@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistikkportalen</title>
+  <meta name="description" content="Et uoffisielt verktøy som gir deg bedre tilgang til SSBs åpne data.">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/table.css">
+  <link rel="stylesheet" href="css/menu-navigator.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <h1><a href="#home" id="header-home-link">Statistikkportalen</a></h1>
+      <p class="subtitle">Et uoffisielt verktøy som gir deg bedre tilgang til SSBs åpne data.</p>
+    </div>
+  </header>
+
+  <!-- Main Application -->
+  <main id="app">
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" style="display: none;">
+      Laster...
+    </div>
+
+    <!-- Error Display -->
+    <div id="error-display"></div>
+
+    <!-- Dynamic Content Area -->
+    <div id="content">
+      <p>Initialiser...</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>Data fra <a href="https://www.ssb.no/" target="_blank">Statistisk sentralbyrå</a>
+    <a href="https://www.ssb.no/diverse/lisens" target="_blank">(CC BY 4.0)</a>
+    <span class="footer-separator">·</span>
+    <a href="#" id="clear-cache-link" title="Tøm hurtigbuffer og last inn data på nytt fra SSB">Tøm hurtigbuffer</a></p>
+  </footer>
+
+  <!-- JavaScript - Load in correct order -->
+  <script src="js/config.js"></script>
+  <script src="js/cache.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/menu-hierarchy.js"></script>
+  <script src="js/browser-state.js"></script>
+  <script src="js/menu-bar.js"></script>
+  <script src="js/front-page.js"></script>
+  <script src="js/search-view.js"></script>
+  <script src="js/topic-view.js"></script>
+  <script src="js/variable-select.js"></script>
+  <script src="js/table-display.js"></script>
+  <script src="js/table-rotation.js"></script>
+  <script src="js/export.js"></script>
+
+  <!-- Application Initialization -->
+  <script>
+    // Initialize app when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('[App] Initializing Statistikkportalen');
+      console.log('[App] API Base URL:', api.baseUrl);
+
+      // Cleanup expired cache entries on startup
+      const removed = api.cleanupCache();
+      if (removed > 0) {
+        console.log('[App] Cleaned up ' + removed + ' expired cache entries');
+      }
+
+      // Log cache stats
+      const stats = api.getCacheStats();
+      if (stats) {
+        console.log('[App] Cache stats:', stats);
+      }
+
+      // Handle browser back/forward navigation
+      window.addEventListener('popstate', handleHashChange);
+
+      // Header logo click → navigate to front page
+      document.getElementById('header-home-link')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        URLRouter.navigateTo('home', {});
+        URLRouter.handleRoute();
+      });
+
+      // Manual cache clear
+      document.getElementById('clear-cache-link')?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        await api.clearCache();
+        console.log('[App] Cache cleared by user');
+        window.location.reload();
+      });
+
+      // Route based on current URL hash
+      if (window.location.hash && window.location.hash !== '#') {
+        URLRouter.handleRoute();
+      } else {
+        // Default to front page
+        AppState.currentView = 'home';
+        renderCurrentView();
+      }
+    });
+
+    // Expose useful functions to window for debugging
+    window.AppState = AppState;
+    window.BrowserState = BrowserState;
+    window.api = api;
+    window.clearCache = () => {
+      api.clearCache();
+      console.log('[App] API cache cleared');
+    };
+  </script>
+</body>
+</html>

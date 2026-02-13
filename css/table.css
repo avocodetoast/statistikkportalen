@@ -1,0 +1,423 @@
+/**
+ * Table Styles for Data Display
+ * Optimized for displaying statistical data tables
+ */
+
+/* ========== Table Container ========== */
+
+.data-container {
+  margin-top: var(--spacing-lg);
+}
+
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--color-background);
+  border-radius: var(--border-radius);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.control-group {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.table-info {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+#cell-count-display {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ========== Table Wrapper ========== */
+
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 70vh;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ========== Data Table ========== */
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--font-size-sm);
+  background: var(--color-surface);
+}
+
+.data-table th,
+.data-table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  text-align: left;
+}
+
+/* ========== Table Headers ========== */
+
+.data-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-primary);
+  color: white;
+}
+
+.data-table thead th {
+  font-weight: 600;
+  text-align: center;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--color-primary);
+}
+
+.corner-cell {
+  background: var(--color-primary-dark);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.col-header {
+  background: var(--color-primary);
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+/* ========== Row Headers ========== */
+
+.row-header {
+  background: var(--color-background);
+  font-weight: 600;
+  color: var(--color-text);
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  white-space: nowrap;
+  border-right: 2px solid var(--color-border);
+}
+
+/* Make row headers sticky when scrolling horizontally */
+.data-table tbody th.row-header {
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+/* ========== Data Cells ========== */
+
+.data-cell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  background: var(--color-surface);
+}
+
+.data-cell:hover {
+  background: #fff8e1;
+}
+
+/* Alternating row colors for better readability */
+.data-table tbody tr:nth-child(even) .data-cell {
+  background: #fafafa;
+}
+
+.data-table tbody tr:nth-child(even) .data-cell:hover {
+  background: #fff8e1;
+}
+
+/* ========== Empty/Missing Values ========== */
+
+.data-cell:empty::after {
+  content: "-";
+  color: var(--color-text-light);
+}
+
+/* ========== Table Zebra Striping ========== */
+
+.data-table tbody tr:hover {
+  background: rgba(39, 66, 71, 0.03);
+}
+
+.data-table tbody tr:hover .data-cell,
+.data-table tbody tr:hover .row-header {
+  background: rgba(39, 66, 71, 0.05);
+}
+
+/* ========== Column Highlighting on Hover ========== */
+
+.data-table td {
+  position: relative;
+}
+
+/* ========== Scrollbar Styling ========== */
+
+.table-wrapper::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: var(--color-background);
+  border-radius: var(--border-radius);
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--border-radius);
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #999999;
+}
+
+/* ========== Compact Table Mode ========== */
+
+.data-table.compact th,
+.data-table.compact td {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 0.8rem;
+}
+
+/* ========== Large Numbers ========== */
+
+.data-table .data-cell {
+  font-feature-settings: "tnum"; /* Tabular numbers */
+  letter-spacing: 0.02em;
+}
+
+/* ========== Responsive Table ========== */
+
+@media (max-width: 768px) {
+  .table-wrapper {
+    max-height: 50vh;
+  }
+
+  .data-table {
+    font-size: 0.75rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .table-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .control-group {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ========== Print Styles ========== */
+
+@media print {
+  .table-controls {
+    display: none;
+  }
+
+  .table-wrapper {
+    max-height: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  .data-table {
+    page-break-inside: auto;
+  }
+
+  .data-table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  .data-table thead {
+    display: table-header-group;
+  }
+
+  .data-table tbody {
+    display: table-row-group;
+  }
+
+  /* Remove sticky positioning for print */
+  .data-table thead,
+  .data-table .row-header {
+    position: static;
+  }
+
+  /* Ensure borders are visible in print */
+  .data-table th,
+  .data-table td {
+    border: 1px solid #000;
+  }
+}
+
+/* ========== Accessibility ========== */
+
+.data-table:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .data-table th,
+  .data-table td {
+    border-color: #000;
+  }
+
+  .row-header {
+    border-right-color: #000;
+    border-right-width: 3px;
+  }
+
+  .data-table thead th {
+    border-bottom-width: 3px;
+    border-bottom-color: #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .data-cell,
+  .row-header,
+  .dimension-chip {
+    transition: none;
+  }
+}
+
+/* ========== Loading State for Table ========== */
+
+.table-wrapper.loading {
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-wrapper.loading::after {
+  content: "Laster data...";
+  position: absolute;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+/* ========== Table Performance Optimization ========== */
+
+/* Use GPU acceleration for sticky elements */
+.data-table thead,
+.data-table .row-header {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Optimize rendering for large tables */
+.table-wrapper {
+  contain: layout style paint;
+}
+
+/* ========== Custom Cell Types ========== */
+
+/* Numeric cells with special formatting */
+.data-cell.negative {
+  color: var(--color-error);
+}
+
+.data-cell.positive {
+  color: var(--color-success);
+}
+
+.data-cell.zero {
+  color: var(--color-text-light);
+}
+
+/* Highlighted cells (for future features) */
+.data-cell.highlighted {
+  background: #fff3cd !important;
+  font-weight: 600;
+}
+
+/* ========== Table Metadata Display ========== */
+
+.table-metadata {
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--color-background);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+}
+
+.table-metadata h4 {
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-primary-dark);
+}
+
+.metadata-toggle-btn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin: 0;
+  padding: var(--spacing-xs) 0;
+  user-select: none;
+}
+
+.metadata-toggle-btn:hover {
+  color: var(--color-primary);
+}
+
+.metadata-toggle-icon {
+  font-size: 0.75rem;
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+}
+
+.metadata-content {
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+.metadata-content p {
+  margin-bottom: var(--spacing-xs);
+}
+
+.metadata-content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.table-metadata dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--spacing-xs) var(--spacing-md);
+}
+
+.table-metadata dt {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.table-metadata dd {
+  color: var(--color-text-light);
+  margin: 0;
+}
