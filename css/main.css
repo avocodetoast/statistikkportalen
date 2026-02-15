@@ -770,6 +770,16 @@ button {
   gap: var(--spacing-xs);
 }
 
+.api-url-warning {
+  color: #7a5c00;
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: var(--border-radius);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-xs);
+}
+
 .api-copy-toast {
   font-size: var(--font-size-sm);
   color: var(--color-success);

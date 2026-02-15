@@ -152,7 +152,25 @@ class SSBApi {
   }
 
   /**
+   * Build POST request body from a valueCodes object.
+   * Converts { Kjonn: ["0","1"], Tid: "top(3)" } to the POST JSON format:
+   * { selection: [{ variableCode: "Kjonn", valueCodes: ["0","1"] }, ...] }
+   *
+   * @param {object} valueCodes - Dimension filters
+   * @returns {object} - POST body object
+   */
+  buildPostBody(valueCodes) {
+    const selection = Object.keys(valueCodes).map(dimension => {
+      const values = valueCodes[dimension];
+      const valueCodesArray = Array.isArray(values) ? values : [values];
+      return { variableCode: dimension, valueCodes: valueCodesArray };
+    });
+    return { selection };
+  }
+
+  /**
    * Get data for a specific table with dimension filters.
+   * Uses POST to avoid URL length limits with large selections.
    *
    * Dimensions omitted from valueCodes are "eliminated" by the API —
    * the server aggregates across all values for that dimension.
@@ -166,27 +184,20 @@ class SSBApi {
    */
   async getTableData(tableId, valueCodes, lang = this.defaultLang) {
     try {
-      // Build query parameters
-      const params = new URLSearchParams({ lang: lang });
+      const url = this.baseUrl + '/tables/' + tableId + '/data?lang=' + lang;
+      const body = this.buildPostBody(valueCodes);
 
-      // Add valueCodes parameters
-      Object.keys(valueCodes).forEach(dimension => {
-        const values = valueCodes[dimension];
-        // Handle both string and array values
-        const valueStr = Array.isArray(values) ? values.join(',') : values;
-        params.append('valueCodes[' + dimension + ']', valueStr);
-      });
-
-      const url = this.baseUrl + '/tables/' + tableId + '/data?' + params.toString();
-      logger.log('[API] Fetching data for table ' + tableId);
-      logger.log('[API] Query URL:', url);
+      logger.log('[API] Fetching data (POST) for table ' + tableId);
+      logger.log('[API] POST body:', body);
 
       const response = await this._throttledFetch(url, {
-        method: 'GET',
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Accept-Language': lang
-        }
+        },
+        body: JSON.stringify(body)
       });
 
       if (!response.ok) {
@@ -333,12 +344,42 @@ class SSBApi {
   async downloadTableData(tableId, valueCodes, options) {
     const url = this.getExportUrl(tableId, valueCodes, options);
     const format = options.format || 'csv';
+    const lang = options.lang || this.defaultLang;
+    const usePost = url.length > AppConfig.limits.maxGetUrlLength;
 
-    logger.log('[API] Downloading from:', url);
+    logger.log('[API] Export URL length:', url.length, '— using', usePost ? 'POST' : 'GET');
 
     try {
-      // Fetch the file as a blob
-      const response = await this._throttledFetch(url);
+      let response;
+      if (usePost) {
+        // Build POST URL with format/layout params only (no valueCodes)
+        const postParams = new URLSearchParams({ lang: lang });
+        if (options.format) postParams.append('outputFormat', options.format);
+        if (options.formatParams && options.formatParams.length > 0) {
+          postParams.append('outputFormatParams', options.formatParams.join(','));
+        }
+        if (options.stub && options.stub.length > 0) {
+          postParams.append('stub', options.stub.join(','));
+        }
+        if (options.heading && options.heading.length > 0) {
+          postParams.append('heading', options.heading.join(','));
+        }
+        const postUrl = this.baseUrl + '/tables/' + tableId + '/data?' + postParams.toString();
+        const body = this.buildPostBody(valueCodes);
+
+        logger.log('[API] Downloading via POST:', postUrl);
+        response = await this._throttledFetch(postUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept-Language': lang
+          },
+          body: JSON.stringify(body)
+        });
+      } else {
+        logger.log('[API] Downloading from:', url);
+        response = await this._throttledFetch(url);
+      }
 
       if (!response.ok) {
         if (response.status === 429) {

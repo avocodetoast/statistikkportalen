@@ -44,7 +44,10 @@ const AppConfig = {
     cellWarningThreshold: 600000,
 
     // Maximum tables to fetch in one request
-    maxTablePageSize: 10000
+    maxTablePageSize: 10000,
+
+    // Maximum GET URL length before warning (SSB recommends < 2000 chars)
+    maxGetUrlLength: 2000
   },
 
   /**

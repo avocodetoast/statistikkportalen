@@ -22,8 +22,9 @@ function updateQueryPreview() {
 
   const selection = getVariableSelection();
   const tableId = AppState.selectedTable.id;
+  const mode = document.getElementById('api-method-toggle')?.value || 'get';
 
-  // Build URL params in the same way as api.getTableData()
+  // Build GET URL params (used for both GET display and length checking)
   const params = new URLSearchParams({ lang: 'no' });
 
   Object.keys(selection).forEach(dimension => {
@@ -43,15 +44,12 @@ function updateQueryPreview() {
   if (formatsSupportingParams.includes(format)) {
     const formatParams = [];
 
-    // Display format (UseCodes / UseTexts / UseCodesAndTexts)
     const displayFormat = document.getElementById('api-display-format')?.value;
     if (displayFormat) formatParams.push(displayFormat);
 
-    // Include title
     const includeTitle = document.getElementById('api-include-title')?.value;
     if (includeTitle) formatParams.push(includeTitle);
 
-    // CSV separator
     if (format === 'csv') {
       const separator = document.getElementById('api-csv-separator')?.value;
       if (separator) formatParams.push(separator);
@@ -61,10 +59,8 @@ function updateQueryPreview() {
       params.append('outputFormatParams', formatParams.join(','));
     }
 
-    // Stub/heading layout
     const layout = document.getElementById('api-table-layout')?.value;
     if (layout === 'pivot') {
-      // Pivot-friendly: all dimensions in stub (none in heading)
       const allDims = Object.keys(selection);
       if (allDims.length > 0) {
         params.append('stub', allDims.join(','));
@@ -72,8 +68,53 @@ function updateQueryPreview() {
     }
   }
 
-  const fullDataUrl = AppConfig.apiBaseUrl + '/tables/' + tableId + '/data?' + params.toString();
-  previewUrl.textContent = fullDataUrl;
+  const fullGetUrl = AppConfig.apiBaseUrl + '/tables/' + tableId + '/data?' + params.toString();
+  const urlWarning = document.getElementById('api-url-warning');
+  const postBodySection = document.getElementById('api-post-body-section');
+  const openBtn = document.getElementById('api-open-btn');
+
+  if (mode === 'get') {
+    // GET mode: show full URL
+    previewUrl.textContent = fullGetUrl;
+
+    // URL length warning
+    if (urlWarning) {
+      const tooLong = fullGetUrl.length > AppConfig.limits.maxGetUrlLength;
+      urlWarning.style.display = tooLong ? '' : 'none';
+      if (tooLong) {
+        urlWarning.textContent = 'URL-en er ' + fullGetUrl.length + ' tegn \u2014 overskrider grensen p\u00e5 '
+          + AppConfig.limits.maxGetUrlLength + ' tegn. Bruk POST-modus for store utvalg.';
+      }
+    }
+
+    // Hide POST body
+    if (postBodySection) postBodySection.style.display = 'none';
+
+    // Enable open-in-browser
+    if (openBtn) {
+      openBtn.disabled = false;
+      openBtn.title = '\u00c5pne i ny fane';
+    }
+  } else {
+    // POST mode: show endpoint URL + JSON body
+    const postEndpoint = AppConfig.apiBaseUrl + '/tables/' + tableId + '/data?lang=no';
+    previewUrl.textContent = postEndpoint;
+
+    // Build and show POST body
+    const bodyObj = api.buildPostBody(selection);
+    const postBodyEl = document.getElementById('api-post-body-preview');
+    if (postBodyEl) postBodyEl.textContent = JSON.stringify(bodyObj, null, 2);
+    if (postBodySection) postBodySection.style.display = '';
+
+    // Hide URL warning in POST mode
+    if (urlWarning) urlWarning.style.display = 'none';
+
+    // Disable open-in-browser in POST mode
+    if (openBtn) {
+      openBtn.disabled = true;
+      openBtn.title = 'Kun tilgjengelig i GET-modus';
+    }
+  }
 
   // Update metadata URL
   if (metaUrl) {
@@ -91,6 +132,11 @@ function updateQueryPreview() {
  */
 function setupApiBuilderEvents() {
   const formatSelect = document.getElementById('api-output-format');
+
+  // Method toggle (GET/POST)
+  document.getElementById('api-method-toggle')?.addEventListener('change', () => {
+    updateQueryPreview();
+  });
 
   // Output format selector — show/hide format-specific options
   formatSelect?.addEventListener('change', () => {
@@ -114,21 +160,42 @@ function setupApiBuilderEvents() {
     }
   });
 
-  // Copy as curl command
+  // Copy as curl command (mode-aware)
   document.getElementById('api-copy-curl-btn')?.addEventListener('click', () => {
-    const url = document.getElementById('query-preview-url')?.textContent;
-    if (url && url.startsWith('http')) {
-      const curlCmd = "curl '" + url + "'";
-      copyToClipboard(curlCmd);
-      showCopyToast();
+    const mode = document.getElementById('api-method-toggle')?.value || 'get';
+    if (mode === 'get') {
+      const url = document.getElementById('query-preview-url')?.textContent;
+      if (url && url.startsWith('http')) {
+        copyToClipboard("curl '" + url + "'");
+        showCopyToast();
+      }
+    } else {
+      const endpoint = document.getElementById('query-preview-url')?.textContent;
+      const body = document.getElementById('api-post-body-preview')?.textContent;
+      if (endpoint && body) {
+        const cmd = "curl -X POST '" + endpoint + "' \\\n"
+          + "  -H 'Content-Type: application/json' \\\n"
+          + "  -d '" + body.replace(/'/g, "'\\''") + "'";
+        copyToClipboard(cmd);
+        showCopyToast();
+      }
     }
   });
 
-  // Open data URL in new tab
+  // Open data URL in new tab (GET only)
   document.getElementById('api-open-btn')?.addEventListener('click', () => {
     const url = document.getElementById('query-preview-url')?.textContent;
     if (url && url.startsWith('http')) {
       window.open(url, '_blank');
+    }
+  });
+
+  // Copy POST body
+  document.getElementById('api-copy-post-body-btn')?.addEventListener('click', () => {
+    const body = document.getElementById('api-post-body-preview')?.textContent;
+    if (body) {
+      copyToClipboard(body);
+      showCopyToast();
     }
   });
 

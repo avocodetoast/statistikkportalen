@@ -84,6 +84,14 @@ async function renderVariableSelection(container) {
 
           <div class="api-builder-options-grid">
             <div class="api-builder-option">
+              <label class="api-builder-label">Metode:</label>
+              <select id="api-method-toggle" class="api-format-select">
+                <option value="get">GET</option>
+                <option value="post">POST</option>
+              </select>
+            </div>
+
+            <div class="api-builder-option">
               <label class="api-builder-label">Responsformat:</label>
               <select id="api-output-format" class="api-format-select">
                 <option value="" selected>JSON-stat2 (standard)</option>
@@ -143,6 +151,17 @@ async function renderVariableSelection(container) {
             <code class="query-preview-url" id="query-preview-url">
               Velg verdier for &aring; se sp&oslash;rringen
             </code>
+            <div id="api-url-warning" class="api-url-warning" style="display: none;"></div>
+          </div>
+
+          <div class="api-builder-section" id="api-post-body-section" style="display: none;">
+            <div class="api-builder-section-header">
+              <span class="api-builder-section-title">POST-body (JSON)</span>
+              <div class="api-builder-actions">
+                <button class="btn-secondary btn-sm" id="api-copy-post-body-btn" title="Kopier JSON-body">Kopier body</button>
+              </div>
+            </div>
+            <code class="query-preview-url" id="api-post-body-preview" style="white-space: pre;"></code>
           </div>
 
           <div class="api-builder-section">
