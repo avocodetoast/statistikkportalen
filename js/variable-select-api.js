@@ -101,7 +101,7 @@ function updateQueryPreview() {
     previewUrl.textContent = postEndpoint;
 
     // Build and show POST body
-    const bodyObj = api.buildPostBody(selection);
+    const bodyObj = api.buildPostBody(selection, { codelistIds: AppState.activeCodelistIds });
     const postBodyEl = document.getElementById('api-post-body-preview');
     if (postBodyEl) postBodyEl.textContent = JSON.stringify(bodyObj, null, 2);
     if (postBodySection) postBodySection.style.display = '';

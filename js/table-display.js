@@ -80,7 +80,7 @@ async function loadTableData() {
   logger.log('[TableDisplay] Variable selection:', selection);
 
   const data = await safeApiCall(
-    () => api.getTableData(tableId, selection, 'no'),
+    () => api.getTableData(tableId, selection, 'no', AppState.activeCodelistIds),
     'Kunne ikke hente data fra API'
   );
 

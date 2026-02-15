@@ -159,13 +159,29 @@ class SSBApi {
    * @param {object} valueCodes - Dimension filters
    * @returns {object} - POST body object
    */
-  buildPostBody(valueCodes) {
+  buildPostBody(valueCodes, options = {}) {
+    const codelistIds = options.codelistIds || {};
+
     const selection = Object.keys(valueCodes).map(dimension => {
       const values = valueCodes[dimension];
       const valueCodesArray = Array.isArray(values) ? values : [values];
-      return { variableCode: dimension, valueCodes: valueCodesArray };
+      const entry = { variableCode: dimension, valueCodes: valueCodesArray };
+      // Include codelist ID when a codelist is active for this dimension
+      if (codelistIds[dimension]) {
+        entry.codelist = codelistIds[dimension];
+      }
+      return entry;
     });
-    return { selection };
+    const body = { selection };
+
+    // Add placement (stub/heading) if provided
+    if (options.stub || options.heading) {
+      body.placement = {};
+      if (options.heading && options.heading.length > 0) body.placement.heading = options.heading;
+      if (options.stub && options.stub.length > 0) body.placement.stub = options.stub;
+    }
+
+    return body;
   }
 
   /**
@@ -180,12 +196,13 @@ class SSBApi {
    * @param {object} valueCodes - Dimension filters, e.g., { Kjonn: "0", Tid: "top(3)" }
    *   Supports: array of codes, "*" (all), "top(N)" (last N values)
    * @param {string} lang - Language code (no/en)
+   * @param {object} codelistIds - Active codelist IDs per dimension (optional)
    * @returns {Promise<object>} - Table data (JSON-Stat2 format)
    */
-  async getTableData(tableId, valueCodes, lang = this.defaultLang) {
+  async getTableData(tableId, valueCodes, lang = this.defaultLang, codelistIds = {}) {
     try {
       const url = this.baseUrl + '/tables/' + tableId + '/data?lang=' + lang;
-      const body = this.buildPostBody(valueCodes);
+      const body = this.buildPostBody(valueCodes, { codelistIds });
 
       logger.log('[API] Fetching data (POST) for table ' + tableId);
       logger.log('[API] POST body:', body);
@@ -352,20 +369,19 @@ class SSBApi {
     try {
       let response;
       if (usePost) {
-        // Build POST URL with format/layout params only (no valueCodes)
+        // POST: outputFormat + outputFormatParams as query params,
+        // selection + placement (stub/heading) in JSON body
         const postParams = new URLSearchParams({ lang: lang });
         if (options.format) postParams.append('outputFormat', options.format);
         if (options.formatParams && options.formatParams.length > 0) {
           postParams.append('outputFormatParams', options.formatParams.join(','));
         }
-        if (options.stub && options.stub.length > 0) {
-          postParams.append('stub', options.stub.join(','));
-        }
-        if (options.heading && options.heading.length > 0) {
-          postParams.append('heading', options.heading.join(','));
-        }
         const postUrl = this.baseUrl + '/tables/' + tableId + '/data?' + postParams.toString();
-        const body = this.buildPostBody(valueCodes);
+        const body = this.buildPostBody(valueCodes, {
+          stub: options.stub,
+          heading: options.heading,
+          codelistIds: options.codelistIds || {}
+        });
 
         logger.log('[API] Downloading via POST:', postUrl);
         response = await this._throttledFetch(postUrl, {

@@ -108,13 +108,7 @@ function showExportDialog() {
             </div>
           </div>
 
-          <!-- Include Title -->
-          <div class="form-group">
-            <label class="checkbox-option">
-              <input type="checkbox" id="include-title" checked>
-              <span>Inkluder tabelltittel</span>
-            </label>
-          </div>
+          <!-- Include Title removed: causes errors with xlsx via POST -->
 
           <!-- Export Info -->
           <div class="export-info">
@@ -209,15 +203,9 @@ async function executeExport() {
   const displayFormat = dialog.querySelector('input[name="display-format"]:checked')?.value || 'UseTexts';
   const csvSeparator = dialog.querySelector('input[name="csv-separator"]:checked')?.value || 'SeparatorSemicolon';
   const layout = dialog.querySelector('input[name="table-layout"]:checked')?.value || 'as-shown';
-  const includeTitle = document.getElementById('include-title')?.checked || false;
-
   // Build format parameters
   const formatParams = [];
   formatParams.push(displayFormat);
-
-  if (includeTitle) {
-    formatParams.push('IncludeTitle');
-  }
 
   // Add CSV separator if CSV format
   if (format === 'csv') {
@@ -249,7 +237,8 @@ async function executeExport() {
       stub: stub,
       heading: heading,
       formatParams: formatParams,
-      lang: 'no'
+      lang: 'no',
+      codelistIds: AppState.activeCodelistIds
     });
     showLoading(false);
     logger.log('[Export] Export completed successfully');
