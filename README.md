@@ -49,6 +49,6 @@ Applikasjonen kan også med mindre justeringer tilpasses andre systemer som bruk
 - localStorage aktivert (for caching)
 
 ## Lisens
-Denne koden er lisensiert under [MIT-lisens](LICENSE.md).
+Denne koden er lisensiert under [MIT-lisens](LICENCE.md).
 Data fra Statistisk sentralbyrå er lisensiert under [CC BY 4.0](https://www.ssb.no/diverse/lisens).
 
