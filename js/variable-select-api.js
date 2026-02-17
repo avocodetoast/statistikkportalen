@@ -23,59 +23,59 @@ function updateQueryPreview() {
   const selection = getVariableSelection();
   const tableId = AppState.selectedTable.id;
   const mode = document.getElementById('api-method-toggle')?.value || 'get';
+  const urlDecoded = document.getElementById('api-decode-url-cb')?.checked || false;
 
-  // Build GET URL params (used for both GET display and length checking)
-  const params = new URLSearchParams({ lang: 'no' });
-
-  Object.keys(selection).forEach(dimension => {
-    const values = selection[dimension];
-    const valueStr = Array.isArray(values) ? values.join(',') : values;
-    params.append('valueCodes[' + dimension + ']', valueStr);
-  });
-
-  // Output format
+  // Collect format-specific params (valid for both GET and POST URLs)
   const format = document.getElementById('api-output-format')?.value || '';
-  if (format) {
-    params.append('outputFormat', format);
-  }
-
-  // Output format params (for csv, html, xlsx)
   const formatsSupportingParams = ['csv', 'html', 'xlsx'];
-  if (formatsSupportingParams.includes(format)) {
-    const formatParams = [];
+  const fmtParams = [];
+  let stubDims = undefined;
 
+  if (formatsSupportingParams.includes(format)) {
     const displayFormat = document.getElementById('api-display-format')?.value;
-    if (displayFormat) formatParams.push(displayFormat);
+    if (displayFormat) fmtParams.push(displayFormat);
 
     const includeTitle = document.getElementById('api-include-title')?.value;
-    if (includeTitle) formatParams.push(includeTitle);
+    if (includeTitle) fmtParams.push(includeTitle);
 
     if (format === 'csv') {
       const separator = document.getElementById('api-csv-separator')?.value;
-      if (separator) formatParams.push(separator);
-    }
-
-    if (formatParams.length > 0) {
-      params.append('outputFormatParams', formatParams.join(','));
+      if (separator) fmtParams.push(separator);
     }
 
     const layout = document.getElementById('api-table-layout')?.value;
     if (layout === 'pivot') {
       const allDims = Object.keys(selection);
-      if (allDims.length > 0) {
-        params.append('stub', allDims.join(','));
-      }
+      if (allDims.length > 0) stubDims = allDims;
     }
   }
 
+  // Build GET URL params (valueCodes + format params)
+  const params = new URLSearchParams({ lang: 'no' });
+  Object.keys(selection).forEach(dimension => {
+    const values = selection[dimension];
+    const valueStr = Array.isArray(values) ? values.join(',') : values;
+    params.append('valueCodes[' + dimension + ']', valueStr);
+  });
+  if (format) params.append('outputFormat', format);
+  if (fmtParams.length > 0) params.append('outputFormatParams', fmtParams.join(','));
+  if (stubDims) params.append('stub', stubDims.join(','));
+
+  // Build POST URL params (format params only — valueCodes go in the body)
+  const postParams = new URLSearchParams({ lang: 'no' });
+  if (format) postParams.append('outputFormat', format);
+  if (fmtParams.length > 0) postParams.append('outputFormatParams', fmtParams.join(','));
+  if (stubDims) postParams.append('stub', stubDims.join(','));
+
   const fullGetUrl = AppConfig.apiBaseUrl + '/tables/' + tableId + '/data?' + params.toString();
+  const fullPostUrl = AppConfig.apiBaseUrl + '/tables/' + tableId + '/data?' + postParams.toString();
   const urlWarning = document.getElementById('api-url-warning');
   const postBodySection = document.getElementById('api-post-body-section');
   const openBtn = document.getElementById('api-open-btn');
 
   if (mode === 'get') {
-    // GET mode: show full URL
-    previewUrl.textContent = fullGetUrl;
+    // GET mode: show full URL (with valueCodes)
+    previewUrl.textContent = urlDecoded ? decodeURIComponent(fullGetUrl) : fullGetUrl;
 
     // URL length warning
     if (urlWarning) {
@@ -96,12 +96,14 @@ function updateQueryPreview() {
       openBtn.title = '\u00c5pne i ny fane';
     }
   } else {
-    // POST mode: show endpoint URL + JSON body
-    const postEndpoint = AppConfig.apiBaseUrl + '/tables/' + tableId + '/data?lang=no';
-    previewUrl.textContent = postEndpoint;
+    // POST mode: show endpoint URL with format params (no valueCodes) + JSON body
+    previewUrl.textContent = urlDecoded ? decodeURIComponent(fullPostUrl) : fullPostUrl;
 
-    // Build and show POST body
-    const bodyObj = api.buildPostBody(selection, { codelistIds: AppState.activeCodelistIds });
+    // Build and show POST body (include stub/heading placement if pivot layout)
+    const bodyObj = api.buildPostBody(selection, {
+      codelistIds: AppState.activeCodelistIds,
+      stub: stubDims
+    });
     const postBodyEl = document.getElementById('api-post-body-preview');
     if (postBodyEl) postBodyEl.textContent = JSON.stringify(bodyObj, null, 2);
     if (postBodySection) postBodySection.style.display = '';
@@ -149,6 +151,11 @@ function setupApiBuilderEvents() {
     document.getElementById(id)?.addEventListener('change', () => {
       updateQueryPreview();
     });
+  });
+
+  // Decode URL checkbox
+  document.getElementById('api-decode-url-cb')?.addEventListener('change', () => {
+    updateQueryPreview();
   });
 
   // Copy data URL

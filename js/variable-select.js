@@ -143,6 +143,7 @@ async function renderVariableSelection(container) {
             <div class="api-builder-section-header">
               <span class="api-builder-section-title">Data-URL</span>
               <div class="api-builder-actions">
+                <label class="api-builder-checkbox-label" title="Vis URL med lesbare tegn i stedet for URL-koding"><input type="checkbox" id="api-decode-url-cb"> Vis i klartekst</label>
                 <button class="btn-secondary btn-sm" id="api-copy-url-btn" title="Kopier URL">Kopier URL</button>
                 <button class="btn-secondary btn-sm" id="api-copy-curl-btn" title="Kopier som curl-kommando">Kopier curl</button>
                 <button class="btn-secondary btn-sm" id="api-open-btn" title="&Aring;pne i ny fane">&Aring;pne i nettleser</button>

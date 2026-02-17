@@ -767,7 +767,17 @@ button {
 
 .api-builder-actions {
   display: flex;
+  align-items: center;
   gap: var(--spacing-xs);
+}
+
+.api-builder-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  user-select: none;
 }
 
 .api-url-warning {
