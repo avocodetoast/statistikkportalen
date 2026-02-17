@@ -184,8 +184,11 @@ function displayData() {
         <button id="rotate-table-btn" class="btn-secondary">
           ↻ Roter tabell
         </button>
-        <button id="export-btn" class="btn-primary">
-          ⬇ Last ned
+        <button id="export-quick-btn" class="btn-primary">
+          ⬇ Last ned i Excel-format
+        </button>
+        <button id="export-btn" class="btn-secondary">
+          Flere alternativer
         </button>
       </div>
       <div class="table-info">
@@ -202,6 +205,10 @@ function displayData() {
   // Set up event listeners
   document.getElementById('rotate-table-btn')?.addEventListener('click', () => {
     openRotationDialog();
+  });
+
+  document.getElementById('export-quick-btn')?.addEventListener('click', () => {
+    quickExportXlsx();
   });
 
   document.getElementById('export-btn')?.addEventListener('click', () => {

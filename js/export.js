@@ -268,6 +268,36 @@ async function executeExport() {
 }
 
 /**
+ * Quick export: download as xlsx using default settings (as shown on screen)
+ */
+async function quickExportXlsx() {
+  if (!currentData || !AppState.tableLayout) {
+    showError('Ingen data å eksportere');
+    return;
+  }
+
+  const layout = AppState.tableLayout;
+  const valueCodes = AppState.variableSelection;
+
+  try {
+    showLoading(true, 'Laster ned fil...');
+    await api.downloadTableData(AppState.selectedTable.id, valueCodes, {
+      format: 'xlsx',
+      stub: layout.rows,
+      heading: layout.columns,
+      formatParams: [],
+      lang: 'no',
+      codelistIds: AppState.activeCodelistIds
+    });
+    showLoading(false);
+  } catch (error) {
+    showLoading(false);
+    logger.error('[Export] Quick export failed:', error);
+    showError('Kunne ikke laste ned filen', error);
+  }
+}
+
+/**
  * Legacy export functions for backwards compatibility
  * These now open the export dialog instead
  */
