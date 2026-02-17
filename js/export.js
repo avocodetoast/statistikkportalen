@@ -60,7 +60,11 @@ function showExportDialog() {
             <label class="form-label">Vis verdier som:</label>
             <div class="radio-group">
               <label class="radio-option">
-                <input type="radio" name="display-format" value="UseTexts" checked>
+                <input type="radio" name="display-format" value="" checked>
+                <span>Standard</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="display-format" value="UseTexts">
                 <span>Tekst (f.eks. "Oslo")</span>
               </label>
               <label class="radio-option">
@@ -206,14 +210,16 @@ async function executeExport() {
 
   // Get selected options
   const format = dialog.querySelector('input[name="export-format"]:checked')?.value || 'xlsx';
-  const displayFormat = dialog.querySelector('input[name="display-format"]:checked')?.value || 'UseTexts';
+  const displayFormat = dialog.querySelector('input[name="display-format"]:checked')?.value ?? '';
   const csvSeparator = dialog.querySelector('input[name="csv-separator"]:checked')?.value || 'SeparatorSemicolon';
   const layout = dialog.querySelector('input[name="table-layout"]:checked')?.value || 'as-shown';
   const includeTitle = document.getElementById('include-title')?.checked || false;
 
   // Build format parameters
   const formatParams = [];
-  formatParams.push(displayFormat);
+  if (displayFormat) {
+    formatParams.push(displayFormat);
+  }
 
   if (includeTitle) {
     formatParams.push('IncludeTitle');

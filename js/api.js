@@ -295,107 +295,46 @@ class SSBApi {
   }
 
   /**
-   * Construct download URL for table data export using SSB's API.
+   * Trigger download of table data in specified format.
+   * Downloads the file as a blob and saves it with a custom filename.
    *
    * @param {string} tableId - Table ID
-   * @param {object} valueCodes - Dimension filters (same format as getTableData)
+   * @param {object} valueCodes - Dimension filters
    * @param {object} options - Export options
    * @param {string} options.format - Output format: 'csv', 'xlsx', 'px', 'html', 'parquet'
    * @param {string[]} options.stub - Dimensions to place in stub (rows)
    * @param {string[]} options.heading - Dimensions to place in heading (columns)
    * @param {string[]} options.formatParams - Output format parameters (e.g., 'IncludeTitle', 'UseTexts')
    * @param {string} options.lang - Language code (default: 'no')
-   * @returns {string} - Complete download URL
-   */
-  getExportUrl(tableId, valueCodes, options = {}) {
-    const {
-      format = 'csv',
-      stub = [],
-      heading = [],
-      formatParams = [],
-      lang = this.defaultLang
-    } = options;
-
-    // Build query parameters
-    const params = new URLSearchParams({ lang: lang });
-
-    // Add valueCodes parameters
-    Object.keys(valueCodes).forEach(dimension => {
-      const values = valueCodes[dimension];
-      const valueStr = Array.isArray(values) ? values.join(',') : values;
-      params.append('valueCodes[' + dimension + ']', valueStr);
-    });
-
-    // Add stub dimensions
-    if (stub.length > 0) {
-      params.append('stub', stub.join(','));
-    }
-
-    // Add heading dimensions
-    if (heading.length > 0) {
-      params.append('heading', heading.join(','));
-    }
-
-    // Add output format
-    params.append('outputFormat', format);
-
-    // Add output format parameters
-    if (formatParams.length > 0) {
-      params.append('outputFormatParams', formatParams.join(','));
-    }
-
-    const url = this.baseUrl + '/tables/' + tableId + '/data?' + params.toString();
-    logger.log('[API] Export URL:', url);
-    return url;
-  }
-
-  /**
-   * Trigger download of table data in specified format.
-   * Downloads the file as a blob and saves it with a custom filename.
-   *
-   * @param {string} tableId - Table ID
-   * @param {object} valueCodes - Dimension filters
-   * @param {object} options - Export options (see getExportUrl)
    * @returns {Promise<void>}
    */
   async downloadTableData(tableId, valueCodes, options) {
-    const url = this.getExportUrl(tableId, valueCodes, options);
     const format = options.format || 'csv';
     const lang = options.lang || this.defaultLang;
-    const usePost = url.length > AppConfig.limits.maxGetUrlLength;
 
-    logger.log('[API] Export URL length:', url.length, '— using', usePost ? 'POST' : 'GET');
+    const postParams = new URLSearchParams({ lang: lang });
+    postParams.append('outputFormat', format);
+    if (options.formatParams && options.formatParams.length > 0) {
+      postParams.append('outputFormatParams', options.formatParams.join(','));
+    }
+    const postUrl = this.baseUrl + '/tables/' + tableId + '/data?' + postParams.toString();
+    const body = this.buildPostBody(valueCodes, {
+      stub: options.stub,
+      heading: options.heading,
+      codelistIds: options.codelistIds || {}
+    });
+
+    logger.log('[API] Downloading via POST:', postUrl);
 
     try {
-      let response;
-      if (usePost) {
-        // POST: outputFormat + outputFormatParams as query params,
-        // selection + placement (stub/heading) in JSON body
-        const postParams = new URLSearchParams({ lang: lang });
-        if (options.format) postParams.append('outputFormat', options.format);
-        if (options.formatParams && options.formatParams.length > 0) {
-          postParams.append('outputFormatParams', options.formatParams.join(','));
-        }
-        const postUrl = this.baseUrl + '/tables/' + tableId + '/data?' + postParams.toString();
-        const body = this.buildPostBody(valueCodes, {
-          stub: options.stub,
-          heading: options.heading,
-          codelistIds: options.codelistIds || {}
-        });
-
-        logger.log('[API] Downloading via POST:', postUrl);
-        response = await this._throttledFetch(postUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept-Language': lang
-          },
-          body: JSON.stringify(body)
-        });
-      } else {
-        logger.log('[API] Downloading from:', url);
-        response = await this._throttledFetch(url);
-      }
+      const response = await this._throttledFetch(postUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept-Language': lang
+        },
+        body: JSON.stringify(body)
+      });
 
       if (!response.ok) {
         if (response.status === 429) {
