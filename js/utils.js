@@ -77,6 +77,7 @@ const AppState = {
   tableData: null,
   tableLayout: { rows: [], columns: [] },
   topicPath: [], // Current topic navigation path (e.g., ['be', 'be02'])
+  navigationRef: null, // Hash-path to navigate back to (e.g., 'topic/be/be02'), stored in sessionStorage
 
   setView(view) {
     this.currentView = view;
@@ -99,6 +100,8 @@ const AppState = {
     this.activeCodelistIds = {};
     this.tableData = null;
     this.tableLayout = { rows: [], columns: [] };
+    this.navigationRef = null;
+    sessionStorage.removeItem('ssb_navRef');
   },
 
   /**

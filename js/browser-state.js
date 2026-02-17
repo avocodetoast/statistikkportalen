@@ -320,6 +320,19 @@ const BrowserState = {
       return;
     }
 
+    // Capture navigation context so "Tilbake til tabelloversikt" works correctly
+    let ref = 'home';
+    if (AppState.currentView === 'topic' && AppState.topicPath.length > 0) {
+      const topicPath = AppState.topicPath.join('/');
+      const filterStr = new URLSearchParams(BrowserState.topicFiltersToParams()).toString();
+      ref = filterStr ? `topic/${topicPath}?${filterStr}` : `topic/${topicPath}`;
+    } else if (AppState.currentView === 'search') {
+      const filterStr = new URLSearchParams(BrowserState.searchFiltersToParams()).toString();
+      ref = filterStr ? `search?${filterStr}` : 'search';
+    }
+    AppState.navigationRef = ref;
+    sessionStorage.setItem('ssb_navRef', JSON.stringify({ tableId, ref }));
+
     AppState.setSelectedTable(table);
     AppState.setView('variables');
   },

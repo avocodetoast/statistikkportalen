@@ -27,7 +27,7 @@ async function renderTableDisplay(container) {
       <div class="view-header">
         <div class="view-header-buttons">
           <button id="back-to-browser" class="btn-secondary">
-            &larr; Tilbake til tabelliste
+            &larr; Tilbake til tabelloversikt
           </button>
           <button id="back-to-variables" class="btn-secondary">
             &larr; Endre variabelvalg
@@ -47,13 +47,12 @@ async function renderTableDisplay(container) {
   document.getElementById('back-to-browser')?.addEventListener('click', () => {
     currentData = null;
     currentFullMetadata = null;
+    const ref = AppState.navigationRef || 'home';
     AppState.resetTableState();
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      URLRouter.navigateTo('home', {});
-      URLRouter.handleRoute();
-    }
+    const [route, qs] = ref.split('?');
+    const params = Object.fromEntries(new URLSearchParams(qs || ''));
+    URLRouter.navigateTo(route, params);
+    URLRouter.handleRoute();
   });
 
   document.getElementById('back-to-variables')?.addEventListener('click', () => {

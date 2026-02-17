@@ -192,15 +192,14 @@ async function renderVariableSelection(container) {
     </div>
   `;
 
-  // Set up back button - go back in history, fallback to home
+  // Set up back button - navigate to stored ref, fallback to home
   document.getElementById('back-to-browser')?.addEventListener('click', () => {
+    const ref = AppState.navigationRef || 'home';
     AppState.resetTableState();
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      URLRouter.navigateTo('home', {});
-      URLRouter.handleRoute();
-    }
+    const [route, qs] = ref.split('?');
+    const params = Object.fromEntries(new URLSearchParams(qs || ''));
+    URLRouter.navigateTo(route, params);
+    URLRouter.handleRoute();
   });
 
   // Set up query preview toggle (collapsible)

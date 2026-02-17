@@ -229,6 +229,14 @@ const URLRouter = {
 
     logger.log('[Router] Variables route - tableId:', tableId);
 
+    // Restore navigation context from sessionStorage if available for this table
+    try {
+      const stored = JSON.parse(sessionStorage.getItem('ssb_navRef') || 'null');
+      AppState.navigationRef = (stored && stored.tableId === tableId) ? stored.ref : null;
+    } catch (e) {
+      AppState.navigationRef = null;
+    }
+
     // Decode parameters
     const variableSelection = params.v ? this.decode(params.v) : null;
     const codelistIds = params.c ? this.decode(params.c) : null;
@@ -282,6 +290,14 @@ const URLRouter = {
     }
 
     logger.log('[Router] Table route - tableId:', tableId);
+
+    // Restore navigation context from sessionStorage if available for this table
+    try {
+      const stored = JSON.parse(sessionStorage.getItem('ssb_navRef') || 'null');
+      AppState.navigationRef = (stored && stored.tableId === tableId) ? stored.ref : null;
+    } catch (e) {
+      AppState.navigationRef = null;
+    }
 
     // Decode parameters
     const variableSelection = params.v ? this.decode(params.v) : null;
