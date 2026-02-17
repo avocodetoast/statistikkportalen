@@ -276,8 +276,14 @@ function applyPreset(preset, dimensions, overlay) {
         d === 'Tid' || d.toLowerCase().includes('tid')
       );
       if (timeDimIndex !== -1) {
-        newRows = dimensions.filter((_, i) => i !== timeDimIndex);
-        newCols = [dimensions[timeDimIndex]];
+        const nonTimeDims = dimensions.filter((_, i) => i !== timeDimIndex);
+        if (nonTimeDims.length > 0) {
+          newRows = [dimensions[timeDimIndex]];
+          newCols = nonTimeDims;
+        } else {
+          newRows = [dimensions[timeDimIndex]];
+          newCols = [];
+        }
       } else if (dimensions.length > 1) {
         newRows = dimensions.slice(0, -1);
         newCols = [dimensions[dimensions.length - 1]];

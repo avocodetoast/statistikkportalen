@@ -133,12 +133,19 @@ function determineDefaultLayout(data) {
   );
 
   if (timeDimIndex !== -1) {
-    // Time dimension as column
-    const rows = dimensions.filter((_, i) => i !== timeDimIndex);
-    return {
-      rows: rows,
-      columns: [dimensions[timeDimIndex]]
-    };
+    // Time dimension as rows (one row per period)
+    const nonTimeDims = dimensions.filter((_, i) => i !== timeDimIndex);
+    if (nonTimeDims.length > 0) {
+      return {
+        rows: [dimensions[timeDimIndex]],
+        columns: nonTimeDims
+      };
+    } else {
+      return {
+        rows: [dimensions[timeDimIndex]],
+        columns: []
+      };
+    }
   } else if (dimensions.length > 1) {
     // Last dimension as column
     return {
