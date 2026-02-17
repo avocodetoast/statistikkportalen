@@ -101,6 +101,12 @@ async function loadTableData() {
   // Fetch full metadata (from cache) for display
   try {
     currentFullMetadata = await api.getTableMetadata(tableId, true, 'no');
+    // Update title if it was set as a placeholder during direct URL navigation
+    if (currentFullMetadata?.label && AppState.selectedTable) {
+      AppState.selectedTable.label = currentFullMetadata.label;
+      const h2 = document.querySelector('.view-header h2');
+      if (h2) h2.textContent = extractTableTitle(currentFullMetadata.label);
+    }
   } catch (e) {
     logger.warn('[TableDisplay] Could not load full metadata:', e);
     currentFullMetadata = null;

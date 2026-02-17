@@ -246,6 +246,13 @@ async function loadTableMetadata(tableId) {
   tableMetadata = data;
   logger.log('[VariableSelect] Loaded metadata:', data);
 
+  // Update title if it was set as a placeholder during direct URL navigation
+  if (data.label && AppState.selectedTable) {
+    AppState.selectedTable.label = data.label;
+    const h2 = document.querySelector('.view-header h2');
+    if (h2) h2.textContent = extractTableTitle(data.label);
+  }
+
   // Reset codelist state for new table
   Object.keys(activeCodelists).forEach(k => delete activeCodelists[k]);
   Object.keys(dimensionValueOrder).forEach(k => delete dimensionValueOrder[k]);
