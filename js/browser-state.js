@@ -20,8 +20,12 @@ const BrowserState = {
     includeDiscontinued: true,
     subjectFilter: '',
     frequencyFilter: '',
-    updatedFilter: ''
+    updatedFilter: '',
+    enhanced: false
   },
+
+  // Lazy search index for enhanced mode (built on first use, cached forever)
+  _searchIndex: null,
 
   // Topic view filters (independent from search filters)
   // Reset when navigating to a new topic
@@ -80,6 +84,7 @@ const BrowserState = {
     if (this.searchFilters.subjectFilter) params.subj = this.searchFilters.subjectFilter;
     if (this.searchFilters.frequencyFilter) params.freq = this.searchFilters.frequencyFilter;
     if (this.searchFilters.updatedFilter) params.upd = this.searchFilters.updatedFilter;
+    if (this.searchFilters.enhanced) params.enh = '1';
     return params;
   },
 
@@ -92,6 +97,7 @@ const BrowserState = {
     this.searchFilters.subjectFilter = params.subj || '';
     this.searchFilters.frequencyFilter = params.freq || '';
     this.searchFilters.updatedFilter = params.upd || '';
+    this.searchFilters.enhanced = params.enh === '1';
   },
 
   /**
@@ -130,12 +136,48 @@ const BrowserState = {
    * Used for calculating per-value hit counts in filter dropdowns.
    *
    * @param {Array} tables - Tables to filter
-   * @param {Object} filters - {query, includeDiscontinued, subjectFilter, frequencyFilter, updatedFilter}
+   * @param {Object} filters - {query, includeDiscontinued, subjectFilter, frequencyFilter, updatedFilter, enhanced}
    * @param {string} [excludeFilter] - 'subject', 'frequency', or 'updated' to skip
-   * @returns {Array} Filtered tables
+   * @returns {Array} Filtered tables (sorted by relevance when enhanced mode is on)
    */
   filterTables(tables, filters, excludeFilter) {
+    // Enhanced mode: use SearchEnhanced for text matching + ranking
+    if (filters.enhanced && filters.query && excludeFilter !== 'query') {
+      if (!this._searchIndex) {
+        this._searchIndex = SearchEnhanced.buildIndex(tables);
+      }
+      // Apply non-query filters first
+      const preFiltered = this._filterNonQuery(tables, filters, excludeFilter);
+      // Build sub-index for pre-filtered set
+      const preFilteredSet = new Set(preFiltered.map(t => t.id));
+      const subIndex = this._searchIndex.filter(e => preFilteredSet.has(e.table.id));
+      return SearchEnhanced.filterAndRank(subIndex, filters);
+    }
+
+    // Standard mode
     const queryLower = (filters.query || '').toLowerCase();
+    return this._filterNonQuery(tables, filters, excludeFilter).filter(table => {
+      if (queryLower) {
+        const matchesQuery =
+          table.label.toLowerCase().includes(queryLower) ||
+          table.id.includes(queryLower) ||
+          (table.variableNames && table.variableNames.some(v => v.toLowerCase().includes(queryLower)));
+        if (!matchesQuery) return false;
+      }
+      return true;
+    });
+  },
+
+  /**
+   * Apply only the non-query filters (discontinued, subject, frequency, updated).
+   * Shared by both standard and enhanced filterTables paths.
+   *
+   * @param {Array} tables
+   * @param {Object} filters
+   * @param {string} [excludeFilter]
+   * @returns {Array}
+   */
+  _filterNonQuery(tables, filters, excludeFilter) {
     const includeDiscontinued = filters.includeDiscontinued;
     const subjectFilter = filters.subjectFilter || '';
     const frequencyFilter = filters.frequencyFilter || '';
@@ -150,15 +192,6 @@ const BrowserState = {
 
     return tables.filter(table => {
       if (table.discontinued === true && !includeDiscontinued) return false;
-
-      if (queryLower) {
-        const matchesQuery =
-          table.label.toLowerCase().includes(queryLower) ||
-          table.id.includes(queryLower) ||
-          (table.variableNames && table.variableNames.some(v => v.toLowerCase().includes(queryLower)));
-        if (!matchesQuery) return false;
-      }
-
       if (excludeFilter !== 'subject' && subjectFilter && table.subjectCode !== subjectFilter) return false;
 
       if (excludeFilter !== 'frequency' && frequencyFilter) {

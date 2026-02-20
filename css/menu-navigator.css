@@ -513,6 +513,21 @@
   text-decoration: underline;
 }
 
+/* Beta Badge (used for "Forbedret søk" label) */
+.beta-badge {
+  display: inline-block;
+  margin-left: 0.3rem;
+  padding: 0.15rem 0.4rem;
+  background: #6c8ebf;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 3px;
+  text-transform: uppercase;
+  vertical-align: middle;
+  letter-spacing: 0.03em;
+}
+
 /* Discontinued Badge */
 .discontinued-badge {
   display: inline-block;

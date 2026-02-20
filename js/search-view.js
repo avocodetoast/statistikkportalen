@@ -4,7 +4,13 @@
  * Shows: search input + compact menu bar + filter row + results grouped by subject
  * Filters are synced to URL via replaceState.
  * Debounced auto-search when already on the search page.
+ *
+ * Enhanced mode additionally queries the SSB API server-side to find tables
+ * matched via variable VALUES (not available in the local table list).
  */
+
+// Token to cancel in-flight enhanced searches when a new one starts
+let _searchToken = 0;
 
 async function renderSearchView(container) {
   // Ensure data is loaded
@@ -50,9 +56,14 @@ async function renderSearchView(container) {
           <span>Inkluder avsluttede tabeller</span>
         </label>
 
+        <label class="filter-checkbox">
+          <input type="checkbox" id="enhanced-search" ${filters.enhanced ? 'checked' : ''} />
+          <span>Forbedret søk <span class="beta-badge">beta</span></span>
+        </label>
+
         <select id="subject-filter" class="filter-select">
           <option value="">Alle emner${totalCount > 0 ? ` (${totalCount})` : ''}</option>
-          ${Object.entries(mh.subjectGroups).map(([id, group]) => `
+          ${Object.values(mh.subjectGroups).map(group => `
             <optgroup label="${escapeHtml(group.label)}">
               ${group.subjects.map(subjectCode => {
                 const subjectName = mh.subjectNames[subjectCode];
@@ -109,7 +120,7 @@ async function renderSearchView(container) {
   }
 
   // Filter change listeners
-  const filterIds = ['include-discontinued', 'subject-filter', 'frequency-filter', 'updated-filter'];
+  const filterIds = ['include-discontinued', 'enhanced-search', 'subject-filter', 'frequency-filter', 'updated-filter'];
   filterIds.forEach(filterId => {
     const element = document.getElementById(filterId);
     if (element) {
@@ -143,9 +154,11 @@ function _searchShowWelcome() {
 }
 
 /**
- * Perform search with all active filters
+ * Perform search with all active filters.
+ * In enhanced mode, first renders client-side results immediately, then
+ * augments with server-side results (which include variable value matching).
  */
-function _searchPerformSearch() {
+async function _searchPerformSearch() {
   const contentArea = document.getElementById('search-content-area');
   if (!contentArea) return;
 
@@ -154,6 +167,7 @@ function _searchPerformSearch() {
   // Read current filter values from DOM
   const query = (document.getElementById('page-search')?.value || '').trim();
   const includeDiscontinued = document.getElementById('include-discontinued')?.checked || false;
+  const enhanced = document.getElementById('enhanced-search')?.checked || false;
   const subjectFilter = document.getElementById('subject-filter')?.value || '';
   const frequencyFilter = document.getElementById('frequency-filter')?.value || '';
   const updatedFilter = document.getElementById('updated-filter')?.value || '';
@@ -161,6 +175,7 @@ function _searchPerformSearch() {
   // Update BrowserState filters
   BrowserState.searchFilters.query = query;
   BrowserState.searchFilters.includeDiscontinued = includeDiscontinued;
+  BrowserState.searchFilters.enhanced = enhanced;
   BrowserState.searchFilters.subjectFilter = subjectFilter;
   BrowserState.searchFilters.frequencyFilter = frequencyFilter;
   BrowserState.searchFilters.updatedFilter = updatedFilter;
@@ -179,13 +194,53 @@ function _searchPerformSearch() {
   // Update dropdown counts dynamically
   _searchUpdateDropdownCounts();
 
-  // Filter tables using shared utility
-  const results = BrowserState.filterTables(mh.allTables, BrowserState.searchFilters);
+  // Client-side results (instant — uses local table list)
+  const clientResults = BrowserState.filterTables(mh.allTables, BrowserState.searchFilters);
+  _renderSearchResults(contentArea, clientResults, mh, enhanced);
 
-  // Group by subject
-  const grouped = _searchGroupBySubject(results, mh);
+  // Enhanced mode: augment with SSB server-side search (finds tables via variable VALUES).
+  // Runs one API call per synonym variant so abbreviations like "bnp" also find
+  // tables matched via the full term "bruttonasjonalprodukt".
+  if (enhanced && query) {
+    const myToken = ++_searchToken;
 
-  // Render results
+    try {
+      const serverQuery = SearchEnhanced.getServerQuery(query);
+      const response = await api.getTables({ query: serverQuery, lang: 'no', pageSize: 10000, includeDiscontinued: true });
+
+      // Abort if a newer search has started
+      if (myToken !== _searchToken) return;
+
+      // Find tables the server found that weren't in our client results
+      const allTablesMap = new Map(mh.allTables.map(t => [t.id, t]));
+      const clientIds = new Set(clientResults.map(t => t.id));
+      const allServerTables = response.tables || [];
+
+      const serverExtras = allServerTables
+        .filter(t => !clientIds.has(t.id))
+        .map(t => allTablesMap.get(t.id) || t); // prefer our enriched local version
+
+      // Apply non-query filters (subject, frequency, updated, discontinued)
+      const filteredExtras = BrowserState._filterNonQuery(serverExtras, BrowserState.searchFilters);
+
+      if (filteredExtras.length > 0) {
+        const combined = [...clientResults, ...filteredExtras];
+        _renderSearchResults(contentArea, combined, mh, enhanced);
+      }
+    } catch (e) {
+      logger.warn('[SearchView] Server-side augmentation failed:', e);
+    }
+  }
+}
+
+/**
+ * Render search results into the content area.
+ * Extracted so both the immediate client-side render and the
+ * server-augmented re-render can share the same logic.
+ */
+function _renderSearchResults(contentArea, results, mh, preserveOrder) {
+  const grouped = _searchGroupBySubject(results, mh, preserveOrder);
+
   contentArea.innerHTML = `
     <div class="search-results">
       <h2>Søkeresultater</h2>
@@ -208,14 +263,14 @@ function _searchPerformSearch() {
     </div>
   `;
 
-  // Attach table link listeners
   BrowserState.attachTableLinkListeners(contentArea);
 }
 
 /**
  * Group tables by subject code
+ * @param {boolean} preserveOrder - When true, skip sortCode re-sort to preserve relevance ranking
  */
-function _searchGroupBySubject(tables, mh) {
+function _searchGroupBySubject(tables, mh, preserveOrder) {
   const groups = {};
 
   tables.forEach(table => {
@@ -233,7 +288,9 @@ function _searchGroupBySubject(tables, mh) {
   return Object.values(groups)
     .sort((a, b) => a.label.localeCompare(b.label))
     .map(group => {
-      group.tables.sort((a, b) => a.sortCode.localeCompare(b.sortCode));
+      if (!preserveOrder) {
+        group.tables.sort((a, b) => a.sortCode.localeCompare(b.sortCode));
+      }
       return group;
     });
 }
