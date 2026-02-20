@@ -310,6 +310,10 @@
   color: #999;
 }
 
+.breadcrumb-current {
+  color: #333;
+}
+
 /* Subject Cards (Level 1) */
 .subject-cards {
   display: grid;

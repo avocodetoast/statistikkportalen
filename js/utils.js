@@ -304,3 +304,62 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
+
+// ========== Navigation Breadcrumb ==========
+
+/**
+ * Build breadcrumb HTML for variable-select and table-display views.
+ * Shows the topic path that led to this table, plus the table itself as
+ * the final (non-linked) crumb.
+ *
+ * - From topic navigation: uses the path recorded in AppState.navigationRef
+ * - All other cases (search, direct URL, home): uses the table's first known
+ *   path from BrowserState (requires BrowserState to be loaded first)
+ *
+ * Returns an empty string when no path context is available.
+ *
+ * @param {string} tableId    - Table ID (e.g. '09772')
+ * @param {string} tableLabel - Human-readable table title (already extracted)
+ * @returns {string} HTML string
+ */
+function buildNavigationBreadcrumb(tableId, tableLabel) {
+  const mh = BrowserState && BrowserState.menuHierarchy;
+  const ref = AppState.navigationRef;
+
+  const tableCrumb = '<span class="breadcrumb-current">' +
+    escapeHtml(tableId) + (tableLabel ? ' ' + escapeHtml(tableLabel) : '') +
+    '</span>';
+
+  function renderPathLinks(crumbs) {
+    return crumbs.map((crumb, i) =>
+      (i > 0 ? '<span class="breadcrumb-sep">/</span>' : '') +
+      '<a href="#topic/' + crumb.path.join('/') + '" class="breadcrumb-link">' +
+      escapeHtml(crumb.label) + '</a>'
+    ).join('');
+  }
+
+  function wrapBreadcrumbs(innerHtml) {
+    return '<div class="breadcrumbs">' + innerHtml +
+      '<span class="breadcrumb-sep">/</span>' + tableCrumb + '</div>';
+  }
+
+  if (!mh) return '';
+
+  // --- From topic navigation: use the exact path the user browsed ---
+  if (ref && ref.startsWith('topic/')) {
+    const pathStr = ref.replace('topic/', '').split('?')[0];
+    const pathIds = pathStr.split('/').filter(p => p);
+    if (pathIds.length > 0) {
+      const crumbs = mh.getBreadcrumbs(pathIds);
+      if (crumbs.length > 0) return wrapBreadcrumbs(renderPathLinks(crumbs));
+    }
+  }
+
+  // --- All other cases: use table's first known path from BrowserState ---
+  const tableObj = BrowserState.allTables.find(t => t.id === tableId);
+  if (!tableObj || !tableObj.paths || tableObj.paths.length === 0) return '';
+  const firstPathIds = tableObj.paths[0].map(p => p.id);
+  const crumbs = mh.getBreadcrumbs(firstPathIds);
+  if (crumbs.length === 0) return '';
+  return wrapBreadcrumbs(renderPathLinks(crumbs));
+}

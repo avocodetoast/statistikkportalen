@@ -59,6 +59,7 @@ async function renderVariableSelection(container) {
   const table = AppState.selectedTable;
   updatePageTitle([extractTableTitle(table.label), 'Velg variabler']);
 
+  await BrowserState.init();
 
   container.innerHTML = `
     <div class="view-container">
@@ -66,6 +67,7 @@ async function renderVariableSelection(container) {
         <button id="back-to-browser" class="btn-secondary">
           &larr; Tilbake til tabelloversikt
         </button>
+        ${buildNavigationBreadcrumb(table.id, extractTableTitle(table.label))}
         <h2>${escapeHtml(extractTableTitle(table.label))}</h2>
         <p class="table-id-display">Tabell ${escapeHtml(table.id)}</p>
         <p class="view-description">
@@ -253,6 +255,8 @@ async function loadTableMetadata(tableId) {
     AppState.selectedTable.label = data.label;
     const h2 = document.querySelector('.view-header h2');
     if (h2) h2.textContent = extractTableTitle(data.label);
+    const bc = document.querySelector('.breadcrumb-current');
+    if (bc) bc.textContent = AppState.selectedTable.id + ' ' + extractTableTitle(data.label);
   }
 
   // Reset codelist state for new table
