@@ -34,6 +34,13 @@ Applikasjonen kan også med mindre justeringer tilpasses andre systemer som bruk
    - Intelligent caching av API-kall i localStorage
    - Automatisk opprydding av utdaterte data
 
+7. **Lagrede spørringer**
+   - Lagre spørringer som kan gjenfinnes med lenke
+   - Åpne en SSB-spørring ved å lime lenken inn i søkefeltet
+
+8. **Smart søk (beta)**
+   - Finn flere tabeller enn ved den vanlige søkemodusen
+
 ## Kom i gang
 1. Åpne `index.html` i en moderne nettleser
 2. Vent til tabellisten lastes (caches automatisk)
