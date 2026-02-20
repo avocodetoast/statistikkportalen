@@ -21,6 +21,7 @@ async function renderTableDisplay(container) {
   }
 
   const table = AppState.selectedTable;
+  updatePageTitle([extractTableTitle(table.label)]);
 
   container.innerHTML = `
     <div class="view-container">

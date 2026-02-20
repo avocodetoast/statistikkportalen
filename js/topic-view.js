@@ -46,6 +46,15 @@ async function renderTopicView(container) {
   const firstId = path[0];
   const isGroupId = Object.keys(mh.subjectGroups).includes(firstId);
 
+  // Update page title with deepest named topic
+  if (isGroupId && path.length === 1) {
+    updatePageTitle([mh.subjectGroups[firstId].label]);
+  } else {
+    const breadcrumbs = mh.getBreadcrumbs(path);
+    const lastCrumb = breadcrumbs[breadcrumbs.length - 1];
+    updatePageTitle(lastCrumb ? [lastCrumb.label] : ['Emner']);
+  }
+
   if (isGroupId && path.length === 1) {
     // Level 1: Show subjects in a group (cards)
     _topicRenderGroupSubjects(container, mh, firstId);

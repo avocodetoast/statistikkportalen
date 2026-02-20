@@ -57,6 +57,8 @@ async function renderVariableSelection(container) {
   }
 
   const table = AppState.selectedTable;
+  updatePageTitle([extractTableTitle(table.label), 'Velg variabler']);
+
 
   container.innerHTML = `
     <div class="view-container">

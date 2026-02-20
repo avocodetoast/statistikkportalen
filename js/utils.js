@@ -171,6 +171,7 @@ function renderCurrentView() {
 
   switch(AppState.currentView) {
     case 'home':
+      updatePageTitle([]);
       renderFrontPage(content);
       break;
     case 'search':
@@ -279,6 +280,14 @@ function extractTableTitle(label) {
   if (!label) return 'Uten navn';
   const match = label.match(/^\d+:\s*(.+)$/);
   return match ? match[1] : label;
+}
+
+/**
+ * Update the browser tab title.
+ * @param {string[]} parts - Title parts prepended before "Statistikkportalen"
+ */
+function updatePageTitle(parts) {
+  document.title = [...parts, 'Statistikkportalen'].join(' – ');
 }
 
 /**

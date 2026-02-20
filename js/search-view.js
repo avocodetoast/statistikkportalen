@@ -30,6 +30,8 @@ async function renderSearchView(container) {
   const mh = BrowserState.menuHierarchy;
   const filters = BrowserState.searchFilters;
 
+  updatePageTitle(filters.query ? [filters.query] : ['Søk']);
+
   // Calculate initial hit counts
   const hitCounts = _searchCalcSubjectHitCounts(mh, filters);
   const totalCount = Object.values(hitCounts).reduce((sum, c) => sum + c, 0);
