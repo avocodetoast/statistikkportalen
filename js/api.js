@@ -366,6 +366,70 @@ class SSBApi {
   }
 
   /**
+   * Save current query to SSB's saved queries service.
+   *
+   * @param {string} tableId - Table ID
+   * @param {object} valueCodes - Dimension filters (same format as getTableData)
+   * @param {object} options - { stub, heading, codelistIds, lang }
+   * @returns {Promise<object>} - Response with id and savedQuery fields
+   */
+  async saveSavedQuery(tableId, valueCodes, options = {}) {
+    const body = {
+      id: '',
+      tableId: tableId,
+      outputFormat: 'json-stat2',
+      outputFormatParams: [],
+      selection: this.buildPostBody(valueCodes, {
+        stub: options.stub,
+        heading: options.heading,
+        codelistIds: options.codelistIds || {}
+      }),
+      language: options.lang || 'no'
+    };
+
+    const url = this.baseUrl + '/savedqueries';
+    logger.log('[API] Saving query for table', tableId, ':', url);
+
+    const response = await this._throttledFetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+      throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+    }
+
+    const data = await response.json();
+    logger.log('[API] Saved query created, id:', data.id);
+    return data;
+  }
+
+  /**
+   * Fetch a saved query by ID.
+   *
+   * @param {string} id - Saved query ID (e.g. "30116027")
+   * @returns {Promise<object>} - Saved query object
+   */
+  async getSavedQuery(id) {
+    const url = this.baseUrl + '/savedqueries/' + encodeURIComponent(id);
+    logger.log('[API] Fetching saved query', id, ':', url);
+
+    const response = await this._throttledFetch(url, {
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (!response.ok) {
+      throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+    }
+
+    return response.json();
+  }
+
+  /**
    * Clear all cached data
    */
   clearCache() {

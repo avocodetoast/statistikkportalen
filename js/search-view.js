@@ -107,7 +107,13 @@ async function renderSearchView(container) {
     searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.stopPropagation();
-        _searchPerformSearch();
+        const sqId = detectSavedQueryId(searchInput.value);
+        if (sqId) {
+          URLRouter.navigateTo('sq/' + sqId, {});
+          URLRouter.handleRoute();
+        } else {
+          _searchPerformSearch();
+        }
       }
     });
 

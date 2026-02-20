@@ -363,3 +363,29 @@ function buildNavigationBreadcrumb(tableId, tableLabel) {
   if (crumbs.length === 0) return '';
   return wrapBreadcrumbs(renderPathLinks(crumbs));
 }
+
+/**
+ * Detect if text is a saved-query URL and return the query ID.
+ * Handles:
+ *   https://www.ssb.no/statbank/sq/{id}          (SSB direct saved-query link)
+ *   https://www.ssb.no/statbank/table/{id}?sq=N  (SSB table link with sq param)
+ *   {any URL}?sq={id}                             (generic sq query param)
+ *   {any URL}#sq/{id}                             (statistikkportalen deep-link)
+ *
+ * @param {string} text
+ * @returns {string|null} - Numeric query ID, or null if not recognised
+ */
+function detectSavedQueryId(text) {
+  if (!text) return null;
+  const t = text.trim();
+  // /statbank/sq/{id} path
+  const pathMatch = t.match(/\/statbank\/sq\/(\d+)/);
+  if (pathMatch) return pathMatch[1];
+  // ?sq={id} or &sq={id} query parameter
+  const paramMatch = t.match(/[?&]sq=(\d+)/);
+  if (paramMatch) return paramMatch[1];
+  // #sq/{id} hash (statistikkportalen deep-link)
+  const hashMatch = t.match(/#sq\/(\d+)/);
+  if (hashMatch) return hashMatch[1];
+  return null;
+}

@@ -143,6 +143,8 @@ const URLRouter = {
       await this._handleVariablesRoute(route, params);
     } else if (route.startsWith('table/')) {
       await this._handleTableRoute(route, params);
+    } else if (route.startsWith('sq/')) {
+      await this._handleSavedQueryRoute(route.replace('sq/', ''));
     } else if (route === 'browser' || route.startsWith('browser/') || route.startsWith('browser?')) {
       // Legacy redirect: #browser* → new routes
       this._handleLegacyBrowserRoute(route, params);
@@ -186,6 +188,57 @@ const URLRouter = {
     AppState.topicPath = path;
     AppState.currentView = 'topic';
     renderCurrentView();
+  },
+
+  /**
+   * Handle saved query route (#sq/{id})
+   * Fetches the saved query from SSB, restores AppState, and renders the table.
+   */
+  async _handleSavedQueryRoute(id) {
+    logger.log('[Router] Saved query route - id:', id);
+
+    const content = document.getElementById('content');
+    if (content) {
+      content.innerHTML = '<div class="view-container"><p class="loading-message">Laster lagret spørring...</p></div>';
+    }
+
+    try {
+      const result = await api.getSavedQuery(id);
+      const sq = result.savedQuery || result;
+
+      // Convert saved query selection array → variableSelection object
+      const valueCodes = {};
+      const activeCodelistIds = {};
+      (sq.selection?.selection || []).forEach(item => {
+        valueCodes[item.variableCode] = item.valueCodes;
+        if (item.codelist) activeCodelistIds[item.variableCode] = item.codelist;
+      });
+
+      AppState.selectedTable = {
+        id: sq.tableId,
+        label: sq.tableId + ': (laster...)'
+      };
+      AppState.variableSelection = valueCodes;
+      AppState.activeCodelistIds = activeCodelistIds;
+      AppState.tableLayout = {
+        rows: sq.selection?.placement?.stub || [],
+        columns: sq.selection?.placement?.heading || []
+      };
+      AppState.navigationRef = null;
+
+      AppState.currentView = 'table';
+      renderCurrentView();
+    } catch (e) {
+      logger.error('[Router] Failed to load saved query:', e);
+      if (content) {
+        content.innerHTML = `
+          <div class="view-container">
+            <p class="error-message">Kunne ikke laste spørringen (${escapeHtml(String(id))}): ${escapeHtml(e.message)}</p>
+            <p><a href="#home">Gå til forsiden</a></p>
+          </div>
+        `;
+      }
+    }
   },
 
   /**
@@ -365,6 +418,16 @@ const SSBURLMapper = {
   fromSSB(ssbUrl) {
     try {
       const url = new URL(ssbUrl);
+
+      // Saved query: /statbank/sq/{id} or ?sq={id}
+      const sqPathMatch = url.pathname.match(/\/statbank\/sq\/(\d+)/);
+      if (sqPathMatch) {
+        return URLRouter.buildHash('sq/' + sqPathMatch[1], {});
+      }
+      const sqParam = url.searchParams.get('sq');
+      if (sqParam && /^\d+$/.test(sqParam)) {
+        return URLRouter.buildHash('sq/' + sqParam, {});
+      }
 
       // Table view: /statbank/table/{tableId}
       const tableMatch = url.pathname.match(/\/statbank\/table\/(\d+)/);

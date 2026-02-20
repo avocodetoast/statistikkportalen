@@ -1163,6 +1163,25 @@ button {
   margin-bottom: 0;
 }
 
+/* Save Query Dialog */
+.save-query-link-row {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.save-query-link-input {
+  flex: 1;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  background: var(--color-surface-alt, #f5f5f5);
+  color: var(--color-text);
+  min-width: 0;
+}
+
 /* Responsive Dialog */
 @media (max-width: 768px) {
   .dialog-container {
