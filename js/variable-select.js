@@ -61,6 +61,13 @@ async function renderVariableSelection(container) {
 
   await BrowserState.init();
 
+  // If we arrived via direct link/refresh, the label was a placeholder — update it now
+  const realTable = BrowserState.allTables.find(t => t.id === table.id);
+  if (realTable) {
+    AppState.selectedTable.label = realTable.label;
+    updatePageTitle([extractTableTitle(table.label), 'Velg variabler']);
+  }
+
   container.innerHTML = `
     <div class="view-container">
       <div class="view-header">
