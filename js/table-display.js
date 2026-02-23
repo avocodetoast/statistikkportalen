@@ -134,11 +134,19 @@ async function loadTableData() {
   logger.log('[TableDisplay] Values:', data.value.length);
 
   // Determine layout: use pre-set layout (e.g. from saved query or URL param) if it
-  // has meaningful content, otherwise calculate a sensible default from the data.
+  // has meaningful content AND covers exactly the same dimensions as the current data.
+  // If the dimension set has changed (e.g. user added/removed an optional variable),
+  // recalculate from scratch so no dimension is silently missing or stale.
   const existingLayout = AppState.tableLayout;
-  const hasPresetLayout = existingLayout &&
-    (existingLayout.rows.length > 0 || existingLayout.columns.length > 0);
-  if (!hasPresetLayout) {
+  const allDataDims = [...data.id].sort();
+  const layoutDims = existingLayout
+    ? [...(existingLayout.rows || []), ...(existingLayout.columns || [])].sort()
+    : [];
+  const hasValidPresetLayout = existingLayout &&
+    (existingLayout.rows.length > 0 || existingLayout.columns.length > 0) &&
+    JSON.stringify(allDataDims) === JSON.stringify(layoutDims);
+
+  if (!hasValidPresetLayout) {
     AppState.tableLayout = determineDefaultLayout(data);
   }
 
@@ -391,6 +399,10 @@ function buildDimensionCombinations(dimCodes, data) {
 
   dimCodes.forEach(dimCode => {
     const dimension = data.dimension[dimCode];
+    if (!dimension) {
+      logger.warn('[TableDisplay] Skipping unknown dimension in layout:', dimCode);
+      return;
+    }
     const codes = Object.keys(dimension.category.index);
 
     const newCombinations = [];
