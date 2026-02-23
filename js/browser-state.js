@@ -335,6 +335,7 @@ const BrowserState = {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const row = e.target.closest('.table-row');
+        if (!row) return;
         const tableId = row.dataset.tableId;
         this.selectTable(tableId);
       });

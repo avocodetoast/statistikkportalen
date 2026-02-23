@@ -48,7 +48,7 @@ function updateValueCounter(card) {
   if (mode === 'star') {
     selectedCount.textContent = 'alle';
   } else if (mode === 'top') {
-    const topN = card.querySelector('.top-n-input')?.value || '12';
+    const topN = card.querySelector('.top-n-input')?.value || '10';
     selectedCount.textContent = 'siste ' + topN;
   } else {
     const count = container.querySelectorAll('.value-list-item.selected').length;
@@ -209,7 +209,7 @@ function updateSelectionCellCount() {
       dimSelectedCount = trueCount;
     } else if (mode === 'top') {
       // Last N values
-      const topN = parseInt(card.querySelector('.top-n-input')?.value || '12', 10);
+      const topN = parseInt(card.querySelector('.top-n-input')?.value || '10', 10);
       dimSelectedCount = Math.min(topN, trueCount);
     } else {
       // Specific mode - count selected items

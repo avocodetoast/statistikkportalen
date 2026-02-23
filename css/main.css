@@ -828,20 +828,7 @@ button {
 
 /* ========== Dialog/Modal ========== */
 
-.dialog-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  padding: var(--spacing-xl);
-}
-
+/* Wide variant used by the rotation dialog */
 .dialog-box {
   background: var(--color-surface);
   border-radius: var(--border-radius-lg);
@@ -849,57 +836,14 @@ button {
   max-width: 800px;
   width: 100%;
   max-height: 90vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-}
-
-.dialog-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-lg);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.dialog-header h3 {
-  margin: 0;
-}
-
-.dialog-close {
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: var(--color-text-light);
-  cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dialog-close:hover {
-  color: var(--color-text);
-}
-
-.dialog-content {
-  padding: var(--spacing-lg);
-  overflow-y: auto;
-  flex: 1;
 }
 
 .dialog-description {
   color: var(--color-text-light);
   margin-bottom: var(--spacing-lg);
-}
-
-.dialog-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--spacing-md);
-  padding: var(--spacing-lg);
-  border-top: 1px solid var(--color-border);
 }
 
 /* ========== Rotation Dialog ========== */
@@ -1016,7 +960,7 @@ button {
   }
 }
 
-/* ========== Dialog / Modal Overlay ========== */
+/* ========== Dialog / Modal (shared chrome + standard container) ========== */
 
 .dialog-overlay {
   position: fixed;

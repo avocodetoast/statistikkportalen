@@ -77,19 +77,19 @@
   <script>
     // Initialize app when DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('[App] Initializing Statistikkportalen');
-      console.log('[App] API Base URL:', api.baseUrl);
+      logger.log('[App] Initializing Statistikkportalen');
+      logger.log('[App] API Base URL:', api.baseUrl);
 
       // Cleanup expired cache entries on startup
       const removed = api.cleanupCache();
       if (removed > 0) {
-        console.log('[App] Cleaned up ' + removed + ' expired cache entries');
+        logger.log('[App] Cleaned up ' + removed + ' expired cache entries');
       }
 
       // Log cache stats
       const stats = api.getCacheStats();
       if (stats) {
-        console.log('[App] Cache stats:', stats);
+        logger.log('[App] Cache stats:', stats);
       }
 
       // Handle browser back/forward navigation
@@ -106,7 +106,7 @@
       document.getElementById('clear-cache-link')?.addEventListener('click', async (e) => {
         e.preventDefault();
         await api.clearCache();
-        console.log('[App] Cache cleared by user');
+        logger.log('[App] Cache cleared by user');
         window.location.reload();
       });
 
@@ -120,13 +120,15 @@
       }
     });
 
-    // Expose useful functions to window for debugging
-    window.AppState = AppState;
-    window.BrowserState = BrowserState;
-    window.api = api;
+    // Expose debug helpers only when debug mode is on
+    if (AppConfig.debug) {
+      window.AppState = AppState;
+      window.BrowserState = BrowserState;
+      window.api = api;
+    }
     window.clearCache = () => {
       api.clearCache();
-      console.log('[App] API cache cleared');
+      logger.log('[App] API cache cleared');
     };
   </script>
 </body>

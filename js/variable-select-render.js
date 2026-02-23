@@ -97,7 +97,7 @@ async function displayVariables() {
             ${isTimeDim ? `
               <span class="top-n-group">
                 <button class="btn-secondary btn-sm select-top-btn">Siste</button>
-                <input type="number" class="top-n-input" value="12" min="1" max="${valueCount}">
+                <input type="number" class="top-n-input" value="10" min="1" max="${valueCount}">
                 <span class="top-n-label">verdier</span>
               </span>
             ` : ''}
@@ -278,7 +278,7 @@ async function restoreSelections() {
     } else if (typeof dimSelection === 'string' && dimSelection.startsWith('top(')) {
       // Top mode: set mode and restore the N value
       container.dataset.mode = 'top';
-      const n = dimSelection.match(/\d+/)?.[0] || '12';
+      const n = dimSelection.match(/\d+/)?.[0] || '10';
       const topInput = card.querySelector('.top-n-input');
       if (topInput) topInput.value = n;
       updateModeVisuals(card);
