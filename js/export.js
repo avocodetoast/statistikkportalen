@@ -285,7 +285,7 @@ async function quickExportXlsx() {
       format: 'xlsx',
       stub: layout.rows,
       heading: layout.columns,
-      formatParams: [],
+      formatParams: ['IncludeTitle'],
       lang: 'no',
       codelistIds: AppState.activeCodelistIds
     });
