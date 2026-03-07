@@ -475,6 +475,22 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  table-layout: fixed;
+}
+
+.table-list th:nth-child(1),
+.table-list td:nth-child(1) {
+  width: 90px;
+}
+
+.table-list th:nth-child(3),
+.table-list td:nth-child(3) {
+  width: 168px;
+}
+
+.table-list th:nth-child(4),
+.table-list td:nth-child(4) {
+  width: 130px;
 }
 
 .table-list thead {
@@ -491,8 +507,15 @@
 }
 
 .table-list td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #eee;
+  padding: 0.4rem 1rem;
+  border-bottom: 1px solid #f3f3f3;
+}
+
+.table-list td:nth-child(3),
+.table-list td:nth-child(4),
+.table-list th:nth-child(3),
+.table-list th:nth-child(4) {
+  white-space: nowrap;
 }
 
 .table-row:hover {
@@ -531,15 +554,16 @@
 /* Discontinued Badge */
 .discontinued-badge {
   display: inline-block;
-  margin-left: 0.5rem;
-  padding: 0.25rem 0.5rem;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.35rem;
   background: #ff9800;
   color: #fff;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 600;
   border-radius: 3px;
   text-transform: uppercase;
   vertical-align: middle;
+  letter-spacing: 0.03em;
 }
 
 /* Responsive */
@@ -699,12 +723,10 @@
 
 /* Nested Hierarchy Groups (Level 4+ deep navigation) */
 .hierarchy-group {
-  margin: 0.5rem 0 0.5rem 1rem;
-  border-left: 2px solid #ddd;
-}
-
-.hierarchy-group[open] {
-  border-left-color: #1a9d49;
+  margin: 0.5rem 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .hierarchy-group-header {
@@ -714,6 +736,8 @@
   font-size: 15px;
   color: #333;
   list-style: none;
+  background: #f5f5f5;
+  user-select: none;
   transition: color 0.2s;
 }
 
@@ -722,15 +746,15 @@
 }
 
 .hierarchy-group-header::before {
-  content: '\25B6';
+  content: '\25BC';
   display: inline-block;
   margin-right: 0.5rem;
   font-size: 0.7em;
   transition: transform 0.2s;
 }
 
-.hierarchy-group[open] > .hierarchy-group-header::before {
-  transform: rotate(90deg);
+.hierarchy-group:not([open]) > .hierarchy-group-header::before {
+  transform: rotate(-90deg);
 }
 
 .hierarchy-group-header:hover {
@@ -741,20 +765,17 @@
   font-weight: 400;
   font-size: 13px;
   color: #999;
-  margin-left: 0.5rem;
+  margin-left: 0.25rem;
 }
 
 .hierarchy-group-content {
-  padding: 0.25rem 0;
+  padding: 0.25rem 0.5rem;
 }
 
-/* Deeper levels get lighter border */
+/* Nested groups are inset with a lighter border */
 .hierarchy-group .hierarchy-group {
-  border-left-color: #eee;
-}
-
-.hierarchy-group .hierarchy-group[open] {
-  border-left-color: #a8d5b8;
+  margin: 0.25rem 0.5rem;
+  border-color: #e8e8e8;
 }
 
 /* Search Results - Grouped by Subject */
