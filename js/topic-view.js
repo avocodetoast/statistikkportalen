@@ -252,6 +252,7 @@ function _topicRenderTables(container, mh, path) {
           <option value="7" ${filters.updatedFilter === '7' ? 'selected' : ''}>Oppdatert siste uke (${updatedCounts['7'] || 0})</option>
           <option value="30" ${filters.updatedFilter === '30' ? 'selected' : ''}>Oppdatert siste måned (${updatedCounts['30'] || 0})</option>
           <option value="365" ${filters.updatedFilter === '365' ? 'selected' : ''}>Oppdatert siste år (${updatedCounts['365'] || 0})</option>
+          <option value="730" ${filters.updatedFilter === '730' ? 'selected' : ''}>Oppdatert siste to år (${updatedCounts['730'] || 0})</option>
         </select>
       </div>
 
@@ -395,6 +396,7 @@ function _topicUpdateDropdownCounts(subtreeTables) {
       <option value="7">Oppdatert siste uke (${updatedCounts['7'] || 0})</option>
       <option value="30">Oppdatert siste måned (${updatedCounts['30'] || 0})</option>
       <option value="365">Oppdatert siste år (${updatedCounts['365'] || 0})</option>
+      <option value="730">Oppdatert siste to år (${updatedCounts['730'] || 0})</option>
     `;
     if (selected) updEl.value = selected;
   }

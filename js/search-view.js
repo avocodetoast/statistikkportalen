@@ -90,6 +90,7 @@ async function renderSearchView(container) {
           <option value="7" ${filters.updatedFilter === '7' ? 'selected' : ''}>Oppdatert siste uke${updatedCounts['7'] !== undefined ? ` (${updatedCounts['7']})` : ''}</option>
           <option value="30" ${filters.updatedFilter === '30' ? 'selected' : ''}>Oppdatert siste måned${updatedCounts['30'] !== undefined ? ` (${updatedCounts['30']})` : ''}</option>
           <option value="365" ${filters.updatedFilter === '365' ? 'selected' : ''}>Oppdatert siste år${updatedCounts['365'] !== undefined ? ` (${updatedCounts['365']})` : ''}</option>
+          <option value="730" ${filters.updatedFilter === '730' ? 'selected' : ''}>Oppdatert siste to år${updatedCounts['730'] !== undefined ? ` (${updatedCounts['730']})` : ''}</option>
         </select>
       </div>
 
@@ -207,7 +208,7 @@ async function _searchPerformSearch() {
   // Enhanced mode: augment with SSB server-side search (finds tables via variable VALUES).
   // Runs one API call per synonym variant so abbreviations like "bnp" also find
   // tables matched via the full term "bruttonasjonalprodukt".
-  if (enhanced && query) {
+  if (enhanced && query && query !== '*') {
     const myToken = ++_searchToken;
 
     try {
@@ -370,6 +371,7 @@ function _searchUpdateDropdownCounts() {
       <option value="7">Oppdatert siste uke (${updatedCounts['7'] || 0})</option>
       <option value="30">Oppdatert siste måned (${updatedCounts['30'] || 0})</option>
       <option value="365">Oppdatert siste år (${updatedCounts['365'] || 0})</option>
+      <option value="730">Oppdatert siste to år (${updatedCounts['730'] || 0})</option>
     `;
 
     if (selectedValue) {

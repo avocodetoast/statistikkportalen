@@ -1140,3 +1140,212 @@ button {
     padding: var(--spacing-md);
   }
 }
+
+/* ========== Front Page - Recently Updated Tables ========== */
+
+.recently-updated {
+  margin-top: var(--spacing-xl);
+}
+
+.recently-updated h2 {
+  font-size: 1.35rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.update-period {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 0 var(--spacing-lg);
+  margin-bottom: 0.75rem;
+  align-items: start;
+}
+
+.update-period + .update-period {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--spacing-md);
+}
+
+.update-period-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding-top: 0.5rem;
+}
+
+.update-period-name {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-left: 3px solid var(--color-primary);
+  padding-left: var(--spacing-sm);
+  line-height: 1.35;
+}
+
+.update-period-count {
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0;
+  background: #eee;
+  border-radius: 10px;
+  padding: 2px 8px;
+  color: var(--color-text-light);
+  align-self: flex-start;
+  margin-left: calc(3px + var(--spacing-sm));
+}
+
+.update-group-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.update-group {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.update-group:last-child {
+  border-bottom: none;
+}
+
+.update-group[open] {
+  background: #fafffe;
+}
+
+.update-group-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 0.4rem var(--spacing-md);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  font-size: var(--font-size-sm);
+}
+
+.update-group-summary::-webkit-details-marker {
+  display: none;
+}
+
+.update-group-summary::before {
+  content: '\25B6';
+  font-size: 0.5rem;
+  color: var(--color-text-light);
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.update-group[open] > .update-group-summary::before {
+  transform: rotate(90deg);
+}
+
+.update-group-summary:hover {
+  background: var(--color-background);
+}
+
+.update-group-link {
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.update-group-link:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.update-group-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.update-group-tables {
+  border-top: 1px solid var(--color-border);
+  overflow-x: auto;
+}
+
+.update-group-tables .table-list thead {
+  display: none;
+}
+
+.update-group-tables .table-list td:nth-child(4) {
+  display: none;
+}
+
+.update-group-tables .table-list {
+  font-size: 13px;
+}
+
+.update-group-tables .table-list td {
+  padding: 0.3rem 1rem;
+}
+
+.update-period-empty {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  font-style: italic;
+  padding: 0.4rem 0;
+  align-self: center;
+}
+
+.update-period-collapsible {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.update-period-collapsible-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  margin-bottom: var(--spacing-md);
+}
+
+.update-period-collapsible-summary::-webkit-details-marker {
+  display: none;
+}
+
+.update-period-collapsible-summary::before {
+  content: '\25B6';
+  font-size: 0.55rem;
+  color: var(--color-text-light);
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.update-period-collapsible[open] > .update-period-collapsible-summary::before {
+  transform: rotate(90deg);
+}
+
+.update-period-collapsible-summary .update-period-name {
+  border-left: 3px solid var(--color-border);
+}
+
+.update-period-collapsible-summary .update-period-count {
+  margin-left: 0;
+}
+
+@media (max-width: 700px) {
+  .update-period {
+    grid-template-columns: 1fr;
+  }
+  .update-period-label {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding-top: 0;
+    margin-bottom: var(--spacing-sm);
+  }
+  .update-period-count {
+    margin-left: 0;
+  }
+}
