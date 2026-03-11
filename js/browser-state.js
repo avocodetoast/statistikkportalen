@@ -141,6 +141,9 @@ const BrowserState = {
    * @returns {Array} Filtered tables (sorted by relevance when enhanced mode is on)
    */
   filterTables(tables, filters, excludeFilter) {
+    // Treat '*' (or blank) as match-all — no text filter applied
+    if (filters.query === '*') filters = { ...filters, query: '' };
+
     // Enhanced mode: use SearchEnhanced for text matching + ranking
     if (filters.enhanced && filters.query && excludeFilter !== 'query') {
       if (!this._searchIndex) {
@@ -233,11 +236,11 @@ const BrowserState = {
 
   /**
    * Count tables per update period. Excludes updated filter itself.
-   * @returns {Object} {'1': N, '7': N, '30': N, '365': N}
+   * @returns {Object} {'1': N, '7': N, '30': N, '365': N, '730': N}
    */
   calcUpdatedCounts(tables, filters) {
     const base = this.filterTables(tables, filters, 'updated');
-    const periods = [1, 7, 30, 365];
+    const periods = [1, 7, 30, 365, 730];
     const counts = {};
 
     for (const daysAgo of periods) {

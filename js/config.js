@@ -88,12 +88,14 @@ const AppConfig = {
   },
 
   /**
-   * SSB metadata update schedule (Norwegian time / Europe/Oslo)
+   * SSB update schedule (Norwegian time / Europe/Oslo)
    * Metadata updates at 05:00 and 11:30 daily.
+   * Data (statistics) updates at 08:00 daily.
    * Cache created before the most recent update is considered stale.
    */
   ssbUpdateTimes: [
     { hour: 5, minute: 0 },
+    { hour: 8, minute: 0 },
     { hour: 11, minute: 30 }
   ],
 

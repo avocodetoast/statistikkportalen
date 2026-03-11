@@ -14,12 +14,12 @@
 
 /* ========== Front Page ========== */
 .front-page {
-  padding: 1rem 0;
+  padding: 0;
 }
 
 .front-search-container {
   max-width: 700px;
-  margin: 1rem auto 2rem auto;
+  margin: 0 auto 2rem auto;
   padding: 0 1rem;
 }
 
