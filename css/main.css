@@ -899,17 +899,27 @@ button {
 }
 
 .dimension-chip.dragging {
-  opacity: 0.5;
+  opacity: 0;
+  border: 2px dashed var(--color-primary);
+  background: rgba(39, 66, 71, 0.04);
+  box-shadow: none;
 }
 
 .dimension-name {
   font-weight: 600;
   color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .dimension-count {
   font-size: var(--font-size-sm);
   color: var(--color-text-light);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: var(--spacing-sm);
 }
 
 .rotation-presets {

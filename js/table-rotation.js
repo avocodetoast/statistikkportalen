@@ -151,92 +151,102 @@ function setupDragAndDrop(overlay) {
 
   let draggedElement = null;
 
-  // Drag start
+  // Drag start — defer the visual class so the browser captures the chip's
+  // normal appearance as the drag ghost image before it turns into a slot.
   overlay.addEventListener('dragstart', (e) => {
-    if (e.target.classList.contains('dimension-chip')) {
-      draggedElement = e.target;
-      e.target.classList.add('dragging');
-    }
+    const chip = e.target.closest('.dimension-chip');
+    if (!chip) return;
+    draggedElement = chip;
+    requestAnimationFrame(() => {
+      if (draggedElement) draggedElement.classList.add('dragging');
+    });
   }, { signal });
 
-  // Drag end
-  overlay.addEventListener('dragend', (e) => {
-    if (e.target.classList.contains('dimension-chip')) {
-      e.target.classList.remove('dragging');
+  // Drag end — fires for both successful drops and cancelled drags.
+  // The chip is already in the right position (we moved it live during dragover),
+  // so we just restore its appearance and tidy up.
+  overlay.addEventListener('dragend', () => {
+    if (draggedElement) {
+      draggedElement.classList.remove('dragging');
       draggedElement = null;
     }
+    overlay.querySelectorAll('.dimension-dropzone').forEach(z => z.classList.remove('drag-over'));
+    updateEmptyZones(overlay);
   }, { signal });
 
-  // Drag over zones
-  overlay.querySelectorAll('.dimension-dropzone').forEach(zone => {
-    zone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      zone.classList.add('drag-over');
-    }, { signal });
-
-    zone.addEventListener('dragleave', () => {
-      zone.classList.remove('drag-over');
-    }, { signal });
-
-    zone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      zone.classList.remove('drag-over');
-
-      if (!draggedElement) return;
-
-      // Move element to new zone
-      const targetZone = zone.id === 'rows-zone' ? 'row' : 'col';
-      draggedElement.dataset.zone = targetZone;
-
-      // Remove empty zone message if present
-      const emptyMsg = zone.querySelector('.empty-zone');
-      if (emptyMsg) emptyMsg.remove();
-
-      // Append to zone
-      zone.appendChild(draggedElement);
-
-      // Update empty zone messages
-      updateEmptyZones(overlay);
-    }, { signal });
-  });
-
-  // Drag over individual chips (for reordering within zone)
+  // Single dragover on the overlay handles both zone-switching and reordering.
+  // Moving the chip live (rather than a separate placeholder) keeps zone sizes
+  // stable and avoids any double-element layout glitch.
   overlay.addEventListener('dragover', (e) => {
+    e.preventDefault();
     if (!draggedElement) return;
 
     const dropzone = e.target.closest('.dimension-dropzone');
     if (!dropzone) return;
 
-    const afterElement = getDragAfterElement(dropzone, e.clientY);
+    // Highlight only the current target zone
+    overlay.querySelectorAll('.dimension-dropzone').forEach(z => {
+      z.classList.toggle('drag-over', z === dropzone);
+    });
 
-    if (afterElement == null) {
-      dropzone.appendChild(draggedElement);
-    } else {
-      dropzone.insertBefore(draggedElement, afterElement);
+    // Clear any "empty zone" message so the chip has room to enter
+    const emptyMsg = dropzone.querySelector('.empty-zone');
+    if (emptyMsg) emptyMsg.remove();
+
+    // Calculate where the chip should land
+    const afterElement = getDragAfterElement(dropzone, e.clientY, draggedElement);
+
+    // Only touch the DOM when the position has actually changed — prevents
+    // oscillation when the chip is near the midpoint of a neighbour.
+    const alreadyInPlace =
+      draggedElement.parentNode === dropzone &&
+      draggedElement.nextElementSibling === afterElement;
+
+    if (!alreadyInPlace) {
+      if (afterElement == null) {
+        dropzone.appendChild(draggedElement);
+      } else {
+        dropzone.insertBefore(draggedElement, afterElement);
+      }
+      draggedElement.dataset.zone = dropzone.id === 'rows-zone' ? 'row' : 'col';
     }
   }, { signal });
+
+  overlay.querySelectorAll('.dimension-dropzone').forEach(zone => {
+    // dragleave fires when the cursor moves to a child element (e.g. a chip
+    // label span), which would flicker the highlight off. Guard with relatedTarget.
+    zone.addEventListener('dragleave', (e) => {
+      if (!zone.contains(e.relatedTarget)) {
+        zone.classList.remove('drag-over');
+      }
+    }, { signal });
+
+    // drop: the chip is already in its final position from dragover. Just
+    // prevent the browser default and let dragend do the cleanup.
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+    }, { signal });
+  });
 }
 
 /**
- * Get element to insert before when dragging
- * @param {HTMLElement} container - Container element
+ * Get element to insert before when dragging.
+ * @param {HTMLElement} container - Dropzone element
  * @param {number} y - Mouse Y position
- * @returns {HTMLElement|null} - Element to insert before
+ * @param {HTMLElement} excluded - The chip being dragged (excluded from targets)
+ * @returns {HTMLElement|null} - Element to insert before, or null to append
  */
-function getDragAfterElement(container, y) {
-  const draggableElements = [
-    ...container.querySelectorAll('.dimension-chip:not(.dragging)')
-  ];
+function getDragAfterElement(container, y, excluded) {
+  const candidates = [...container.querySelectorAll('.dimension-chip')]
+    .filter(el => el !== excluded);
 
-  return draggableElements.reduce((closest, child) => {
+  return candidates.reduce((closest, child) => {
     const box = child.getBoundingClientRect();
     const offset = y - box.top - box.height / 2;
-
     if (offset < 0 && offset > closest.offset) {
-      return { offset: offset, element: child };
-    } else {
-      return closest;
+      return { offset, element: child };
     }
+    return closest;
   }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
 
