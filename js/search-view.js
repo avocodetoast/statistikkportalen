@@ -208,7 +208,7 @@ async function _searchPerformSearch() {
   // - Enhanced: server indexes variable VALUES not available in local table list
   // - Fuzzy: appends ~1 to each token for Lucene fuzzy (edit-distance) matching
   // - Auto-fallback: if 0 client results, silently retries with fuzzy query
-  if (query) {
+  if (enhanced && query && query !== '*') {
     const myToken = ++_searchToken;
     const allTablesMap = new Map(mh.allTables.map(t => [t.id, t]));
     const clientIds = new Set(clientResults.map(t => t.id));
