@@ -153,9 +153,8 @@ function setupExportDialogEvents() {
   const closeBtn = document.getElementById('export-dialog-close');
   const cancelBtn = document.getElementById('export-cancel-btn');
 
-  const closeDialog = () => {
-    dialog.remove();
-  };
+  const closeDialog = () => { dialog.remove(); removeEscape(); };
+  const removeEscape = addEscapeHandler(closeDialog);
 
   if (closeBtn) closeBtn.addEventListener('click', closeDialog);
   if (cancelBtn) cancelBtn.addEventListener('click', closeDialog);

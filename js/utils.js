@@ -305,6 +305,24 @@ function escapeHtml(text) {
     .replace(/'/g, '&#39;');
 }
 
+/**
+ * Register an Escape key handler that closes a dialog.
+ * The handler removes itself when it fires. Call the returned function
+ * to remove it early (e.g. when the dialog is closed by a button click).
+ * @param {Function} closeFn - Function to call when Escape is pressed
+ * @returns {Function} - Cleanup function to remove the listener
+ */
+function addEscapeHandler(closeFn) {
+  const handler = (e) => {
+    if (e.key === 'Escape') {
+      document.removeEventListener('keydown', handler);
+      closeFn();
+    }
+  };
+  document.addEventListener('keydown', handler);
+  return () => document.removeEventListener('keydown', handler);
+}
+
 // ========== Navigation Breadcrumb ==========
 
 /**

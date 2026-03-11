@@ -618,7 +618,8 @@ async function showSaveQueryDialog() {
   document.body.insertAdjacentHTML('beforeend', dialogHtml);
 
   const dialog = document.getElementById('save-query-dialog');
-  const closeDialog = () => dialog.remove();
+  const closeDialog = () => { dialog.remove(); removeEscape(); };
+  const removeEscape = addEscapeHandler(closeDialog);
 
   document.getElementById('save-query-close')?.addEventListener('click', closeDialog);
 

@@ -108,17 +108,16 @@ function renderDimensionList(dimCodes, zone) {
  * @param {Array} dimensions - All dimension codes
  */
 function setupRotationEvents(overlay, dimensions) {
-  // Close button
-  overlay.querySelector('#close-rotation-dialog')?.addEventListener('click', () => {
-    overlay.remove();
-  });
+  const closeOverlay = () => { overlay.remove(); removeEscape(); };
+  const removeEscape = addEscapeHandler(closeOverlay);
 
-  overlay.querySelector('#cancel-rotation-btn')?.addEventListener('click', () => {
-    overlay.remove();
-  });
+  // Close button
+  overlay.querySelector('#close-rotation-dialog')?.addEventListener('click', closeOverlay);
+  overlay.querySelector('#cancel-rotation-btn')?.addEventListener('click', closeOverlay);
 
   // Apply button
   overlay.querySelector('#apply-rotation-btn')?.addEventListener('click', () => {
+    removeEscape();
     applyRotation(overlay);
   });
 
