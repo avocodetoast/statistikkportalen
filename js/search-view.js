@@ -205,31 +205,46 @@ async function _searchPerformSearch() {
   const clientResults = BrowserState.filterTables(mh.allTables, BrowserState.searchFilters);
   _renderSearchResults(contentArea, clientResults, mh, enhanced);
 
-  // Enhanced mode: augment with SSB server-side search (finds tables via variable VALUES).
-  // Runs one API call per synonym variant so abbreviations like "bnp" also find
-  // tables matched via the full term "bruttonasjonalprodukt".
-  if (enhanced && query && query !== '*') {
+  // Server-side augmentation: enhanced mode, fuzzy mode, or auto-fallback on 0 results.
+  // - Enhanced: server indexes variable VALUES not available in local table list. Runs one API call per synonym variant so abbreviations like "bnp" also find tables matched via the full term "bruttonasjonalprodukt".
+  // - Fuzzy: appends ~1 to each token for Lucene fuzzy (edit-distance) matching
+  // - Auto-fallback: if 0 client results, silently retries with fuzzy query
+  if (query) {
     const myToken = ++_searchToken;
+    const allTablesMap = new Map(mh.allTables.map(t => [t.id, t]));
+    const clientIds = new Set(clientResults.map(t => t.id));
+
+    const _extractExtras = (response) =>
+      (response.tables || [])
+        .filter(t => !clientIds.has(t.id))
+        .map(t => allTablesMap.get(t.id) || t);
 
     try {
-      const serverQuery = SearchEnhanced.getServerQuery(query);
-      const response = await api.getTables({ query: serverQuery, lang: 'no', pageSize: 10000, includeDiscontinued: true });
+      let serverExtras = [];
 
-      // Abort if a newer search has started
-      if (myToken !== _searchToken) return;
+      if (enhanced) {
+        const serverQuery = SearchEnhanced.getServerQuery(query);
+        const response = await api.getTables({ query: serverQuery, lang: 'no', pageSize: 10000, includeDiscontinued: true });
+        if (myToken !== _searchToken) return;
 
-      // Find tables the server found that weren't in our client results
-      const allTablesMap = new Map(mh.allTables.map(t => [t.id, t]));
-      const clientIds = new Set(clientResults.map(t => t.id));
-      const allServerTables = response.tables || [];
+        serverExtras = _extractExtras(response);
+      }
 
-      const serverExtras = allServerTables
-        .filter(t => !clientIds.has(t.id))
-        .map(t => allTablesMap.get(t.id) || t); // prefer our enriched local version
+      // Auto-fallback: if still no results at all, retry once with a fuzzy query
+      if (clientResults.length === 0 && serverExtras.length === 0) {
+        const fuzzyQuery = SearchEnhanced.buildFuzzyQuery(query);
+        const fuzzyResponse = await api.getTables({ query: fuzzyQuery, lang: 'no', pageSize: 10000, includeDiscontinued: true });
+        if (myToken !== _searchToken) return;
 
-      // Apply non-query filters (subject, frequency, updated, discontinued)
+        const fuzzyExtras = BrowserState._filterNonQuery(_extractExtras(fuzzyResponse), BrowserState.searchFilters);
+        if (fuzzyExtras.length > 0) {
+          _renderSearchResults(contentArea, fuzzyExtras, mh, false, true);
+        }
+        return;
+      }
+
+      // Merge server extras with client results and re-render
       const filteredExtras = BrowserState._filterNonQuery(serverExtras, BrowserState.searchFilters);
-
       if (filteredExtras.length > 0) {
         const combined = [...clientResults, ...filteredExtras];
         _renderSearchResults(contentArea, combined, mh, enhanced);
@@ -244,13 +259,15 @@ async function _searchPerformSearch() {
  * Render search results into the content area.
  * Extracted so both the immediate client-side render and the
  * server-augmented re-render can share the same logic.
+ * @param {boolean} fuzzyFallback - True when results come from automatic fuzzy retry
  */
-function _renderSearchResults(contentArea, results, mh, preserveOrder) {
+function _renderSearchResults(contentArea, results, mh, preserveOrder, fuzzyFallback = false) {
   const grouped = _searchGroupBySubject(results, mh, preserveOrder);
 
   contentArea.innerHTML = `
     <div class="search-results">
       <h2>Søkeresultater</h2>
+      ${fuzzyFallback ? '<p class="info-message">Ingen eksakte treff – viser omtrentlige treff (fuzzy søk)</p>' : ''}
       <p>${results.length} ${results.length === 1 ? 'tabell' : 'tabeller'} funnet</p>
 
       ${results.length === 0 ? `

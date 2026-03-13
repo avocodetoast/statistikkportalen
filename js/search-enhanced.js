@@ -165,6 +165,28 @@ const SearchEnhanced = {
   },
 
   /**
+   * Build a fuzzy Lucene query by appending ~1 to each token.
+   * Lucene operators (OR, AND, NOT) and tokens that already carry
+   * special characters (~, *, ?) are left untouched.
+   *
+   * Examples:
+   *   "sysselseting"          → "sysselseting~1"
+   *   "arbeids marked"        → "arbeids~1 marked~1"
+   *   "bnp OR bruttonasjonalprodukt" → "bnp~1 OR bruttonasjonalprodukt~1"
+   *
+   * @param {string} rawQuery - The query string (may include OR-expanded terms)
+   * @returns {string} Fuzzy query string
+   */
+  buildFuzzyQuery(rawQuery) {
+    if (!rawQuery || !rawQuery.trim()) return rawQuery;
+    return rawQuery.trim().split(/\s+/).map(token => {
+      if (/^(OR|AND|NOT)$/.test(token)) return token;
+      if (/[~*?]/.test(token)) return token;
+      return token + '~1';
+    }).join(' ');
+  },
+
+  /**
    * Build a single query string for the SSB API using OR syntax.
    * For single-token queries with synonyms, joins all variants with " OR " so
    * the API returns the union in one request (e.g. "bnp OR bruttonasjonalprodukt OR bruttoprodukt").
