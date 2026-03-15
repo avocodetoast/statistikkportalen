@@ -198,6 +198,27 @@ const SearchEnhanced = {
   },
 
   /**
+   * Build a fuzzy Lucene query by appending ~1 to each token.
+   * Lucene operators (OR, AND, NOT) and tokens that already carry
+   * special characters (~, *, ?) are left untouched.
+   *
+   * Examples:
+   *   "sysselseting"    → "sysselseting~1"
+   *   "arbeids marked"  → "arbeids~1 marked~1"
+   *
+   * @param {string} rawQuery - The user's raw query string
+   * @returns {string} Fuzzy query string
+   */
+  buildFuzzyQuery(rawQuery) {
+    if (!rawQuery || !rawQuery.trim()) return rawQuery;
+    return rawQuery.trim().split(/\s+/).map(token => {
+      if (/^(OR|AND|NOT)$/.test(token)) return token;
+      if (/[~*?]/.test(token)) return token;
+      return token + '~1';
+    }).join(' ');
+  },
+
+  /**
    * Filter and rank a pre-built sub-index by the query in filters.
    * Non-query filters (discontinued, subject, etc.) have already been applied.
    *

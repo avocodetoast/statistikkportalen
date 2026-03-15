@@ -205,27 +205,46 @@ async function _searchPerformSearch() {
   const clientResults = BrowserState.filterTables(mh.allTables, BrowserState.searchFilters);
   _renderSearchResults(contentArea, clientResults, mh, enhanced);
 
-  // Enhanced mode: augment with SSB server-side search (finds tables via variable VALUES).
-  // Runs one API call per synonym variant so abbreviations like "bnp" also find
-  // tables matched via the full term "bruttonasjonalprodukt".
-  if (enhanced && query && query !== '*') {
+  // Server-side augmentation and fuzzy fallback.
+  // - Enhanced: queries SSB API to find tables matched via variable VALUES.
+  //   Runs synonym-expanded query so abbreviations like "bnp" also find
+  //   tables matched via the full term "bruttonasjonalprodukt".
+  // - Fuzzy fallback: if 0 results from both client and server, retries once
+  //   with Lucene ~1 edit-distance query (catches single-character typos).
+  if (query && query !== '*') {
     const myToken = ++_searchToken;
 
     try {
-      const serverQuery = SearchEnhanced.getServerQuery(query);
-      const response = await api.getTables({ query: serverQuery, lang: 'no', pageSize: 10000, includeDiscontinued: true });
-
-      // Abort if a newer search has started
-      if (myToken !== _searchToken) return;
-
-      // Find tables the server found that weren't in our client results
       const allTablesMap = new Map(mh.allTables.map(t => [t.id, t]));
       const clientIds = new Set(clientResults.map(t => t.id));
-      const allServerTables = response.tables || [];
+      const _extractExtras = (response) =>
+        (response.tables || [])
+          .filter(t => !clientIds.has(t.id))
+          .map(t => allTablesMap.get(t.id) || t); // prefer our enriched local version
 
-      const serverExtras = allServerTables
-        .filter(t => !clientIds.has(t.id))
-        .map(t => allTablesMap.get(t.id) || t); // prefer our enriched local version
+      let serverExtras = [];
+
+      if (enhanced) {
+        const serverQuery = SearchEnhanced.getServerQuery(query);
+        const response = await api.getTables({ query: serverQuery, lang: 'no', pageSize: 10000, includeDiscontinued: true });
+
+        // Abort if a newer search has started
+        if (myToken !== _searchToken) return;
+
+        serverExtras = _extractExtras(response);
+      }
+
+      // Fuzzy fallback: 0 results from client + server → retry with ~1 Lucene fuzzy query
+      if (clientResults.length === 0 && serverExtras.length === 0) {
+        const fuzzyQuery = SearchEnhanced.buildFuzzyQuery(query);
+        const fuzzyResponse = await api.getTables({ query: fuzzyQuery, lang: 'no', pageSize: 10000, includeDiscontinued: true });
+        if (myToken !== _searchToken) return;
+        const filteredFuzzy = BrowserState._filterNonQuery(_extractExtras(fuzzyResponse), BrowserState.searchFilters);
+        if (filteredFuzzy.length > 0) {
+          _renderSearchResults(contentArea, filteredFuzzy, mh, false, true);
+        }
+        return;
+      }
 
       // Apply non-query filters (subject, frequency, updated, discontinued)
       const filteredExtras = BrowserState._filterNonQuery(serverExtras, BrowserState.searchFilters);
@@ -244,13 +263,15 @@ async function _searchPerformSearch() {
  * Render search results into the content area.
  * Extracted so both the immediate client-side render and the
  * server-augmented re-render can share the same logic.
+ * @param {boolean} fuzzyFallback - True when results come from automatic fuzzy retry
  */
-function _renderSearchResults(contentArea, results, mh, preserveOrder) {
+function _renderSearchResults(contentArea, results, mh, preserveOrder, fuzzyFallback = false) {
   const grouped = _searchGroupBySubject(results, mh, preserveOrder);
 
   contentArea.innerHTML = `
     <div class="search-results">
       <h2>Søkeresultater</h2>
+      ${fuzzyFallback ? '<p class="info-message">Ingen eksakte treff – viser omtrentlige treff (fuzzy søk)</p>' : ''}
       <p>${results.length} ${results.length === 1 ? 'tabell' : 'tabeller'} funnet</p>
 
       ${results.length === 0 ? `
