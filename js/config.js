@@ -84,7 +84,10 @@ const AppConfig = {
     maxDisplayValues: 500,
 
     // Error message auto-hide delay (milliseconds)
-    errorAutoHideMs: 10000
+    errorAutoHideMs: 10000,
+
+    // Show discontinued tables by default in search and topic views
+    showDiscontinuedByDefault: false
   },
 
   /**

@@ -17,7 +17,7 @@ const BrowserState = {
   // Search view filters (independent from topic filters)
   searchFilters: {
     query: '',
-    includeDiscontinued: true,
+    includeDiscontinued: AppConfig.ui.showDiscontinuedByDefault,
     subjectFilter: '',
     frequencyFilter: '',
     updatedFilter: '',
@@ -30,7 +30,7 @@ const BrowserState = {
   // Topic view filters (independent from search filters)
   // Reset when navigating to a new topic
   topicFilters: {
-    includeDiscontinued: true,
+    includeDiscontinued: AppConfig.ui.showDiscontinuedByDefault,
     frequencyFilter: '',
     updatedFilter: ''
   },
@@ -80,7 +80,7 @@ const BrowserState = {
   searchFiltersToParams() {
     const params = {};
     if (this.searchFilters.query) params.q = this.searchFilters.query;
-    if (!this.searchFilters.includeDiscontinued) params.disc = '0';
+    if (this.searchFilters.includeDiscontinued) params.disc = '1';
     if (this.searchFilters.subjectFilter) params.subj = this.searchFilters.subjectFilter;
     if (this.searchFilters.frequencyFilter) params.freq = this.searchFilters.frequencyFilter;
     if (this.searchFilters.updatedFilter) params.upd = this.searchFilters.updatedFilter;
@@ -93,7 +93,7 @@ const BrowserState = {
    */
   searchFiltersFromParams(params) {
     this.searchFilters.query = params.q || '';
-    this.searchFilters.includeDiscontinued = params.disc !== '0';
+    this.searchFilters.includeDiscontinued = params.disc === '1';
     this.searchFilters.subjectFilter = params.subj || '';
     this.searchFilters.frequencyFilter = params.freq || '';
     this.searchFilters.updatedFilter = params.upd || '';
@@ -105,7 +105,7 @@ const BrowserState = {
    */
   topicFiltersToParams() {
     const params = {};
-    if (!this.topicFilters.includeDiscontinued) params.disc = '0';
+    if (this.topicFilters.includeDiscontinued) params.disc = '1';
     if (this.topicFilters.frequencyFilter) params.freq = this.topicFilters.frequencyFilter;
     if (this.topicFilters.updatedFilter) params.upd = this.topicFilters.updatedFilter;
     return params;
@@ -115,7 +115,7 @@ const BrowserState = {
    * Set topic filters from URL query params
    */
   topicFiltersFromParams(params) {
-    this.topicFilters.includeDiscontinued = params.disc !== '0';
+    this.topicFilters.includeDiscontinued = params.disc === '1';
     this.topicFilters.frequencyFilter = params.freq || '';
     this.topicFilters.updatedFilter = params.upd || '';
   },
@@ -124,7 +124,7 @@ const BrowserState = {
    * Reset topic filters (called when navigating to a new topic)
    */
   resetTopicFilters() {
-    this.topicFilters.includeDiscontinued = true;
+    this.topicFilters.includeDiscontinued = AppConfig.ui.showDiscontinuedByDefault;
     this.topicFilters.frequencyFilter = '';
     this.topicFilters.updatedFilter = '';
   },
