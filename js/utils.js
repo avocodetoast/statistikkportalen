@@ -4,7 +4,7 @@
 
 // ========== Loading Indicator ==========
 
-function showLoading(show, message = 'Laster...') {
+function showLoading(show, message = t('loading.app')) {
   const loader = document.getElementById('loading-indicator');
   if (loader) {
     loader.textContent = message;
@@ -22,13 +22,13 @@ function showError(message, technicalError = null) {
   msgDiv.className = 'error-message';
 
   const strong = document.createElement('strong');
-  strong.textContent = 'Feil: ';
+  strong.textContent = t('error.prefix') + ' ';
   msgDiv.appendChild(strong);
   msgDiv.appendChild(document.createTextNode(message));
 
   if (technicalError) {
     const btn = document.createElement('button');
-    btn.textContent = 'Se tekniske detaljer';
+    btn.textContent = t('error.details');
     btn.addEventListener('click', () => logger.log(window.lastError));
     msgDiv.appendChild(document.createTextNode(' '));
     msgDiv.appendChild(btn);
@@ -187,7 +187,7 @@ function renderCurrentView() {
       renderTableDisplay(content);
       break;
     default:
-      content.innerHTML = '<p>Ukjent visning</p>';
+      content.innerHTML = '<p>' + t('error.unknownView') + '</p>';
   }
 }
 
@@ -277,7 +277,7 @@ function getTimestamp() {
  * @returns {string} - Clean title
  */
 function extractTableTitle(label) {
-  if (!label) return 'Uten navn';
+  if (!label) return t('table.unnamed');
   const match = label.match(/^\d+:\s*(.+)$/);
   return match ? match[1] : label;
 }
@@ -287,7 +287,7 @@ function extractTableTitle(label) {
  * @param {string[]} parts - Title parts prepended before "Statistikkportalen"
  */
 function updatePageTitle(parts) {
-  document.title = [...parts, 'Statistikkportalen'].join(' – ');
+  document.title = [...parts, AppConfig.app?.name || 'Statistikkportalen'].join(' – ');
 }
 
 /**

@@ -242,7 +242,7 @@ class CacheManager {
 
   /**
    * Get the UTC timestamp of the most recent SSB metadata update.
-   * SSB updates metadata at the times defined in AppConfig.ssbUpdateTimes
+   * SSB updates metadata at the times defined in AppConfig.sourceUpdateTimes
    * (Norwegian time / Europe/Oslo). Result is cached for 60 seconds.
    */
   _getLastSSBUpdateTimestamp() {
@@ -252,8 +252,8 @@ class CacheManager {
     }
 
     const now = new Date();
-    const updateTimes = (typeof AppConfig !== 'undefined' && AppConfig.ssbUpdateTimes)
-      ? AppConfig.ssbUpdateTimes
+    const updateTimes = (typeof AppConfig !== 'undefined' && AppConfig.sourceUpdateTimes)
+      ? AppConfig.sourceUpdateTimes
       : [{ hour: 5, minute: 0 }, { hour: 11, minute: 30 }];
 
     // Calculate offset between UTC and Norwegian time (handles DST automatically)

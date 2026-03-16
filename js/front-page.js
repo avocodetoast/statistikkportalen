@@ -10,7 +10,7 @@ async function renderFrontPage(container) {
   if (!BrowserState.isLoaded) {
     container.innerHTML = `
       <div class="loading-spinner">
-        <p>Laster tabellliste...</p>
+        <p>${t('loading.tables')}</p>
       </div>
     `;
     try {
@@ -18,7 +18,7 @@ async function renderFrontPage(container) {
     } catch (error) {
       container.innerHTML = `
         <div class="error-message">
-          <h3>Kunne ikke laste data</h3>
+          <h3>${t('error.loadData')}</h3>
           <p>${escapeHtml(error.message)}</p>
         </div>
       `;
@@ -35,7 +35,7 @@ async function renderFrontPage(container) {
         <input
           type="text"
           id="front-search"
-          placeholder="Søk etter tabell (ID, tittel, variabler...)"
+          placeholder="${t('search.placeholder')}"
           class="search-input front-search-input"
         />
       </div>
@@ -43,10 +43,10 @@ async function renderFrontPage(container) {
       <div class="subject-grid">
         ${Object.entries(mh.subjectGroups).map(([, group]) => `
           <div class="subject-group-column">
-            <h3 class="subject-group-column-header">${escapeHtml(group.label)}</h3>
+            <h3 class="subject-group-column-header">${escapeHtml(t('subject.group.' + group.id))}</h3>
             <ul class="subject-list">
               ${group.subjects.map(code => {
-                const name = mh.subjectNames[code];
+                const name = t('subject.name.' + code) || mh.subjectNames[code];
                 return `<li><a href="#topic/${code}" class="front-subject-link" data-subject="${code}">${escapeHtml(name)}</a></li>`;
               }).join('')}
             </ul>
@@ -60,7 +60,7 @@ async function renderFrontPage(container) {
               <details class="update-group">
                 <summary class="update-group-summary">
                   <a href="#" class="update-group-link" data-path="${escapeHtml(group.path.join('/'))}">${escapeHtml(group.label)}</a>
-                  <span class="update-group-count">${group.tables.length} tabeller</span>
+                  <span class="update-group-count">${group.tables.length} ${group.tables.length === 1 ? t('unit.table.one') : t('unit.table.many')}</span>
                 </summary>
                 <div class="update-group-tables">
                   ${BrowserState.renderTableListHTML(group.tables)}
@@ -73,7 +73,7 @@ async function renderFrontPage(container) {
                 <details class="update-period-collapsible">
                   <summary class="update-period-collapsible-summary">
                     <span class="update-period-name">${escapeHtml(bucket.label)}</span>
-                    <span class="update-period-count">${bucket.totalCount} tabeller</span>
+                    <span class="update-period-count">${bucket.totalCount} ${bucket.totalCount === 1 ? t('unit.table.one') : t('unit.table.many')}</span>
                   </summary>
                   <div class="update-group-list">${groupsHTML}</div>
                 </details>
@@ -83,11 +83,11 @@ async function renderFrontPage(container) {
               <div class="update-period">
                 <div class="update-period-label">
                   <span class="update-period-name">${escapeHtml(bucket.label)}</span>
-                  ${bucket.totalCount > 0 ? `<span class="update-period-count">${bucket.totalCount} tabeller</span>` : ''}
+                  ${bucket.totalCount > 0 ? `<span class="update-period-count">${bucket.totalCount} ${bucket.totalCount === 1 ? t('unit.table.one') : t('unit.table.many')}</span>` : ''}
                 </div>
                 ${bucket.groups.length > 0
                   ? `<div class="update-group-list">${groupsHTML}</div>`
-                  : `<p class="update-period-empty">Ingen tabeller oppdatert</p>`
+                  : `<p class="update-period-empty">${t('date.noTablesUpdated')}</p>`
                 }
               </div>
             `;
@@ -192,11 +192,11 @@ function _collectRecentUpdateGroups(mh) {
     }
   }
 
-  const prevBizLabel = (dow === 0 || dow === 1 || dow === 6) ? 'Fredag' : 'I går';
+  const prevBizLabel = (dow === 0 || dow === 1 || dow === 6) ? t('date.friday') : t('date.yesterday');
   const buckets = [
-    { key: 'today',   label: 'Oppdatert i dag', from: startOfToday,   to: null,          alwaysShow: true,  collapsible: false },
-    { key: 'prevbiz', label: prevBizLabel,       from: startOfPrevBiz, to: startOfToday,  alwaysShow: true,  collapsible: false },
-    { key: 'week',    label: 'Tidligere siste 7 dager',        from: startOfWeek,    to: startOfPrevBiz, alwaysShow: false, collapsible: true  },
+    { key: 'today',   label: t('date.updatedToday'), from: startOfToday,   to: null,          alwaysShow: true,  collapsible: false },
+    { key: 'prevbiz', label: prevBizLabel,            from: startOfPrevBiz, to: startOfToday,  alwaysShow: true,  collapsible: false },
+    { key: 'week',    label: t('date.earlier7Days'),  from: startOfWeek,    to: startOfPrevBiz, alwaysShow: false, collapsible: true  },
   ];
 
   return buckets.map(bucket => {

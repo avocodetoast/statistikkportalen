@@ -126,7 +126,7 @@ async function showSaveQueryDialog() {
         stub: layout ? layout.rows : [],
         heading: layout ? layout.columns : [],
         codelistIds: AppState.activeCodelistIds || {},
-        lang: 'no'
+        lang: getCurrentApiLang()
       }
     );
 

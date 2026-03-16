@@ -14,7 +14,7 @@ async function renderTableDisplay(container) {
   logger.log('[TableDisplay] Rendering table display');
 
   if (!AppState.selectedTable || !AppState.variableSelection) {
-    showError('Mangler tabell eller variabelvalg');
+    showError(t('error.noTableOrSel'));
     URLRouter.navigateTo('home', {});
     URLRouter.handleRoute();
     return;
@@ -37,19 +37,19 @@ async function renderTableDisplay(container) {
       <div class="view-header">
         <div class="view-header-buttons">
           <button id="back-to-browser" class="btn-secondary">
-            &larr; Tilbake til tabelloversikt
+            ${t('nav.back.tables')}
           </button>
           <button id="back-to-variables" class="btn-secondary">
-            &larr; Endre variabelvalg
+            ${t('nav.back.variables')}
           </button>
         </div>
         ${buildNavigationBreadcrumb(table.id, extractTableTitle(table.label))}
         <h2>${escapeHtml(extractTableTitle(table.label))}</h2>
-        <p class="table-id-display">Tabell ${escapeHtml(table.id)}</p>
+        <p class="table-id-display">${t('table.prefix')} ${escapeHtml(table.id)}</p>
       </div>
 
       <div id="data-container" class="data-container">
-        <p class="loading-message">Henter data...</p>
+        <p class="loading-message">${t('loading.data')}</p>
       </div>
     </div>
   `;
@@ -90,15 +90,15 @@ async function loadTableData() {
   logger.log('[TableDisplay] Variable selection:', selection);
 
   const data = await safeApiCall(
-    () => api.getTableData(tableId, selection, 'no', AppState.activeCodelistIds),
-    'Kunne ikke hente data fra API'
+    () => api.getTableData(tableId, selection, getCurrentApiLang(), AppState.activeCodelistIds),
+    t('error.fetchData')
   );
 
   if (!data || !data.value) {
     logger.error('[TableDisplay] Invalid data format:', data);
     const container = document.getElementById('data-container');
     if (container) {
-      container.innerHTML = '<p class="error-message">Kunne ikke hente data fra API. Prøv igjen eller endre variabelvalget.</p>';
+      container.innerHTML = '<p class="error-message">' + t('error.fetchData') + '</p>';
     }
     return;
   }
@@ -106,7 +106,7 @@ async function loadTableData() {
   if (data.value.length === 0) {
     const container = document.getElementById('data-container');
     if (container) {
-      container.innerHTML = '<p class="no-results">Ingen data funnet for valgt kombinasjon. Prøv å endre variabelvalget.</p>';
+      container.innerHTML = '<p class="no-results">' + t('error.noData') + '</p>';
     }
     return;
   }
@@ -115,7 +115,7 @@ async function loadTableData() {
 
   // Fetch full metadata (from cache) for display
   try {
-    currentFullMetadata = await api.getTableMetadata(tableId, true, 'no');
+    currentFullMetadata = await api.getTableMetadata(tableId, true, getCurrentApiLang());
     // Update title if it was set as a placeholder during direct URL navigation
     if (currentFullMetadata?.label && AppState.selectedTable) {
       AppState.selectedTable.label = currentFullMetadata.label;
@@ -212,16 +212,16 @@ function displayData() {
     <div class="table-controls">
       <div class="control-group">
         <button id="rotate-table-btn" class="btn-secondary">
-          ↻ Roter tabell
+          ${t('table.rotate')}
         </button>
         <button id="export-quick-btn" class="btn-primary">
-          ⬇ Last ned i Excel-format
+          ${t('table.download')}
         </button>
         <button id="export-btn" class="btn-secondary">
-          Flere alternativer
+          ${t('table.moreOptions')}
         </button>
         <button id="save-query-btn" class="btn-secondary">
-          &#128279; Få lenke
+          ${t('table.getLink')}
         </button>
       </div>
       <div class="table-info">
@@ -286,7 +286,7 @@ function displayData() {
  */
 function buildHtmlTable() {
   if (!currentData || !AppState.tableLayout) {
-    return '<p class="error-message">Kunne ikke bygge tabell</p>';
+    return '<p class="error-message">' + t('error.buildTable') + '</p>';
   }
 
   const data = currentData;
@@ -511,9 +511,9 @@ function getDataStatus(rowHeader, colHeader) {
  */
 function suppressedLabel(code) {
   switch (code) {
-    case '.':  return 'Ikke tilgjengelig';
-    case ':':  return 'Konfidensielt';
-    case '..': return 'Ikke aktuelt';
+    case '.':  return t('table.notAvailable');
+    case ':':  return t('table.confidential');
+    case '..': return t('table.notApplicable');
     default:   return code;
   }
 }
@@ -545,6 +545,6 @@ function updateCellCount() {
   if (!display || !currentData) return;
 
   const totalCells = currentData.value.length;
-  display.textContent = formatNumber(totalCells, 0) + ' celler';
+  display.textContent = formatNumber(totalCells, 0) + ' ' + t('unit.cell.many');
 }
 

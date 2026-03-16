@@ -7,17 +7,52 @@
 
 const AppConfig = {
   /**
-   * SSB PxWebApi v2 base URL
+   * PxWebApi v2 base URL for the data source.
    * Default: https://data.ssb.no/api/pxwebapi/v2
-   * For testing or alternative environments, change this to the appropriate endpoint.
+   * For alternative environments, change this to the appropriate endpoint.
    */
   apiBaseUrl: 'https://data.ssb.no/api/pxwebapi/v2',
 
   /**
-   * Default language for API requests
-   * Options: 'no' (Norwegian), 'en' (English)
+   * Instance-specific source information.
+   * These values are used in the UI where the data source is named explicitly.
    */
-  defaultLanguage: 'no',
+  source: {
+    name: 'SSB',
+    nameFull: 'Statistisk sentralbyrå',
+    url: 'https://www.ssb.no/',
+    licenseUrl: 'https://www.ssb.no/diverse/lisens',
+    licenseName: 'CC BY 4.0'
+  },
+
+  /**
+   * Application branding.
+   */
+  app: {
+    name: 'Statistikkportalen',
+    tagline: {
+      nb: 'Et uoffisielt verktøy som gir deg bedre tilgang til SSBs åpne data.',
+      en: 'An unofficial tool giving you better access to Statistics Norway\'s open data.'
+    }
+  },
+
+  /**
+   * Available UI languages.
+   * code:    UI language code (used for translations.js lookup)
+   * apiLang: Language code sent to the API (lang= parameter)
+   * label:   Display name shown in the language selector
+   *
+   * The first entry is the default language.
+   */
+  languages: [
+    { code: 'nb', apiLang: 'no', label: 'Norsk' },
+    { code: 'en', apiLang: 'en', label: 'English' }
+  ],
+
+  /**
+   * Default UI language code (must match a code in languages above).
+   */
+  defaultLanguage: 'nb',
 
   /**
    * Cache time-to-live (TTL) in milliseconds
@@ -91,12 +126,12 @@ const AppConfig = {
   },
 
   /**
-   * SSB update schedule (Norwegian time / Europe/Oslo)
+   * Source update schedule (Norwegian time / Europe/Oslo for SSB).
    * Metadata updates at 05:00 and 11:30 daily.
    * Data (statistics) updates at 08:00 daily.
    * Cache created before the most recent update is considered stale.
    */
-  ssbUpdateTimes: [
+  sourceUpdateTimes: [
     { hour: 5, minute: 0 },
     { hour: 8, minute: 0 },
     { hour: 11, minute: 30 }

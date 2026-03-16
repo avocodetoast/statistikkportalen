@@ -11,8 +11,12 @@ class SSBApi {
   constructor() {
     this.baseUrl = AppConfig.apiBaseUrl;
     this.cache = new CacheManager();
-    this.defaultLang = AppConfig.defaultLanguage;
     this._lastRequestTime = 0;
+  }
+
+  /** Returns the current API language code (e.g. 'no', 'en', 'sv'). */
+  get defaultLang() {
+    return typeof getCurrentApiLang === 'function' ? getCurrentApiLang() : 'no';
   }
 
   /**
@@ -45,13 +49,14 @@ class SSBApi {
     const {
       query = '',
       includeDiscontinued = true,
-      lang = 'no',
+      lang = null,
       pageSize = 10000,
       useCache = true
     } = options;
+    const resolvedLang = lang || (typeof getCurrentApiLang === 'function' ? getCurrentApiLang() : 'no');
 
     // Build cache key from all parameters that affect the result
-    const cacheKey = 'tables_' + lang + '_' + includeDiscontinued + '_' + pageSize +
+    const cacheKey = 'tables_' + resolvedLang + '_' + includeDiscontinued + '_' + pageSize +
                      (query ? '_q_' + query : '');
 
     if (useCache) {
@@ -65,7 +70,7 @@ class SSBApi {
     try {
       // Build URL with parameters
       const params = new URLSearchParams({
-        lang: lang,
+        lang: resolvedLang,
         pageSize: pageSize.toString(),
         includeDiscontinued: includeDiscontinued.toString()
       });
@@ -81,7 +86,7 @@ class SSBApi {
       const response = await this._throttledFetch(url, {
         headers: {
           'Accept': 'application/json',
-          'Accept-Language': lang
+          'Accept-Language': resolvedLang
         }
       });
 
@@ -384,7 +389,7 @@ class SSBApi {
         heading: options.heading,
         codelistIds: options.codelistIds || {}
       }),
-      language: options.lang || 'no'
+      language: options.lang || (typeof getCurrentApiLang === 'function' ? getCurrentApiLang() : 'no')
     };
 
     const url = this.baseUrl + '/savedqueries';

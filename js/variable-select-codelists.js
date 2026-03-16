@@ -45,7 +45,7 @@ async function preloadCodelistOrdering(dimensions) {
     const firstId = sorted[0].id;
 
     const data = await safeApiCall(
-      () => api.getCodeList(firstId, true, 'no'),
+      () => api.getCodeList(firstId, true, getCurrentApiLang()),
       null // silent failure — falls back to category.index order
     );
 
@@ -98,8 +98,8 @@ function setupCodelistDropdowns() {
         try {
           dropdown.disabled = true;
           const codelistData = await safeApiCall(
-            () => api.getCodeList(codelistId, true, 'no'),
-            'Kunne ikke laste kodeliste'
+            () => api.getCodeList(codelistId, true, getCurrentApiLang()),
+            t('codelist.error')
           );
           dropdown.disabled = false;
 
@@ -338,6 +338,6 @@ function updateEliminationBadge(card, elimination) {
   const badge = card.querySelector('.variable-badge');
   if (badge) {
     badge.className = 'variable-badge ' + (elimination ? 'badge-optional' : 'badge-required');
-    badge.innerHTML = elimination ? 'Valgfri variabel' : 'M&aring; velges *';
+    badge.innerHTML = elimination ? t('codelist.optional') : t('codelist.required');
   }
 }

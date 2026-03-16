@@ -72,43 +72,43 @@ async function displayVariables() {
         <div class="variable-header">
           <h3 class="variable-name">${escapeHtml(dimension.label || dimCode)}</h3>
           <span class="variable-badge ${elimination ? 'badge-optional' : 'badge-required'}">
-            ${elimination ? 'Valgfri variabel' : 'M&aring; velges *'}
+            ${elimination ? t('variable.optional') : t('variable.required')}
           </span>
-          <span class="variable-info">${valueCount} verdier</span>
+          <span class="variable-info">${valueCount} ${t('unit.value.many')}</span>
         </div>
 
         <div class="variable-controls">
           ${hasCodelists ? `
             <div class="codelist-selector">
-              <label class="codelist-label">Kategorisering:</label>
+              <label class="codelist-label">${t('variable.categorization')}</label>
               <select class="codelist-dropdown" data-dimension="${escapeHtml(dimCode)}">
                 ${sortedCodelists.map(cl =>
                   '<option value="' + escapeHtml(cl.id) + '">' + escapeHtml(cl.label) + '</option>'
                 ).join('')}
-                <option value="" selected>Velg fritt blant alle verdier</option>
+                <option value="" selected>${t('variable.freeChoice')}</option>
               </select>
             </div>
           ` : ''}
 
           <div class="control-row">
-            <button class="btn-secondary btn-sm select-star-btn" title="Alle verdier (*)">Alle (*)</button>
-            <button class="btn-secondary btn-sm select-all-btn">Velg alle</button>
-            <button class="btn-secondary btn-sm select-none-btn">Opphev alle</button>
+            <button class="btn-secondary btn-sm select-star-btn" title="Alle verdier (*)">${t('variable.btn.all')}</button>
+            <button class="btn-secondary btn-sm select-all-btn">${t('variable.btn.selectAll')}</button>
+            <button class="btn-secondary btn-sm select-none-btn">${t('variable.btn.deselectAll')}</button>
             ${isTimeDim ? `
               <span class="top-n-group">
-                <button class="btn-secondary btn-sm select-top-btn">Siste</button>
+                <button class="btn-secondary btn-sm select-top-btn">${t('variable.btn.last')}</button>
                 <input type="number" class="top-n-input" value="10" min="1" max="${valueCount}">
-                <span class="top-n-label">verdier</span>
+                <span class="top-n-label">${t('unit.value.many')}</span>
               </span>
             ` : ''}
           </div>
 
           <div class="value-filter-container value-filter-wrapper">
-            <input type="text" class="value-filter-input" placeholder="Filtrer verdier...">
+            <input type="text" class="value-filter-input" placeholder="${t('variable.filterPlaceholder')}">
           </div>
 
           <div class="value-counter">
-            Valgt <span class="selected-count">0</span> av totalt <span class="total-count">${valueCount}</span>
+            ${t('variable.selected')} <span class="selected-count">0</span> ${t('variable.ofTotal')} <span class="total-count">${valueCount}</span>
           </div>
 
           <div class="value-list-container" data-mode="specific" tabindex="0">
@@ -218,8 +218,8 @@ async function restoreSelections() {
         try {
           dropdown.disabled = true;
           const codelistData = await safeApiCall(
-            () => api.getCodeList(savedCodelistId, true, 'no'),
-            'Kunne ikke laste kodeliste'
+            () => api.getCodeList(savedCodelistId, true, getCurrentApiLang()),
+            t('codelist.error')
           );
           dropdown.disabled = false;
 
@@ -355,8 +355,7 @@ function renderValueList(dimCode, dimension, isTimeDim) {
   });
 
   if (hasMore) {
-    html += `<div class="truncate-notice">Viser ${maxDisplay} av ${codes.length} verdier.
-             Bruk "Alle (*)" for &aring; inkludere alle.</div>`;
+    html += `<div class="truncate-notice">${tpl('variable.truncated', maxDisplay, codes.length)}</div>`;
   }
 
   return html;

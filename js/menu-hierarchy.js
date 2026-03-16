@@ -148,7 +148,7 @@ class MenuHierarchy {
       const node = this.hierarchy[subjectCode];
       return {
         id: subjectCode,
-        label: this.subjectNames[subjectCode] || subjectCode,
+        label: t('subject.name.' + subjectCode) || this.subjectNames[subjectCode] || subjectCode,
         tableCount: this._countTables(node),
         node: node
       };
@@ -324,7 +324,7 @@ class MenuHierarchy {
     for (const [groupId, group] of Object.entries(this.subjectGroups)) {
       if (group.subjects.includes(subjectCode)) {
         breadcrumbs.push({
-          label: group.label,
+          label: t('subject.group.' + groupId),
           path: [groupId]
         });
         break;
@@ -333,7 +333,7 @@ class MenuHierarchy {
 
     // Add subject
     breadcrumbs.push({
-      label: this.subjectNames[subjectCode] || subjectCode,
+      label: t('subject.name.' + subjectCode) || this.subjectNames[subjectCode] || subjectCode,
       path: [subjectCode]
     });
 

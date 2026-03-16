@@ -20,11 +20,11 @@ const MenuBar = {
           ${Object.entries(menuHierarchy.subjectGroups).map(([id, group]) => `
             <div class="subject-group-item" data-group-id="${id}">
               <button class="subject-group-button">
-                <span class="chevron">&#8250;</span> ${escapeHtml(group.label)}
+                <span class="chevron">&#8250;</span> ${escapeHtml(t('subject.group.' + id))}
               </button>
               <div class="subject-dropdown">
                 ${group.subjects.map(subjectCode => {
-                  const subjectName = menuHierarchy.subjectNames[subjectCode];
+                  const subjectName = t('subject.name.' + subjectCode) || menuHierarchy.subjectNames[subjectCode];
                   return `
                     <a href="#topic/${subjectCode}" class="subject-link" data-subject-id="${subjectCode}">
                       ${escapeHtml(subjectName || subjectCode)}

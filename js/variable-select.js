@@ -50,14 +50,14 @@ async function renderVariableSelection(container) {
   logger.log('[VariableSelect] Rendering variable selection');
 
   if (!AppState.selectedTable) {
-    showError('Ingen tabell valgt');
+    showError(t('error.noTable'));
     URLRouter.navigateTo('home', {});
     URLRouter.handleRoute();
     return;
   }
 
   const table = AppState.selectedTable;
-  updatePageTitle([extractTableTitle(table.label), 'Velg variabler']);
+  updatePageTitle([extractTableTitle(table.label), t('variable.heading')]);
 
   await BrowserState.init();
 
@@ -65,37 +65,36 @@ async function renderVariableSelection(container) {
   const realTable = BrowserState.allTables.find(t => t.id === table.id);
   if (realTable) {
     AppState.selectedTable.label = realTable.label;
-    updatePageTitle([extractTableTitle(table.label), 'Velg variabler']);
+    updatePageTitle([extractTableTitle(table.label), t('variable.heading')]);
   }
 
   container.innerHTML = `
     <div class="view-container">
       <div class="view-header">
         <button id="back-to-browser" class="btn-secondary">
-          &larr; Tilbake til tabelloversikt
+          ${t('nav.back.tables')}
         </button>
         ${buildNavigationBreadcrumb(table.id, extractTableTitle(table.label))}
         <h2>${escapeHtml(extractTableTitle(table.label))}</h2>
-        <p class="table-id-display">Tabell ${escapeHtml(table.id)}</p>
+        <p class="table-id-display">${t('variable.tablePrefix')} ${escapeHtml(table.id)}</p>
         <p class="view-description">
-          Velg verdier for hver variabel. Klikk for &aring; velge, Shift+klikk for &aring; velge et omr&aring;de,
-          Ctrl/Cmd+klikk for &aring; legge til enkelverdier, Ctrl+A for &aring; velge alle synlige.
+          ${t('variable.instructions')}
         </p>
       </div>
 
       <div id="variables-container" class="variables-container">
-        <p class="loading-message">Laster metadata...</p>
+        <p class="loading-message">${t('loading.metadata')}</p>
       </div>
 
       <div class="query-preview-container">
         <button class="query-preview-toggle" id="query-preview-toggle">
-          <span class="query-toggle-icon">&#9654;</span> API-bygger
+          <span class="query-toggle-icon">&#9654;</span> ${t('api.builder')}
         </button>
         <div class="query-preview-content" id="query-preview-content" style="display: none;">
 
           <div class="api-builder-options-grid">
             <div class="api-builder-option">
-              <label class="api-builder-label">Metode:</label>
+              <label class="api-builder-label">${t('api.method')}</label>
               <select id="api-method-toggle" class="api-format-select">
                 <option value="get">GET</option>
                 <option value="post">POST</option>
@@ -103,7 +102,7 @@ async function renderVariableSelection(container) {
             </div>
 
             <div class="api-builder-option">
-              <label class="api-builder-label">Responsformat:</label>
+              <label class="api-builder-label">${t('api.format')}</label>
               <select id="api-output-format" class="api-format-select">
                 <option value="" selected>JSON-stat2 (standard)</option>
                 <option value="csv">CSV</option>
@@ -116,61 +115,61 @@ async function renderVariableSelection(container) {
             </div>
 
             <div class="api-builder-option" id="api-display-option" style="display: none;">
-              <label class="api-builder-label">Visning:</label>
+              <label class="api-builder-label">${t('api.display')}</label>
               <select id="api-display-format" class="api-format-select">
-                <option value="UseTexts" selected>Tekst</option>
-                <option value="UseCodes">Koder</option>
-                <option value="UseCodesAndTexts">Koder og tekst</option>
+                <option value="UseTexts" selected>${t('api.displayText')}</option>
+                <option value="UseCodes">${t('api.displayCodes')}</option>
+                <option value="UseCodesAndTexts">${t('api.displayBoth')}</option>
               </select>
             </div>
 
             <div class="api-builder-option" id="api-title-option" style="display: none;">
-              <label class="api-builder-label">Tabelltittel:</label>
+              <label class="api-builder-label">${t('api.tableTitle')}</label>
               <select id="api-include-title" class="api-format-select">
-                <option value="" selected>Uten tittel</option>
-                <option value="IncludeTitle">Med tittel</option>
+                <option value="" selected>${t('variable.withoutTitle')}</option>
+                <option value="IncludeTitle">${t('variable.withTitle')}</option>
               </select>
             </div>
 
             <div class="api-builder-option" id="api-separator-option" style="display: none;">
-              <label class="api-builder-label">Skilletegn:</label>
+              <label class="api-builder-label">${t('api.separator')}</label>
               <select id="api-csv-separator" class="api-format-select">
-                <option value="SeparatorSemicolon" selected>Semikolon</option>
-                <option value="SeparatorTab">Tabulator</option>
-                <option value="SeparatorSpace">Mellomrom</option>
+                <option value="SeparatorSemicolon" selected>${t('api.separatorSemicolon')}</option>
+                <option value="SeparatorTab">${t('api.separatorTab')}</option>
+                <option value="SeparatorSpace">${t('api.separatorSpace')}</option>
               </select>
             </div>
 
             <div class="api-builder-option" id="api-layout-option" style="display: none;">
-              <label class="api-builder-label">Tabellayout:</label>
+              <label class="api-builder-label">${t('api.layout')}</label>
               <select id="api-table-layout" class="api-format-select">
-                <option value="" selected>Standard</option>
-                <option value="pivot">Pivotvennlig (alle i forspalte)</option>
+                <option value="" selected>${t('api.layoutStandard')}</option>
+                <option value="pivot">${t('api.layoutPivot')}</option>
               </select>
             </div>
           </div>
 
           <div class="api-builder-section">
             <div class="api-builder-section-header">
-              <span class="api-builder-section-title">Data-URL</span>
+              <span class="api-builder-section-title">${t('api.dataUrl')}</span>
               <div class="api-builder-actions">
-                <label class="api-builder-checkbox-label" title="Vis URL med lesbare tegn i stedet for URL-koding"><input type="checkbox" id="api-decode-url-cb"> Vis i klartekst</label>
-                <button class="btn-secondary btn-sm" id="api-copy-url-btn" title="Kopier URL">Kopier URL</button>
-                <button class="btn-secondary btn-sm" id="api-copy-curl-btn" title="Kopier som curl-kommando">Kopier curl</button>
-                <button class="btn-secondary btn-sm" id="api-open-btn" title="&Aring;pne i ny fane">&Aring;pne i nettleser</button>
+                <label class="api-builder-checkbox-label" title="${t('api.decodedUrlTooltip')}"><input type="checkbox" id="api-decode-url-cb"> ${t('api.showPlaintext')}</label>
+                <button class="btn-secondary btn-sm" id="api-copy-url-btn" title="${t('api.copyUrl')}">${t('api.copyUrl')}</button>
+                <button class="btn-secondary btn-sm" id="api-copy-curl-btn" title="${t('api.copyCurl')}">${t('api.copyCurl')}</button>
+                <button class="btn-secondary btn-sm" id="api-open-btn" title="${t('api.openNewTab')}">${t('api.openBrowser')}</button>
               </div>
             </div>
             <code class="query-preview-url" id="query-preview-url">
-              Velg verdier for &aring; se sp&oslash;rringen
+              ${t('variable.selectValues')}
             </code>
             <div id="api-url-warning" class="api-url-warning" style="display: none;"></div>
           </div>
 
           <div class="api-builder-section" id="api-post-body-section" style="display: none;">
             <div class="api-builder-section-header">
-              <span class="api-builder-section-title">POST-body (JSON)</span>
+              <span class="api-builder-section-title">${t('api.postBody')}</span>
               <div class="api-builder-actions">
-                <button class="btn-secondary btn-sm" id="api-copy-post-body-btn" title="Kopier JSON-body">Kopier body</button>
+                <button class="btn-secondary btn-sm" id="api-copy-post-body-btn" title="${t('api.copyBody')}">${t('api.copyBody')}</button>
               </div>
             </div>
             <code class="query-preview-url" id="api-post-body-preview" style="white-space: pre;"></code>
@@ -178,25 +177,25 @@ async function renderVariableSelection(container) {
 
           <div class="api-builder-section">
             <div class="api-builder-section-header">
-              <span class="api-builder-section-title">Metadata-URL</span>
+              <span class="api-builder-section-title">${t('api.metadataUrl')}</span>
               <div class="api-builder-actions">
-                <button class="btn-secondary btn-sm" id="api-copy-meta-btn" title="Kopier metadata-URL">Kopier URL</button>
-                <button class="btn-secondary btn-sm" id="api-open-meta-btn" title="&Aring;pne metadata i ny fane">&Aring;pne i nettleser</button>
+                <button class="btn-secondary btn-sm" id="api-copy-meta-btn" title="${t('api.copyMetadataUrl')}">${t('api.copyMetadataUrl')}</button>
+                <button class="btn-secondary btn-sm" id="api-open-meta-btn" title="${t('api.openMetadata')}">${t('api.openBrowser')}</button>
               </div>
             </div>
             <code class="query-preview-url" id="query-preview-meta-url"></code>
           </div>
 
-          <div class="api-copy-toast" id="api-copy-toast" style="display: none;">Kopiert!</div>
+          <div class="api-copy-toast" id="api-copy-toast" style="display: none;">${t('api.copied')}</div>
         </div>
       </div>
 
       <div class="action-bar">
         <button id="fetch-data-btn" class="btn-primary" disabled>
-          Hent data
+          ${t('variable.fetchData')}
         </button>
         <div class="selection-summary">
-          <span id="selection-status">Velg verdier for alle variabler</span>
+          <span id="selection-status">${t('variable.selectValuesAll')}</span>
           <div id="cell-count-display" class="cell-count-display"></div>
         </div>
       </div>
@@ -245,8 +244,8 @@ async function renderVariableSelection(container) {
  */
 async function loadTableMetadata(tableId) {
   const data = await safeApiCall(
-    () => api.getTableMetadata(tableId, true, 'no'),
-    'Kunne ikke laste metadata for tabell ' + tableId
+    () => api.getTableMetadata(tableId, true, getCurrentApiLang()),
+    t('error.loadMetadata') + tableId
   );
 
   if (!data || !data.dimension) {

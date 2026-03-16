@@ -51,7 +51,7 @@ function updateQueryPreview() {
   }
 
   // Build GET URL params (valueCodes + format params)
-  const params = new URLSearchParams({ lang: 'no' });
+  const params = new URLSearchParams({ lang: getCurrentApiLang() });
   Object.keys(selection).forEach(dimension => {
     const values = selection[dimension];
     const valueStr = Array.isArray(values) ? values.join(',') : values;
@@ -62,7 +62,7 @@ function updateQueryPreview() {
   if (stubDims) params.append('stub', stubDims.join(','));
 
   // Build POST URL params (format params only — valueCodes go in the body)
-  const postParams = new URLSearchParams({ lang: 'no' });
+  const postParams = new URLSearchParams({ lang: getCurrentApiLang() });
   if (format) postParams.append('outputFormat', format);
   if (fmtParams.length > 0) postParams.append('outputFormatParams', fmtParams.join(','));
   if (stubDims) postParams.append('stub', stubDims.join(','));
@@ -82,8 +82,7 @@ function updateQueryPreview() {
       const tooLong = fullGetUrl.length > AppConfig.limits.maxGetUrlLength;
       urlWarning.style.display = tooLong ? '' : 'none';
       if (tooLong) {
-        urlWarning.textContent = 'URL-en er ' + fullGetUrl.length + ' tegn \u2014 overskrider grensen p\u00e5 '
-          + AppConfig.limits.maxGetUrlLength + ' tegn. Bruk POST-modus for store utvalg.';
+        urlWarning.textContent = tpl('api.urlTooLong', fullGetUrl.length, AppConfig.limits.maxGetUrlLength);
       }
     }
 
@@ -93,7 +92,7 @@ function updateQueryPreview() {
     // Enable open-in-browser
     if (openBtn) {
       openBtn.disabled = false;
-      openBtn.title = '\u00c5pne i ny fane';
+      openBtn.title = t('api.openNewTab');
     }
   } else {
     // POST mode: show endpoint URL with format params (no valueCodes) + JSON body
@@ -114,7 +113,7 @@ function updateQueryPreview() {
     // Disable open-in-browser in POST mode
     if (openBtn) {
       openBtn.disabled = true;
-      openBtn.title = 'Kun tilgjengelig i GET-modus';
+      openBtn.title = t('api.getOnlyFeature');
     }
   }
 
@@ -310,7 +309,7 @@ async function handleFetchData() {
 
   const selection = getVariableSelection();
   if (!validateSelection(selection)) {
-    showError('Velg verdier for alle obligatoriske variabler');
+    showError(t('variable.selectValuesAll'));
     return;
   }
 

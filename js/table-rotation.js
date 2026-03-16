@@ -9,7 +9,7 @@ function openRotationDialog() {
   logger.log('[TableRotation] Opening rotation dialog');
 
   if (!currentData) {
-    showError('Ingen data å rotere');
+    showError(t('error.noDataRotate'));
     return;
   }
 
@@ -22,25 +22,25 @@ function openRotationDialog() {
   overlay.innerHTML = `
     <div class="dialog-box">
       <div class="dialog-header">
-        <h3>Roter tabell</h3>
+        <h3>${t('rotation.title')}</h3>
         <button class="dialog-close" id="close-rotation-dialog">×</button>
       </div>
 
       <div class="dialog-content">
         <p class="dialog-description">
-          Dra dimensjoner mellom rader og kolonner for å endre tabellens layout.
+          ${t('rotation.instructions')}
         </p>
 
         <div class="rotation-container">
           <div class="dimension-zone">
-            <h4>Rader</h4>
+            <h4>${t('rotation.rows')}</h4>
             <div id="rows-zone" class="dimension-dropzone">
               ${renderDimensionList(currentLayout.rows, 'row')}
             </div>
           </div>
 
           <div class="dimension-zone">
-            <h4>Kolonner</h4>
+            <h4>${t('rotation.columns')}</h4>
             <div id="columns-zone" class="dimension-dropzone">
               ${renderDimensionList(currentLayout.columns, 'col')}
             </div>
@@ -48,17 +48,17 @@ function openRotationDialog() {
         </div>
 
         <div class="rotation-presets">
-          <p><strong>Hurtigvalg:</strong></p>
-          <button class="btn-link preset-btn" data-preset="default">Standard</button>
-          <button class="btn-link preset-btn" data-preset="transpose">Transponér</button>
-          ${dimensions.length > 2 ? '<button class="btn-link preset-btn" data-preset="all-rows">Alle som rader</button>' : ''}
-          ${dimensions.length > 2 ? '<button class="btn-link preset-btn" data-preset="all-cols">Alle som kolonner</button>' : ''}
+          <p><strong>${t('rotation.presets')}</strong></p>
+          <button class="btn-link preset-btn" data-preset="default">${t('rotation.standard')}</button>
+          <button class="btn-link preset-btn" data-preset="transpose">${t('rotation.transpose')}</button>
+          ${dimensions.length > 2 ? '<button class="btn-link preset-btn" data-preset="all-rows">' + t('rotation.allRows') + '</button>' : ''}
+          ${dimensions.length > 2 ? '<button class="btn-link preset-btn" data-preset="all-cols">' + t('rotation.allColumns') + '</button>' : ''}
         </div>
       </div>
 
       <div class="dialog-footer">
-        <button id="apply-rotation-btn" class="btn-primary">Bruk layout</button>
-        <button id="cancel-rotation-btn" class="btn-secondary">Avbryt</button>
+        <button id="apply-rotation-btn" class="btn-primary">${t('rotation.apply')}</button>
+        <button id="cancel-rotation-btn" class="btn-secondary">${t('rotation.cancel')}</button>
       </div>
     </div>
   `;
@@ -79,7 +79,7 @@ function renderDimensionList(dimCodes, zone) {
   if (!currentData) return '';
 
   if (dimCodes.length === 0) {
-    return '<p class="empty-zone">Dra dimensjoner hit</p>';
+    return '<p class="empty-zone">' + t('rotation.dropHere') + '</p>';
   }
 
   let html = '';
@@ -94,7 +94,7 @@ function renderDimensionList(dimCodes, zone) {
            data-zone="${zone}"
            data-index="${index}">
         <span class="dimension-name">${escapeHtml(label)}</span>
-        <span class="dimension-count">${valueCount} verdier</span>
+        <span class="dimension-count">${valueCount} ${t('rotation.values')}</span>
       </div>
     `;
   });
@@ -258,7 +258,7 @@ function updateEmptyZones(overlay) {
     const chips = zone.querySelectorAll('.dimension-chip');
 
     if (chips.length === 0 && !zone.querySelector('.empty-zone')) {
-      zone.innerHTML = '<p class="empty-zone">Dra dimensjoner hit</p>';
+      zone.innerHTML = '<p class="empty-zone">' + t('rotation.dropHere') + '</p>';
     }
   });
 }
@@ -352,13 +352,13 @@ function applyRotation(overlay) {
   const expectedDims = [...currentData.id].sort();
 
   if (JSON.stringify(allDims) !== JSON.stringify(expectedDims)) {
-    showError('Alle dimensjoner må være enten i rader eller kolonner');
+    showError(t('rotation.allRequired'));
     return;
   }
 
   // Validate: at least one dimension in rows OR columns
   if (newRows.length === 0 && newCols.length === 0) {
-    showError('Tabellen må ha minst én dimensjon');
+    showError(t('rotation.minOne'));
     return;
   }
 

@@ -16,7 +16,7 @@ async function renderTopicView(container) {
   if (!BrowserState.isLoaded) {
     container.innerHTML = `
       <div class="loading-spinner">
-        <p>Laster tabellliste...</p>
+        <p>${t('loading.tables')}</p>
       </div>
     `;
     try {
@@ -24,7 +24,7 @@ async function renderTopicView(container) {
     } catch (error) {
       container.innerHTML = `
         <div class="error-message">
-          <h3>Kunne ikke laste data</h3>
+          <h3>${t('error.loadData')}</h3>
           <p>${escapeHtml(error.message)}</p>
         </div>
       `;
@@ -48,11 +48,11 @@ async function renderTopicView(container) {
 
   // Update page title with deepest named topic
   if (isGroupId && path.length === 1) {
-    updatePageTitle([mh.subjectGroups[firstId].label]);
+    updatePageTitle([t('subject.group.' + firstId)]);
   } else {
     const breadcrumbs = mh.getBreadcrumbs(path);
     const lastCrumb = breadcrumbs[breadcrumbs.length - 1];
-    updatePageTitle(lastCrumb ? [lastCrumb.label] : ['Emner']);
+    updatePageTitle(lastCrumb ? [lastCrumb.label] : [t('nav.subjects')]);
   }
 
   if (isGroupId && path.length === 1) {
@@ -76,7 +76,7 @@ async function renderTopicView(container) {
 function _topicRenderGroupSubjects(container, mh, groupId) {
   const group = mh.subjectGroups[groupId];
   if (!group) {
-    container.innerHTML = '<p class="error-message">Ukjent emnegruppe</p>';
+    container.innerHTML = '<p class="error-message">' + t('topic.unknownGroup') + '</p>';
     return;
   }
 
@@ -88,16 +88,16 @@ function _topicRenderGroupSubjects(container, mh, groupId) {
       ${MenuBar.render(mh)}
 
       <div class="breadcrumbs">
-        <a href="#home" class="breadcrumb-link" data-path="">Forsiden</a>
+        <a href="#home" class="breadcrumb-link" data-path="">${t('nav.home')}</a>
       </div>
 
-      <h1>${escapeHtml(group.label)}</h1>
+      <h1>${escapeHtml(t('subject.group.' + groupId))}</h1>
 
       <div class="subtopic-cards">
         ${subjects.map(subject => `
           <div class="subtopic-card" data-subject-id="${subject.id}">
             <h3>${escapeHtml(subject.label)}</h3>
-            <p>${subject.tableCount} tabeller</p>
+            <p>${subject.tableCount} ${subject.tableCount === 1 ? t('unit.table.one') : t('unit.table.many')}</p>
             <span class="card-arrow">&rarr;</span>
           </div>
         `).join('')}
@@ -123,7 +123,7 @@ function _topicRenderGroupSubjects(container, mh, groupId) {
 function _topicRenderSubtopics(container, mh, path) {
   const subjectCode = path[0];
   const subtopics = mh.getSubtopicsForSubject(subjectCode);
-  const subjectName = mh.subjectNames[subjectCode];
+  const subjectName = t('subject.name.' + subjectCode) || mh.subjectNames[subjectCode];
   const breadcrumbs = mh.getBreadcrumbs([subjectCode]);
 
   container.innerHTML = `
@@ -139,7 +139,7 @@ function _topicRenderSubtopics(container, mh, path) {
         ${subtopics.map(subtopic => `
           <div class="subtopic-card" data-subtopic-id="${subtopic.id}">
             <h3>${escapeHtml(subtopic.label)}</h3>
-            <p>${subtopic.tableCount} tabeller</p>
+            <p>${subtopic.tableCount} ${subtopic.tableCount === 1 ? t('unit.table.one') : t('unit.table.many')}</p>
             <span class="card-arrow">&rarr;</span>
           </div>
         `).join('')}
@@ -186,7 +186,7 @@ function _topicRenderCategories(container, mh, path) {
         ${categories.map(cat => `
           <div class="category-card" data-category-id="${cat.id}">
             <h3>${escapeHtml(cat.label)}</h3>
-            <p>${cat.tableCount} tabeller</p>
+            <p>${cat.tableCount} ${cat.tableCount === 1 ? t('unit.table.one') : t('unit.table.many')}</p>
             <span class="card-arrow">&rarr;</span>
           </div>
         `).join('')}
@@ -215,7 +215,7 @@ function _topicRenderTables(container, mh, path) {
   const filters = BrowserState.topicFilters;
 
   if (!node) {
-    container.innerHTML = '<p class="error-message">Fant ingen tabeller for denne stien</p>';
+    container.innerHTML = '<p class="error-message">' + t('error.noTablesPath') + '</p>';
     return;
   }
 
@@ -235,24 +235,24 @@ function _topicRenderTables(container, mh, path) {
       <div class="search-filters">
         <label class="filter-checkbox">
           <input type="checkbox" id="topic-include-discontinued" ${filters.includeDiscontinued ? 'checked' : ''} />
-          <span>Inkluder avsluttede tabeller</span>
+          <span>${t('search.includeStopped')}</span>
         </label>
 
         <select id="topic-frequency-filter" class="filter-select">
-          <option value="" ${!filters.frequencyFilter ? 'selected' : ''}>Alle frekvenser (${totalFiltered})</option>
-          <option value="Monthly" ${filters.frequencyFilter === 'Monthly' ? 'selected' : ''}>Månedlig (${frequencyCounts['Monthly'] || 0})</option>
-          <option value="Quarterly" ${filters.frequencyFilter === 'Quarterly' ? 'selected' : ''}>Kvartalsvis (${frequencyCounts['Quarterly'] || 0})</option>
-          <option value="Annual" ${filters.frequencyFilter === 'Annual' ? 'selected' : ''}>Årlig (${frequencyCounts['Annual'] || 0})</option>
-          <option value="Other" ${filters.frequencyFilter === 'Other' ? 'selected' : ''}>Annet (${frequencyCounts['Other'] || 0})</option>
+          <option value="" ${!filters.frequencyFilter ? 'selected' : ''}>${t('filter.allFrequencies')} (${totalFiltered})</option>
+          <option value="Monthly" ${filters.frequencyFilter === 'Monthly' ? 'selected' : ''}>${t('filter.monthly')} (${frequencyCounts['Monthly'] || 0})</option>
+          <option value="Quarterly" ${filters.frequencyFilter === 'Quarterly' ? 'selected' : ''}>${t('filter.quarterly')} (${frequencyCounts['Quarterly'] || 0})</option>
+          <option value="Annual" ${filters.frequencyFilter === 'Annual' ? 'selected' : ''}>${t('filter.annual')} (${frequencyCounts['Annual'] || 0})</option>
+          <option value="Other" ${filters.frequencyFilter === 'Other' ? 'selected' : ''}>${t('filter.other')} (${frequencyCounts['Other'] || 0})</option>
         </select>
 
         <select id="topic-updated-filter" class="filter-select">
-          <option value="" ${!filters.updatedFilter ? 'selected' : ''}>Alle perioder (${totalFiltered})</option>
-          <option value="1" ${filters.updatedFilter === '1' ? 'selected' : ''}>Oppdatert siste dag (${updatedCounts['1'] || 0})</option>
-          <option value="7" ${filters.updatedFilter === '7' ? 'selected' : ''}>Oppdatert siste uke (${updatedCounts['7'] || 0})</option>
-          <option value="30" ${filters.updatedFilter === '30' ? 'selected' : ''}>Oppdatert siste måned (${updatedCounts['30'] || 0})</option>
-          <option value="365" ${filters.updatedFilter === '365' ? 'selected' : ''}>Oppdatert siste år (${updatedCounts['365'] || 0})</option>
-          <option value="730" ${filters.updatedFilter === '730' ? 'selected' : ''}>Oppdatert siste to år (${updatedCounts['730'] || 0})</option>
+          <option value="" ${!filters.updatedFilter ? 'selected' : ''}>${t('filter.allPeriods')} (${totalFiltered})</option>
+          <option value="1" ${filters.updatedFilter === '1' ? 'selected' : ''}>${t('filter.lastDay')} (${updatedCounts['1'] || 0})</option>
+          <option value="7" ${filters.updatedFilter === '7' ? 'selected' : ''}>${t('filter.lastWeek')} (${updatedCounts['7'] || 0})</option>
+          <option value="30" ${filters.updatedFilter === '30' ? 'selected' : ''}>${t('filter.lastMonth')} (${updatedCounts['30'] || 0})</option>
+          <option value="365" ${filters.updatedFilter === '365' ? 'selected' : ''}>${t('filter.lastYear')} (${updatedCounts['365'] || 0})</option>
+          <option value="730" ${filters.updatedFilter === '730' ? 'selected' : ''}>${t('filter.last2Years')} (${updatedCounts['730'] || 0})</option>
         </select>
       </div>
 
@@ -345,7 +345,7 @@ function _topicRenderSubtree(node, depth, mh, filters) {
       <details class="hierarchy-group depth-${depth}" ${depth < 2 ? 'open' : ''}>
         <summary class="hierarchy-group-header">
           ${escapeHtml(child.label)}
-          <span class="hierarchy-count">(${childTableCount} tabeller)</span>
+          <span class="hierarchy-count">(${childTableCount} ${childTableCount === 1 ? t('unit.table.one') : t('unit.table.many')})</span>
         </summary>
         <div class="hierarchy-group-content">
           ${_topicRenderSubtree(child, depth + 1, mh, filters)}
@@ -378,11 +378,11 @@ function _topicUpdateDropdownCounts(subtreeTables) {
   if (freqEl) {
     const selected = freqEl.value;
     freqEl.innerHTML = `
-      <option value="">Alle frekvenser (${totalFiltered})</option>
-      <option value="Monthly">Månedlig (${frequencyCounts['Monthly'] || 0})</option>
-      <option value="Quarterly">Kvartalsvis (${frequencyCounts['Quarterly'] || 0})</option>
-      <option value="Annual">Årlig (${frequencyCounts['Annual'] || 0})</option>
-      <option value="Other">Annet (${frequencyCounts['Other'] || 0})</option>
+      <option value="">${t('filter.allFrequencies')} (${totalFiltered})</option>
+      <option value="Monthly">${t('filter.monthly')} (${frequencyCounts['Monthly'] || 0})</option>
+      <option value="Quarterly">${t('filter.quarterly')} (${frequencyCounts['Quarterly'] || 0})</option>
+      <option value="Annual">${t('filter.annual')} (${frequencyCounts['Annual'] || 0})</option>
+      <option value="Other">${t('filter.other')} (${frequencyCounts['Other'] || 0})</option>
     `;
     if (selected) freqEl.value = selected;
   }
@@ -391,12 +391,12 @@ function _topicUpdateDropdownCounts(subtreeTables) {
   if (updEl) {
     const selected = updEl.value;
     updEl.innerHTML = `
-      <option value="">Alle perioder (${totalFiltered})</option>
-      <option value="1">Oppdatert siste dag (${updatedCounts['1'] || 0})</option>
-      <option value="7">Oppdatert siste uke (${updatedCounts['7'] || 0})</option>
-      <option value="30">Oppdatert siste måned (${updatedCounts['30'] || 0})</option>
-      <option value="365">Oppdatert siste år (${updatedCounts['365'] || 0})</option>
-      <option value="730">Oppdatert siste to år (${updatedCounts['730'] || 0})</option>
+      <option value="">${t('filter.allPeriods')} (${totalFiltered})</option>
+      <option value="1">${t('filter.lastDay')} (${updatedCounts['1'] || 0})</option>
+      <option value="7">${t('filter.lastWeek')} (${updatedCounts['7'] || 0})</option>
+      <option value="30">${t('filter.lastMonth')} (${updatedCounts['30'] || 0})</option>
+      <option value="365">${t('filter.lastYear')} (${updatedCounts['365'] || 0})</option>
+      <option value="730">${t('filter.last2Years')} (${updatedCounts['730'] || 0})</option>
     `;
     if (selected) updEl.value = selected;
   }

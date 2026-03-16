@@ -106,6 +106,10 @@ header {
   color: white;
   padding: var(--spacing-lg) var(--spacing-xl);
   box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
 }
 
 .header-content h1 {
@@ -117,6 +121,42 @@ header {
   color: rgba(255, 255, 255, 0.9);
   font-size: var(--font-size-sm);
   margin: 0;
+}
+
+.header-lang {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.lang-btn {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1.4;
+}
+
+.lang-btn:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.lang-btn.lang-active {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: row;
+    align-items: flex-start;
+  }
 }
 
 main {

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="no">
+<html lang="no" id="html-root">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Statistikkportalen</title>
-  <meta name="description" content="Et uoffisielt verktøy som gir deg bedre tilgang til SSBs åpne data.">
+  <meta name="description" content="Et uoffisielt verktøy som gir deg bedre tilgang til SSBs åpne data." id="meta-description">
 
   <!-- Analytics -->
   <script defer src="https://stats.statistikkportalen.no/script.js" data-website-id="e8e31e32-aa40-4865-8acb-3311b8a374e9" data-domains="statistikkportalen.no" data-do-not-track="true"></script>
@@ -18,9 +18,10 @@
   <!-- Header -->
   <header>
     <div class="header-content">
-      <h1><a href="#home" id="header-home-link">Statistikkportalen</a></h1>
-      <p class="subtitle">Et uoffisielt verktøy som gir deg bedre tilgang til SSBs åpne data.</p>
+      <h1><a href="#home" id="header-home-link" id="header-title">Statistikkportalen</a></h1>
+      <p class="subtitle" id="header-subtitle">Et uoffisielt verktøy som gir deg bedre tilgang til SSBs åpne data.</p>
     </div>
+    <div class="header-lang" id="header-lang"></div>
   </header>
 
   <!-- Main Application -->
@@ -35,18 +36,18 @@
 
     <!-- Dynamic Content Area -->
     <div id="content">
-      <p>Initialiser...</p>
+      <p>Initialiserer...</p>
     </div>
   </main>
 
   <!-- Footer -->
   <footer>
-    <p>Data fra <a href="https://www.ssb.no/" target="_blank" rel="noopener noreferrer">Statistisk sentralbyrå</a>
-    <a href="https://www.ssb.no/diverse/lisens" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a>
+    <p id="footer-source-line"><span id="footer-data-from">Data fra</span> <a id="footer-source-link" href="https://www.ssb.no/" target="_blank" rel="noopener noreferrer">Statistisk sentralbyrå</a>
+    <a id="footer-license-link" href="https://www.ssb.no/diverse/lisens" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a>
     <span class="footer-separator">·</span>
     <a href="https://github.com/avocodetoast/statistikkportalen" target="_blank" rel="noopener noreferrer">GitHub</a>
     <span class="footer-separator">·</span>
-    <a href="#" id="clear-cache-link" title="Tøm hurtigbuffer og last inn data på nytt fra SSB">Tøm hurtigbuffer</a>
+    <a href="#" id="clear-cache-link"></a>
     <span class="footer-separator">·</span>
     <span id="app-version"></span></p>
   </footer>
@@ -54,6 +55,7 @@
   <!-- JavaScript - Load in correct order -->
   <script src="js/version.js"></script>
   <script src="js/config.js"></script>
+  <script src="js/translations.js"></script>
   <script src="js/cache.js"></script>
   <script src="js/api.js"></script>
   <script src="js/utils.js"></script>
@@ -80,10 +82,82 @@
 
   <!-- Application Initialization -->
   <script>
+    // Re-applies all language-sensitive static UI strings (tagline, footer).
+    // Called on init and whenever the language is switched.
+    function applyTranslatableUI() {
+      const rawTagline = AppConfig.app?.tagline || '';
+      const appTagline = (typeof rawTagline === 'object')
+        ? (rawTagline[currentLanguage] ?? rawTagline['nb'] ?? '')
+        : rawTagline;
+
+      document.getElementById('meta-description').setAttribute('content', appTagline);
+      document.getElementById('header-subtitle').textContent = appTagline;
+
+      const dataFromEl = document.getElementById('footer-data-from');
+      if (dataFromEl) dataFromEl.textContent = t('footer.dataFrom');
+
+      const clearLink = document.getElementById('clear-cache-link');
+      if (clearLink) {
+        clearLink.textContent = t('cache.clear');
+        clearLink.title = t('cache.clearTooltip');
+      }
+    }
+
     // Initialize app when DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
+      // Apply instance-specific branding from AppConfig
+      const appName = AppConfig.app?.name || 'Statistikkportalen';
+      const src = AppConfig.source || {};
+
+      document.title = appName;
+      document.getElementById('header-home-link').textContent = appName;
+
+      // Footer source links (language-neutral)
+      const sourceLink = document.getElementById('footer-source-link');
+      if (sourceLink && src.url) {
+        sourceLink.href = src.url;
+        sourceLink.textContent = src.nameFull || src.name || src.url;
+      }
+      const licenseLink = document.getElementById('footer-license-link');
+      if (licenseLink && src.licenseUrl) {
+        licenseLink.href = src.licenseUrl;
+        licenseLink.textContent = `(${src.licenseName || 'License'})`;
+      }
+
+      applyTranslatableUI();
+
+      // Language selector
+      const langContainer = document.getElementById('header-lang');
+      const langs = AppConfig.languages || [];
+      if (langs.length > 1 && langContainer) {
+        langContainer.setAttribute('role', 'group');
+        langContainer.setAttribute('aria-label', t('lang.label'));
+        langs.forEach(lang => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'lang-btn' + (lang.code === currentLanguage ? ' lang-active' : '');
+          btn.textContent = lang.label;
+          btn.setAttribute('aria-pressed', lang.code === currentLanguage ? 'true' : 'false');
+          btn.addEventListener('click', () => {
+            setLanguage(lang.code);
+            applyTranslatableUI();
+            langContainer.querySelectorAll('.lang-btn').forEach(b => {
+              b.classList.remove('lang-active');
+              b.setAttribute('aria-pressed', 'false');
+            });
+            btn.classList.add('lang-active');
+            btn.setAttribute('aria-pressed', 'true');
+          });
+          langContainer.appendChild(btn);
+        });
+      }
+
+      // Set HTML lang attribute
+      document.getElementById('html-root').lang =
+        (AppConfig.languages || []).find(l => l.code === currentLanguage)?.apiLang || 'no';
+
       document.getElementById('app-version').textContent = VERSION;
-      logger.log('[App] Initializing Statistikkportalen');
+      logger.log('[App] Initializing', appName);
       logger.log('[App] API Base URL:', api.baseUrl);
 
       // Cleanup expired cache entries on startup

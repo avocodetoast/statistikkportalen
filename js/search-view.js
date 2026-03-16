@@ -17,7 +17,7 @@ async function renderSearchView(container) {
   if (!BrowserState.isLoaded) {
     container.innerHTML = `
       <div class="loading-spinner">
-        <p>Laster tabellliste...</p>
+        <p>${t('loading.tables')}</p>
       </div>
     `;
     try {
@@ -25,7 +25,7 @@ async function renderSearchView(container) {
     } catch (error) {
       container.innerHTML = `
         <div class="error-message">
-          <h3>Kunne ikke laste data</h3>
+          <h3>${t('error.loadData')}</h3>
           <p>${escapeHtml(error.message)}</p>
         </div>
       `;
@@ -36,7 +36,7 @@ async function renderSearchView(container) {
   const mh = BrowserState.menuHierarchy;
   const filters = BrowserState.searchFilters;
 
-  updatePageTitle(filters.query ? [filters.query] : ['Søk']);
+  updatePageTitle(filters.query ? [filters.query] : [t('nav.search')]);
 
   // Calculate initial hit counts
   const hitCounts = _searchCalcSubjectHitCounts(mh, filters);
@@ -53,20 +53,20 @@ async function renderSearchView(container) {
       <div class="search-filters">
         <label class="filter-checkbox">
           <input type="checkbox" id="include-discontinued" ${filters.includeDiscontinued ? 'checked' : ''} />
-          <span>Inkluder avsluttede tabeller</span>
+          <span>${t('search.includeStopped')}</span>
         </label>
 
         <label class="filter-checkbox">
           <input type="checkbox" id="enhanced-search" ${filters.enhanced ? 'checked' : ''} />
-          <span>Forbedret søk <span class="beta-badge">beta</span></span>
+          <span>${t('search.enhanced')} <span class="beta-badge">${t('search.beta')}</span></span>
         </label>
 
         <select id="subject-filter" class="filter-select">
-          <option value="">Alle emner${totalCount > 0 ? ` (${totalCount})` : ''}</option>
+          <option value="">${t('filter.allSubjects')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
           ${Object.values(mh.subjectGroups).map(group => `
-            <optgroup label="${escapeHtml(group.label)}">
+            <optgroup label="${escapeHtml(t('subject.group.' + group.id))}">
               ${group.subjects.map(subjectCode => {
-                const subjectName = mh.subjectNames[subjectCode];
+                const subjectName = t('subject.name.' + subjectCode) || mh.subjectNames[subjectCode];
                 const count = hitCounts[subjectCode] || 0;
                 const disabled = count === 0 ? 'disabled' : '';
                 const selected = filters.subjectFilter === subjectCode ? 'selected' : '';
@@ -77,20 +77,20 @@ async function renderSearchView(container) {
         </select>
 
         <select id="frequency-filter" class="filter-select">
-          <option value="" ${!filters.frequencyFilter ? 'selected' : ''}>Alle frekvenser${totalCount > 0 ? ` (${totalCount})` : ''}</option>
-          <option value="Monthly" ${filters.frequencyFilter === 'Monthly' ? 'selected' : ''}>Månedlig (${frequencyCounts['Monthly'] || 0})</option>
-          <option value="Quarterly" ${filters.frequencyFilter === 'Quarterly' ? 'selected' : ''}>Kvartalsvis (${frequencyCounts['Quarterly'] || 0})</option>
-          <option value="Annual" ${filters.frequencyFilter === 'Annual' ? 'selected' : ''}>Årlig (${frequencyCounts['Annual'] || 0})</option>
-          <option value="Other" ${filters.frequencyFilter === 'Other' ? 'selected' : ''}>Annet (${frequencyCounts['Other'] || 0})</option>
+          <option value="" ${!filters.frequencyFilter ? 'selected' : ''}>${t('filter.allFrequencies')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
+          <option value="Monthly" ${filters.frequencyFilter === 'Monthly' ? 'selected' : ''}>${t('filter.monthly')} (${frequencyCounts['Monthly'] || 0})</option>
+          <option value="Quarterly" ${filters.frequencyFilter === 'Quarterly' ? 'selected' : ''}>${t('filter.quarterly')} (${frequencyCounts['Quarterly'] || 0})</option>
+          <option value="Annual" ${filters.frequencyFilter === 'Annual' ? 'selected' : ''}>${t('filter.annual')} (${frequencyCounts['Annual'] || 0})</option>
+          <option value="Other" ${filters.frequencyFilter === 'Other' ? 'selected' : ''}>${t('filter.other')} (${frequencyCounts['Other'] || 0})</option>
         </select>
 
         <select id="updated-filter" class="filter-select">
-          <option value="" ${!filters.updatedFilter ? 'selected' : ''}>Alle perioder${totalCount > 0 ? ` (${totalCount})` : ''}</option>
-          <option value="1" ${filters.updatedFilter === '1' ? 'selected' : ''}>Oppdatert siste dag${updatedCounts['1'] !== undefined ? ` (${updatedCounts['1']})` : ''}</option>
-          <option value="7" ${filters.updatedFilter === '7' ? 'selected' : ''}>Oppdatert siste uke${updatedCounts['7'] !== undefined ? ` (${updatedCounts['7']})` : ''}</option>
-          <option value="30" ${filters.updatedFilter === '30' ? 'selected' : ''}>Oppdatert siste måned${updatedCounts['30'] !== undefined ? ` (${updatedCounts['30']})` : ''}</option>
-          <option value="365" ${filters.updatedFilter === '365' ? 'selected' : ''}>Oppdatert siste år${updatedCounts['365'] !== undefined ? ` (${updatedCounts['365']})` : ''}</option>
-          <option value="730" ${filters.updatedFilter === '730' ? 'selected' : ''}>Oppdatert siste to år${updatedCounts['730'] !== undefined ? ` (${updatedCounts['730']})` : ''}</option>
+          <option value="" ${!filters.updatedFilter ? 'selected' : ''}>${t('filter.allPeriods')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
+          <option value="1" ${filters.updatedFilter === '1' ? 'selected' : ''}>${t('filter.lastDay')}${updatedCounts['1'] !== undefined ? ` (${updatedCounts['1']})` : ''}</option>
+          <option value="7" ${filters.updatedFilter === '7' ? 'selected' : ''}>${t('filter.lastWeek')}${updatedCounts['7'] !== undefined ? ` (${updatedCounts['7']})` : ''}</option>
+          <option value="30" ${filters.updatedFilter === '30' ? 'selected' : ''}>${t('filter.lastMonth')}${updatedCounts['30'] !== undefined ? ` (${updatedCounts['30']})` : ''}</option>
+          <option value="365" ${filters.updatedFilter === '365' ? 'selected' : ''}>${t('filter.lastYear')}${updatedCounts['365'] !== undefined ? ` (${updatedCounts['365']})` : ''}</option>
+          <option value="730" ${filters.updatedFilter === '730' ? 'selected' : ''}>${t('filter.last2Years')}${updatedCounts['730'] !== undefined ? ` (${updatedCounts['730']})` : ''}</option>
         </select>
       </div>
 
@@ -154,8 +154,8 @@ function _searchShowWelcome() {
 
   contentArea.innerHTML = `
     <div class="welcome-message">
-      <h2>Søk i SSBs statistikkbank</h2>
-      <p>Skriv inn søkeord eller bruk filtrene for å finne tabeller</p>
+      <h2>${t('search.heading')}</h2>
+      <p>${t('search.instructions')}</p>
     </div>
   `;
 }
@@ -226,7 +226,7 @@ async function _searchPerformSearch() {
 
       if (enhanced) {
         const serverQuery = SearchEnhanced.getServerQuery(query);
-        const response = await api.getTables({ query: serverQuery, lang: 'no', pageSize: 10000, includeDiscontinued: true });
+        const response = await api.getTables({ query: serverQuery, lang: getCurrentApiLang(), pageSize: 10000, includeDiscontinued: true });
 
         // Abort if a newer search has started
         if (myToken !== _searchToken) return;
@@ -237,7 +237,7 @@ async function _searchPerformSearch() {
       // Fuzzy fallback: 0 results from client + server → retry with ~1 Lucene fuzzy query
       if (clientResults.length === 0 && serverExtras.length === 0) {
         const fuzzyQuery = SearchEnhanced.buildFuzzyQuery(query);
-        const fuzzyResponse = await api.getTables({ query: fuzzyQuery, lang: 'no', pageSize: 10000, includeDiscontinued: true });
+        const fuzzyResponse = await api.getTables({ query: fuzzyQuery, lang: getCurrentApiLang(), pageSize: 10000, includeDiscontinued: true });
         if (myToken !== _searchToken) return;
         const filteredFuzzy = BrowserState._filterNonQuery(_extractExtras(fuzzyResponse), BrowserState.searchFilters);
         if (filteredFuzzy.length > 0) {
@@ -270,13 +270,13 @@ function _renderSearchResults(contentArea, results, mh, preserveOrder, fuzzyFall
 
   contentArea.innerHTML = `
     <div class="search-results">
-      <h2>Søkeresultater</h2>
-      ${fuzzyFallback ? '<p class="info-message">Ingen eksakte treff – viser omtrentlige treff (fuzzy søk)</p>' : ''}
-      <p>${results.length} ${results.length === 1 ? 'tabell' : 'tabeller'} funnet</p>
+      <h2>${t('search.results')}</h2>
+      ${fuzzyFallback ? `<p class="info-message">${t('search.fuzzyFallback')}</p>` : ''}
+      <p>${results.length} ${results.length === 1 ? t('unit.table.one') : t('unit.table.many')} ${t('search.found')}</p>
 
       ${results.length === 0 ? `
         <div class="no-results">
-          <p>Ingen tabeller funnet</p>
+          <p>${t('search.noResults')}</p>
         </div>
       ` : grouped.map(group => `
         <details class="search-group" open>
@@ -285,7 +285,7 @@ function _renderSearchResults(contentArea, results, mh, preserveOrder, fuzzyFall
             <span class="search-group-count">(${group.tables.length})</span>
           </summary>
           ${BrowserState.renderTableListHTML(group.tables.slice(0, 100))}
-          ${group.tables.length > 100 ? `<p class="info-message">Viser de første 100 av ${group.tables.length} resultater i denne gruppen</p>` : ''}
+          ${group.tables.length > 100 ? `<p class="info-message">${tpl('search.showingFirst', group.tables.length)}</p>` : ''}
         </details>
       `).join('')}
     </div>
@@ -306,7 +306,7 @@ function _searchGroupBySubject(tables, mh, preserveOrder) {
     if (!groups[code]) {
       groups[code] = {
         code: code,
-        label: mh.subjectNames[code] || code,
+        label: t('subject.name.' + code) || mh.subjectNames[code] || code,
         tables: []
       };
     }
@@ -342,11 +342,11 @@ function _searchUpdateDropdownCounts() {
     const selectedValue = subjectFilterEl.value;
 
     subjectFilterEl.innerHTML = `
-      <option value="">Alle emner${totalCount > 0 ? ` (${totalCount})` : ''}</option>
+      <option value="">${t('filter.allSubjects')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
       ${Object.entries(mh.subjectGroups).map(([id, group]) => `
-        <optgroup label="${escapeHtml(group.label)}">
+        <optgroup label="${escapeHtml(t('subject.group.' + group.id))}">
           ${group.subjects.map(subjectCode => {
-            const subjectName = mh.subjectNames[subjectCode];
+            const subjectName = t('subject.name.' + subjectCode) || mh.subjectNames[subjectCode];
             const count = hitCounts[subjectCode] || 0;
             const disabled = count === 0 ? 'disabled' : '';
             return `<option value="${subjectCode}" ${disabled}>${escapeHtml(subjectName)} (${count})</option>`;
@@ -369,11 +369,11 @@ function _searchUpdateDropdownCounts() {
     const selectedValue = frequencyFilterEl.value;
 
     frequencyFilterEl.innerHTML = `
-      <option value="">Alle frekvenser${totalCount > 0 ? ` (${totalCount})` : ''}</option>
-      <option value="Monthly">Månedlig (${frequencyCounts['Monthly'] || 0})</option>
-      <option value="Quarterly">Kvartalsvis (${frequencyCounts['Quarterly'] || 0})</option>
-      <option value="Annual">Årlig (${frequencyCounts['Annual'] || 0})</option>
-      <option value="Other">Annet (${frequencyCounts['Other'] || 0})</option>
+      <option value="">${t('filter.allFrequencies')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
+      <option value="Monthly">${t('filter.monthly')} (${frequencyCounts['Monthly'] || 0})</option>
+      <option value="Quarterly">${t('filter.quarterly')} (${frequencyCounts['Quarterly'] || 0})</option>
+      <option value="Annual">${t('filter.annual')} (${frequencyCounts['Annual'] || 0})</option>
+      <option value="Other">${t('filter.other')} (${frequencyCounts['Other'] || 0})</option>
     `;
 
     if (selectedValue) {
@@ -387,12 +387,12 @@ function _searchUpdateDropdownCounts() {
     const selectedValue = updatedFilterEl.value;
 
     updatedFilterEl.innerHTML = `
-      <option value="">Alle perioder${totalCount > 0 ? ` (${totalCount})` : ''}</option>
-      <option value="1">Oppdatert siste dag (${updatedCounts['1'] || 0})</option>
-      <option value="7">Oppdatert siste uke (${updatedCounts['7'] || 0})</option>
-      <option value="30">Oppdatert siste måned (${updatedCounts['30'] || 0})</option>
-      <option value="365">Oppdatert siste år (${updatedCounts['365'] || 0})</option>
-      <option value="730">Oppdatert siste to år (${updatedCounts['730'] || 0})</option>
+      <option value="">${t('filter.allPeriods')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
+      <option value="1">${t('filter.lastDay')} (${updatedCounts['1'] || 0})</option>
+      <option value="7">${t('filter.lastWeek')} (${updatedCounts['7'] || 0})</option>
+      <option value="30">${t('filter.lastMonth')} (${updatedCounts['30'] || 0})</option>
+      <option value="365">${t('filter.lastYear')} (${updatedCounts['365'] || 0})</option>
+      <option value="730">${t('filter.last2Years')} (${updatedCounts['730'] || 0})</option>
     `;
 
     if (selectedValue) {

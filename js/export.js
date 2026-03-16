@@ -13,7 +13,7 @@ function showExportDialog() {
   logger.log('[Export] Opening export dialog');
 
   if (!currentData || !AppState.tableLayout) {
-    showError('Ingen data å eksportere');
+    showError(t('error.noDataExport'));
     return;
   }
 
@@ -31,83 +31,83 @@ function showExportDialog() {
     <div class="dialog-overlay" id="export-dialog">
       <div class="dialog-container">
         <div class="dialog-header">
-          <h3>Last ned tabell</h3>
+          <h3>${t('export.title')}</h3>
           <button class="dialog-close" id="export-dialog-close">&times;</button>
         </div>
 
         <div class="dialog-content">
           <!-- File Format -->
           <div class="form-group">
-            <label class="form-label">Filformat:</label>
+            <label class="form-label">${t('export.format')}</label>
             <div class="radio-group">
               <label class="radio-option">
                 <input type="radio" name="export-format" value="xlsx" checked>
-                <span>Excel (xlsx)</span>
+                <span>${t('export.formatExcel')}</span>
               </label>
               <label class="radio-option">
                 <input type="radio" name="export-format" value="csv">
-                <span>CSV (semikolon-separert tekstfil)</span>
+                <span>${t('export.formatCsv')}</span>
               </label>
               <label class="radio-option">
                 <input type="radio" name="export-format" value="px">
-                <span>PX (PC-Axis format)</span>
+                <span>${t('export.formatPx')}</span>
               </label>
             </div>
           </div>
 
           <!-- Display Format -->
           <div class="form-group">
-            <label class="form-label">Vis verdier som:</label>
+            <label class="form-label">${t('export.displayAs')}</label>
             <div class="radio-group">
               <label class="radio-option">
                 <input type="radio" name="display-format" value="" checked>
-                <span>Standard</span>
+                <span>${t('export.displayStandard')}</span>
               </label>
               <label class="radio-option">
                 <input type="radio" name="display-format" value="UseTexts">
-                <span>Tekst (f.eks. "Oslo")</span>
+                <span>${t('export.displayText')}</span>
               </label>
               <label class="radio-option">
                 <input type="radio" name="display-format" value="UseCodes">
-                <span>Koder (f.eks. "0301")</span>
+                <span>${t('export.displayCodes')}</span>
               </label>
               <label class="radio-option">
                 <input type="radio" name="display-format" value="UseCodesAndTexts">
-                <span>Både koder og tekst (f.eks. "0301: Oslo")</span>
+                <span>${t('export.displayBoth')}</span>
               </label>
             </div>
           </div>
 
           <!-- CSV Separator (only for CSV) -->
           <div class="form-group" id="csv-separator-group">
-            <label class="form-label">CSV-separator:</label>
+            <label class="form-label">${t('export.csvSeparator')}</label>
             <div class="radio-group">
               <label class="radio-option">
                 <input type="radio" name="csv-separator" value="SeparatorSemicolon" checked>
-                <span>Semikolon (;) - Standard for norsk Excel</span>
+                <span>${t('export.sepSemicolon')}</span>
               </label>
               <label class="radio-option">
                 <input type="radio" name="csv-separator" value="SeparatorTab">
-                <span>Tabulator</span>
+                <span>${t('export.sepTab')}</span>
               </label>
               <label class="radio-option">
                 <input type="radio" name="csv-separator" value="SeparatorSpace">
-                <span>Mellomrom</span>
+                <span>${t('export.sepSpace')}</span>
               </label>
             </div>
           </div>
 
           <!-- Table Layout -->
           <div class="form-group">
-            <label class="form-label">Tabelloppsett:</label>
+            <label class="form-label">${t('export.layout')}</label>
             <div class="radio-group">
               <label class="radio-option">
                 <input type="radio" name="table-layout" value="as-shown" checked>
-                <span>Som vist på skjermen (heading: ${escapeHtml(layout.columns.join(', ') || 'ingen')})</span>
+                <span>${tpl('export.layoutAsShown', escapeHtml(layout.columns.join(', ') || 'ingen'))}</span>
               </label>
               <label class="radio-option">
                 <input type="radio" name="table-layout" value="pivot-friendly">
-                <span>Pivotvennlig (alle variabler i stub, lettere å pivotere i Excel)</span>
+                <span>${t('export.layoutPivot')}</span>
               </label>
             </div>
           </div>
@@ -116,20 +116,20 @@ function showExportDialog() {
           <div class="form-group">
             <label class="checkbox-option">
               <input type="checkbox" id="include-title" checked>
-              <span>Inkluder tabelltittel</span>
+              <span>${t('export.includeTitle')}</span>
             </label>
           </div>
 
           <!-- Export Info -->
           <div class="export-info">
-            <p><strong>Info:</strong> Filen lastes ned direkte fra SSB sitt API.</p>
-            <p>Tabellen inneholder <strong>${escapeHtml(currentData.value.length.toLocaleString('nb-NO'))}</strong> datapunkter.</p>
+            <p>${tpl('export.downloadInfo', AppConfig.source?.name || 'API')}</p>
+            <p>${tpl('export.dataPoints', escapeHtml(currentData.value.length.toLocaleString('nb-NO')))}</p>
           </div>
         </div>
 
         <div class="dialog-footer">
-          <button class="btn-secondary" id="export-cancel-btn">Avbryt</button>
-          <button class="btn-primary" id="export-download-btn">Last ned</button>
+          <button class="btn-secondary" id="export-cancel-btn">${t('export.cancel')}</button>
+          <button class="btn-primary" id="export-download-btn">${t('export.download')}</button>
         </div>
       </div>
     </div>
@@ -192,7 +192,7 @@ function setupExportDialogEvents() {
       } catch (error) {
         logger.error('[Export] Download button handler error:', error);
         closeDialog();
-        showError('Nedlastingen feilet', error);
+        showError(t('error.downloadFailed'), error);
       }
     });
   }
@@ -248,13 +248,13 @@ async function executeExport() {
 
   // Trigger download via API (with loading indicator)
   try {
-    showLoading(true, 'Laster ned fil...');
+    showLoading(true, t('loading.file'));
     await api.downloadTableData(AppState.selectedTable.id, valueCodes, {
       format: format,
       stub: stub,
       heading: heading,
       formatParams: formatParams,
-      lang: 'no',
+      lang: getCurrentApiLang(),
       codelistIds: AppState.activeCodelistIds
     });
     showLoading(false);
@@ -262,7 +262,7 @@ async function executeExport() {
   } catch (error) {
     showLoading(false);
     logger.error('[Export] Export failed:', error);
-    showError('Kunne ikke laste ned filen', error);
+    showError(t('error.downloadFailed2'), error);
   }
 }
 
@@ -271,7 +271,7 @@ async function executeExport() {
  */
 async function quickExportXlsx() {
   if (!currentData || !AppState.tableLayout) {
-    showError('Ingen data å eksportere');
+    showError(t('error.noDataExport'));
     return;
   }
 
@@ -279,20 +279,20 @@ async function quickExportXlsx() {
   const valueCodes = AppState.variableSelection;
 
   try {
-    showLoading(true, 'Laster ned fil...');
+    showLoading(true, t('loading.file'));
     await api.downloadTableData(AppState.selectedTable.id, valueCodes, {
       format: 'xlsx',
       stub: layout.rows,
       heading: layout.columns,
       formatParams: ['IncludeTitle'],
-      lang: 'no',
+      lang: getCurrentApiLang(),
       codelistIds: AppState.activeCodelistIds
     });
     showLoading(false);
   } catch (error) {
     showLoading(false);
     logger.error('[Export] Quick export failed:', error);
-    showError('Kunne ikke laste ned filen', error);
+    showError(t('error.downloadFailed2'), error);
   }
 }
 

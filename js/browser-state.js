@@ -48,12 +48,19 @@ const BrowserState = {
     await this._initPromise;
   },
 
+  reset() {
+    this.isLoaded = false;
+    this._initPromise = null;
+    this.allTables = [];
+    this.menuHierarchy = null;
+  },
+
   async _doInit() {
     try {
       logger.log('[BrowserState] Fetching all tables (including discontinued)...');
 
       const response = await api.getTables({
-        lang: 'no',
+        lang: getCurrentApiLang(),
         pageSize: 10000,
         includeDiscontinued: true
       });

@@ -46,10 +46,10 @@ function updateValueCounter(card) {
   const mode = container.dataset.mode;
 
   if (mode === 'star') {
-    selectedCount.textContent = 'alle';
+    selectedCount.textContent = t('status.all');
   } else if (mode === 'top') {
     const topN = card.querySelector('.top-n-input')?.value || '10';
-    selectedCount.textContent = 'siste ' + topN;
+    selectedCount.textContent = tpl('status.topMode', topN);
   } else {
     const count = container.querySelectorAll('.value-list-item.selected').length;
     selectedCount.textContent = count;
@@ -86,11 +86,11 @@ function updateSelectionStatus() {
   const isValid = validateSelection(selection);
 
   if (isValid) {
-    statusElement.textContent = 'Klar til \u00e5 hente data';
+    statusElement.textContent = t('status.ready');
     statusElement.className = 'selection-status-valid';
     fetchButton.disabled = false;
   } else {
-    statusElement.textContent = 'Velg minst \u00e9n verdi for alle obligatoriske variabler';
+    statusElement.textContent = t('status.selectRequired');
     statusElement.className = 'selection-status-invalid';
     fetchButton.disabled = true;
   }
@@ -107,11 +107,11 @@ function updateSelectionStatus() {
     // No selection for this dimension
     if (!dimSelection || (Array.isArray(dimSelection) && dimSelection.length === 0)) {
       if (isElimination) {
-        summary.textContent = 'Ingen verdier valgt (variabelen utelates fra sp\u00f8rringen)';
+        summary.textContent = t('status.noValuesOpt');
         summary.className = 'variable-selection-summary summary-optional';
         setCardStatus(card, 'optional');
       } else {
-        summary.textContent = 'Ingen verdier valgt';
+        summary.textContent = t('status.noValues');
         summary.className = 'variable-selection-summary summary-invalid';
         setCardStatus(card, 'invalid');
       }
@@ -121,10 +121,10 @@ function updateSelectionStatus() {
 
     if (Array.isArray(dimSelection)) {
       const count = dimSelection.length;
-      summary.textContent = count + ' verdi' + (count === 1 ? '' : 'er') + ' valgt';
+      summary.textContent = count + ' ' + (count === 1 ? t('unit.value.one') : t('unit.value.many')) + ' valgt';
       summary.className = 'variable-selection-summary summary-valid';
     } else if (dimSelection === '*') {
-      summary.textContent = 'Alle verdier valgt';
+      summary.textContent = t('status.allSelected');
       summary.className = 'variable-selection-summary summary-valid';
     } else if (typeof dimSelection === 'string' && dimSelection.startsWith('top(')) {
       summary.textContent = dimSelection;
@@ -141,7 +141,7 @@ function updateSelectionStatus() {
 
   // Disable fetch button if cell count exceeds API limit (800,000)
   if (isValid && cellCount > AppConfig.limits.maxCells) {
-    statusElement.textContent = 'For mange celler valgt \u2014 reduser utvalget';
+    statusElement.textContent = t('status.tooManyCells');
     statusElement.className = 'selection-status-invalid';
     fetchButton.disabled = true;
   }
@@ -279,12 +279,12 @@ function updateSelectionCellCount() {
 
   const formatted = selectedCells.toLocaleString('nb-NO');
   const maxFormatted = maxCells.toLocaleString('nb-NO');
-  cellCountEl.textContent = formatted + ' celler valgt (av maks ' + maxFormatted + ' mulige)';
+  cellCountEl.textContent = tpl('status.cellsSelected', formatted, t('unit.cell.many'), maxFormatted);
 
   // Warn if approaching API limit (800,000 cells)
   if (selectedCells > 800000) {
     cellCountEl.style.color = 'var(--color-error)';
-    cellCountEl.textContent += ' \u2014 overskrider API-grensen p\u00e5 800\u00a0000!';
+    cellCountEl.textContent += ' ' + t('status.exceedsLimit');
   } else if (selectedCells > 600000) {
     cellCountEl.style.color = '#e65100';
   } else {
