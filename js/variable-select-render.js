@@ -103,7 +103,7 @@ async function displayVariables() {
             ` : ''}
           </div>
 
-          <div class="value-filter-container">
+          <div class="value-filter-container value-filter-wrapper">
             <input type="text" class="value-filter-input" placeholder="Filtrer verdier...">
           </div>
 

@@ -61,6 +61,18 @@ function updateValueCounter(card) {
 // ============================================================
 
 /**
+ * Set the left-border status class on a variable card and toggle badge visibility.
+ * @param {HTMLElement} card - The .variable-card element
+ * @param {'valid'|'invalid'|'optional'} status
+ */
+function setCardStatus(card, status) {
+  card.classList.remove('card-status-invalid', 'card-status-valid', 'card-status-optional');
+  card.classList.add('card-status-' + status);
+  const badge = card.querySelector('.variable-badge');
+  if (badge) badge.classList.toggle('badge-hidden', status === 'valid');
+}
+
+/**
  * Update selection status and enable/disable fetch button.
  * Also updates per-card summaries and the API query preview.
  */
@@ -97,9 +109,11 @@ function updateSelectionStatus() {
       if (isElimination) {
         summary.textContent = 'Ingen verdier valgt (variabelen utelates fra sp\u00f8rringen)';
         summary.className = 'variable-selection-summary summary-optional';
+        setCardStatus(card, 'optional');
       } else {
         summary.textContent = 'Ingen verdier valgt';
         summary.className = 'variable-selection-summary summary-invalid';
+        setCardStatus(card, 'invalid');
       }
       updateValueCounter(card);
       return;
@@ -117,6 +131,7 @@ function updateSelectionStatus() {
       summary.className = 'variable-selection-summary summary-valid';
     }
 
+    setCardStatus(card, 'valid');
     updateValueCounter(card);
   });
 
