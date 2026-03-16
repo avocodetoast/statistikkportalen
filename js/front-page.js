@@ -27,7 +27,7 @@ async function renderFrontPage(container) {
   }
 
   const mh = BrowserState.menuHierarchy;
-  const recentBuckets = _collectRecentUpdateGroups(mh);
+  const recentBuckets = _collectRecentUpdateGroups(mh, BrowserState.recentTables);
 
   container.innerHTML = `
     <div class="front-page">
@@ -153,8 +153,13 @@ async function renderFrontPage(container) {
  * - "I dag" and previous business day always shown (with empty state if needed).
  * - Monday uses "fredag" as previous business day instead of "i går".
  * - "Siste uke" (remaining days) is collapsible and omitted when empty.
+ *
+ * @param {MenuHierarchy} mh - Menu hierarchy for grouping by topic
+ * @param {Array|null} recentTables - Pre-fetched tables from pastDays=7 API call.
+ *   When provided, only these tables are scanned (much smaller than the full 7000+ list).
+ *   Falls back to scanning all tables in the hierarchy if not provided.
  */
-function _collectRecentUpdateGroups(mh) {
+function _collectRecentUpdateGroups(mh, recentTables) {
   const now = new Date();
   const dow = now.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -167,27 +172,51 @@ function _collectRecentUpdateGroups(mh) {
   const startOfWeek = new Date(startOfToday);
   startOfWeek.setDate(startOfWeek.getDate() - 7);
 
-  // Collect nodes at category level (depth 2). If a subtopic has no categories,
-  // fall back to subtopic level. Only include a table if its first path matches
-  // the node's path, so tables with multiple paths appear in exactly one group.
+  // When we have pre-fetched recent tables (from pastDays API parameter),
+  // group them by their first path instead of walking the full hierarchy tree.
+  // This avoids scanning all ~7000 tables when we only need the ~50-200 recent ones.
   const nodeEntries = [];
-  function addEntry(node, path) {
-    const tables = mh._collectAllTables(node, true).filter(t => {
+
+  if (recentTables && recentTables.length > 0) {
+    // Group pre-fetched tables by their topic node path
+    const byPath = {};
+    for (const t of recentTables) {
       const fp = t.paths && t.paths[0];
-      if (!fp || fp.length < path.length) return false;
-      return path.every((id, i) => fp[i].id === id);
-    });
-    if (tables.length > 0) nodeEntries.push({ label: node.label, path, tables });
-  }
-  for (const [subjectCode, subjectNode] of Object.entries(mh.hierarchy)) {
-    for (const [subtopicId, subtopicNode] of Object.entries(subjectNode.children)) {
-      const categories = Object.entries(subtopicNode.children);
-      if (categories.length > 0) {
-        for (const [categoryId, categoryNode] of categories) {
-          addEntry(categoryNode, [subjectCode, subtopicId, categoryId]);
+      if (!fp || fp.length < 2) continue;
+      // Use depth 2 (category) if available, else depth 1 (subtopic)
+      const depth = fp.length >= 3 ? 3 : 2;
+      const pathIds = fp.slice(0, depth).map(p => p.id);
+      const key = pathIds.join('/');
+      if (!byPath[key]) {
+        // Derive label from the deepest node in the path
+        const label = fp[depth - 1].label || pathIds[depth - 1];
+        byPath[key] = { label, path: pathIds, tables: [] };
+      }
+      byPath[key].tables.push(t);
+    }
+    for (const entry of Object.values(byPath)) {
+      nodeEntries.push(entry);
+    }
+  } else {
+    // Fallback: walk the full hierarchy tree
+    function addEntry(node, path) {
+      const tables = mh._collectAllTables(node, true).filter(t => {
+        const fp = t.paths && t.paths[0];
+        if (!fp || fp.length < path.length) return false;
+        return path.every((id, i) => fp[i].id === id);
+      });
+      if (tables.length > 0) nodeEntries.push({ label: node.label, path, tables });
+    }
+    for (const [subjectCode, subjectNode] of Object.entries(mh.hierarchy)) {
+      for (const [subtopicId, subtopicNode] of Object.entries(subjectNode.children)) {
+        const categories = Object.entries(subtopicNode.children);
+        if (categories.length > 0) {
+          for (const [categoryId, categoryNode] of categories) {
+            addEntry(categoryNode, [subjectCode, subtopicId, categoryId]);
+          }
+        } else {
+          addEntry(subtopicNode, [subjectCode, subtopicId]);
         }
-      } else {
-        addEntry(subtopicNode, [subjectCode, subtopicId]);
       }
     }
   }

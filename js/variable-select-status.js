@@ -266,11 +266,13 @@ function updateSelectionCellCount() {
   const maxFormatted = maxCells.toLocaleString('nb-NO');
   cellCountEl.textContent = formatted + ' celler valgt (av maks ' + maxFormatted + ' mulige)';
 
-  // Warn if approaching API limit (800,000 cells)
-  if (selectedCells > 800000) {
+  // Warn if approaching API cell limit
+  const apiMaxCells = AppConfig.limits.maxCells;
+  const apiWarningThreshold = AppConfig.limits.cellWarningThreshold;
+  if (selectedCells > apiMaxCells) {
     cellCountEl.style.color = 'var(--color-error)';
-    cellCountEl.textContent += ' \u2014 overskrider API-grensen p\u00e5 800\u00a0000!';
-  } else if (selectedCells > 600000) {
+    cellCountEl.textContent += ' \u2014 overskrider API-grensen p\u00e5 ' + apiMaxCells.toLocaleString('nb-NO') + '!';
+  } else if (selectedCells > apiWarningThreshold) {
     cellCountEl.style.color = '#e65100';
   } else {
     cellCountEl.style.color = '';

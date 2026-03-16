@@ -11,6 +11,7 @@
 const BrowserState = {
   menuHierarchy: null,
   allTables: [],
+  recentTables: null,
   isLoaded: false,
   _initPromise: null,
 
@@ -52,11 +53,23 @@ const BrowserState = {
     try {
       logger.log('[BrowserState] Fetching all tables (including discontinued)...');
 
-      const response = await api.getTables({
-        lang: 'no',
-        pageSize: 10000,
-        includeDiscontinued: true
-      });
+      // Fetch API config, full table list, and recently updated tables in parallel
+      const [response, , recentResponse] = await Promise.all([
+        api.getTables({
+          lang: 'no',
+          pageSize: 10000,
+          includeDiscontinued: true
+        }),
+        api.getConfig(),
+        api.getTables({
+          lang: 'no',
+          pageSize: 10000,
+          pastDays: 7,
+          useCache: true
+        }).catch(() => null)
+      ]);
+
+      this.recentTables = recentResponse ? recentResponse.tables : null;
 
       this.allTables = response.tables;
       logger.log(`[BrowserState] Loaded ${this.allTables.length} tables`);

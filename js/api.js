@@ -30,6 +30,35 @@ class SSBApi {
   }
 
   /**
+   * Parse an error response and throw with a descriptive message.
+   * SSB returns RFC 7807 Problem Detail JSON with a `detail` field
+   * that contains specific, actionable error descriptions.
+   *
+   * @param {Response} response - The failed fetch response
+   * @throws {Error} - Error with the best available message
+   */
+  async _handleErrorResponse(response) {
+    if (response.status === 429) {
+      throw new Error('For mange forespørsler. Vennligst vent litt og prøv igjen.');
+    }
+
+    // Try to parse RFC 7807 Problem Detail response
+    let detail = '';
+    try {
+      const body = await response.json();
+      detail = body.detail || body.title || '';
+    } catch (e) {
+      // Response wasn't JSON — fall through to generic message
+    }
+
+    if (response.status === 403) {
+      throw new Error(detail || 'Spørringen ga for mange celler. Reduser utvalget og prøv igjen.');
+    }
+
+    throw new Error(detail || ('HTTP ' + response.status + ': ' + response.statusText));
+  }
+
+  /**
    * Get list of tables with optional search/filtering.
    * Results are cached for 24 hours (tableListTTL).
    *
@@ -38,6 +67,7 @@ class SSBApi {
    * @param {boolean} options.includeDiscontinued - Include discontinued tables (default: true)
    * @param {string} options.lang - Language code (default: 'no')
    * @param {number} options.pageSize - Page size (default: 10000)
+   * @param {number} options.pastDays - Only include tables updated within this many days
    * @param {boolean} options.useCache - Whether to use cached data (default: true)
    * @returns {Promise<object>} - Table list response
    */
@@ -47,12 +77,14 @@ class SSBApi {
       includeDiscontinued = true,
       lang = 'no',
       pageSize = 10000,
+      pastDays = null,
       useCache = true
     } = options;
 
     // Build cache key from all parameters that affect the result
     const cacheKey = 'tables_' + lang + '_' + includeDiscontinued + '_' + pageSize +
-                     (query ? '_q_' + query : '');
+                     (query ? '_q_' + query : '') +
+                     (pastDays ? '_pd_' + pastDays : '');
 
     if (useCache) {
       const cached = await this.cache.get(cacheKey);
@@ -75,6 +107,11 @@ class SSBApi {
         params.append('query', query.trim());
       }
 
+      // Filter by recent updates
+      if (pastDays) {
+        params.append('pastDays', pastDays.toString());
+      }
+
       const url = this.baseUrl + '/tables?' + params.toString();
       logger.log('[API] Fetching tables:', url);
 
@@ -86,10 +123,7 @@ class SSBApi {
       });
 
       if (!response.ok) {
-        if (response.status === 429) {
-          throw new Error('For mange forespørsler. Vennligst vent litt og prøv igjen.');
-        }
-        throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+        await this._handleErrorResponse(response);
       }
 
       const data = await response.json();
@@ -132,10 +166,7 @@ class SSBApi {
       });
 
       if (!response.ok) {
-        if (response.status === 429) {
-          throw new Error('For mange forespørsler. Vennligst vent litt og prøv igjen.');
-        }
-        throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+        await this._handleErrorResponse(response);
       }
 
       const data = await response.json();
@@ -218,12 +249,7 @@ class SSBApi {
       });
 
       if (!response.ok) {
-        if (response.status === 429) {
-          throw new Error('For mange forespørsler. Vennligst vent litt og prøv igjen.');
-        }
-        const errorText = await response.text();
-        logger.error('[API] Error response:', errorText);
-        throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+        await this._handleErrorResponse(response);
       }
 
       const data = await response.json();
@@ -275,10 +301,7 @@ class SSBApi {
       });
 
       if (!response.ok) {
-        if (response.status === 429) {
-          throw new Error('For mange forespørsler. Vennligst vent litt og prøv igjen.');
-        }
-        throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+        await this._handleErrorResponse(response);
       }
 
       const data = await response.json();
@@ -337,10 +360,7 @@ class SSBApi {
       });
 
       if (!response.ok) {
-        if (response.status === 429) {
-          throw new Error('For mange forespørsler. Vennligst vent litt og prøv igjen.');
-        }
-        throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+        await this._handleErrorResponse(response);
       }
 
       const blob = await response.blob();
@@ -400,7 +420,7 @@ class SSBApi {
     });
 
     if (!response.ok) {
-      throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+      await this._handleErrorResponse(response);
     }
 
     const data = await response.json();
@@ -423,10 +443,62 @@ class SSBApi {
     });
 
     if (!response.ok) {
-      throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+      await this._handleErrorResponse(response);
     }
 
     return response.json();
+  }
+
+  /**
+   * Fetch API configuration from the /config endpoint.
+   * Updates AppConfig.limits with the server's maxDataCells value.
+   * Cached for 24 hours (same as table list).
+   *
+   * @returns {Promise<object>} - Config response
+   */
+  async getConfig() {
+    const cacheKey = 'api_config';
+    const cached = await this.cache.get(cacheKey);
+    if (cached) {
+      this._applyConfig(cached);
+      return cached;
+    }
+
+    try {
+      const url = this.baseUrl + '/config';
+      logger.log('[API] Fetching API config:', url);
+
+      const response = await this._throttledFetch(url, {
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (!response.ok) {
+        logger.warn('[API] Could not fetch config, using defaults');
+        return null;
+      }
+
+      const data = await response.json();
+      logger.log('[API] API config: maxDataCells=' + data.maxDataCells +
+                 ', maxCalls=' + data.maxCallsPerTimeWindow + '/' + data.timeWindow);
+
+      this._applyConfig(data);
+      await this.cache.set(cacheKey, data, AppConfig.cache.tableListTTL);
+      return data;
+    } catch (error) {
+      logger.warn('[API] Failed to fetch config, using defaults:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Apply server config values to AppConfig.limits.
+   * @param {object} config - Config response from /config endpoint
+   */
+  _applyConfig(config) {
+    if (config.maxDataCells != null) {
+      AppConfig.limits.maxCells = config.maxDataCells;
+      AppConfig.limits.cellWarningThreshold = Math.round(config.maxDataCells * 0.75);
+    }
   }
 
   /**
