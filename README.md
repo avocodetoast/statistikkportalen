@@ -1,4 +1,7 @@
-# Statistikkportalen
+# Statistikkportalen JBR test
+
+Se også:  https://nesa.no/ssb/statport-test/#home
+
 Statistikkportalen er et uoffisielt grensesnitt som forbedrer tilgangen til SSBs data. Applikasjonen gir rask navigering gjennom lokal caching, et kompakt grensesnitt for å minimere scrolling, og enklere oppdagelse av tabeller gjennom menynavigering.
 
 Applikasjonen kan også med mindre justeringer tilpasses andre systemer som bruker PxWebApi, eksempelvis SCBs statistikkbank.
