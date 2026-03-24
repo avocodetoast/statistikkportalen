@@ -326,9 +326,13 @@ function getVariableSelection() {
 
     if (mode === 'star') {
       const codelistInfo = activeCodelists[dimCode];
-      if (codelistInfo) {
-        // Codelist active: send explicit codes from the codelist, not *
-        // (* means all values in the full dimension, not just the codelist subset)
+      if (codelistInfo && codelistInfo.isAggregated) {
+        // Aggregated (agg_) codelist: send all codelist codes as-is.
+        // The API resolves them using the codelist ID in the POST body.
+        selection[dimCode] = codelistInfo.values.map(v => v.code);
+      } else if (codelistInfo) {
+        // Filter (vs_) codelist: send all original codes explicitly.
+        // (* would select the full dimension, not just the codelist subset.)
         selection[dimCode] = Array.from(codelistInfo.originalCodes);
       } else {
         selection[dimCode] = '*';
@@ -341,11 +345,13 @@ function getVariableSelection() {
       const selectedItems = container.querySelectorAll('.value-list-item.selected');
       let values = Array.from(selectedItems).map(item => item.dataset.code);
 
-      // If any codelist is active, expand via valueMap to get original dimension codes.
-      // For filter codelists: valueMap[0] === code, so expansion is a no-op.
-      // For aggregated codelists: expands to the original dimension codes.
+      // If a filter (vs_) codelist is active, expand via valueMap to get original
+      // dimension codes. For filter codelists valueMap[0] === code, so this is
+      // effectively a no-op, but keeps the logic consistent.
+      // Aggregated (agg_) codelists: keep the aggregate codes as-is — the API
+      // resolves them using the codelist ID in the POST body.
       const codelistInfo = activeCodelists[dimCode];
-      if (codelistInfo) {
+      if (codelistInfo && !codelistInfo.isAggregated) {
         const expandedCodes = new Set();
         selectedItems.forEach(item => {
           const valueMapJson = item.dataset.valuemap;
