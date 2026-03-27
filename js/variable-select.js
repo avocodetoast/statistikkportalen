@@ -108,7 +108,6 @@ async function renderVariableSelection(container) {
                 <option value="csv">CSV</option>
                 <option value="xlsx">Excel (xlsx)</option>
                 <option value="px">PX (PC-Axis)</option>
-                <option value="parquet">Parquet</option>
                 <option value="html">HTML</option>
                 <option value="json-px">JSON-PX</option>
               </select>
@@ -153,9 +152,8 @@ async function renderVariableSelection(container) {
             <div class="api-builder-section-header">
               <span class="api-builder-section-title">${t('api.dataUrl')}</span>
               <div class="api-builder-actions">
-                <label class="api-builder-checkbox-label" title="${t('api.decodedUrlTooltip')}"><input type="checkbox" id="api-decode-url-cb"> ${t('api.showPlaintext')}</label>
+                <label class="api-builder-checkbox-label" title="${t('api.decodedUrlTooltip')}"><input type="checkbox" id="api-decode-url-cb" checked> ${t('api.showPlaintext')}</label>
                 <button class="btn-secondary btn-sm" id="api-copy-url-btn" title="${t('api.copyUrl')}">${t('api.copyUrl')}</button>
-                <button class="btn-secondary btn-sm" id="api-copy-curl-btn" title="${t('api.copyCurl')}">${t('api.copyCurl')}</button>
                 <button class="btn-secondary btn-sm" id="api-open-btn" title="${t('api.openNewTab')}">${t('api.openBrowser')}</button>
               </div>
             </div>

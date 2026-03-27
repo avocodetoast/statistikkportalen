@@ -14,31 +14,39 @@ Applikasjonen kan også med mindre justeringer tilpasses andre systemer som bruk
    - Støtte for spesielle operatorer
      - `*` — Alle verdier
      - `top(n)` — De n siste verdiene (f.eks. `top(12)` for siste 12 måneder)
+     - `from(periode)` — Alle verdier fra og med en gitt periode (f.eks. `from(2020M01)`)
    - Visuelle indikatorer for valideringsstatus
 
-3. **Datavisning**
+3. **API-bygger**
+   - Generer GET- og POST-URL direkte fra variabelvalget
+   - Støtte for alle responsformater (JSON-stat2, CSV, Excel, PX, HTML)
+   - Tidsdimensjonen optimeres automatisk: eksplisitte perioder erstattes med `from(startdato)` eller `top(n)` for en dynamisk URL som alltid henter ferske data
+   - URL vises i klartekst som standard
+   - Kopier URL eller POST-body med ett klikk
+
+4. **Datavisning**
    - Intelligent standard layout
    - Sticky headers for enkel navigering i store tabeller
    - Norske tallformater (mellomrom som tusenskilletegn, komma som desimalskilletegn)
 
-4. **Tabellrotasjon**
+5. **Tabellrotasjon**
    - Drag-and-drop-grensesnitt for å endre tabellayout
    - Flytt dimensjoner mellom rader og kolonner
    - Hurtigvalg: Standard, Transponér, Alle som rader/kolonner
 
-5. **Dataeksport**
+6. **Dataeksport**
    - Eksporter til Excel, CSV og PX-format
    - Valg for eksportformat, eksempelvis pivotvennlig CSV
 
-6. **Caching**
+7. **Caching**
    - Intelligent caching av API-kall i localStorage
    - Automatisk opprydding av utdaterte data
 
-7. **Lagrede spørringer**
+8. **Lagrede spørringer**
    - Lagre spørringer som kan gjenfinnes med lenke
    - Åpne en SSB-spørring ved å lime lenken inn i søkefeltet
 
-8. **Smart søk (beta)**
+9. **Smart søk (beta)**
    - Finn flere tabeller enn ved den vanlige søkemodusen
 
 ## Kom i gang
@@ -50,7 +58,7 @@ Applikasjonen kan også med mindre justeringer tilpasses andre systemer som bruk
 6. Utforsk, roter og eksporter data
 
 ## Systemkrav
-- Moderne nettleser (Chrome, Firefox, Safari, Edge)
+- Moderne nettleser (Chrome, Firefox, Safari, Edge, Vivaldi)
 - JavaScript aktivert
 - Internettforbindelse (for API-kall)
 - localStorage aktivert (for caching)
@@ -58,4 +66,4 @@ Applikasjonen kan også med mindre justeringer tilpasses andre systemer som bruk
 ## Lisens
 Denne koden er lisensiert under [MIT-lisens](LICENCE.md).
 Data fra Statistisk sentralbyrå er lisensiert under [CC BY 4.0](https://www.ssb.no/diverse/lisens).
-
+Data fra Statistiska centralbyrån er lisensiert under [CC0](https://www.scb.se/en/services/open-data-api/).

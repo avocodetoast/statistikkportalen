@@ -19,12 +19,12 @@ function updateModeVisuals(card) {
   const mode = container.dataset.mode;
 
   // Highlight active mode button
-  card.querySelectorAll('.select-star-btn, .select-top-btn').forEach(btn => {
+  card.querySelectorAll('.select-all-btn, .select-top-btn').forEach(btn => {
     btn.classList.remove('btn-active');
   });
 
   if (mode === 'star') {
-    card.querySelector('.select-star-btn')?.classList.add('btn-active');
+    card.querySelector('.select-all-btn')?.classList.add('btn-active');
     container.classList.add('mode-inactive');
   } else if (mode === 'top') {
     card.querySelector('.select-top-btn')?.classList.add('btn-active');
