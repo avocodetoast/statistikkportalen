@@ -1,7 +1,7 @@
 # Statistikkportalen
 Statistikkportalen er et uoffisielt grensesnitt som forbedrer tilgangen til SSBs data. Applikasjonen gir rask navigering gjennom lokal caching, et kompakt grensesnitt for å minimere scrolling, og enklere oppdagelse av tabeller gjennom menynavigering.
 
-Applikasjonen kan også med mindre justeringer tilpasses andre systemer som bruker PxWebApi, eksempelvis SCBs statistikkbank.
+Applikasjonen kan tilpasses andre systemer som bruker PxWebApi v2, eksempelvis SCBs statistikkbank. Det krever kun at tre filer byttes ut: `config.js` (API-URL, kilde, språk), `subjects.js` (emnehierarki) og `synonyms.js` (søkesynonymer).
 
 ## Funksjonalitet
 1. **Oppdag tabeller raskt og enkelt**
