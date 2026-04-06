@@ -50,22 +50,41 @@ function updateQueryPreview() {
     }
   }
 
-  // Build GET URL params (valueCodes + format params)
-  const params = new URLSearchParams({ lang: getCurrentApiLang() });
-  Object.keys(selection).forEach(dimension => {
-    const values = selection[dimension];
-    const valueStr = Array.isArray(values) ? values.join(',') : values;
-    params.append('valueCodes[' + dimension + ']', valueStr);
-  });
-  if (format) params.append('outputFormat', format);
-  if (fmtParams.length > 0) params.append('outputFormatParams', fmtParams.join(','));
-  if (stubDims) params.append('stub', stubDims.join(','));
-
   // Build POST URL params (format params only — valueCodes go in the body)
   const postParams = new URLSearchParams({ lang: getCurrentApiLang() });
   if (format) postParams.append('outputFormat', format);
   if (fmtParams.length > 0) postParams.append('outputFormatParams', fmtParams.join(','));
   if (stubDims) postParams.append('stub', stubDims.join(','));
+
+  // Build GET URL params (POST params + valueCodes + active codelists)
+  // Time dimensions with explicit selections are replaced with from()/top() so the URL
+  // stays dynamically forward-looking (same logic as SSB's own URL simplifier):
+  //   > 2 periods → from(firstPeriod)   — fetch from a fixed start date onwards
+  //   1–2 periods → top(N)              — fetch the last N periods
+  const params = new URLSearchParams(postParams);
+  Object.keys(selection).forEach(dimension => {
+    const values = selection[dimension];
+    let valueStr;
+    if (Array.isArray(values) && values.length > 0) {
+      const isTimeDim = tableMetadata?.role?.time?.length
+        ? tableMetadata.role.time.includes(dimension)
+        : dimension === 'Tid' || dimension.toLowerCase().includes('tid');
+      if (isTimeDim) {
+        valueStr = values.length > 2 ? 'from(' + values[0] + ')' : 'top(' + values.length + ')';
+      } else {
+        valueStr = values.join(',');
+      }
+    } else {
+      valueStr = Array.isArray(values) ? values.join(',') : values;
+    }
+    params.append('valueCodes[' + dimension + ']', valueStr);
+  });
+  const activeCodelistIds = AppState.activeCodelistIds || {};
+  Object.keys(activeCodelistIds).forEach(dimension => {
+    if (activeCodelistIds[dimension]) {
+      params.append('codelist[' + dimension + ']', activeCodelistIds[dimension]);
+    }
+  });
 
   const fullGetUrl = AppConfig.apiBaseUrl + '/tables/' + tableId + '/data?' + params.toString();
   const fullPostUrl = AppConfig.apiBaseUrl + '/tables/' + tableId + '/data?' + postParams.toString();
@@ -119,7 +138,7 @@ function updateQueryPreview() {
 
   // Update metadata URL
   if (metaUrl) {
-    metaUrl.textContent = AppConfig.apiBaseUrl + '/tables/' + tableId + '/metadata?lang=no';
+    metaUrl.textContent = AppConfig.apiBaseUrl + '/tables/' + tableId + '/metadata?lang=' + getCurrentApiLang();
   }
 }
 

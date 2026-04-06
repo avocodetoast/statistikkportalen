@@ -11,15 +11,18 @@ Scripts are loaded in this exact order (each depends on those above it):
 ```
 version.js          — VERSION constant (displayed in footer)
 config.js           — AppConfig, logger
+translations.js     — t(), tpl(), setLanguage(), getCurrentApiLang(); translation dictionary for all UI strings
 cache.js            — CacheManager (IndexedDBCache + localStorage hybrid)
 api.js              — SSBApi (uses CacheManager, AppConfig)
 utils.js            — AppState, renderCurrentView(), helpers, addEscapeHandler()
 router.js           — URLRouter, SSBURLMapper (uses AppState, BrowserState, render*)
-menu-hierarchy.js   — MenuHierarchy class (pure data, no dependencies)
+subjects.js         — SubjectConfig: subjectGroups + subjectNames (instance-specific, swapped per data source)
+menu-hierarchy.js   — MenuHierarchy class (uses SubjectConfig)
 browser-state.js    — BrowserState (uses api, MenuHierarchy, SearchEnhanced, AppState)
 menu-bar.js         — Filter bar rendering (uses BrowserState)
 front-page.js       — renderFrontPage (uses BrowserState, URLRouter)
-search-enhanced.js  — SearchEnhanced (pure scoring/ranking, no side effects)
+synonyms.js         — SearchSynonyms: synonym groups for enhanced search (instance-specific)
+search-enhanced.js  — SearchEnhanced (uses SearchSynonyms; pure scoring/ranking, no side effects)
 search-view.js      — renderSearchView (uses BrowserState, SearchEnhanced, api)
 topic-view.js       — renderTopicView (uses BrowserState, URLRouter)
 variable-select-state.js     ─┐
@@ -151,7 +154,31 @@ BrowserState.selectTable("09772")
               → setupCodelistDropdowns()           // If dimension has extension.codelists[]
               → restoreSelections()                // From AppState.variableSelection (URL state)
            → Wire events: click, shift-click, Ctrl+click, Ctrl+A, filter input, mode buttons
+              // Mode buttons per dimension card:
+              //   "Velg alle"   → star mode ("*"): API wildcard, all values including future ones
+              //   "Opphev alle" → deselect all (specific mode, empty selection)
+              //   "Siste N"     → top(N) mode (time dimensions only)
            → updateAllStatus()                     // Validate, show cell count, enable/disable "Hent data"
+```
+
+### The user opens the API builder
+
+The API builder panel is rendered inside the variable selection view by `variable-select-api.js`. It generates a live preview of the GET and POST URLs for the current selection, and is updated on every selection change.
+
+```
+setupApiBuilder()
+  → updateApiPreview()           // Called on every selection change
+     → buildGetUrl()             // Constructs GET URL with valueCodes[Dim]=... params
+        → Time dimension optimisation:
+           1 period   → top(1)
+           2 periods  → top(2)
+           >2 periods → from(firstPeriod)   // forward-looking: always fetches from fixed start
+        → codelist[Dim]=id appended for agg_ codelists
+        → URL shown decoded (plaintext) by default
+     → buildPostBody()           // Constructs JSON POST body for display
+  → Format selector: JSON-stat2 | CSV | Excel | PX | HTML
+  → "Kopier URL" button  → copies GET URL to clipboard
+  → "Kopier POST-body" button → copies JSON POST body to clipboard
 ```
 
 ### The user clicks "Hent data"
@@ -159,6 +186,10 @@ BrowserState.selectTable("09772")
 ```
 handleFetchData()
   → getVariableSelection()                 // Read DOM state → { Dim: [codes] | "*" | "top(N)" }
+     // Codelist handling in getVariableSelection():
+     //   vs_ (filter) codelist active  → expand via valueMap (no-op: valueMap[0] === code)
+     //   agg_ (aggregation) codelist active → keep aggregate codes as-is;
+     //                                         API resolves them via codelist ID in POST body
   → AppState.variableSelection = selection
   → AppState.setView('table')
      → renderTableDisplay()
@@ -272,6 +303,7 @@ All API calls go through `SSBApi` (api.js) which enforces 100ms minimum spacing 
 GET  /config                          — API limits and capabilities (cached 24h)
 GET  /tables?lang=no&pageSize=10000&includeDiscontinued=true[&query=...][&pastDays=7]
 GET  /tables/{id}/metadata?lang=no
+GET  /tables/{id}/data?lang=no&valueCodes[Dim]=codes[&codelist[Dim]=id][&outputFormat=...]
 POST /tables/{id}/data?lang=no[&outputFormat=xlsx&outputFormatParams=...]
 GET  /codeLists/{id}?lang=no
 POST /savedqueries                    — Create saved query
@@ -287,9 +319,9 @@ On startup, `api.getConfig()` fetches the `/config` endpoint and updates `AppCon
 All API methods use `_handleErrorResponse()` which parses RFC 7807 Problem Detail responses. SSB returns structured JSON errors with a `detail` field containing specific messages (e.g. "Value, xxx is not a valid value code for variable yyy"). Status codes handled:
 
 - **400** — Bad request (invalid value codes, malformed query). Shows the `detail` message.
-- **403** — Forbidden (query exceeds cell limit). Shows a specific Norwegian message.
+- **403** — Forbidden (query exceeds cell limit). Shows `t('error.cellLimit')` (falls back to API `detail` if present).
 - **404** — Not found (table/codelist doesn't exist). Shows the `detail` message.
-- **429** — Rate limited. Shows a "too many requests" message in Norwegian.
+- **429** — Rate limited. Shows `t('error.rateLimit')`.
 
 ### POST body for data requests
 
@@ -297,6 +329,7 @@ All API methods use `_handleErrorResponse()` which parses RFC 7807 Problem Detai
 {
   "selection": [
     { "variableCode": "Kjonn", "valueCodes": ["1","2"], "codelist": "vs_Kjonn" },
+    { "variableCode": "Alder", "valueCodes": ["005","1014"], "codelist": "agg_FemAarigGruppering" },
     { "variableCode": "Tid", "valueCodes": ["top(5)"] }
   ],
   "placement": {
@@ -307,6 +340,11 @@ All API methods use `_handleErrorResponse()` which parses RFC 7807 Problem Detai
 ```
 
 Dimensions omitted from `selection` are "eliminated" — the API aggregates across all values. Only dimensions with `extension.elimination=true` in metadata can be omitted.
+
+**Codelist types and how they affect `valueCodes`:**
+
+- **`vs_` (valueset/filter):** `valueCodes` contains original dimension codes. The codelist restricts which codes are valid; `valueMap` is a no-op (`valueMap[0] === code`).
+- **`agg_` (aggregation):** `valueCodes` contains the codelist's own aggregate codes (e.g. `"005"` for "0–4 år"). The API uses the `codelist` field to resolve these to underlying values and return grouped totals. Sending expanded original codes here would be wrong.
 
 ## JSON-Stat2 response format
 
@@ -375,6 +413,33 @@ query.toLowerCase() → match against table.label, table.id, table.variableNames
 4. AND logic: every token must match somewhere
 5. Server augmentation: API search finds tables by VALUE matches not in local list
 6. Fuzzy fallback: if 0 results, retry with Lucene `~1` edit-distance
+
+## Internationalisation (i18n)
+
+`translations.js` is a self-contained i18n module loaded immediately after `config.js`. It manages all UI strings and the active language.
+
+**Public API:**
+
+- **`t(key)`** — returns the translation string for `key` in the current language, falling back to `nb`
+- **`tpl(key, ...args)`** — same as `t()`, but replaces `{0}`, `{1}`, … placeholders with positional `args`
+- **`setLanguage(code)`** — switches the active language and persists the choice to `localStorage`
+- **`getCurrentApiLang()`** — returns the `apiLang` value for the active language (sent as `lang=` to the API)
+
+**Language codes:** UI codes (`'nb'`, `'en'`) are distinct from API codes (`'no'`, `'en'`). The mapping lives in `AppConfig.languages`.
+
+**Language selector:** If `AppConfig.languages` contains more than one entry, `index.html` renders language toggle buttons inside `#header-lang`. Clicking a button calls `setLanguage()` then `applyTranslatableUI()` (an inline function in `index.html`) which re-applies all static UI strings (tagline, footer labels, cache-clear link) without a full re-render.
+
+**Instance-specific strings** (app name, source name, URLs) are in `AppConfig`, not in the translation dictionary, so the same `translations.js` works across different deployments.
+
+## Stylesheets
+
+CSS is split into three plain files (no preprocessor):
+
+- **`css/main.css`** — Global layout, typography, CSS variables (`--color-*`, `--spacing-*`, `--border-radius`), header, footer, buttons, forms, and shared component styles.
+- **`css/table.css`** — Styles specific to the data table display view: table container, controls bar, frozen headers, cell formatting, status symbols.
+- **`css/menu-navigator.css`** — Styles for the front page, search view, topic browser, and navigation elements (subject grid, breadcrumbs, filter bar, search input, table list cards).
+
+All three are loaded unconditionally via `<link>` tags in `index.html`.
 
 ## Shared utilities
 
