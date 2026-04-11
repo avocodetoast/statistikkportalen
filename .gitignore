@@ -1,4 +1,24 @@
+# Secrets
 .env
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverrideIcon
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# OneDrive temp files
+~$*
+
+# AI
 CLAUDE.md
 
+# Git
+.gitignore.local
