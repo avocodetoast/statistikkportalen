@@ -13,31 +13,8 @@
 
 const SearchEnhanced = {
 
-  /**
-   * Bidirectional synonym groups: each array is a set of equivalent terms (all normalized).
-   * If a query token matches ANY term in a group, the search also tries ALL other terms in the group.
-   * Add/remove groups or terms freely — order within a group doesn't matter.
-   */
-  SYNONYM_GROUPS: [
-    ['aku', 'arbeidskraftundersokelsen', 'arbeidskraftmaling'],
-    ['bnp', 'bruttonasjonalprodukt', 'bruttoprodukt'],
-    ['kpi', 'konsumprisindeks', 'prisvekst', 'inflasjon'],
-    ['knr', 'nasjonalregnskap'],
-    ['fob', 'folke og boligtellingen', 'folke boligtellingen'],
-    ['ssb', 'statistisk sentralbyra'],
-    ['nav', 'arbeids og velferdsetaten'],
-    ['nho', 'naeringslivets hovedorganisasjon'],
-    ['sfo', 'skolefritidsordning'],
-    ['vgs', 'videregaende skole', 'videregaende opplaering'],
-    ['gsi', 'grunnskolens informasjonssystem'],
-    ['kostra', 'kommune stat rapportering'],
-    ['fhi', 'folkehelseinstituttet'],
-    ['mva', 'merverdiavgift', 'merverdi'],
-    ['helse', 'helseforetak', 'sykehus'],
-    ['bolig', 'eiendom', 'boliger'],
-    ['sysselsetting', 'sysselsatte', 'arbeidsforhold'],
-    ['arbeidsledig', 'arbeidsledighet', 'ledige', 'ledighetsprosent'],
-  ],
+  // Synonym groups loaded from synonyms.js
+  SYNONYM_GROUPS: SearchSynonyms,
 
   /**
    * Normalize a string: lowercase + strip Norwegian/common diacritics.

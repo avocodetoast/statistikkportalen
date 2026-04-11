@@ -91,7 +91,6 @@ async function displayVariables() {
           ` : ''}
 
           <div class="control-row">
-            <button class="btn-secondary btn-sm select-star-btn" title="Alle verdier (*)">${t('variable.btn.all')}</button>
             <button class="btn-secondary btn-sm select-all-btn">${t('variable.btn.selectAll')}</button>
             <button class="btn-secondary btn-sm select-none-btn">${t('variable.btn.deselectAll')}</button>
             ${isTimeDim ? `

@@ -43,7 +43,7 @@ class SSBApi {
    */
   async _handleErrorResponse(response) {
     if (response.status === 429) {
-      throw new Error('For mange forespørsler. Vennligst vent litt og prøv igjen.');
+      throw new Error(t('error.rateLimit'));
     }
 
     // Try to parse RFC 7807 Problem Detail response
@@ -56,7 +56,7 @@ class SSBApi {
     }
 
     if (response.status === 403) {
-      throw new Error(detail || 'Spørringen ga for mange celler. Reduser utvalget og prøv igjen.');
+      throw new Error(detail || t('error.cellLimit'));
     }
 
     throw new Error(detail || ('HTTP ' + response.status + ': ' + response.statusText));
@@ -402,7 +402,7 @@ class SSBApi {
    * @param {string} tableId - Table ID
    * @param {object} valueCodes - Dimension filters
    * @param {object} options - Export options
-   * @param {string} options.format - Output format: 'csv', 'xlsx', 'px', 'html', 'parquet'
+   * @param {string} options.format - Output format: 'csv', 'xlsx', 'px', 'html'
    * @param {string[]} options.stub - Dimensions to place in stub (rows)
    * @param {string[]} options.heading - Dimensions to place in heading (columns)
    * @param {string[]} options.formatParams - Output format parameters (e.g., 'IncludeTitle', 'UseTexts')

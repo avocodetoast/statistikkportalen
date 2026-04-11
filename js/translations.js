@@ -46,6 +46,8 @@ const translations = {
     'error.loadCodelist':     'Kunne ikke laste kodeliste',
     'error.noTablesPath':     'Fant ingen tabeller for denne stien',
     'error.unknownView':      'Ukjent visning',
+    'error.rateLimit':        'For mange forespørsler. Vennligst vent litt og prøv igjen.',
+    'error.cellLimit':        'Spørringen ga for mange celler. Reduser utvalget og prøv igjen.',
 
     // Navigation
     'nav.home':          'Forsiden',
@@ -107,7 +109,7 @@ const translations = {
     'variable.selectValuesAll': 'Velg verdier for alle variabler',
     'variable.optional':        'Valgfri variabel',
     'variable.required':        'Må velges *',
-    'variable.categorization':  'Kategorisering:',
+    'variable.categorization':  'Gruppering:',
     'variable.freeChoice':      'Velg fritt blant alle verdier',
     'variable.filterPlaceholder': 'Filtrer verdier...',
     'variable.selected':        'Valgt',
@@ -298,6 +300,8 @@ const translations = {
     'error.loadCodelist':     'Could not load codelist',
     'error.noTablesPath':     'No tables found for this path',
     'error.unknownView':      'Unknown view',
+    'error.rateLimit':        'Too many requests. Please wait a moment and try again.',
+    'error.cellLimit':        'The query returned too many cells. Reduce your selection and try again.',
 
     'nav.home':           'Home',
     'nav.subjects':       'Subjects',
@@ -352,7 +356,7 @@ const translations = {
     'variable.selectValuesAll': 'Select values for all variables',
     'variable.optional':        'Optional variable',
     'variable.required':        'Required *',
-    'variable.categorization':  'Categorization:',
+    'variable.categorization':  'Grouping:',
     'variable.freeChoice':      'Choose freely from all values',
     'variable.filterPlaceholder': 'Filter values...',
     'variable.selected':        'Selected',
@@ -533,6 +537,8 @@ const translations = {
     'error.loadCodelist':     'Kunde inte ladda kodlista',
     'error.noTablesPath':     'Hittade inga tabeller f\u00F6r denna s\u00F6kv\u00E4g',
     'error.unknownView':      'Ok\u00E4nd vy',
+    'error.rateLimit':        'F\u00F6r m\u00E5nga f\u00F6rfr\u00E5gningar. V\u00E4nta lite och f\u00F6rs\u00F6k igen.',
+    'error.cellLimit':        'F\u00F6rfr\u00E5gan returnerade f\u00F6r m\u00E5nga celler. Minska urvalet och f\u00F6rs\u00F6k igen.',
 
     'nav.home':           'Startsidan',
     'nav.subjects':       '\u00C4mnen',
@@ -587,7 +593,7 @@ const translations = {
     'variable.selectValuesAll': 'V\u00E4lj v\u00E4rden f\u00F6r alla variabler',
     'variable.optional':        'Valfri variabel',
     'variable.required':        'M\u00E5ste v\u00E4ljas *',
-    'variable.categorization':  'Kategorisering:',
+    'variable.categorization':  'Gruppering:',
     'variable.freeChoice':      'V\u00E4lj fritt bland alla v\u00E4rden',
     'variable.filterPlaceholder': 'Filtrera v\u00E4rden...',
     'variable.selected':        'Vald',

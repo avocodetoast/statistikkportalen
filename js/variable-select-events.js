@@ -286,19 +286,6 @@ function setupKeyboardShortcuts() {
  * Set up mode buttons (select all, select none, star, top)
  */
 function setupModeButtons() {
-  // "Alle (*)" button — requests all values via the API wildcard
-  document.querySelectorAll('.select-star-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const card = btn.closest('.variable-card');
-      const container = card.querySelector('.value-list-container');
-      container.dataset.mode = 'star';
-      updateModeVisuals(card);
-      updateValueCounter(card);
-      updateSelectionStatus();
-    });
-  });
-
   // "Siste N" button — requests last N values (time dimensions)
   document.querySelectorAll('.select-top-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -324,19 +311,13 @@ function setupModeButtons() {
     });
   });
 
-  // "Velg alle" button — selects all visible items individually
+  // "Velg alle" button — requests all values via the API wildcard (star mode)
   document.querySelectorAll('.select-all-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       const card = btn.closest('.variable-card');
       const container = card.querySelector('.value-list-container');
-      container.dataset.mode = 'specific';
-      // Select only visible items (respects codelist filter)
-      container.querySelectorAll('.value-list-item').forEach(item => {
-        if (item.style.display !== 'none') {
-          item.classList.add('selected');
-        }
-      });
+      container.dataset.mode = 'star';
       updateModeVisuals(card);
       updateValueCounter(card);
       updateSelectionStatus();
