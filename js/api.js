@@ -7,6 +7,14 @@
  * Rate limit: 30 queries/minute. A minimal throttle ensures requests
  * are spaced at least 100ms apart to avoid hammering the server.
  */
+/**
+ * Whether a codelist ID is an aggregation codelist (agg_*) vs. a valueset (vs_*).
+ * Aggregations require outputValues=aggregated to receive summed values.
+ */
+function isAggregationCodelistId(codelistId) {
+  return typeof codelistId === 'string' && codelistId.toLowerCase().startsWith('agg_');
+}
+
 class SSBApi {
   constructor() {
     this.baseUrl = AppConfig.apiBaseUrl;
@@ -278,6 +286,12 @@ class SSBApi {
       // Include codelist ID when a codelist is active for this dimension
       if (codelistIds[dimension]) {
         entry.codelist = codelistIds[dimension];
+        // Aggregation codelists (agg_*) need outputValues=aggregated so the API
+        // returns summed values rather than the underlying single values
+        // (e.g. agg_KommSummer for time-consistent municipality totals).
+        if (isAggregationCodelistId(codelistIds[dimension])) {
+          entry.outputValues = 'aggregated';
+        }
       }
       return entry;
     });
@@ -515,6 +529,56 @@ class SSBApi {
   async getSavedQuery(id) {
     const url = this.baseUrl + '/savedqueries/' + encodeURIComponent(id);
     logger.log('[API] Fetching saved query', id, ':', url);
+
+    const response = await this._throttledFetch(url, {
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (!response.ok) {
+      await this._handleErrorResponse(response);
+    }
+
+    return response.json();
+  }
+
+  /**
+   * Execute a saved query and return its data directly.
+   * Avoids re-building a POST body from the saved selection — the server
+   * already has the selection and applies it server-side.
+   *
+   * @param {string} id - Saved query ID (e.g. "30116027")
+   * @param {string} lang - Language code (default: current UI lang)
+   * @returns {Promise<object>} - JSON-Stat2 data response
+   */
+  async getSavedQueryData(id, lang = this.defaultLang) {
+    const url = this.baseUrl + '/savedqueries/' + encodeURIComponent(id) +
+                '/data?lang=' + lang + '&outputFormat=json-stat2';
+    logger.log('[API] Fetching saved query data', id, ':', url);
+
+    const response = await this._throttledFetch(url, {
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (!response.ok) {
+      await this._handleErrorResponse(response);
+    }
+
+    return response.json();
+  }
+
+  /**
+   * Fetch the recommended default selection for a table.
+   * Returns the selection the table owner has configured as a sensible starting
+   * point — useful for pre-populating variable selection on first open.
+   *
+   * @param {string} tableId - Table ID (e.g. "07459")
+   * @param {string} lang - Language code (default: current UI lang)
+   * @returns {Promise<object>} - Default selection object with a `selection` array
+   *   of { variableCode, valueCodes, codelist? } entries
+   */
+  async getDefaultSelection(tableId, lang = this.defaultLang) {
+    const url = this.baseUrl + '/tables/' + tableId + '/defaultselection?lang=' + lang;
+    logger.log('[API] Fetching default selection for table ' + tableId + ':', url);
 
     const response = await this._throttledFetch(url, {
       headers: { 'Accept': 'application/json' }

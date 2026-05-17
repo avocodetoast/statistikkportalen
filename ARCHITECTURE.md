@@ -149,8 +149,12 @@ BrowserState.selectTable("09772")
         → buildNavigationBreadcrumb()             // Show topic path leading to this table
         → api.getTableMetadata("09772")           // Cached 7 days
         → displayVariables()
+           → Look up roleByDim from tableMetadata.role (time/geo/metric)
            → For each dimension in metadata:
-              → renderDimensionCard()              // Title, selection mode buttons, value list
+              → renderDimensionCard()              // Title, role badge (Tid/Geografi/Statistikkvariabel),
+                                                   // elimination badge, selection mode buttons, value list
+                                                   // Time dimensions get a format hint as the filter placeholder
+                                                   // (sampled from the latest period code, e.g. "Format: 2024M06")
               → setupCodelistDropdowns()           // If dimension has extension.codelists[]
               → restoreSelections()                // From AppState.variableSelection (URL state)
            → Wire events: click, shift-click, Ctrl+click, Ctrl+A, filter input, mode buttons
@@ -173,10 +177,14 @@ setupApiBuilder()
            1 period   → top(1)
            2 periods  → top(2)
            >2 periods → from(firstPeriod)   // forward-looking: always fetches from fixed start
-        → codelist[Dim]=id appended for agg_ codelists
+        → codelist[Dim]=id appended whenever a codelist is active
+        → outputValues[Dim]=aggregated appended for agg_* codelists
         → URL shown decoded (plaintext) by default
      → buildPostBody()           // Constructs JSON POST body for display
   → Format selector: JSON-stat2 | CSV | Excel | PX | HTML
+     → On render, options not present in AppConfig.limits.dataFormats
+       (populated from /config) are removed; the export dialog filters
+       its radio group the same way
   → "Kopier URL" button  → copies GET URL to clipboard
   → "Kopier POST-body" button → copies JSON POST body to clipboard
 ```
@@ -197,7 +205,9 @@ handleFetchData()
         → api.getTableData("09772", selection, "no", codelistIds)   // POST, never cached
         → determineDefaultLayout(data)     // Time dim → rows, others → columns
         → displayData()
-           → buildMetadataSection()        // table-metadata.js: collapsible panel (source, contact, notes)
+           → buildMetadataSection()        // table-metadata.js: collapsible panel (source, contact, notes,
+                                          // "Om statistikken"-link built from paths[*][2].id kortnavn,
+                                          // and Klass/VarDok links from link.describedby URNs)
            → buildHtmlTable()
               → buildDimensionCombinations(rowDims)    // Cartesian product of row values
               → buildDimensionCombinations(colDims)    // Cartesian product of column values
@@ -329,7 +339,7 @@ All API methods use `_handleErrorResponse()` which parses RFC 7807 Problem Detai
 {
   "selection": [
     { "variableCode": "Kjonn", "valueCodes": ["1","2"], "codelist": "vs_Kjonn" },
-    { "variableCode": "Alder", "valueCodes": ["005","1014"], "codelist": "agg_FemAarigGruppering" },
+    { "variableCode": "Alder", "valueCodes": ["005","1014"], "codelist": "agg_FemAarigGruppering", "outputValues": "aggregated" },
     { "variableCode": "Tid", "valueCodes": ["top(5)"] }
   ],
   "placement": {
@@ -344,7 +354,7 @@ Dimensions omitted from `selection` are "eliminated" — the API aggregates acro
 **Codelist types and how they affect `valueCodes`:**
 
 - **`vs_` (valueset/filter):** `valueCodes` contains original dimension codes. The codelist restricts which codes are valid; `valueMap` is a no-op (`valueMap[0] === code`).
-- **`agg_` (aggregation):** `valueCodes` contains the codelist's own aggregate codes (e.g. `"005"` for "0–4 år"). The API uses the `codelist` field to resolve these to underlying values and return grouped totals. Sending expanded original codes here would be wrong.
+- **`agg_` (aggregation):** `valueCodes` contains the codelist's own aggregate codes (e.g. `"005"` for "0–4 år"). The API uses the `codelist` field to resolve these to underlying values and return grouped totals. Sending expanded original codes here would be wrong. `buildPostBody()` also adds `"outputValues": "aggregated"` for any `agg_*` codelist so the API returns the summed values rather than the underlying single values (critical for e.g. `agg_KommSummer` time-consistent municipality totals); the GET-URL preview emits the matching `outputValues[Dim]=aggregated` query parameter.
 
 ## JSON-Stat2 response format
 
@@ -378,10 +388,10 @@ flatIndex = Region_index × (size_Kjonn × size_Tid)
 
 This is implemented in `calculateFlatIndex()` (table-display.js).
 
-The optional `status` field maps flat indices (as strings) to suppression codes:
-- `"."` — value not available
-- `":"` — confidential
-- `".."` — not applicable
+The optional `status` field maps flat indices (as strings) to suppression codes (per SSB convention):
+- `"."` — not applicable (ikke mulig å oppgi tall)
+- `".."` — not available (tallgrunnlag mangler)
+- `":"` — confidential (konfidensielt)
 
 When a status code is present for a cell, the UI shows the symbol instead of a number and adds a tooltip with the Norwegian explanation.
 

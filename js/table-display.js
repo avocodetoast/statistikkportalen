@@ -89,10 +89,19 @@ async function loadTableData() {
   logger.log('[TableDisplay] Fetching data for table:', tableId);
   logger.log('[TableDisplay] Variable selection:', selection);
 
-  const data = await safeApiCall(
-    () => api.getTableData(tableId, selection, getCurrentApiLang(), AppState.activeCodelistIds),
-    t('error.fetchData')
-  );
+  // Use pre-fetched data if available (e.g. from saved query parallel fetch).
+  // Consume and clear immediately so subsequent navigations always re-fetch.
+  let data;
+  if (AppState.tableData) {
+    logger.log('[TableDisplay] Using pre-fetched data for table:', tableId);
+    data = AppState.tableData;
+    AppState.tableData = null;
+  } else {
+    data = await safeApiCall(
+      () => api.getTableData(tableId, selection, getCurrentApiLang(), AppState.activeCodelistIds),
+      t('error.fetchData')
+    );
+  }
 
   if (!data || !data.value) {
     logger.error('[TableDisplay] Invalid data format:', data);
@@ -510,10 +519,14 @@ function getDataStatus(rowHeader, colHeader) {
  * @returns {string}
  */
 function suppressedLabel(code) {
+  // SSB JSON-stat2 status conventions:
+  //   "."  = ikke mulig å oppgi tall (not applicable)
+  //   ".." = tallgrunnlag mangler   (not available)
+  //   ":"  = konfidensielt          (confidential)
   switch (code) {
-    case '.':  return t('table.notAvailable');
+    case '.':  return t('table.notApplicable');
+    case '..': return t('table.notAvailable');
     case ':':  return t('table.confidential');
-    case '..': return t('table.notApplicable');
     default:   return code;
   }
 }

@@ -81,8 +81,13 @@ function updateQueryPreview() {
   });
   const activeCodelistIds = AppState.activeCodelistIds || {};
   Object.keys(activeCodelistIds).forEach(dimension => {
-    if (activeCodelistIds[dimension]) {
-      params.append('codelist[' + dimension + ']', activeCodelistIds[dimension]);
+    const codelistId = activeCodelistIds[dimension];
+    if (codelistId) {
+      params.append('codelist[' + dimension + ']', codelistId);
+      // Aggregation codelists need outputValues=aggregated to return summed values
+      if (isAggregationCodelistId(codelistId)) {
+        params.append('outputValues[' + dimension + ']', 'aggregated');
+      }
     }
   });
 
@@ -152,6 +157,18 @@ function updateQueryPreview() {
  */
 function setupApiBuilderEvents() {
   const formatSelect = document.getElementById('api-output-format');
+
+  // Trim unsupported formats from the dropdown. /config returns the live list
+  // of dataFormats; api._applyConfig populates AppConfig.limits.dataFormats.
+  // Empty value="" is JSON-stat2 (the default) and is always kept.
+  if (formatSelect && Array.isArray(AppConfig.limits.dataFormats)) {
+    const allowed = new Set(AppConfig.limits.dataFormats.map(f => f.toLowerCase()));
+    allowed.add('');
+    allowed.add('json-stat2');
+    Array.from(formatSelect.options).forEach(opt => {
+      if (!allowed.has(opt.value.toLowerCase())) opt.remove();
+    });
+  }
 
   // Method toggle (GET/POST)
   document.getElementById('api-method-toggle')?.addEventListener('change', () => {

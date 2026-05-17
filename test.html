@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tests — Statistikkportalen (SSB)</title>
+  <style>
+    body { font-family: monospace; margin: 2em; background: #1a1a2e; color: #e0e0e0; }
+    h1 { font-size: 1.2em; }
+    .pass { color: #4caf50; }
+    .fail { color: #f44336; }
+    .suite { margin: 1em 0 0.3em; font-weight: bold; color: #90caf9; }
+    .result { margin-left: 1.5em; }
+    #summary { margin-top: 1.5em; padding: 0.5em; font-weight: bold; }
+    #summary.all-pass { background: #1b5e20; color: #a5d6a7; }
+    #summary.has-fail { background: #b71c1c; color: #ef9a9a; }
+  </style>
+</head>
+<body>
+  <h1>Statistikkportalen (SSB) — Tests</h1>
+  <div id="output"></div>
+  <div id="summary"></div>
+
+  <!-- Load app scripts in dependency order (same as index.html) -->
+  <script src="js/version.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/translations.js"></script>
+  <script src="js/cache.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/subjects.js"></script>
+  <script src="js/menu-hierarchy.js"></script>
+  <script src="js/synonyms.js"></script>
+  <script src="js/search-enhanced.js"></script>
+
+  <script>
+    // Minimal test runner
+    const _out = document.getElementById('output');
+    const _summary = document.getElementById('summary');
+    let _passed = 0, _failed = 0;
+
+    function suite(name) {
+      const el = document.createElement('div');
+      el.className = 'suite';
+      el.textContent = name;
+      _out.appendChild(el);
+    }
+
+    function assert(description, condition) {
+      const el = document.createElement('div');
+      el.className = 'result';
+      if (condition) {
+        el.innerHTML = '<span class="pass">PASS</span> ' + description;
+        _passed++;
+      } else {
+        el.innerHTML = '<span class="fail">FAIL</span> ' + description;
+        _failed++;
+      }
+      _out.appendChild(el);
+    }
+
+    function assertEqual(description, actual, expected) {
+      const pass = actual === expected;
+      const el = document.createElement('div');
+      el.className = 'result';
+      if (pass) {
+        el.innerHTML = '<span class="pass">PASS</span> ' + description;
+        _passed++;
+      } else {
+        el.innerHTML = '<span class="fail">FAIL</span> ' + description +
+          ' — expected: ' + JSON.stringify(expected) + ', got: ' + JSON.stringify(actual);
+        _failed++;
+      }
+      _out.appendChild(el);
+    }
+
+    function showSummary() {
+      const total = _passed + _failed;
+      _summary.textContent = _passed + '/' + total + ' passed' + (_failed ? ', ' + _failed + ' FAILED' : '');
+      _summary.className = _failed ? 'has-fail' : 'all-pass';
+    }
+
+    // -----------------------------------------------------------------------
+    // Tests
+    // -----------------------------------------------------------------------
+
+    suite('AppConfig — SSB instance');
+    assertEqual('API base URL', AppConfig.apiBaseUrl, 'https://data.ssb.no/api/pxwebapi/v2');
+    assertEqual('source.name', AppConfig.source.name, 'SSB');
+    assertEqual('source.nameFull', AppConfig.source.nameFull, 'Statistisk sentralbyrå');
+    assertEqual('source.licenseName', AppConfig.source.licenseName, 'CC BY 4.0');
+    assertEqual('app.name', AppConfig.app.name, 'Statistikkportalen');
+    assertEqual('defaultLanguage', AppConfig.defaultLanguage, 'nb');
+    assertEqual('first language code', AppConfig.languages[0].code, 'nb');
+    assertEqual('first language apiLang', AppConfig.languages[0].apiLang, 'no');
+    assertEqual('maxCells', AppConfig.limits.maxCells, 800000);
+    assertEqual('cellWarningThreshold', AppConfig.limits.cellWarningThreshold, 600000);
+    assertEqual('sourceUpdateTimes has 3 entries', AppConfig.sourceUpdateTimes.length, 3);
+
+    suite('AppConfig — tagline');
+    assert('tagline has nb key', typeof AppConfig.app.tagline.nb === 'string');
+    assert('tagline has en key', typeof AppConfig.app.tagline.en === 'string');
+    assert('tagline.nb mentions SSB', AppConfig.app.tagline.nb.includes('SSB'));
+    assert('tagline.en mentions Statistics Norway', AppConfig.app.tagline.en.includes('Statistics Norway'));
+
+    suite('Translations — nb language');
+    assertEqual('t() defaults to nb', currentLanguage, 'nb');
+    assert('t("loading.app") returns Norwegian', t('loading.app') === 'Laster...');
+    assert('t("nav.home") returns Norwegian', t('nav.home') === 'Forsiden');
+    assert('t("search.heading") returns Norwegian', t('search.heading').includes('statistikkbanken'));
+
+    suite('Translations — saveQuery keys');
+    assert('nb saveQuery.title exists', t('saveQuery.title') !== 'saveQuery.title');
+    assert('nb saveQuery.copy exists', t('saveQuery.copy') !== 'saveQuery.copy');
+    assert('nb saveQuery.saved exists', t('saveQuery.saved') !== 'saveQuery.saved');
+
+    suite('Translations — SSB subject groups (nb)');
+    assert('subject.group.arbeid exists', t('subject.group.arbeid') !== 'subject.group.arbeid');
+    assert('subject.group.okonomi exists', t('subject.group.okonomi') !== 'subject.group.okonomi');
+    assert('subject.group.befolkning exists', t('subject.group.befolkning') !== 'subject.group.befolkning');
+
+    suite('Translations — SSB subject names (nb)');
+    assert('subject.name.al exists', t('subject.name.al') !== 'subject.name.al');
+    assert('subject.name.be exists', t('subject.name.be') !== 'subject.name.be');
+    assert('subject.name.nk exists', t('subject.name.nk') !== 'subject.name.nk');
+    assert('subject.name.ud exists', t('subject.name.ud') !== 'subject.name.ud');
+
+    suite('Translations — English');
+    setLanguage('en');
+    assert('en saveQuery.title exists', t('saveQuery.title') !== 'saveQuery.title');
+    assert('en subject.group.arbeid exists', t('subject.group.arbeid') !== 'subject.group.arbeid');
+    assert('en subject.name.al exists', t('subject.name.al') !== 'subject.name.al');
+    setLanguage('nb'); // restore
+
+    suite('Translations — getCurrentApiLang');
+    assertEqual('nb → apiLang no', getCurrentApiLang(), 'no');
+
+    suite('SubjectConfig — SSB subjects');
+    assert('subjectGroups exists', typeof SubjectConfig.subjectGroups === 'object');
+    assertEqual('6 subject groups', Object.keys(SubjectConfig.subjectGroups).length, 6);
+    assert('arbeid group has al', SubjectConfig.subjectGroups.arbeid.subjects.includes('al'));
+    assert('arbeid group has ud', SubjectConfig.subjectGroups.arbeid.subjects.includes('ud'));
+    assert('okonomi group has nk', SubjectConfig.subjectGroups.okonomi.subjects.includes('nk'));
+    assert('subjectNames has al', SubjectConfig.subjectNames['al'] === 'Arbeid og lønn');
+    assert('subjectNames has be', SubjectConfig.subjectNames['be'] === 'Befolkning');
+
+    // Verify all subjects in groups exist in subjectNames
+    const allGroupSubjects = Object.values(SubjectConfig.subjectGroups).flatMap(g => g.subjects);
+    const missingNames = allGroupSubjects.filter(s => !SubjectConfig.subjectNames[s]);
+    assert('all grouped subjects have names (' + allGroupSubjects.length + ' subjects)',
+      missingNames.length === 0);
+
+    suite('SearchSynonyms — Norwegian');
+    assert('SearchSynonyms is array', Array.isArray(SearchSynonyms));
+    assert('has synonym groups', SearchSynonyms.length >= 10);
+    const bnpGroup = SearchSynonyms.find(g => g.includes('bnp'));
+    assert('BNP synonym group exists', !!bnpGroup);
+    assert('BNP group has bruttonasjonalprodukt', bnpGroup && bnpGroup.includes('bruttonasjonalprodukt'));
+    const kpiGroup = SearchSynonyms.find(g => g.includes('kpi'));
+    assert('KPI synonym group exists', !!kpiGroup);
+    assert('KPI group has konsumprisindeks', kpiGroup && kpiGroup.includes('konsumprisindeks'));
+
+    suite('CacheManager — SSB namespace');
+    const cm = new CacheManager();
+    assertEqual('prefix is ssb_', cm.prefix, 'ssb_');
+    assertEqual('IndexedDB name is ssb_cache', cm.indexedDBCache.dbName, 'ssb_cache');
+
+    suite('CacheManager — schedule staleness enabled');
+    // With 3 sourceUpdateTimes, _getLastSourceUpdateTimestamp should return a real timestamp
+    assert('last source update is a positive timestamp', cm._getLastSourceUpdateTimestamp() > 0);
+
+    suite('PxWebApi — class and base URL');
+    assert('api is instance of PxWebApi', api.constructor.name === 'PxWebApi');
+    assertEqual('api.baseUrl', api.baseUrl, 'https://data.ssb.no/api/pxwebapi/v2');
+
+    suite('URLRouter — ssb_navRef key');
+    sessionStorage.removeItem('ssb_navRef');
+    assert('ssb_navRef not set initially', sessionStorage.getItem('ssb_navRef') === null);
+
+    suite('SSBURLMapper');
+    assert('SSBURLMapper exists', typeof SSBURLMapper === 'object');
+    assert('fromSSB method exists',
+      typeof SSBURLMapper.fromSSB === 'function' || typeof SSBURLMapper.fromSource === 'function');
+
+    suite('detectSavedQueryId');
+    assertEqual('hash #sq/30121434', detectSavedQueryId('#sq/30121434'), '30121434');
+    assertEqual('query ?sq=30121434', detectSavedQueryId('https://example.com?sq=30121434'), '30121434');
+    assertEqual('random text returns null', detectSavedQueryId('hello world'), null);
+    assertEqual('empty returns null', detectSavedQueryId(''), null);
+    // SSB-specific /statbank/sq/ path IS matched
+    assertEqual('/statbank/sq/ matched',
+      detectSavedQueryId('https://www.ssb.no/statbank/table/14704?sq=30121434'), '30121434');
+
+    // -----------------------------------------------------------------------
+    showSummary();
+  </script>
+</body>
+</html>

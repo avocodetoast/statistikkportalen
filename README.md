@@ -11,6 +11,9 @@ Applikasjonen kan tilpasses andre systemer som bruker PxWebApi v2, eksempelvis S
 
 2. **Variabelvelger**
    - Interaktivt grensesnitt for å velge verdier for hver dimensjon
+   - Semantiske merker (Tid, Geografi, Statistikkvariabel) basert på JSON-stat2 `role`
+   - Tidsdimensjon viser forventet periodeformat (f.eks. `2024M06`)
+   - Støtte for kodelister, inkludert riktig håndtering av aggregeringer (`agg_*`) — sender automatisk `outputValues=aggregated` for korrekte summerte tall
    - Støtte for spesielle operatorer
      - `*` — Alle verdier
      - `top(n)` — De n siste verdiene (f.eks. `top(12)` for siste 12 måneder)
@@ -19,7 +22,7 @@ Applikasjonen kan tilpasses andre systemer som bruker PxWebApi v2, eksempelvis S
 
 3. **API-bygger**
    - Generer GET- og POST-URL direkte fra variabelvalget
-   - Støtte for alle responsformater (JSON-stat2, CSV, Excel, PX, HTML)
+   - Støtte for alle responsformater (JSON-stat2, CSV, Excel, PX, HTML) — formatlisten leses dynamisk fra `/config` slik at den alltid speiler hva API-et faktisk støtter
    - Tidsdimensjonen optimeres automatisk: eksplisitte perioder erstattes med `from(startdato)` eller `top(n)` for en dynamisk URL som alltid henter ferske data
    - URL vises i klartekst som standard
    - Kopier URL eller POST-body med ett klikk
@@ -28,6 +31,8 @@ Applikasjonen kan tilpasses andre systemer som bruker PxWebApi v2, eksempelvis S
    - Intelligent standard layout
    - Sticky headers for enkel navigering i store tabeller
    - Norske tallformater (mellomrom som tusenskilletegn, komma som desimalskilletegn)
+   - Korrekt visning av statuskoder (`.`, `..`, `:`) per SSBs konvensjon
+   - Tabellinfo med direktelenke til "Om statistikken" på ssb.no
 
 5. **Tabellrotasjon**
    - Drag-and-drop-grensesnitt for å endre tabellayout
