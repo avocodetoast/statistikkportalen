@@ -255,12 +255,16 @@ async function handleLoadDefaultSelection() {
   btn.disabled = true;
   btn.textContent = t('variable.defaultSelectionLoading');
 
+  let showingTempMessage = false;
   try {
     const result = await api.getDefaultSelection(AppState.selectedTable.id, getCurrentApiLang());
     const entries = result?.selection || result || [];
 
     if (!Array.isArray(entries) || entries.length === 0) {
       logger.warn('[VariableSelect] Default selection returned empty or unexpected format:', result);
+      showingTempMessage = true;
+      btn.textContent = t('variable.defaultSelectionEmpty');
+      setTimeout(() => { btn.textContent = originalText; }, 3000);
       return;
     }
 
@@ -284,7 +288,7 @@ async function handleLoadDefaultSelection() {
     showError(t('error.defaultSelection'), err);
   } finally {
     btn.disabled = false;
-    btn.textContent = originalText;
+    if (!showingTempMessage) btn.textContent = originalText;
   }
 }
 

@@ -458,8 +458,8 @@ button {
 
 .variable-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: var(--spacing-sm);
   margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-md);
   border-bottom: 2px solid var(--color-border);
@@ -469,6 +469,7 @@ button {
   color: var(--color-primary-dark);
   font-size: var(--font-size-lg);
   margin: 0;
+  flex: 1;
 }
 
 .variable-info {
@@ -682,6 +683,34 @@ button {
   background: #fff3e0;
   color: #e65100;
   border: 1px solid #ffcc80;
+}
+
+/* Role badges (Tid / Geografi / Statistikkvariabel) */
+.variable-role-badge {
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.role-time {
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+
+.role-geo {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.role-metric {
+  background: #f3e5f5;
+  color: #6a1b9a;
+  border: 1px solid #ce93d8;
 }
 
 /* Codelist dropdown selector — visually "upstream": blue-gray strip, bleeds to card edges */

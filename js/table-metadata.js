@@ -15,7 +15,7 @@ function _urnToUrl(href) {
 
   const klassMatch = href.match(/^urn:ssb:classification:klass:(\d+)$/);
   if (klassMatch) {
-    return 'https://data.ssb.no/api/klass/v1/classifications/' + klassMatch[1] + '.json';
+    return 'https://www.ssb.no/klass/klassifikasjoner/' + klassMatch[1];
   }
 
   const vardokMatch = href.match(/^urn:ssb:conceptvariable:vardok:(\d+)$/);

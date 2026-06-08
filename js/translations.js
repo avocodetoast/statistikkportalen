@@ -125,6 +125,7 @@ const translations = {
     'variable.defaultSelection':      'Fyll inn standardvalg',
     'variable.defaultSelectionTitle': 'Hent og fyll inn tabellens anbefalte standardutvalg',
     'variable.defaultSelectionLoading': 'Henter standardvalg...',
+    'variable.defaultSelectionEmpty':   'Ingen standardvalg funnet',
 
     // Variable mode buttons
     'variable.btn.all':         'Alle (*)',
@@ -380,6 +381,7 @@ const translations = {
     'variable.defaultSelection':      'Load default selection',
     'variable.defaultSelectionTitle': 'Fetch and apply the table\'s recommended default selection',
     'variable.defaultSelectionLoading': 'Loading default selection...',
+    'variable.defaultSelectionEmpty':   'No default selection found',
 
     'variable.btn.all':         'All (*)',
     'variable.btn.selectAll':   'Select all',
@@ -551,6 +553,7 @@ const translations = {
     'error.downloadFailed':   'Nedladdningen misslyckades',
     'error.downloadFailed2':  'Kunde inte ladda ned filen',
     'error.loadCodelist':     'Kunde inte ladda kodlista',
+    'error.defaultSelection': 'Kunde inte ladda standardval',
     'error.noTablesPath':     'Hittade inga tabeller f\u00F6r denna s\u00F6kv\u00E4g',
     'error.unknownView':      'Ok\u00E4nd vy',
     'error.rateLimit':        'F\u00F6r m\u00E5nga f\u00F6rfr\u00E5gningar. V\u00E4nta lite och f\u00F6rs\u00F6k igen.',
@@ -621,6 +624,10 @@ const translations = {
     'variable.withoutTitle':    'Utan titel',
     'variable.withTitle':       'Med titel',
     'variable.truncated':       'Visar {0} av {1} v\u00E4rden. Anv\u00E4nd "Alla (*)" f\u00F6r att inkludera alla.',
+    'variable.defaultSelection':      'Fyll i standardval',
+    'variable.defaultSelectionTitle': 'H\u00E4mta och fyll i tabellens rekommenderade standardurval',
+    'variable.defaultSelectionLoading': 'H\u00E4mtar standardval...',
+    'variable.defaultSelectionEmpty':   'Inget standardval hittades',
 
     'variable.btn.all':         'Alla (*)',
     'variable.btn.selectAll':   'V\u00E4lj alla',

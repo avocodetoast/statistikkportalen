@@ -427,3 +427,17 @@
   color: var(--color-text-light);
   margin: 0;
 }
+
+.metadata-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.metadata-dim-label {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
