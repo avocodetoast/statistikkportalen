@@ -22,6 +22,17 @@
  *
  * @returns {string[]} - Ordered array of dimension codes
  */
+/**
+ * Pick the most recent (highest-sorted) value code from a time dimension to use
+ * as a format example in the placeholder, e.g. "2024M06" or "2024K2".
+ * Returns null if no values are found.
+ */
+function _sampleTimeFormat(dimension) {
+  const codes = dimension?.category?.index ? Object.keys(dimension.category.index) : [];
+  if (codes.length === 0) return null;
+  return codes.sort().slice(-1)[0];
+}
+
 function getDimensionDisplayOrder() {
   const heading = tableMetadata.extension?.px?.heading || [];
   const stub = tableMetadata.extension?.px?.stub || [];
@@ -51,13 +62,25 @@ async function displayVariables() {
 
   let html = '';
 
+  // Role lookup from metadata: role.time/geo/metric → which dimensions play these roles.
+  // Used to label variable cards with semantic badges ("Tid", "Geografi", "Mål").
+  const roleByDim = {};
+  const roles = tableMetadata.role || {};
+  (roles.time || []).forEach(d => { roleByDim[d] = 'time'; });
+  (roles.geo || []).forEach(d => { roleByDim[d] = 'geo'; });
+  (roles.metric || []).forEach(d => { roleByDim[d] = 'metric'; });
+
   dimensions.forEach(dimCode => {
     const dimension = tableMetadata.dimension[dimCode];
     if (!dimension) return;
 
     const values = dimension.category.label;
     const valueCount = Object.keys(values).length;
-    const isTimeDim = dimCode === 'Tid' || dimCode.toLowerCase().includes('tid');
+    const role = roleByDim[dimCode] || null;
+    const isTimeDim = role === 'time' || dimCode === 'Tid' || dimCode.toLowerCase().includes('tid');
+    const roleBadgeHtml = role
+      ? '<span class="variable-role-badge role-' + role + '">' + t('variable.role.' + role) + '</span>'
+      : '';
 
     // Elimination: can this dimension be omitted from the query?
     const elimination = dimension.extension?.elimination === true;
@@ -71,6 +94,7 @@ async function displayVariables() {
       <div class="variable-card" data-dimension="${escapeHtml(dimCode)}" data-elimination="${elimination}">
         <div class="variable-header">
           <h3 class="variable-name">${escapeHtml(dimension.label || dimCode)}</h3>
+          ${roleBadgeHtml}
           <span class="variable-badge ${elimination ? 'badge-optional' : 'badge-required'}">
             ${elimination ? t('variable.optional') : t('variable.required')}
           </span>
@@ -103,7 +127,10 @@ async function displayVariables() {
           </div>
 
           <div class="value-filter-container value-filter-wrapper">
-            <input type="text" class="value-filter-input" placeholder="${t('variable.filterPlaceholder')}">
+            <input type="text" class="value-filter-input" placeholder="${
+              isTimeDim ? escapeHtml(tpl('variable.timeFormatHint', _sampleTimeFormat(dimension) || '')) || t('variable.filterPlaceholder')
+                        : t('variable.filterPlaceholder')
+            }">
           </div>
 
           <div class="value-counter">

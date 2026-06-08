@@ -203,8 +203,25 @@ const URLRouter = {
     }
 
     try {
-      const result = await api.getSavedQuery(id);
+      // Fetch query metadata and data in parallel — the data endpoint executes
+      // the saved selection server-side, saving a second POST round-trip.
+      const [queryResult, dataResult] = await Promise.allSettled([
+        api.getSavedQuery(id),
+        api.getSavedQueryData(id, getCurrentApiLang())
+      ]);
+
+      if (queryResult.status === 'rejected') throw queryResult.reason;
+
+      const result = queryResult.value;
       const sq = result.savedQuery || result;
+
+      // If the data was pre-fetched successfully, stash it in AppState so that
+      // loadTableData() can consume it instead of issuing another POST fetch.
+      if (dataResult.status === 'fulfilled' && dataResult.value?.value) {
+        AppState.tableData = dataResult.value;
+      } else if (dataResult.status === 'rejected') {
+        logger.warn('[Router] Saved query data pre-fetch failed, will re-fetch:', dataResult.reason);
+      }
 
       // Convert saved query selection array → variableSelection object
       const valueCodes = {};

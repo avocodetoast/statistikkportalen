@@ -80,6 +80,10 @@ async function renderVariableSelection(container) {
         <p class="view-description">
           ${t('variable.instructions')}
         </p>
+        <button id="load-default-selection" class="btn-secondary btn-sm"
+                title="${t('variable.defaultSelectionTitle')}">
+          ${t('variable.defaultSelection')}
+        </button>
       </div>
 
       <div id="variables-container" class="variables-container">
@@ -234,6 +238,54 @@ async function renderVariableSelection(container) {
 
   // Set up fetch button
   document.getElementById('fetch-data-btn')?.addEventListener('click', handleFetchData);
+
+  // Set up default selection button
+  document.getElementById('load-default-selection')?.addEventListener('click', handleLoadDefaultSelection);
+}
+
+/**
+ * Fetch the table's default selection and apply it to the variable cards.
+ * Reuses the same restore mechanism as URL-state restore.
+ */
+async function handleLoadDefaultSelection() {
+  const btn = document.getElementById('load-default-selection');
+  if (!btn || !AppState.selectedTable) return;
+
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = t('variable.defaultSelectionLoading');
+
+  try {
+    const result = await api.getDefaultSelection(AppState.selectedTable.id, getCurrentApiLang());
+    const entries = result?.selection || result || [];
+
+    if (!Array.isArray(entries) || entries.length === 0) {
+      logger.warn('[VariableSelect] Default selection returned empty or unexpected format:', result);
+      return;
+    }
+
+    // Convert array format → AppState format and apply via the existing restore path
+    const newSelection = {};
+    const newCodelists = {};
+    entries.forEach(item => {
+      if (item.variableCode) {
+        newSelection[item.variableCode] = item.valueCodes || [];
+        if (item.codelist) newCodelists[item.variableCode] = item.codelist;
+      }
+    });
+
+    AppState.variableSelection = newSelection;
+    AppState.activeCodelistIds = newCodelists;
+
+    await restoreSelections();
+    updateSelectionStatus();
+  } catch (err) {
+    logger.error('[VariableSelect] Failed to load default selection:', err);
+    showError(t('error.defaultSelection'), err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
 }
 
 /**

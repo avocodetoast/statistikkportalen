@@ -138,6 +138,23 @@ function showExportDialog() {
   // Add dialog to page
   document.body.insertAdjacentHTML('beforeend', dialogHtml);
 
+  // Hide format radios for formats not supported by the live API config.
+  if (Array.isArray(AppConfig.limits.dataFormats)) {
+    const allowed = new Set(AppConfig.limits.dataFormats.map(f => f.toLowerCase()));
+    document.querySelectorAll('input[name="export-format"]').forEach(input => {
+      if (!allowed.has(input.value.toLowerCase())) {
+        const wrapper = input.closest('.radio-option');
+        if (wrapper) wrapper.style.display = 'none';
+        if (input.checked) input.checked = false;
+      }
+    });
+    if (!document.querySelector('input[name="export-format"]:checked')) {
+      const fallback = Array.from(document.querySelectorAll('input[name="export-format"]'))
+        .find(i => i.closest('.radio-option')?.style.display !== 'none');
+      if (fallback) fallback.checked = true;
+    }
+  }
+
   // Set up event listeners
   setupExportDialogEvents();
 }
