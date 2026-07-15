@@ -57,6 +57,12 @@ async function renderVariableSelection(container) {
   }
 
   const table = AppState.selectedTable;
+  // Capability gates: the API-builder panel (GET/POST URL preview) and the
+  // "load default selection" button are SSB-only features — Norges Bank has
+  // neither; FHI has a default selection but no API-builder. See
+  // js/sources/*-adapter.js capabilities and js/sources/source-registry.js.
+  const caps = api.capabilitiesFor(table.id) || {};
+
   // Pre-rendrede tabellsider (/table/{id}/) har en generert tittel som skal stå
   // urørt i Googlebots snapshot — ikke overskriv med plassholder-/lastetittel.
   if (!seoTableMatchesRoute(table.id)) {
@@ -74,30 +80,17 @@ async function renderVariableSelection(container) {
     }
   }
 
-  container.innerHTML = `
-    <div class="view-container">
-      <div class="view-header">
-        <button id="back-to-browser" class="btn-secondary">
-          ${t('nav.back.tables')}
-        </button>
-        ${buildNavigationBreadcrumb(table.id, extractTableTitle(table.label))}
-        <h2>${escapeHtml(extractTableTitle(table.label))}</h2>
-        <p class="table-id-display">${t('variable.tablePrefix')} ${escapeHtml(table.id)}</p>
-        <p class="view-description">
-          ${t('variable.instructions')}
-        </p>
+  // "Load default selection" (SSB, FHI) — Norges Bank has no defaultselection
+  // endpoint (capabilities.supportsDefaultSelection: false), so the button is
+  // omitted entirely rather than shown-then-erroring.
+  const defaultSelectionBtnHtml = caps.supportsDefaultSelection ? `
         <button id="load-default-selection" class="btn-secondary btn-sm"
                 title="${t('variable.defaultSelectionTitle')}">
           ${t('variable.defaultSelection')}
-        </button>
-      </div>
+        </button>` : '';
 
-      <div id="table-info-container"></div>
-
-      <div id="variables-container" class="variables-container">
-        <p class="loading-message">${t('loading.metadata')}</p>
-      </div>
-
+  // API builder panel (GET/POST URL preview) — SSB-only (capabilities.supportsGetUrlBuilder).
+  const apiBuilderHtml = caps.supportsGetUrlBuilder ? `
       <div class="query-preview-container">
         <button class="query-preview-toggle" id="query-preview-toggle">
           <span class="query-toggle-icon">&#9654;</span> ${t('api.builder')}
@@ -187,7 +180,30 @@ async function renderVariableSelection(container) {
 
           <div class="api-copy-toast" id="api-copy-toast" style="display: none;">${t('api.copied')}</div>
         </div>
+      </div>` : '';
+
+  container.innerHTML = `
+    <div class="view-container">
+      <div class="view-header">
+        <button id="back-to-browser" class="btn-secondary">
+          ${t('nav.back.tables')}
+        </button>
+        ${buildNavigationBreadcrumb(table.id, extractTableTitle(table.label))}
+        <h2>${escapeHtml(extractTableTitle(table.label))}</h2>
+        <p class="table-id-display">${t('variable.tablePrefix')} ${escapeHtml(table.id)}</p>
+        <p class="view-description">
+          ${t('variable.instructions')}
+        </p>
+        ${defaultSelectionBtnHtml}
       </div>
+
+      <div id="table-info-container"></div>
+
+      <div id="variables-container" class="variables-container">
+        <p class="loading-message">${t('loading.metadata')}</p>
+      </div>
+
+      ${apiBuilderHtml}
 
       <div class="action-bar">
         <button id="fetch-data-btn" class="btn-primary" disabled>

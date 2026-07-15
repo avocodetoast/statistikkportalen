@@ -675,5 +675,17 @@ class SSBApi {
   }
 }
 
-// Create global API instance
-const api = new SSBApi();
+// Expose the SSBApi class so the source adapter (js/sources/ssb-adapter.js)
+// can instantiate/wrap it.
+window.SSBApi = SSBApi;
+
+// Create the default global API instance as a *property* on window (not a
+// lexical `const`/`let`). This matters: callsites across the codebase use the
+// bare global `api`, which resolves to the `window.api` property. Because it is
+// a property and not a lexical binding, js/sources/source-registry.js (loaded
+// later) can REPLACE `window.api` with the multi-source facade and every bare
+// `api.<method>()` callsite transparently routes through the facade instead.
+//
+// If the sources files never load (e.g. a stripped-down build), this plain
+// SSBApi instance remains in place and the portal behaves exactly as before.
+window.api = new SSBApi();

@@ -298,6 +298,23 @@ class CacheManager {
   }
 
   /**
+   * Whether a cache key belongs to a foreign source (Norges Bank / FHI).
+   *
+   * SSB-oppdateringsplan-staleness (_isStaleBySSBSchedule, basert på
+   * AppConfig.sourceUpdateTimes) gjelder KUN SSB-eide nøkler. Fremmede kilder
+   * cacher under nøkler som inneholder segmentene 'nb-'/'nb_'/'fhi-'/'fhi_'
+   * (f.eks. 'tables_nb_no', 'table_nb-IR_no', 'table_fhi-daar-344_no') og skal
+   * kun følge ren TTL. SSB-nøkler er numeriske tabell-id-er eller
+   * vs_/agg_-kodelister med språk 'no'/'en'/'sv' og treffer derfor aldri
+   * dette guarden.
+   */
+  _isForeignSourceKey(key) {
+    if (typeof key !== 'string') return false;
+    return key.includes('nb-') || key.includes('nb_') ||
+           key.includes('fhi-') || key.includes('fhi_');
+  }
+
+  /**
    * Store a value in cache with automatic storage selection
    * @param {string} key - Cache key
    * @param {any} value - Value to store
@@ -411,7 +428,7 @@ class CacheManager {
 
             // Peek at the stored timestamp to check SSB schedule staleness
             const item = await this.indexedDBCache._getRaw(key);
-            if (item && item.stored && this._isStaleBySSBSchedule(item.stored)) {
+            if (item && item.stored && !this._isForeignSourceKey(key) && this._isStaleBySSBSchedule(item.stored)) {
               logger.log('[Cache] Stale (SSB updated since stored): ' + key + ' (IndexedDB)');
               localStorage.removeItem(refKey);
               await this.indexedDBCache.delete(key);
@@ -448,8 +465,8 @@ class CacheManager {
         return null;
       }
 
-      // Check if stale due to SSB metadata update
-      if (item.stored && this._isStaleBySSBSchedule(item.stored)) {
+      // Check if stale due to SSB metadata update (SSB-eide nøkler kun)
+      if (item.stored && !this._isForeignSourceKey(key) && this._isStaleBySSBSchedule(item.stored)) {
         logger.log('[Cache] Stale (SSB updated since stored): ' + key);
         this.delete(key);
         return null;

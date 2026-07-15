@@ -90,6 +90,14 @@
   <script src="js/translations.js?v=1.4.5"></script>
   <script src="js/cache.js?v=1.4.5"></script>
   <script src="js/api.js?v=1.4.5"></script>
+  <!-- Kildeadaptere + fasade (Statistikkportalen 2.0). Lastes etter api.js
+       (trenger window.SSBApi/window.api) og før browser-state.js (bruker api).
+       source-registry.js laster SIST og erstatter window.api med fasaden. -->
+  <script src="js/sources/sdmx-to-jsonstat.js?v=1.4.5"></script>
+  <script src="js/sources/norges-bank-adapter.js?v=1.4.5"></script>
+  <script src="js/sources/fhi-adapter.js?v=1.4.5"></script>
+  <script src="js/sources/ssb-adapter.js?v=1.4.5"></script>
+  <script src="js/sources/source-registry.js?v=1.4.5"></script>
   <script src="js/utils.js?v=1.4.5"></script>
   <script src="js/router.js?v=1.4.5"></script>
   <script src="js/seo-head.js?v=1.4.5"></script>

@@ -175,6 +175,75 @@ const AppConfig = {
   ],
 
   /**
+   * Datakilder — Statistikkportalen 2.0 multi-kilde-hub.
+   *
+   * Hver kilde peker på en adapter (js/sources/{adapter}-adapter.js) som
+   * eksponeres bak den delte `api`-fasaden (js/sources/source-registry.js).
+   * SSB er standardkilden (fallback for alle tabell-id-er uten kildeprefiks);
+   * Norges Bank og FHI eier tabell-id-er med prefiks `nb-` / `fhi-`.
+   *
+   * `enabled: false` på en kilde gjør at adapteren ikke aggregeres i katalogen
+   * og at kildens tabeller ikke rutes — resten av portalen påvirkes ikke.
+   */
+  sources: {
+    // Statistisk sentralbyrå (PxWebApi v2) — apiBaseUrl over.
+    ssb: { adapter: 'ssb', enabled: true },
+
+    // Norges Bank (SDMX REST). Kjerneutvalg av dataflows; flere aktiveres ved
+    // å legge til rader her (se «Senere» i planen). `flow`/`version` er SDMX-
+    // dataflow-id og -versjon; `tableId` er den namnerommede portal-id-en;
+    // `path` er de to emnetre-segmentene (subjektkode + node i sourceNodes).
+    nb: {
+      adapter: 'norges-bank',
+      enabled: true,
+      baseUrl: 'https://data.norges-bank.no/api',
+      dataflows: [
+        { flow: 'EXR', version: '1.0', tableId: 'nb-EXR',
+          path: ['bf', 'nb-valutakurser'],
+          label: { nb: 'Valutakurser', en: 'Exchange rates' } },
+        { flow: 'IR', version: '1.1', tableId: 'nb-IR',
+          path: ['bf', 'nb-renter'],
+          label: { nb: 'Styringsrenten', en: 'Key policy rate' } },
+        { flow: 'SHORT_RATES', version: '1.2', tableId: 'nb-SHORT_RATES',
+          path: ['bf', 'nb-renter'],
+          label: { nb: 'Kortsiktige renter (NOWA)', en: 'Short-term interest rates (NOWA)' } },
+        { flow: 'GOVT_GENERIC_RATES', version: '1.0', tableId: 'nb-GOVT_GENERIC_RATES',
+          path: ['bf', 'nb-renter'],
+          label: { nb: 'Statsobligasjonsrenter', en: 'Government bond yields' } }
+      ]
+    },
+
+    // Folkehelseinstituttet (åpent statistikk-API, JSON-Stat2 native).
+    // Adapteren er generisk over `sourceIds` — flere kilder aktiveres ved å
+    // legge til en id her (se «Senere» i planen).
+    fhi: {
+      adapter: 'fhi',
+      enabled: true,
+      baseUrl: 'https://statistikk-data.fhi.no/api/open/v1',
+      sourceIds: ['nokkel', 'mfr', 'daar']
+    }
+  },
+
+  /**
+   * Emnetre-noder for fremmede kilder (nivå 2 under en SSB-subjektkode).
+   *
+   * Fremmede tabeller får syntetiske `paths[]` på formen
+   * `[{ id: <subjektkode>, ... }, { id: <node-id>, label, sortCode }]`, slik at
+   * de glir inn i det eksisterende emnehierarkiet (menu-hierarchy.js) uten
+   * viewendringer. sortCode `9xx` plasserer dem sist blant SSB-undertemaene.
+   *
+   * NB: FHI-labelene er kun norske (`nb`). Adaptere/UI som slår opp en label
+   * for et annet språk MÅ falle tilbake til `nb` når `en` mangler.
+   */
+  sourceNodes: {
+    'nb-renter':       { sortCode: '900', label: { nb: 'Renter og avkastning – Norges Bank', en: 'Interest rates – Norges Bank' } },
+    'nb-valutakurser': { sortCode: '901', label: { nb: 'Valutakurser – Norges Bank',        en: 'Exchange rates – Norges Bank' } },
+    'fhi-nokkel':      { sortCode: '990', label: { nb: 'Folkehelse – nøkkeltall (FHI)' } },
+    'fhi-mfr':         { sortCode: '991', label: { nb: 'Medisinsk fødselsregister (FHI)' } },
+    'fhi-daar':        { sortCode: '992', label: { nb: 'Dødsårsaksregisteret (FHI)' } }
+  },
+
+  /**
    * Debug logging
    * Set to true to enable console logging throughout the application.
    */

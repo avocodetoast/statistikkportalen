@@ -213,6 +213,15 @@ function displayData() {
   const container = document.getElementById('data-container');
   if (!container || !currentData) return;
 
+  // Capability gates: SSB-only features (server-side xlsx/px/html export,
+  // saved/shared queries) are hidden for sources that don't support them
+  // (Norges Bank, FHI — see js/sources/*-adapter.js capabilities). The
+  // client-side CSV export below has no server dependency, so it is always
+  // shown, for every source.
+  const caps = api.capabilitiesFor(AppState.selectedTable.id) || {};
+  // No server export (NB/FHI): CSV is the primary download action.
+  const csvBtnClass = caps.supportsServerExport ? 'btn-secondary' : 'btn-primary';
+
   // Build metadata section
   let html = buildMetadataSection();
 
@@ -223,15 +232,21 @@ function displayData() {
         <button id="rotate-table-btn" class="btn-secondary">
           ${t('table.rotate')}
         </button>
+        ${caps.supportsServerExport ? `
         <button id="export-quick-btn" class="btn-primary">
           ${t('table.download')}
+        </button>` : ''}
+        <button id="export-csv-btn" class="${csvBtnClass}" title="${t('table.downloadCsvTooltip')}">
+          ${t('table.downloadCsv')}
         </button>
+        ${caps.supportsServerExport ? `
         <button id="export-btn" class="btn-secondary">
           ${t('table.moreOptions')}
-        </button>
+        </button>` : ''}
+        ${caps.supportsSavedQueries ? `
         <button id="save-query-btn" class="btn-secondary">
           ${t('table.getLink')}
-        </button>
+        </button>` : ''}
       </div>
       <div class="table-info">
         <span id="cell-count-display"></span>
@@ -261,11 +276,147 @@ function displayData() {
     showExportDialog();
   });
 
+  document.getElementById('export-csv-btn')?.addEventListener('click', () => {
+    exportCsvClientSide();
+  });
+
   // Set up metadata toggle
   setupMetadataToggle(container);
 
   // Update cell count
   updateCellCount();
+}
+
+/**
+ * Client-side CSV export of the currently displayed (pivoted) table.
+ *
+ * Available for ALL sources (SSB, Norges Bank, FHI) — unlike the xlsx/px/html
+ * export dialog, it needs no server support: it serializes `currentData` +
+ * `AppState.tableLayout`, i.e. exactly the rows/columns/values the on-screen
+ * HTML table shows (see buildHtmlTable()). For SSB tables it complements the
+ * server-side export (xlsx.); for NB/FHI tables it is the only download
+ * option.
+ *
+ * Format choices (deliberate, not user-configurable):
+ *   - UTF-8 with a BOM, semicolon (;) field separator — matches SSB's own
+ *     "SeparatorSemicolon" CSV default (js/export.js) so the file opens
+ *     directly in Norwegian-locale Excel without a manual import wizard.
+ *   - Numbers use a decimal comma, no thousands separator (formatNumberForCsv),
+ *     consistent with the on-screen formatNumber() but without the space
+ *     thousands-grouping, which spreadsheet software would otherwise choke on.
+ *   - Suppressed cells keep their JSON-stat2 status symbol (., .., :) as text.
+ *   - CSV cannot merge cells, so multi-level column headers are flattened:
+ *     one header row per column dimension, with the value repeated for every
+ *     column in that group (rather than the HTML table's colspan). The
+ *     corner above the row-header columns — left blank on screen — instead
+ *     carries the row dimensions' own labels on the last such row, so every
+ *     CSV column has an unambiguous header.
+ */
+function exportCsvClientSide() {
+  if (!currentData || !AppState.tableLayout) {
+    showError(t('error.noDataExport'));
+    return;
+  }
+
+  const csv = buildCsvContent();
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+
+  // Same custom-filename convention as SSBApi.downloadTableData (api.js):
+  // tableId_yyyymmdd-hhmmss.csv
+  const timestamp = getTimestamp().replace('_', '-');
+  const filename = AppState.selectedTable.id + '_' + timestamp + '.csv';
+
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(link.href);
+
+  logger.log('[TableDisplay] CSV export complete:', filename);
+}
+
+/**
+ * Build the CSV text (without BOM) for the currently displayed table.
+ * See exportCsvClientSide() for the format rationale.
+ * @returns {string} CSV content, CRLF line endings
+ */
+function buildCsvContent() {
+  const SEPARATOR = ';';
+  const data = currentData;
+  const layout = AppState.tableLayout;
+  const rowDims = layout.rows;
+  const colDims = layout.columns;
+
+  const rowHeaders = buildDimensionCombinations(rowDims, data);
+  const colHeaders = buildDimensionCombinations(colDims, data);
+  const rowDimLabels = rowDims.map(d => data.dimension[d]?.label || d);
+
+  const lines = [];
+
+  if (colDims.length > 0) {
+    // One header row per column dimension. The corner cells (above the
+    // row-header columns) are blank except on the last row, which carries
+    // the row dimensions' labels.
+    colDims.forEach((dimCode, dimIndex) => {
+      const dimension = data.dimension[dimCode];
+      const corner = (dimIndex === colDims.length - 1) ? rowDimLabels : rowDims.map(() => '');
+      const headerCells = colHeaders.map(colHeader => {
+        const code = colHeader.codes[dimIndex];
+        return dimension.category.label[code] ?? code;
+      });
+      lines.push([...corner, ...headerCells].map(csvField).join(SEPARATOR));
+    });
+  } else if (rowDims.length > 0) {
+    // No column dimension: a single header row (row-dim labels + one generic value column)
+    lines.push([...rowDimLabels, t('table.csvValueColumn')].map(csvField).join(SEPARATOR));
+  }
+
+  rowHeaders.forEach(rowHeader => {
+    const rowCells = rowDims.map((dimCode, i) => {
+      const code = rowHeader.codes[i];
+      return data.dimension[dimCode].category.label[code] ?? code;
+    });
+
+    const dataCells = colHeaders.map(colHeader => {
+      const status = getDataStatus(rowHeader, colHeader);
+      if (status) return status;
+      return formatNumberForCsv(getDataValue(rowHeader, colHeader));
+    });
+
+    lines.push([...rowCells, ...dataCells].map(csvField).join(SEPARATOR));
+  });
+
+  return lines.join('\r\n');
+}
+
+/**
+ * Format a numeric value for CSV: Norwegian decimal comma, no thousands
+ * separator (unlike the on-screen formatNumber(), which adds space
+ * grouping that would confuse spreadsheet numeric parsing).
+ * @param {number|string|null} value
+ * @returns {string}
+ */
+function formatNumberForCsv(value) {
+  if (value === null || value === undefined || value === '') return '';
+  const num = parseFloat(value);
+  if (isNaN(num)) return String(value);
+  return String(value).replace('.', ',');
+}
+
+/**
+ * Escape a single CSV field: quote (and double internal quotes) whenever
+ * the value contains the separator, a quote, or a line break.
+ * @param {*} value
+ * @returns {string}
+ */
+function csvField(value) {
+  const str = String(value ?? '');
+  if (/[;"\r\n]/.test(str)) {
+    return '"' + str.replace(/"/g, '""') + '"';
+  }
+  return str;
 }
 
 /**

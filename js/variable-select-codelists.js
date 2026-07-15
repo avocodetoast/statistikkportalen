@@ -73,6 +73,14 @@ async function preloadCodelistOrdering(dimensions) {
  * "Velg fritt blant alle verdier" (value="") restores the full value list.
  */
 function setupCodelistDropdowns() {
+  // Foreign sources (NB/FHI) never emit dimension.extension.codelists, so
+  // displayVariables() never renders a .codelist-dropdown for them and this
+  // querySelectorAll is already a no-op — the capability check below is an
+  // explicit, cheap early-out documenting that (see js/sources/*-adapter.js
+  // capabilities.supportsCodelists).
+  const caps = AppState.selectedTable ? api.capabilitiesFor(AppState.selectedTable.id) : null;
+  if (caps && caps.supportsCodelists === false) return;
+
   document.querySelectorAll('.codelist-dropdown').forEach(dropdown => {
     dropdown.addEventListener('change', async () => {
       const dimCode = dropdown.dataset.dimension;
