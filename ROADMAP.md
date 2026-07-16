@@ -30,7 +30,17 @@ NB: tids-/geodimensjonskoder varierer per kilde (DAAR/FYLKE,
 FODSELSTIDSPUNKT_*); rolledeteksjonen i `fhi-adapter.js` er heuristisk og bør
 sjekkes ved aktivering av nye kilder.
 
+### Vedlikehold
+- FHI-katalogen (`data/sources/fhi-catalog.json` — titler, tidsperioder,
+  beskrivelser) er et øyeblikksbilde; kjør `node scripts/update-fhi-catalog.mjs`
+  ved nye FHI-tabeller eller endrede sammendrag.
+- ~64 lange FHI-titler (mest nokkel) kuttes ved ~90 tegn; kan finpusses manuelt
+  i katalogfilen om ønskelig.
+
 ### Øvrig
+- Kryssfiltrering av gyldige kombinasjoner finnes kun for Norges Bank
+  (via `extension.validKeys` fra serieskeysonly); FHI har ingen tilsvarende
+  serieliste i API-et.
 - SEO-sidene (`scripts/*.mjs`) omfatter kun SSB; fremmede kilder er ekskludert.
 - Permalenke-emulering for NB/FHI (saved query-ekvivalent via URL-state).
 - Søkesynonymer for nye domener (renter, valuta, dødsårsaker, fødsler) i

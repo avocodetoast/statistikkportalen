@@ -487,7 +487,18 @@
 
 .table-list th:nth-child(1),
 .table-list td:nth-child(1) {
-  width: 90px;
+  /* Wide enough for SSB's 5-digit ids and most foreign-source ids
+     (e.g. "nb-SHORT_RATES", "fhi-daar-12345"); exceptionally long ids
+     (e.g. "nb-GOVT_GENERIC_RATES") are truncated with an ellipsis rather
+     than wrapping mid-identifier — the full id is still on a title tooltip. */
+  width: 155px;
+}
+
+.table-list td:nth-child(1) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
 }
 
 .table-list th:nth-child(3),
@@ -832,4 +843,13 @@
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
+}
+
+/* Cross-filter: values with no data for the current selection in other
+   dimensions are muted and non-selectable (see variable-select-status.js
+   applyCrossFilter). Loaded after main.css so it overrides .value-list-item. */
+.value-list-item.value-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: not-allowed;
 }

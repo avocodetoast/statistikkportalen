@@ -147,6 +147,8 @@ const translations = {
     'status.topMode':      'siste {0}',
     'status.tooManyCells': 'For mange celler valgt \u2014 reduser utvalget',
     'status.cellsSelected': '{0} {1} valgt (av maks {2} mulige)',
+    'status.seriesMatch':   '{0} serier matcher valget',
+    'status.noSeriesMatch': 'Ingen serier matcher valget',
     'status.exceedsLimit': '\u2014 overskrider API-grensen på 800\u202f000!',
 
     // API builder
@@ -368,6 +370,8 @@ const translations = {
     'status.topMode':      'last {0}',
     'status.tooManyCells': 'Too many cells selected \u2014 reduce the selection',
     'status.cellsSelected': '{0} {1} selected (of max {2} possible)',
+    'status.seriesMatch':   '{0} series match your selection',
+    'status.noSeriesMatch': 'No series match your selection',
     'status.exceedsLimit': '\u2014 exceeds the API limit of 800,000!',
 
     'api.builder':          'API builder',
@@ -584,6 +588,8 @@ const translations = {
     'status.topMode':      'senaste {0}',
     'status.tooManyCells': 'F\u00F6r m\u00E5nga celler valda \u2014 minska urvalet',
     'status.cellsSelected': '{0} {1} valda (av max {2} m\u00F6jliga)',
+    'status.seriesMatch':   '{0} serier matchar valet',
+    'status.noSeriesMatch': 'Inga serier matchar valet',
     'status.exceedsLimit': '\u2014 \u00F6verskrider API-gr\u00E4nsen p\u00E5 800\u202F000!',
 
     'api.builder':          'API-byggare',

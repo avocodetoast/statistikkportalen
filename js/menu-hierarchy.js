@@ -244,7 +244,7 @@ class MenuHierarchy {
         } else if (table.timeUnit === 'Annual') {
           groupKey = 'Årsstall';
         } else {
-          groupKey = 'Andre tabeller';
+          groupKey = MenuHierarchy.FALLBACK_GROUP_LABEL;
         }
       }
 
@@ -259,6 +259,14 @@ class MenuHierarchy {
       .sort(([a], [b]) => b.localeCompare(a))
       .map(([name, tables]) => ({
         name,
+        // Fallback bucket ("Andre tabeller"): a generic catch-all with no real
+        // statistical meaning. Marked so callers can skip the group chrome
+        // when it's the *only* group (all tables uncategorised) — common for
+        // foreign-source nodes (NB, FHI) whose tables have no SSB-style
+        // timeUnit/base-year metadata to group by. SSB tables that genuinely
+        // group into named buckets (Månedstall, Kvartalstall, ...) are
+        // unaffected since those groupKeys never equal the fallback label.
+        isFallback: name === MenuHierarchy.FALLBACK_GROUP_LABEL,
         tables: tables.sort((a, b) => a.sortCode.localeCompare(b.sortCode))
       }));
   }
@@ -304,6 +312,10 @@ class MenuHierarchy {
     return breadcrumbs;
   }
 }
+
+// Generic catch-all bucket used by groupTables() when a table has no
+// meaningful grouping criteria (no base year, non-standard timeUnit).
+MenuHierarchy.FALLBACK_GROUP_LABEL = 'Andre tabeller';
 
 // Global instance
 window.MenuHierarchy = MenuHierarchy;

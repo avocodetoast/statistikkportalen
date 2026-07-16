@@ -59,6 +59,16 @@
     GOVT_GENERIC_RATES: ['Statsobligasjonsrenter', 'Statsobligasjon', 'Statsrente', 'Rente', 'Government bond yields']
   };
 
+  // Datatorg-beskrivelser per flow (norsk). Emitteres som `note` i metadata slik
+  // at Tabellinfo viser dem (jf. table-metadata.js meta.note). Hentet fra Norges
+  // Banks egne datasettbeskrivelser.
+  const DESCRIPTIONS = {
+    EXR: 'Norges Banks valutakurser. Kursene publiseres ca. kl. 16.00.',
+    IR: 'Norges Banks styringsrente.',
+    SHORT_RATES: 'NOWA – Norwegian Overnight Weighted Average.',
+    GOVT_GENERIC_RATES: 'Generisk rente er den effektive renten på et statspapir som er nærmest den oppgitte løpetiden målt fra dagens dato.'
+  };
+
   // Emnesubjektets sortCode (samsvarer med SSBs 'bf'-node; kosmetisk siden
   // SSB-tabeller oppretter subjektnoden først). '9xx'-nodene sist blant undertemaene.
   const SUBJECT_SORTCODE = { bf: '0000006' };
@@ -173,7 +183,23 @@
     const opts = options || {};
     // Server-søk / nylig-oppdaterte er SSB-only semantikk.
     if (opts.query || opts.pastDays) return { tables: [] };
-    return { tables: buildCatalogue(currentLang()) };
+
+    const tables = buildCatalogue(currentLang());
+    // Fyll Tidsperiode/Sist oppdatert fra ett lite, cachet kall pr. flow (24 t).
+    // Feiltolerant: hvis en probe feiler beholdes '' (degradér pent).
+    await Promise.all(tables.map(async (entry) => {
+      const flow = flowForId(entry.id);
+      if (!flow) return;
+      try {
+        const period = await fetchCataloguePeriod(flow);
+        if (period) {
+          entry.firstPeriod = period.firstPeriod || '';
+          entry.lastPeriod = period.lastPeriod || '';
+          entry.updated = period.updated || '';
+        }
+      } catch (e) { /* behold tomme strenger */ }
+    }));
+    return { tables };
   }
 
   // ---- Metadata ----
@@ -233,6 +259,108 @@
     return !!(s && Object.keys(s).length > 0);
   }
 
+  /** SDMX-JSON kan ha data.structure (objekt) ELLER data.structures[0] (array). */
+  function pickStructure(json) {
+    const data = json && json.data;
+    if (!data) return null;
+    if (data.structure) return data.structure;
+    if (Array.isArray(data.structures) && data.structures[0]) return data.structures[0];
+    return null;
+  }
+
+  /**
+   * Hent de FAKTISKE seriene via detail=serieskeysonly (bittelite svar, 3–8 KB).
+   * Returnerer { dims:[dimId...], seriesValues:{dimId:[koder...]}, keys:['B.USD.NOK.SP',...] }
+   * eller null. Kodebasert (ikke indeksbasert) slik at UI-krysfilteret kan matche
+   * direkte mot dimensjonskoder. Cachet 24 t (språkuavhengig — kun koder).
+   */
+  async function fetchSeriesKeys(flow) {
+    const cacheKey = 'nb-serieskeys-' + flow.flow;
+    const cached = await cacheGet(cacheKey);
+    if (cached) return cached;
+
+    const url = BASE + '/data/' + encodeURIComponent(flow.flow) +
+      '/?detail=serieskeysonly&format=sdmx-json';
+    let json = null;
+    try {
+      const res = await fetchSdmx(url);
+      if (res.status === 404 || !res.json) return null;
+      json = res.json;
+    } catch (e) {
+      return null; // Krysfilter er en forbedring, ikke kritisk — degradér stille.
+    }
+
+    const struct = pickStructure(json);
+    const seriesDims = struct && struct.dimensions && struct.dimensions.series;
+    const dataSet = json.data && Array.isArray(json.data.dataSets) ? json.data.dataSets[0] : null;
+    if (!Array.isArray(seriesDims) || !dataSet || !dataSet.series) return null;
+
+    const dims = seriesDims.map(d => d.id);
+    const valueCodes = seriesDims.map(d => (d.values || []).map(v => v.id));
+    const seriesValues = {};
+    dims.forEach((id, i) => { seriesValues[id] = valueCodes[i]; });
+
+    const keys = Object.keys(dataSet.series).map(k => {
+      const idx = k.split(':').map(Number);
+      return idx.map((n, i) => (valueCodes[i] ? valueCodes[i][n] : undefined)).join('.');
+    });
+
+    const result = { dims, seriesValues, keys };
+    await cacheSet(cacheKey, result);
+    return result;
+  }
+
+  /** Trekk ut årstallet (første 4 sifre) fra en SDMX-periodekode; NaN hvis ukjent. */
+  function periodYear(code) {
+    const m = String(code || '').match(/\d{4}/);
+    return m ? parseInt(m[0], 10) : NaN;
+  }
+
+  /**
+   * Katalog-tidsvindu + sist oppdatert for en flow via ETT kombinert kall
+   * (firstNObservations=1&lastNObservations=1 → union av første og siste obs pr.
+   * serie). Returnerer { firstPeriod, lastPeriod, updated } (år-strenger + ISO-dato)
+   * eller null. Cachet 24 t (språkuavhengig). Kalles fra getTables (hver app-init)
+   * — derfor cachet og feiltolerant.
+   */
+  async function fetchCataloguePeriod(flow) {
+    const cacheKey = 'nb-catperiod-' + flow.flow;
+    const cached = await cacheGet(cacheKey);
+    if (cached) return cached;
+
+    const url = BASE + '/data/' + encodeURIComponent(flow.flow) +
+      '/?format=sdmx-json&firstNObservations=1&lastNObservations=1';
+    let json = null;
+    try {
+      const res = await fetchSdmx(url);
+      if (res.status === 404 || !res.json) return null;
+      json = res.json;
+    } catch (e) {
+      return null;
+    }
+
+    const struct = pickStructure(json);
+    const obsDim = struct && struct.dimensions && Array.isArray(struct.dimensions.observation)
+      ? struct.dimensions.observation[0] : null;
+    const values = (obsDim && obsDim.values) ? obsDim.values.map(v => v.id) : [];
+    if (values.length === 0) return null;
+
+    let minY = Infinity, maxY = -Infinity;
+    values.forEach(code => {
+      const y = periodYear(code);
+      if (!isNaN(y)) { if (y < minY) minY = y; if (y > maxY) maxY = y; }
+    });
+    if (!isFinite(minY) || !isFinite(maxY)) return null;
+
+    const result = {
+      firstPeriod: String(minY),
+      lastPeriod: String(maxY),
+      updated: (json.meta && json.meta.prepared) || ''
+    };
+    await cacheSet(cacheKey, result);
+    return result;
+  }
+
   async function getTableMetadata(tableId, useCache, lang) {
     const flow = flowForId(tableId);
     if (!flow) throw new Error('[NBAdapter] Ukjent tabell: ' + tableId);
@@ -257,8 +385,11 @@
       dsd.dataStructureComponents.dimensionList &&
       (dsd.dataStructureComponents.dimensionList.dimensions || []).length || 0;
 
-    // 2) TIME_PERIOD-probe (+ friendly dim-navn).
-    const probe = await probeTime(flow, nSeriesDims, locale);
+    // 2) TIME_PERIOD-probe (+ friendly dim-navn) og serieskeysonly-probe parallelt.
+    const [probe, seriesKeys] = await Promise.all([
+      probeTime(flow, nSeriesDims, locale),
+      fetchSeriesKeys(flow)
+    ]);
 
     const meta = window.SdmxToJsonStat.structureToMetadata(dsdRes.json, flow, {
       lang: locale,
@@ -266,8 +397,22 @@
       updated: (dsdRes.json.meta && dsdRes.json.meta.prepared) || null,
       dimLabels: probe.dimLabels,
       timeValues: probe.timeValues,
-      timeLabel: probe.timeLabel
+      timeLabel: probe.timeLabel,
+      // Begrens kategoriene til verdier som faktisk finnes i ekte serier.
+      seriesValues: seriesKeys ? seriesKeys.seriesValues : null
     });
+
+    // Gyldige dimensjonskombinasjoner for generisk krysfiltrering i UI-en
+    // (variable-select). dims i serieskeysonly-rekkefølge; keys kodebasert.
+    if (seriesKeys && Array.isArray(seriesKeys.keys) && seriesKeys.keys.length) {
+      meta.extension = meta.extension || {};
+      meta.extension.validKeys = { dims: seriesKeys.dims, keys: seriesKeys.keys };
+    }
+
+    // Datatorg-beskrivelse → Tabellinfo (meta.note er en streng-array).
+    if (DESCRIPTIONS[flow.flow]) {
+      meta.note = [DESCRIPTIONS[flow.flow]];
+    }
 
     await cacheSet(cacheKey, meta);
     return meta;

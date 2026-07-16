@@ -1,0 +1,4140 @@
+{
+  "generatedAt": "2026-07-15T06:58:39.982Z",
+  "sources": {
+    "nokkel": {
+      "title": "Folkehelsestatistikk",
+      "tables": [
+        {
+          "tableId": 171,
+          "title": "Framskrevet folkemengde for hvert år fra 2026 til 2050, med utgangspunkt i folketallet…",
+          "internalName": "Befolkningsframskriving",
+          "description": "Framskrevet folkemengde for hvert år fra 2026 til 2050, med utgangspunkt i folketallet per 1.1.2026. Statistikken vises for kommune- og fylkesinndeling per 1.1.2026.",
+          "firstPeriod": "2026",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "Utgangspunkt årstall",
+            "Kjønn",
+            "Alder",
+            "Prognoseår",
+            "Måltall"
+          ],
+          "updated": "2026-06-26T08:10:03.71464Z"
+        },
+        {
+          "tableId": 175,
+          "title": "Innvandrere og norskfødte med innv.foreldre _LANDBAK",
+          "internalName": "Innvandrere og norskfødte med innv.foreldre _LANDBAK",
+          "description": "Andel personer med to utenlandsfødte foreldre og fire utenlandsfødte besteforeldre registrert bosatt i Norge per 1. januar (totalt og etter verdensdel). Andelen er presentert i prosent av befolkningen.",
+          "firstPeriod": "2003",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Alder",
+            "Verdensdel",
+            "Måltall"
+          ],
+          "updated": "2026-02-06T14:57:46.6586Z"
+        },
+        {
+          "tableId": 181,
+          "title": "Andel personer med et gitt utdanningsnivå som høyeste fullførte utdanning i prosent av…",
+          "internalName": "Utdanningsnivå",
+          "description": "Andel personer med et gitt utdanningsnivå som høyeste fullførte utdanning i prosent av alle med oppgitt utdanningsnivå. Årlige tall.",
+          "firstPeriod": "1989",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Utdanningsnivå",
+            "Måltall"
+          ],
+          "updated": "2026-04-16T06:59:07.075606Z"
+        },
+        {
+          "tableId": 185,
+          "title": "Differansen mellom befolkningsmengden i slutten av året (målt 1. januar året etter) og i…",
+          "internalName": "Befolkningsvekst",
+          "description": "Differansen mellom befolkningsmengden i slutten av året (målt 1. januar året etter) og i begynnelsen av året (1. januar). Statistikken vises for kommune- og fylkesinndeling per 1.1.2024.",
+          "firstPeriod": "2002",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Måltall"
+          ],
+          "updated": "2025-10-21T08:56:39.806397Z"
+        },
+        {
+          "tableId": 186,
+          "title": "Personer som bor i henholdsvis leide og eide boliger",
+          "internalName": "Eierstatus",
+          "description": "Personer som bor i henholdsvis leide og eide boliger. Andeler er presentert i prosent av personer i privathusholdninger.",
+          "firstPeriod": "2015",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Alder",
+            "Eierstatus",
+            "Måltall"
+          ],
+          "updated": "2025-12-08T09:24:12.660858Z"
+        },
+        {
+          "tableId": 187,
+          "title": "Personer som bor alene",
+          "internalName": "Personer som bor alene",
+          "description": "Andel personer som bor i en-personhusholdninger i prosent av befolkningen per 1. januar. Statistikken vises for kommune- fylkesinndeling per 1.1.2024.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Alder",
+            "Måltall"
+          ],
+          "updated": "2025-12-08T09:10:42.87317Z"
+        },
+        {
+          "tableId": 332,
+          "title": "Andel ungdomsskoleelever som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11…",
+          "internalName": "Alkohol_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11 ganger eller mer» på spørsmålet om de det siste året (de siste 12 månedene) har «drukket så mye at du har følt deg tydelig beruset» i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Antallganger vises ikke",
+            "Sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:25:29.098814Z"
+        },
+        {
+          "tableId": 334,
+          "title": "Antibiotika forskrevet på resept og utlevert fra apotek til personer i aldersgruppen 0-79…",
+          "internalName": "Antibiotikaresepter",
+          "description": "Antibiotika forskrevet på resept og utlevert fra apotek til personer i aldersgruppen 0-79 år. En resept defineres som en utlevering av et antibiotikum.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2021",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Legemiddelgruppe",
+            "Måltall"
+          ],
+          "updated": "2024-11-04T19:48:29.225776Z"
+        },
+        {
+          "tableId": 335,
+          "title": "Barn av sosialhjelpsmottakere",
+          "internalName": "Barn av sosialhjelpsmottakere",
+          "description": "Barn 0-17 år som bor i familier som mottar sosialhjelp: Antall, og andel i prosent av alle barn 0-17 år. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025.",
+          "firstPeriod": "2015",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn vises ikke",
+            "Alder vises ikke",
+            "Stønadslengde",
+            "Måltall"
+          ],
+          "updated": "2026-02-10T09:44:35.054664Z"
+        },
+        {
+          "tableId": 336,
+          "title": "Andel barn som går i barnehager som oppfyller normene for bemanning og pedagogtetthet av…",
+          "internalName": "Barnehagekvalitet_bemanning",
+          "description": "Andel barn som går i barnehager som oppfyller normene for bemanning og pedagogtetthet av alle barn som går i barnehager. Tallene omfatter både kommunale og private barnehager.",
+          "firstPeriod": "2019",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Oppfyller norm",
+            "Måltall"
+          ],
+          "updated": "2026-06-09T08:26:08.061722Z"
+        },
+        {
+          "tableId": 337,
+          "title": "Andelen barn 0-17 år med barnevernstiltak i prosent av alle barn 0-17 år",
+          "internalName": "Barnevern_tiltak",
+          "description": "Andelen barn 0-17 år med barnevernstiltak i prosent av alle barn 0-17 år. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025.",
+          "firstPeriod": "2003",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "ALDER",
+            "Måltall"
+          ],
+          "updated": "2026-03-24T09:13:05.651799Z"
+        },
+        {
+          "tableId": 338,
+          "title": "Antall i befolkningen i ulike aldersgrupper bosatt pr. 1/1",
+          "internalName": "Befolkningssammensetning_antall_andel",
+          "description": "Antall i befolkningen i ulike aldersgrupper bosatt pr. 1/1. Andel av befolkningen i ulike aldersgrupper bosatt pr. 1/1.",
+          "firstPeriod": "1990",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Måltall"
+          ],
+          "updated": "2026-06-18T13:08:43.141834Z"
+        },
+        {
+          "tableId": 339,
+          "title": "Depressive symptomer_Ungdata_KH",
+          "internalName": "Depressive symptomer_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som har mange psykiske plager. Omfatter de som i gjennomsnitt oppgir å være ganske mye eller veldig mye plaget i løpet av siste uke.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Plagegrad",
+            "Sosioøkonomiske ressurser (SØR)",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:43:46.823485Z"
+        },
+        {
+          "tableId": 341,
+          "title": "Personer tilknyttet vannverk (vannforsyningssystem) med ulik kvalitet på…",
+          "internalName": "Drikkevannsforsyning",
+          "description": "Personer tilknyttet vannverk (vannforsyningssystem) med ulik kvalitet på drikkevannsforsyningen med hensyn til E. coli og leveringsstabilitet (ikke-planlagte avbrudd i vannforsyningen). Andelen vises i prosent av befolkningen tilknyttet vannverk som forsyner minst 50 personer.",
+          "firstPeriod": "2015",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Parameter",
+            "Forsyningskvalitet",
+            "Måltall"
+          ],
+          "updated": "2026-01-12T08:32:55.070566Z"
+        },
+        {
+          "tableId": 342,
+          "title": "Dødsårsaker tiårig",
+          "internalName": "Dødsårsaker tiårig",
+          "description": "Antall døde per 100 000 innbyggere* per år av utvalgte dødsårsaker, alders- og kjønnsstandardisert. Statistikken viser 10 års glidende gjennomsnitt (dvs. gjennomsnitt for overlappende 10-årsperioder).",
+          "firstPeriod": "1990-1999",
+          "lastPeriod": "2015-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T12:34:52.543381Z"
+        },
+        {
+          "tableId": 343,
+          "title": "Antall døde per 100 000 innbyggere* per år av utvalgte dødsårsaker, alders- og…",
+          "internalName": "Dødsårsaker-nøkkeltall-1990-ettårig",
+          "description": "Antall døde per 100 000 innbyggere* per år av utvalgte dødsårsaker, alders- og kjønnsstandardisert. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025, basert på bosted 1. januar i dødsåret, og omfatter personer registrert som bosatt i Norge, uavhengig av om dødsfallet skjedde i eller utenfor landet.",
+          "firstPeriod": "1990",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Dødsårsaker",
+            "Måltall"
+          ],
+          "updated": "2026-01-12T09:40:55.35502Z"
+        },
+        {
+          "tableId": 344,
+          "title": "Selvmord femårig",
+          "internalName": "Selvmord femårig",
+          "description": "Selvmord og villet egenskade, inkludert senvirkning av selvmordsforsøk (ICD-10: X60-X84, Y87.0). Antall døde per 100 000 innbyggere* per år, alders- og kjønnsstandardisert.",
+          "firstPeriod": "1990-1994",
+          "lastPeriod": "2020-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-01-12T09:39:58.096601Z"
+        },
+        {
+          "tableId": 345,
+          "title": "Trafikkulykker, femårige tall",
+          "internalName": "Trafikkulykker, femårige tall",
+          "description": "Antall dødsfall på grunn av trafikkulykker per 100 000 innbyggere* per år, alders- og kjønnsstandardisert. Statistikken viser 5 års glidende gjennomsnitt (dvs. gjennomsnitt for overlappende 5-årsperioder).",
+          "firstPeriod": "1990-1994",
+          "lastPeriod": "2020-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-01-12T09:39:32.447779Z"
+        },
+        {
+          "tableId": 346,
+          "title": "Barn av enslige forsørgere_3aarigLFKB",
+          "internalName": "Barn av enslige forsørgere_3aarigLFKB",
+          "description": "Andelen barn 0-17 år som det utbetales utvidet barnetrygd for, i prosent av alle barn 0-17 år som det utbetales barnetrygd for. Indikatoren viser antallet/andelen barn i alderen 0-17 år med mor eller far som er eneforsørger.",
+          "firstPeriod": "2015-2017",
+          "lastPeriod": "2023-2025",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Måltall"
+          ],
+          "updated": "2026-03-09T08:48:17.960139Z"
+        },
+        {
+          "tableId": 348,
+          "title": "Andel ungdomsskoleelever som svarer «ganske mye plaget» eller «veldig mye plaget» på…",
+          "internalName": "Ensomhet_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som svarer «ganske mye plaget» eller «veldig mye plaget» på spørsmålet: Har du vært plaget av noe av dette i løpet av sist uke: «Følt deg ensom?», i prosent av alle som har svart på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder vises ikke",
+            "Plagenivå",
+            "Sosial status vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:44:05.252263Z"
+        },
+        {
+          "tableId": 349,
+          "title": "Andel ungdomsskoleelever som svarte \"svært fornøyd\", \"litt fornøyd\", \"verken eller\",…",
+          "internalName": "Fornoyd_helsa_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som svarte \"svært fornøyd\", \"litt fornøyd\", \"verken eller\", \"litt misfornøyd\" eller \"svært misfornøyd\" på spørsmålet: \"Hvor fornøyd eller misfornøyd er du med helsa di?\", i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen. Kategoriene for svaralternativene \"litt fornøyd\" og \"svært fornøyd\" er slått sammen og kategoriene for svaralternativene \"litt…",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder vises ikke",
+            "Fornøydhet med helsa",
+            "SOES",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:44:24.20775Z"
+        },
+        {
+          "tableId": 350,
+          "title": "17-åringer som oppgir i den nettbaserte sesjon 1 at de kan svømme 200 meter",
+          "internalName": "Forsvaret_Svomming_3",
+          "description": "17-åringer som oppgir i den nettbaserte sesjon 1 at de kan svømme 200 meter. Andelen er presentert i prosent av alle som svarte på spørsmålet om svømmeferdigheter i den nettbaserte sesjon 1.",
+          "firstPeriod": "2018-2020",
+          "lastPeriod": "2023-2025",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "svommeferd.",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T11:41:16.069306Z"
+        },
+        {
+          "tableId": 351,
+          "title": "17-åringer som oppgir i den nettbaserte sesjon 1 at de kan svømme 200 meter",
+          "internalName": "Forsvaret_Svomming_1",
+          "description": "17-åringer som oppgir i den nettbaserte sesjon 1 at de kan svømme 200 meter. Andelen er presentert i prosent av alle som svarte på spørsmålet om svømmeferdigheter i den nettbaserte sesjon 1.",
+          "firstPeriod": "2018",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "svommeferd",
+            "Måltall"
+          ],
+          "updated": "2026-02-16T13:58:22.362566Z"
+        },
+        {
+          "tableId": 352,
+          "title": "17-åringer som trener sjeldnere enn en gang i uka",
+          "internalName": "Trening_forsvaret_sesjon1_3",
+          "description": "17-åringer som trener sjeldnere enn en gang i uka. Andelen er presentert i prosent av alle som svarte på spørsmålet om trening i den nettbaserte sesjon 1.",
+          "firstPeriod": "2018-2020",
+          "lastPeriod": "2023-2025",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Hyppighet av trening",
+            "Måltall"
+          ],
+          "updated": "2026-04-20T11:26:50.704543Z"
+        },
+        {
+          "tableId": 353,
+          "title": "17-åringer som trener sjeldnere enn en gang i uka",
+          "internalName": "Trening_forsvaret_sesjon1_1",
+          "description": "17-åringer som trener sjeldnere enn en gang i uka. Andelen er presentert i prosent av alle som svarte på spørsmålet om trening i den nettbaserte sesjon 1.",
+          "firstPeriod": "2018",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Hyppighet av trening",
+            "Måltall"
+          ],
+          "updated": "2026-01-20T09:19:15.088638Z"
+        },
+        {
+          "tableId": 354,
+          "title": "Andel ungdomsskoleelever som svarte et av alternativene «Ja, helt sikkert» eller «Ja, det…",
+          "internalName": "FORTROLIGVENN_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som svarte et av alternativene «Ja, helt sikkert» eller «Ja, det tror jeg» på spørsmålet: \"Har du minst én venn som du kan stole fullstendig på og kan betro deg til om alt mulig?\", i prosent av alle som har svart på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder vises ikke",
+            "Svarkategori vises ikke",
+            "Sosial status vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:44:44.866389Z"
+        },
+        {
+          "tableId": 356,
+          "title": "Andel ungdomsskoleelever som svarte \"Ja, jeg er med nå\" på spørsmålet: \"Er du, eller har…",
+          "internalName": "Fritidsorg_deltak_ungdata",
+          "description": "Andel ungdomsskoleelever som svarte \"Ja, jeg er med nå\" på spørsmålet: \"Er du, eller har du tidligere vært med i noen organisasjoner, klubber, lag eller foreninger - etter at du fylte 10 år?\", i prosent av alle som svarte på dette spørsmålet. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Deltar",
+            "Sosioøkonomiske ressurser (SØR)",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:46:17.597104Z"
+        },
+        {
+          "tableId": 357,
+          "title": "Andel ungdomsskoleelever som i ungdataundersøkelsen svarte et av alternativene «1-2…",
+          "internalName": "Fysisk_inakt_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som i ungdataundersøkelsen svarte et av alternativene «1-2 ganger i måneden», «sjelden» eller «aldri» på spørsmålet: \"Hvor ofte er du så fysisk aktiv at du blir andpusten eller svett?\", i prosent av alle som har svart på dette spørsmålet.",
+          "firstPeriod": "2014",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Trener",
+            "Sosioøkonomiske ressurser (SØR)",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:45:03.469948Z"
+        },
+        {
+          "tableId": 358,
+          "title": "Andel personer i husholdninger som har høy gjeldsgrad, her definert som samlet gjeld på…",
+          "internalName": "Gjeld",
+          "description": "Andel personer i husholdninger som har høy gjeldsgrad, her definert som samlet gjeld på over tre ganger samlet inntekt for husholdningen (før skatt). I inntektene inngår de fleste kontante inntekter, både skattepliktige og skattefrie.",
+          "firstPeriod": "2014",
+          "lastPeriod": "2023",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Måltall"
+          ],
+          "updated": "2025-02-26T11:51:11.007021Z"
+        },
+        {
+          "tableId": 359,
+          "title": "Gjennomforing i videregående skole_innvand_3",
+          "internalName": "Gjennomforing i videregående skole_innvand_3",
+          "description": "Gjennomføring i videregående opplæring, totalt og etter innvandringsbakgrunn. Gjennomføring inkluderer personer som startet på grunnkurs i videregående opplæring for første gang et gitt år og andelen som har fullført med studie- eller yrkeskompetanse i løpet av fem/seks år.",
+          "firstPeriod": "2012-2014",
+          "lastPeriod": "2022-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Utdanning (vises ikke)",
+            "Innvandringsbakgrunn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:58:32.461112Z"
+        },
+        {
+          "tableId": 360,
+          "title": "Gjennomforing i videregående skole_utdann_3",
+          "internalName": "Gjennomforing i videregående skole_utdann_3",
+          "description": "Gjennomføring i videregående opplæring totalt og etter foreldrenes høyeste fullførte utdanningsnivå. Gjennomføring inkluderer personer som startet på grunnkurs i videregående opplæring for første gang et gitt år og andelen som har fullført med studie- eller yrkeskompetanse i løpet av fem/seks år.",
+          "firstPeriod": "2012-2014",
+          "lastPeriod": "2022-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Foreldrenes utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:59:06.542166Z"
+        },
+        {
+          "tableId": 361,
+          "title": "Gjennomsnittlige grunnskolepoeng ved avsluttet grunnskole på 10. trinn, totalt og etter…",
+          "internalName": "Grunnskolepoeng_INNVKAT",
+          "description": "Gjennomsnittlige grunnskolepoeng ved avsluttet grunnskole på 10. trinn, totalt og etter kjønn og innvandringsbakgrunn. Statistikken vises etter kommune- og fylkesinndeling per 1.1.2024.",
+          "firstPeriod": "2009-2011",
+          "lastPeriod": "2023-2025",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Foreldrenes utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T13:09:17.757726Z"
+        },
+        {
+          "tableId": 362,
+          "title": "Gjennomsnittlige grunnskolepoeng ved avsluttet grunnskole på 10. trinn, totalt og etter…",
+          "internalName": "Grunnskolepoeng_UTDANN",
+          "description": "Gjennomsnittlige grunnskolepoeng ved avsluttet grunnskole på 10. trinn, totalt og etter kjønn og foreldrenes høyeste utdanningsnivå. Statistikken vises etter kommune- og fylkesinndeling per 1.1.2024.",
+          "firstPeriod": "2009-2011",
+          "lastPeriod": "2023-2025",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Foreldrenes utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T13:08:27.211865Z"
+        },
+        {
+          "tableId": 363,
+          "title": "Andel ungdomsskoleelever som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11…",
+          "internalName": "Hasjbruk_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11 ganger eller mer» på spørsmålet om de det siste året (de siste 12 månedene) har «brukt hasj/marihuana/cannabis» i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Svarkategori",
+            "Sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:48:42.664626Z"
+        },
+        {
+          "tableId": 364,
+          "title": "Hjerte- og karregisteret_3aarigLFKB",
+          "internalName": "Hjerte- og karregisteret_3aarigLFKB",
+          "description": "Antall unike personer med hjerte- og kardiagnose, per 1000 innbyggere per år, alders- og kjønnsstandardisert. Samlede tall for sykehusinnleggelser og dødsfall, samt tall fra disse to kildene hver for seg.",
+          "firstPeriod": "2012-2014",
+          "lastPeriod": "2020-2022",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Indikator",
+            "Måltall"
+          ],
+          "updated": "2024-10-29T12:57:13.733322Z"
+        },
+        {
+          "tableId": 365,
+          "title": "Hjerte- og karregisteret_1aarigLHF",
+          "internalName": "Hjerte- og karregisteret_1aarigLHF",
+          "description": "Antall unike personer med hjerte-/kardiagnose, per 1000 innbyggere per år, aldersstandardisert. Samlede tall for sykehusinnleggelser og dødsfall, samt tall fra disse to kildene hver for seg.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2022",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Indikator",
+            "Måltall"
+          ],
+          "updated": "2025-01-09T06:58:42.47032Z"
+        },
+        {
+          "tableId": 366,
+          "title": "Inntektsulikhet beskrevet med P90/P10 og Gini-koeffisienten (se nedenfor)",
+          "internalName": "Inntektsulikhet",
+          "description": "Inntektsulikhet beskrevet med P90/P10 og Gini-koeffisienten (se nedenfor). Årlige tall.",
+          "firstPeriod": "2009",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Måltall"
+          ],
+          "updated": "2026-02-06T09:20:40.904633Z"
+        },
+        {
+          "tableId": 367,
+          "title": "Overvekt, kvinner, MFR",
+          "internalName": "Overvekt, kvinner, MFR",
+          "description": "Andel kvinner med overvekt inkludert fedme i prosent av alle fødende kvinner med høyde- og vektopplysninger fra første svangerskapskontroll. Overvekt inkl. fedme regnes som KMI over eller lik 25 kg/m2.",
+          "firstPeriod": "2008-2010",
+          "lastPeriod": "2023-2025",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "KMI-kategori",
+            "Måltall"
+          ],
+          "updated": "2026-06-24T07:55:04.688804Z"
+        },
+        {
+          "tableId": 368,
+          "title": "Kreft, nye tilfeller_10aarigLFKB",
+          "internalName": "Kreft, nye tilfeller_10aarigLFKB",
+          "description": "Nye tilfeller av kreft per 100 000 innbyggere per år. Statistikken viser 10 års glidende gjennomsnitt (dvs. gjennomsnitt for overlappende 10-årsperioder).",
+          "firstPeriod": "1990-1999",
+          "lastPeriod": "2015-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Krefttyper",
+            "Måltall"
+          ],
+          "updated": "2026-06-26T08:40:33.412229Z"
+        },
+        {
+          "tableId": 369,
+          "title": "Antall unike personer i kontakt med fastlege, legevakt, fysioterapeut eller kiropraktor…",
+          "internalName": "KPR_3",
+          "description": "Antall unike personer i kontakt med fastlege, legevakt, fysioterapeut eller kiropraktor per 1000 innbyggere per år. Alle kontakttyper er inkludert.",
+          "firstPeriod": "2017-2019",
+          "lastPeriod": "2022-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Sykdomsgruppe",
+            "Måltall"
+          ],
+          "updated": "2026-04-20T11:28:55.310863Z"
+        },
+        {
+          "tableId": 370,
+          "title": "Antall unike personer i kontakt med fastlege, legevakt, fysioterapeut eller kiropraktor…",
+          "internalName": "KPR_1",
+          "description": "Antall unike personer i kontakt med fastlege, legevakt, fysioterapeut eller kiropraktor per 1000 innbyggere per år. Alle kontakttyper er inkludert.",
+          "firstPeriod": "2017",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Sykdomsgruppe",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T12:31:03.890669Z"
+        },
+        {
+          "tableId": 371,
+          "title": "5. og 8. klassinger på de ulike mestringsnivå i lesing, totalt og etter foreldrenes…",
+          "internalName": "Leseferdighet_UTDANN_1",
+          "description": "5. og 8. klassinger på de ulike mestringsnivå i lesing, totalt og etter foreldrenes utdanningsnivå. Andelen presenteres i prosent av alle 5./8.klassinger som tok nasjonale prøver.",
+          "firstPeriod": "2022/23",
+          "lastPeriod": "2025/26",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Foreldrenes utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Mestringsnivå",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T13:03:50.786353Z"
+        },
+        {
+          "tableId": 372,
+          "title": "5. og 8. klassinger på de ulike mestringsnivåene i lesing, totalt og etter…",
+          "internalName": "Leseferdighet_INNVKAT_3",
+          "description": "5. og 8. klassinger på de ulike mestringsnivåene i lesing, totalt og etter innvandringsbakgrunn. Tallene vises som 3-årige gjennomsnitt.",
+          "firstPeriod": "2022/23-2024/25",
+          "lastPeriod": "2023/24-2025/26",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Innvandringsbakgrunn",
+            "Mestringsnivå",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T13:00:59.8413Z"
+        },
+        {
+          "tableId": 373,
+          "title": "Andel ungdomsskoleelever som oppgir i ungdataundersøkelsen at de er har høy tilfredshet…",
+          "internalName": "Livskvalitet_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som oppgir i ungdataundersøkelsen at de er har høy tilfredshet med livet. Indikatoren omfatter de som angir 8 og høyere på en skala fra 0-10 på spørsmålet \"Nedenfor er det en skala fra 0 til 10.",
+          "firstPeriod": "2021",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Skala 0-10, tilfredshet",
+            "Sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:46:36.452752Z"
+        },
+        {
+          "tableId": 374,
+          "title": "Andel ungdomsskoleelever som svarer \"svært fornøyd\", \"litt fornøyd\", \"verken eller\",…",
+          "internalName": "Nærmiljø_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som svarer \"svært fornøyd\", \"litt fornøyd\", \"verken eller\", \"litt misfornøyd\" eller \"svært misfornøyd\" på spørsmålet: \"Hvor fornøyd eller misfornøyd er du med lokalmiljøet der du bor?\", i prosent av alle som har svart på dette spørsmålet i ungdataundersøkelsen. Kategoriene for svaralternativene \"litt fornøyd\" og \"svært fornøyd\" er slått sammen og kategoriene for…",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Fornøydhet med lokalmiljøet",
+            "Sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:46:59.56614Z"
+        },
+        {
+          "tableId": 375,
+          "title": "Treffsteder for unge_Ungdata_KH",
+          "internalName": "Treffsteder for unge_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som svarer «Svært bra» og «Nokså bra» på spørsmålet «Hvordan opplever du at tilbudet til ungdom er når det gjelder lokaler for å treffe andre unge på fritida?», i prosent av alle som svarte på spørsmålet i ungdataundersøkelsen. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025.",
+          "firstPeriod": "2014",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Svarkategori",
+            "Sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:47:19.629118Z"
+        },
+        {
+          "tableId": 377,
+          "title": "Mobbing, 7. og 10. klasse, 3-årige tall",
+          "internalName": "Mobbing, 7. og 10. klasse, 3-årige tall",
+          "description": "Andel elever på 7. og 10. trinn i grunnskolen som har opplevd mobbing fra andre elever de siste månedene i prosent av alle elever som deltok i undersøkelsen. Statistikken vises for kommune- og fylkesinndeling per 1.1.2024.",
+          "firstPeriod": "2016/17-2018/19",
+          "lastPeriod": "2022/23-2024/25",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "SPM_ID",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2025-03-07T13:27:29.115965Z"
+        },
+        {
+          "tableId": 378,
+          "title": "Mobbing, 7. og 10. klasse_1",
+          "internalName": "Mobbing, 7. og 10. klasse_1",
+          "description": "Elever i grunnskolen som har opplevd mobbing de siste månedene. Andelen presenteres i prosent av alle elever som deltok i Elevundersøkelsen.",
+          "firstPeriod": "2016/2017",
+          "lastPeriod": "2025/2026",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Type mobbing",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-02-03T15:08:19.411738Z"
+        },
+        {
+          "tableId": 379,
+          "title": "Personer som ikke er i arbeid, under utdanning eller i opplæring i prosent av…",
+          "internalName": "NEET_INNVKAT",
+          "description": "Personer som ikke er i arbeid, under utdanning eller i opplæring i prosent av befolkningen, totalt og etter innvandringsbakgrunn. NEET (Not in Education, Employment, or Training) er en forkortelse som ofte brukes om personer som har falt utenfor.",
+          "firstPeriod": "2008",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Innvandringsbakgrunn",
+            "Måltall"
+          ],
+          "updated": "2026-02-10T19:44:15.283028Z"
+        },
+        {
+          "tableId": 380,
+          "title": "Andel ungdomsskoleelever som i ungdataundersøkelsen har oppgitt minst ett tilfelle av 3…",
+          "internalName": "Regelbrudd_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som i ungdataundersøkelsen har oppgitt minst ett tilfelle av 3 eller flere av de følgende 6 spørsmålene om regelbrudd: \"Hvor mange ganger har du gjort noe av dette det siste året (de siste 12 månedene)\": Tatt med deg varer fra butikk uten å betale Vært i slåsskamp Med vilje ødelagt eller knust vindusruter, busseter, postkasser eller lignende (gjort hærverk) Sprayet eller…",
+          "firstPeriod": "2017",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Svarkategori",
+            "Sosioøkonomiske ressurser (SØR)",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:47:45.670514Z"
+        },
+        {
+          "tableId": 385,
+          "title": "Legemidler til behandling av type-2 diabetes_3aarigLFK",
+          "internalName": "Legemidler til behandling av type-2 diabetes_3aarigLFK",
+          "description": "Brukere av legemidler forskrevet på resept til behandling av type 2-diabetes i aldersgruppen 30-74 år. Brukere defineres som personer som i løpet av året har hentet ut minst én resept i apotek.",
+          "firstPeriod": "2005-2007",
+          "lastPeriod": "2019-2021",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "ALDER",
+            "Legemiddel",
+            "Måltall"
+          ],
+          "updated": "2024-10-29T13:09:17.201712Z"
+        },
+        {
+          "tableId": 387,
+          "title": "17-åringer med overvekt (dvs",
+          "internalName": "Overvekt_verneplikt_1",
+          "description": "17-åringer med overvekt (dvs. KMI tilsvarende 25-29,9 kg/m²), fedme (dvs.",
+          "firstPeriod": "2011",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "KMI-kategori",
+            "Måltall"
+          ],
+          "updated": "2026-01-19T13:19:13.71667Z"
+        },
+        {
+          "tableId": 388,
+          "title": "17-åringer med overvekt (dvs",
+          "internalName": "Overvekt_verneplikt_4",
+          "description": "17-åringer med overvekt (dvs. KMI tilsvarende 25-29,9 kg/m²), fedme (dvs.",
+          "firstPeriod": "2011-2014",
+          "lastPeriod": "2022-2025",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "KMI-kategori",
+            "Måltall"
+          ],
+          "updated": "2026-04-20T11:32:27.167922Z"
+        },
+        {
+          "tableId": 389,
+          "title": "Andel ungdomsskoleelever som i ungdataundersøkelsen svarer «4-6 timer» eller «Mer enn 6…",
+          "internalName": "Skjermtid_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som i ungdataundersøkelsen svarer «4-6 timer» eller «Mer enn 6 timer» på spørsmålet om hvor lang tid de vanligvis bruker på aktiviteter foran en skjerm (TV, data, nettbrett, mobil) i løpet av en dag, utenom skolen. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025.",
+          "firstPeriod": "2014",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Svarkategori",
+            "Sosial status vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:45:47.437172Z"
+        },
+        {
+          "tableId": 390,
+          "title": "Prosentandel av ungdomsskoleelever som i ungdataundersøkelsen svarer «Minst ukentlig»,…",
+          "internalName": "Smertestillende_ungdata",
+          "description": "Prosentandel av ungdomsskoleelever som i ungdataundersøkelsen svarer «Minst ukentlig», «Flere ganger i uka» eller «Daglig» på spørsmålet «Hvor ofte har du brukt reseptfrie medikamenter (Paracet, Ibux og lignende) i løpet av siste måned?» av alle som svarte på spørsmålet.",
+          "firstPeriod": "2014",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Svarkategori",
+            "sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:48:02.560156Z"
+        },
+        {
+          "tableId": 391,
+          "title": "Andel ungdomsskoleelever som i ungdataundersøkelsen svarer \"ganske mye plaget\" og \"veldig…",
+          "internalName": "Søvnproblemer_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som i ungdataundersøkelsen svarer \"ganske mye plaget\" og \"veldig mye plaget\" på spørsmålet om man siste uke har «hatt søvnproblemer», i prosent av alle som har svart på dette spørsmålet. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Svarkategori",
+            "Sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:49:27.137092Z"
+        },
+        {
+          "tableId": 392,
+          "title": "Andelen mottakere av stønader fra NAV",
+          "internalName": "Stønad_livsopphold",
+          "description": "Andelen mottakere av stønader fra NAV. Dette omfatter mottakere av uføretrygd, arbeidsavklaringspenger, arbeidsledighetstrygd, overgangsstønad for enslige forsørgere, stønad ved barnetilsyn og tiltaksmottakere (individstønad) per desember.",
+          "firstPeriod": "2014",
+          "lastPeriod": "2023",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Måltall"
+          ],
+          "updated": "2025-05-13T14:39:57.70227Z"
+        },
+        {
+          "tableId": 393,
+          "title": "Andel fødende som oppga at de røykte ved første svangerskapskontroll, i prosent av alle…",
+          "internalName": "Røyking_MFR",
+          "description": "Andel fødende som oppga at de røykte ved første svangerskapskontroll, i prosent av alle fødende med røykeopplysninger. Statistikken viser gjennomsnitt for overlappende 5-årsperioder.",
+          "firstPeriod": "1999-2003",
+          "lastPeriod": "2021-2025",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Alder",
+            "Måltall"
+          ],
+          "updated": "2026-06-24T07:17:04.334187Z"
+        },
+        {
+          "tableId": 394,
+          "title": "Fullvaksinerte barn mot henholdsvis meslinger, kusma, røde hunder, difteri, stivkrampe…",
+          "internalName": "Vaksinasjonsdekning_1",
+          "description": "Fullvaksinerte barn mot henholdsvis meslinger, kusma, røde hunder, difteri, stivkrampe (tetanus), kikhoste, poliomyelitt, HPV-infeksjon, Haemophilus influenzae type B (Hib), pneumokokk, rotavirusinfeksjon og hepatitt B ved henholdsvis 2, 9 og 16 års alder, i prosent av alle barn i aldersgruppen 2 år, 9 år eller 16 år. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025.",
+          "firstPeriod": "2002",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn samlet",
+            "Alder",
+            "Vaksine",
+            "Måltall"
+          ],
+          "updated": "2026-01-14T14:23:21.353955Z"
+        },
+        {
+          "tableId": 395,
+          "title": "Fullvaksinerte barn mot henholdsvis meslinger, kusma, røde hunder, difteri, stivkrampe,…",
+          "internalName": "Vaksinasjonsdekning_5aar",
+          "description": "Fullvaksinerte barn mot henholdsvis meslinger, kusma, røde hunder, difteri, stivkrampe, kikhoste, poliomyelitt, hepatitt B, Haemophilus influenzae type B (Hib), HPV (jenter), rotavirus og pneumokokk ved henholdsvis 2, 9 og 16 års alder. Andelen oppgis i prosent av alle barn i aldersgruppene 2 år, 9 år eller 16 år.",
+          "firstPeriod": "2002-2006",
+          "lastPeriod": "2020-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Vaksine mot",
+            "Måltall"
+          ],
+          "updated": "2026-07-03T09:54:42.471601Z"
+        },
+        {
+          "tableId": 396,
+          "title": "Andelen personer eldre enn 65 år registrert vaksinert mot influensa, i prosent av…",
+          "internalName": "Vaks_dekning_Influensa",
+          "description": "Andelen personer eldre enn 65 år registrert vaksinert mot influensa, i prosent av personer eldre enn 65 år registrert i Folkeregisteret som bosatt i Norge på uttrekkstidspunkt. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025.",
+          "firstPeriod": "2015/2016",
+          "lastPeriod": "2024/2025",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Måltall"
+          ],
+          "updated": "2026-01-13T10:51:57.052147Z"
+        },
+        {
+          "tableId": 397,
+          "title": "Elever som trives godt på skolen",
+          "internalName": "TRIVSEL_1",
+          "description": "Elever som trives godt på skolen. Andelen er presentert i prosent av alle som svarte på undersøkelsen.",
+          "firstPeriod": "Skoleåret 2006/07",
+          "lastPeriod": "Skoleåret 2025/26",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Spm.id",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-02-04T11:35:45.312498Z"
+        },
+        {
+          "tableId": 399,
+          "title": "Andel ungdomsskoleelever som i ungdataundersøkelsen svarer «Ja, svært trygt» eller «Ja,…",
+          "internalName": "Trygghet_ungdata",
+          "description": "Andel ungdomsskoleelever som i ungdataundersøkelsen svarer «Ja, svært trygt» eller «Ja, ganske trygt» på spørsmålet «Når du er ute om kvelden, opplever du det som trygt å ferdes i nærområdet der du bor?», i prosent av alle som svarte på spørsmålet.",
+          "firstPeriod": "2014",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Svarkategori",
+            "sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:48:19.750235Z"
+        },
+        {
+          "tableId": 401,
+          "title": "Godkjente stemmesedler eller godkjente stemmegivninger i prosent av stemmeberettigede ved…",
+          "internalName": "Valgdeltakelse",
+          "description": "Godkjente stemmesedler eller godkjente stemmegivninger i prosent av stemmeberettigede ved henholdsvis stortingsvalg og kommunestyrevalg. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025.",
+          "firstPeriod": "2013",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Valg",
+            "Måltall"
+          ],
+          "updated": "2025-09-26T06:51:55.50102Z"
+        },
+        {
+          "tableId": 403,
+          "title": "Personer som bor i husholdninger med inntekt under 50% og 60 % av kommunal medianinntekt…",
+          "internalName": "Vedvarende_lavinntekt_kommunegrense",
+          "description": "Personer som bor i husholdninger med inntekt under 50% og 60 % av kommunal medianinntekt over en treårsperiode, beregnet etter EU-skala. Statistikken vises for fylkes- og kommuneinndeling per 1.1.2024.",
+          "firstPeriod": "2004-2006",
+          "lastPeriod": "2021-2023",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Alder",
+            "Innvandringsbakgrunn",
+            "Lavinntektsgrense",
+            "Måltall"
+          ],
+          "updated": "2026-04-20T11:00:28.230874Z"
+        },
+        {
+          "tableId": 507,
+          "title": "Forventet levealder etter utdanning samlet og høyeste fullførte utdanningsnivå (fire…",
+          "internalName": "Forventet_levealder_TOT_og_utdn_7aarigLF",
+          "description": "Forventet levealder etter utdanning samlet og høyeste fullførte utdanningsnivå (fire ulike grupper), beregnet ved hjelp av dødelighetstabell. Statistikken viser 7 års gjennomsnitt (dvs. gjennomsnitt for overlappende 7-årsperioder).",
+          "firstPeriod": "1990-1996",
+          "lastPeriod": "2018-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Utdanningsnivå",
+            "Måltall"
+          ],
+          "updated": "2026-04-16T06:57:29.02954Z"
+        },
+        {
+          "tableId": 508,
+          "title": "Forventet levealder etter utdn_15aarigLFKB",
+          "internalName": "Forventet levealder etter utdn_15aarigLFKB",
+          "description": "Forventet levealder etter utdanning samlet og høyeste fullførte utdanningsnivå (fire ulike grupper), beregnet ved hjelp av dødelighetstabell. Statistikken viser 15 års gjennomsnitt (dvs. gjennomsnitt for overlappende 15-årsperioder).",
+          "firstPeriod": "1990-2004",
+          "lastPeriod": "2010-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Utdanningsnivå",
+            "Måltall"
+          ],
+          "updated": "2026-04-16T06:56:45.693738Z"
+        },
+        {
+          "tableId": 509,
+          "title": "Forventet levealder_årligetall_ettårALDER_UTD",
+          "internalName": "Forventet levealder_årligetall_ettårALDER_UTD",
+          "description": "Forventet levealder for alle alderstrinn etter utdanning samlet og høyeste fullførte utdanningsnivå (fire ulike grupper), beregnet ved hjelp av dødelighetstabell. To måltall er tilgjengelig: Forventet levealder = Forventet levealder i leveår.",
+          "firstPeriod": "1990",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Utdanningsnivå",
+            "Måltall"
+          ],
+          "updated": "2026-04-16T06:58:33.570385Z"
+        },
+        {
+          "tableId": 510,
+          "title": "Utdanningsforskjeller i forventet levealder_15aarigLFKB",
+          "internalName": "Utdanningsforskjeller i forventet levealder_15aarigLFKB",
+          "description": "Forskjell i forventet levealder mellom 30-åringer i ulike utdanningsgrupper. Indikatoren viser antall år forskjell i forventet levealder mellom den delen av befolkningen som har videregående eller høyere utdanning og den delen av befolkningen som har grunnskole som høyeste utdanningsnivå.",
+          "firstPeriod": "1990-2004",
+          "lastPeriod": "2010-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "utdanningsnivå",
+            "Måltall"
+          ],
+          "updated": "2025-12-03T09:55:11.706007Z"
+        },
+        {
+          "tableId": 511,
+          "title": "Utdanningsforskjeller i forventet levealder_7aarigLF",
+          "internalName": "Utdanningsforskjeller i forventet levealder_7aarigLF",
+          "description": "Forskjell i forventet levealder mellom utdanningsgrupper ved alder 30 år. Indikatoren viser antall år forskjell i forventet levealder mellom den delen av befolkningen som har videregående eller høyere utdanning og den delen av befolkningen som har grunnskole som høyeste utdanningsnivå.",
+          "firstPeriod": "1990-1996",
+          "lastPeriod": "2018-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Ved alder",
+            "Utdanningsnivå",
+            "Måltall"
+          ],
+          "updated": "2025-12-03T09:43:16.729127Z"
+        },
+        {
+          "tableId": 583,
+          "title": "Vedvarende lavinntekt INNVKAT",
+          "internalName": "Vedvarende lavinntekt INNVKAT",
+          "description": "Personer som bor i husholdninger med inntekt under 50% og 60 % av nasjonal medianinntekt over en treårsperiode, beregnet etter EU-skala. Totalt og etter innvandringsbakgrunn.",
+          "firstPeriod": "2004-2006",
+          "lastPeriod": "2022-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Alder",
+            "Innvandringsbakgrunn",
+            "Lavinntektsgrense",
+            "Måltall"
+          ],
+          "updated": "2026-04-20T10:59:32.598006Z"
+        },
+        {
+          "tableId": 600,
+          "title": "Kollektivtilbud, ungdom",
+          "internalName": "Kollektivtilbud, ungdom",
+          "description": "Andel ungdomsskoleelever som i ungdataundersøkelsen svarer «Svært bra» eller «Nokså bra» på spørsmålet «Tenk på områdene rundt der du bor. Hvordan opplever du at tilbudet til ungdom er når det gjelder kollektivtilbudet (buss, tog, trikk eller lignende)?», i prosent av alle som svarte på spørsmålet.",
+          "firstPeriod": "2014",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder vises ikke",
+            "Svarkategori vises ikke",
+            "Sosial status vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:51:48.772534Z"
+        },
+        {
+          "tableId": 601,
+          "title": "Andel ungdomsskoleelever som oppgir at de bruker mer enn 3 timer på Dataspill/TV-spill i…",
+          "internalName": "Mediebruk_DataTVspill_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som oppgir at de bruker mer enn 3 timer på Dataspill/TV-spill i løpet av en gjennomsnittsdag.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Mediebruk",
+            "Sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:43:03.098238Z"
+        },
+        {
+          "tableId": 602,
+          "title": "Andel ungdomsskoleelever som oppgir at de bruker mer enn 3 timer på sosiale medier i…",
+          "internalName": "Mediebruk_SOME_Ungdata_KH",
+          "description": "Andel ungdomsskoleelever som oppgir at de bruker mer enn 3 timer på sosiale medier i løpet av en gjennomsnittsdag.",
+          "firstPeriod": "2014",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Mediebruk",
+            "Sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:43:27.188484Z"
+        },
+        {
+          "tableId": 606,
+          "title": "Andel av de undersøkte barna som aldri har hatt hull eller mistet tann på grunn av karies…",
+          "internalName": "Tannhelse_DMFT=0_MED_DEKNING",
+          "description": "Andel av de undersøkte barna som aldri har hatt hull eller mistet tann på grunn av karies (Decayed/Missing/Filled Teeth score, DMFT/dmft = 0). Statistikken vises for fylkesinndeling per 1.1.2026.",
+          "firstPeriod": "2008",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Tannstatus",
+            "Måltall"
+          ],
+          "updated": "2026-06-23T07:30:49.554672Z"
+        },
+        {
+          "tableId": 607,
+          "title": "Andel ungdomsskoleelever som oppgir at de har vært med venner hos seg eller dem minst 1…",
+          "internalName": "Venner_inne_Ungdata",
+          "description": "Andel ungdomsskoleelever som oppgir at de har vært med venner hos seg eller dem minst 1 gang de siste 7 dagene, i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2021",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Svarkategori",
+            "Sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:50:25.932794Z"
+        },
+        {
+          "tableId": 608,
+          "title": "Andel ungdomsskoleelever som oppgir at de har vært ute med venner størstedelen av kvelden…",
+          "internalName": "Venner_ute_Ungdata",
+          "description": "Andel ungdomsskoleelever som oppgir at de har vært ute med venner størstedelen av kvelden minst 1 gang i løpet av de siste 7 dagene, i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Svarkategori",
+            "Sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:50:06.952942Z"
+        },
+        {
+          "tableId": 619,
+          "title": "Kreft, nye tilfeller_ettårig_LFKB",
+          "internalName": "Kreft, nye tilfeller_ettårig_LFKB",
+          "description": "Nye tilfeller av kreft per 100 000 innbyggere* per år. Statistikken vises for fylkes- og kommuneinndeling per 1.1.2025.",
+          "firstPeriod": "1990",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Krefttype",
+            "Måltall"
+          ],
+          "updated": "2026-06-26T08:37:16.920827Z"
+        },
+        {
+          "tableId": 623,
+          "title": "Gjennomføring i videregående opplæring totalt og etter foreldrenes høyeste fullførte…",
+          "internalName": " Gjennomforing_VGO_utdann_1",
+          "description": "Gjennomføring i videregående opplæring totalt og etter foreldrenes høyeste fullførte utdanningsnivå. Gjennomføring inkluderer personer som startet på grunnkurs i videregående opplæring for første gang et gitt år og andelen som har fullført med studie- eller yrkeskompetanse i løpet av fem/seks år.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Foreldrenes utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T13:01:49.155194Z"
+        },
+        {
+          "tableId": 641,
+          "title": "5./8. klassinger på de ulike mestringsnivåene i regning, totalt og etter…",
+          "internalName": "Regneferd_INNVKAT_3",
+          "description": "5./8. klassinger på de ulike mestringsnivåene i regning, totalt og etter innvandringsbakgrunn. Andelen presenteres i prosent av alle 5./8.klassinger som tok nasjonale prøver i regning.",
+          "firstPeriod": "2022/23-2024/25",
+          "lastPeriod": "2023/24-2025/26",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Foreldrenes utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Mestringsnivå",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:59:31.841602Z"
+        },
+        {
+          "tableId": 650,
+          "title": "Antall og andel personer innvandret eller norskfødt med innvandrerforeldre registrert…",
+          "internalName": "INNVAND_INNVKAT",
+          "description": "Antall og andel personer innvandret eller norskfødt med innvandrerforeldre registrert bosatt i Norge per 1. januar, i prosent av befolkningen. Statistikken vises for fylkes- og kommuneinndeling per 1.1.2025.",
+          "firstPeriod": "2003",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Alder",
+            "Innvandringsbakgrunn",
+            "Landbakgrunn",
+            "Måltall"
+          ],
+          "updated": "2026-02-10T09:09:07.520259Z"
+        },
+        {
+          "tableId": 660,
+          "title": "Forventet levealder totalt og etter utdanning, 25-årig",
+          "internalName": "Forventet levealder totalt og etter utdanning, 25-årig",
+          "description": "Forventet levealder etter utdanning samlet og høyeste fullførte utdanningsnivå (fire ulike grupper), beregnet ved hjelp av dødelighetstabell. Statistikken viser 25 års gjennomsnitt (dvs. gjennomsnitt for overlappende 25-årsperioder).",
+          "firstPeriod": "1990-2014",
+          "lastPeriod": "2000-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Utdanningsnivå",
+            "Måltall"
+          ],
+          "updated": "2026-04-16T06:56:03.576722Z"
+        },
+        {
+          "tableId": 664,
+          "title": "Antall og andel sosialhjelpsmottakere i løpet av året",
+          "internalName": "Sosialhjelpsmottakere",
+          "description": "Antall og andel sosialhjelpsmottakere i løpet av året. Statistikken viser 3 års glidende gjennomsnitt (dvs. gjennomsnitt for overlappende 3-årsperioder).",
+          "firstPeriod": "2015-2017",
+          "lastPeriod": "2021-2023",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Innvandringsbakgrunn",
+            "Stønadslengde",
+            "Måltall"
+          ],
+          "updated": "2025-06-06T06:36:12.451103Z"
+        },
+        {
+          "tableId": 667,
+          "title": "Andel ungdomsskoleelever som oppgir at de bruker mer enn 3 timer på film, serier og…",
+          "internalName": "Mediebruk_underhold_ungdata",
+          "description": "Andel ungdomsskoleelever som oppgir at de bruker mer enn 3 timer på film, serier og YouTube i løpet av en gjennomsnittsdag.",
+          "firstPeriod": "2017",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Mediebruk",
+            "Sosial status",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:49:00.486916Z"
+        },
+        {
+          "tableId": 670,
+          "title": "Andel 5. og 8. klassinger på de ulike mestringsnivå i lesing, i prosent av alle…",
+          "internalName": "Leseferdighet_utdann_3",
+          "description": "Andel 5. og 8. klassinger på de ulike mestringsnivå i lesing, i prosent av alle 5./8.klassinger som tok nasjonale prøver, totalt og etter foreldrenes utdanningsnivå. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025. 5.klassinger har tre mestringsnivåer der mestringsnivå 1 er lavest. 8.klassinger har fem mestringsnivåer der mestringsnivå 1 er lavest.",
+          "firstPeriod": "2022/23-2024/25",
+          "lastPeriod": "2023/24-2025/26",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Foreldrenes utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Mestringsnivå",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T13:01:16.949244Z"
+        },
+        {
+          "tableId": 671,
+          "title": "5. og 8. klassinger på de ulike mestringsnivåene i lesing, totalt og etter…",
+          "internalName": "Leseferdighet_innvkat_1",
+          "description": "5. og 8. klassinger på de ulike mestringsnivåene i lesing, totalt og etter innvandringsbakgrunn. Andelen presenteres i prosent av alle 5./8.klassinger som tok nasjonale prøver i lesing.",
+          "firstPeriod": "2022/23",
+          "lastPeriod": "2025/26",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Foreldrenes utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Mestringsnivå",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T13:02:07.386333Z"
+        },
+        {
+          "tableId": 672,
+          "title": "Elever på ulike mestringsnivåer i regning, totalt og etter foreldrenes utdanningsnivå",
+          "internalName": "Regneferd_UTDANN_1",
+          "description": "Elever på ulike mestringsnivåer i regning, totalt og etter foreldrenes utdanningsnivå. Andelen presenteres i prosent av alle 5./8.klassinger som tok nasjonale prøver.",
+          "firstPeriod": "2022/23",
+          "lastPeriod": "2025/26",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Foreldrenes utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Mestringsnivå",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T13:02:31.06242Z"
+        },
+        {
+          "tableId": 677,
+          "title": "Gjennomforing i videregående skole_innvand_1",
+          "internalName": "Gjennomforing i videregående skole_innvand_1",
+          "description": "Gjennomføring i videregående opplæring, totalt og etter innvandringsbakgrunn. Gjennomføring inkluderer personer som startet på grunnkurs i videregående opplæring for første gang et gitt år og andelen som har fullført med studie- eller yrkeskompetanse i løpet av fem/seks år.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T13:03:21.002054Z"
+        },
+        {
+          "tableId": 685,
+          "title": "Elever på ulike mestringsnivåer i regning, totalt og etter foreldrenes utdanningsnivå",
+          "internalName": "Regneferd_UTDANN_3",
+          "description": "Elever på ulike mestringsnivåer i regning, totalt og etter foreldrenes utdanningsnivå. Andelen presenteres i prosent av alle 5./8.klassinger som tok nasjonale prøver.",
+          "firstPeriod": "2022/23-2024/25",
+          "lastPeriod": "2023/24-2025/26",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Mestringsnivå",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T13:00:26.746104Z"
+        },
+        {
+          "tableId": 688,
+          "title": "Forventede funksjonsfriske leveår_7",
+          "internalName": "Forventede funksjonsfriske leveår_7",
+          "description": "Indikatoren forventet funksjonsfriske leveår (på engelsk: healthy life years (HLY) eller disability-free life expectancy (DFLE)) måler antall år som en person kan forvente å leve uten langvarige aktivitetsbegrensninger. HLY beregnes ofte etter alder fra og med 50 år.",
+          "firstPeriod": "2016-2022",
+          "lastPeriod": "2016-2022",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Måltall"
+          ],
+          "updated": "2025-06-23T09:14:39.112096Z"
+        },
+        {
+          "tableId": 689,
+          "title": "5. og 8. klassinger på de ulike mestringsnivåene i regning, totalt og etter…",
+          "internalName": "Regneferd_INNVKAT_1",
+          "description": "5. og 8. klassinger på de ulike mestringsnivåene i regning, totalt og etter innvandringsbakgrunn. Andelen presenteres i prosent av alle 5./8.klassinger som tok nasjonale prøver i regning.",
+          "firstPeriod": "2022/23",
+          "lastPeriod": "2025/26",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Foreldrenes utdanningsnivå",
+            "Innvandringsbakgrunn",
+            "Mestringsnivå",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T13:03:02.804329Z"
+        },
+        {
+          "tableId": 699,
+          "title": "Antall pasienter innlagt (dag- og døgnopphold) i somatiske sykehus per 1000 innbyggere…",
+          "internalName": "NPR_1",
+          "description": "Antall pasienter innlagt (dag- og døgnopphold) i somatiske sykehus per 1000 innbyggere per år. Dersom en person legges inn flere ganger i løpet av kalenderåret med samme sykdom/ lidelse, telles vedkommende kun én gang.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Sykdomsgruppe",
+            "Måltall"
+          ],
+          "updated": "2025-10-21T09:15:04.540704Z"
+        },
+        {
+          "tableId": 714,
+          "title": "Antall pasienter innlagt (dag- og døgnopphold) i somatiske sykehus per 1000 innbyggere…",
+          "internalName": "NPR_3",
+          "description": "Antall pasienter innlagt (dag- og døgnopphold) i somatiske sykehus per 1000 innbyggere per år. Statistikken viser tre års gjennomsnitt (dvs. gjennomsnitt for 3-årsperioder).Dersom en person legges inn flere ganger i løpet av kalenderåret med samme sykdom/ lidelse, telles vedkommende kun én gang.",
+          "firstPeriod": "2012-2014",
+          "lastPeriod": "2022-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Sykdomsgruppe",
+            "Måltall"
+          ],
+          "updated": "2026-04-20T11:25:21.982583Z"
+        },
+        {
+          "tableId": 752,
+          "title": "Sosialhjelpsmottakere, ettårig",
+          "internalName": "Sosialhjelpsmottakere, ettårig",
+          "description": "Antall og andel sosialhjelpsmottakere i løpet av året. Statistikken vises for kommune- og fylkesinndeling per 1.1.2025.",
+          "firstPeriod": "2015",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Innvandringsbakgrunn",
+            "Stønadslengde",
+            "Måltall"
+          ],
+          "updated": "2025-12-02T13:27:15.205756Z"
+        },
+        {
+          "tableId": 787,
+          "title": "Personer som mottar uføretrygd",
+          "internalName": "Uføre_UTDANN_1",
+          "description": "Personer som mottar uføretrygd. Andelen oppgis i prosent av befolkningen i alderen 18 - t.o.m. 66 år.",
+          "firstPeriod": "2011",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Utdanningsnivå",
+            "Ytelse",
+            "Måltall"
+          ],
+          "updated": "2026-04-16T06:46:15.13153Z"
+        },
+        {
+          "tableId": 788,
+          "title": "Personer som mottar uføretrygd",
+          "internalName": "Uføre_UTDANN_3",
+          "description": "Personer som mottar uføretrygd. Statistikken viser 3 års glidende gjennomsnitt.",
+          "firstPeriod": "2011-2013",
+          "lastPeriod": "2022-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Utdanningsnivå",
+            "Ytelse",
+            "Måltall"
+          ],
+          "updated": "2026-04-20T11:01:44.956444Z"
+        },
+        {
+          "tableId": 790,
+          "title": "Personer som mottar arbeidsavklaringspenger",
+          "internalName": "AAP_UTDANN_1",
+          "description": "Personer som mottar arbeidsavklaringspenger. Andelen oppgis i prosent av befolkningen i alderen 18 - t.o.m. 66 år.",
+          "firstPeriod": "2011",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Utdanningsnivå",
+            "Ytelse",
+            "Måltall"
+          ],
+          "updated": "2026-01-27T14:44:59.329574Z"
+        },
+        {
+          "tableId": 791,
+          "title": "Personer som mottar arbeidsavklaringspenger",
+          "internalName": "AAP_UTDANN_3",
+          "description": "Personer som mottar arbeidsavklaringspenger. Statistikken viser 3 års glidende gjennomsnitt.",
+          "firstPeriod": "2011-2013",
+          "lastPeriod": "2022-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Utdanningsnivå",
+            "Ytelse",
+            "Måltall"
+          ],
+          "updated": "2026-04-20T11:01:02.870678Z"
+        },
+        {
+          "tableId": 794,
+          "title": "Personer som bor trangt, totalt og etter utdanningsnivå",
+          "internalName": "Trangbodd_UTDANN",
+          "description": "Personer som bor trangt, totalt og etter utdanningsnivå. Andeler presenteres i prosent av alle personer i privathusholdninger.",
+          "firstPeriod": "2015",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Alder",
+            "Utdanningsnivå",
+            "Status",
+            "Måltall"
+          ],
+          "updated": "2026-04-16T06:51:48.986192Z"
+        },
+        {
+          "tableId": 795,
+          "title": "Personer som bor trangt, totalt og etter innvandringsbakgrunn",
+          "internalName": "Trangbodd_INNVAND",
+          "description": "Personer som bor trangt, totalt og etter innvandringsbakgrunn. Andeler presenteres i prosent av alle personer i privathusholdninger.",
+          "firstPeriod": "2015",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Alder",
+            "Innvandringsbakgrunn",
+            "status",
+            "Måltall"
+          ],
+          "updated": "2026-01-20T09:35:28.257246Z"
+        },
+        {
+          "tableId": 800,
+          "title": "Luftforurensning, grenseverdi",
+          "internalName": "Luftforurensning, grenseverdi",
+          "description": "Personer som er eksponert for verdier høyere enn 5 (luftkvalitetskriterium og nasjonalt mål), 7 og 10 µg/m3 for fint svevestøv (PM2,5). Andeler er presentert i prosent av befolkningen.",
+          "firstPeriod": "2020-2024",
+          "lastPeriod": "2020-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Nivå",
+            "Måltall"
+          ],
+          "updated": "2026-06-08T05:44:36.428768Z"
+        },
+        {
+          "tableId": 803,
+          "title": "Luftforurensning, PWC (ny)",
+          "internalName": "Luftforurensning, PWC (ny)",
+          "description": "Befolkningsvektet konsentrasjon av finfraksjonen av svevestøv (PM2,5) med enhet mikrogram per kubikkmeter luft (μg/m3) midlet over fem år brukes som eksponeringsmål. Denne størrelsesfraksjonen av svevestøv består hovedsakelig av forbrenningspartikler, og størrelsen (<2,5 µm) er så liten at de kan trenge helt ned i lungeblærene.",
+          "firstPeriod": "2020-2024",
+          "lastPeriod": "2020-2024",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Måltall"
+          ],
+          "updated": "2026-06-08T05:43:42.783813Z"
+        },
+        {
+          "tableId": 804,
+          "title": "Sysselsatte inndelt etter høyeste oppnådde utdanningsnivå, fordelt på stillingsandel…",
+          "internalName": "Sysselsatte_UTDANN_ettårig",
+          "description": "Sysselsatte inndelt etter høyeste oppnådde utdanningsnivå, fordelt på stillingsandel (heltid, deltid), som antall og andel av befolkningen. Populasjonen er alle bosatte pr 1. januar i dataåret, etter bostedskommune samme år.",
+          "firstPeriod": "2015",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Utdanningsnivå",
+            "Stillingsandel",
+            "Måltall"
+          ],
+          "updated": "2026-04-21T09:01:13.354415Z"
+        },
+        {
+          "tableId": 805,
+          "title": "Elever som trives godt på skolen",
+          "internalName": "TRIVSEL_3",
+          "description": "Elever som trives godt på skolen. Andelen presenteres i prosent av alle som svarte på undersøkelsen.",
+          "firstPeriod": "2006/07-2008/09",
+          "lastPeriod": "2023/24-2025/26",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Spm.id",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-02-10T14:13:24.307206Z"
+        },
+        {
+          "tableId": 806,
+          "title": "Elever som har opplevd mobbing fra andre elever de siste månedene",
+          "internalName": "MOBBING_3",
+          "description": "Elever som har opplevd mobbing fra andre elever de siste månedene. Andelen er presentert i prosent av alle elever som deltok i undersøkelsen.",
+          "firstPeriod": "2016/17-2018/19",
+          "lastPeriod": "2023/24-2025/26",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "Skoleår",
+            "Kjønn",
+            "Spm.id",
+            "Klassetrinn",
+            "Måltall"
+          ],
+          "updated": "2026-02-04T11:50:48.897642Z"
+        },
+        {
+          "tableId": 807,
+          "title": "Sysselsatte inndelt etter innvandringsbakgrunn, fordelt på stillingsandel (heltid,…",
+          "internalName": "Sysselsatte_INNVKAT_ettårig",
+          "description": "Sysselsatte inndelt etter innvandringsbakgrunn, fordelt på stillingsandel (heltid, deltid), som antall og andel av befolkningen. Populasjonen er alle bosatte pr 1. januar i dataåret, etter bostedskommune samme år.",
+          "firstPeriod": "2015",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Innvandringsbakgrunn",
+            "Stillingsandel",
+            "Måltall"
+          ],
+          "updated": "2026-04-21T09:01:49.395962Z"
+        },
+        {
+          "tableId": 809,
+          "title": "Personer som ikke er i arbeid, under utdanning eller i opplæring (NEET), totalt og etter…",
+          "internalName": "NEET_UTDANN",
+          "description": "Personer som ikke er i arbeid, under utdanning eller i opplæring (NEET), totalt og etter utdanningsnivå. Andelen presenteres i prosent av befolkningen.",
+          "firstPeriod": "2008",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Utdanningsnivå",
+            "Måltall"
+          ],
+          "updated": "2026-04-16T06:47:43.252926Z"
+        },
+        {
+          "tableId": 810,
+          "title": "Andel ungdomsskoleelever som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11…",
+          "internalName": "Andrenarko_Ungdata",
+          "description": "Andel ungdomsskoleelever som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11 ganger eller mer» på spørsmålet om de det siste året (de siste 12 månedene) har «brukt andre narkotiske stoff enn hasj eller marihuana» i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2021",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder vises ikke",
+            "ANTALL_GANGER",
+            "Sosial status vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:52:10.965956Z"
+        },
+        {
+          "tableId": 811,
+          "title": "Andel ungdomsskoleelever som svarer «Ja, en gang» eller «Ja, flere ganger» på spørsmålet…",
+          "internalName": "Hasjtilbud_Ungdata",
+          "description": "Andel ungdomsskoleelever som svarer «Ja, en gang» eller «Ja, flere ganger» på spørsmålet om de det siste året (de siste 12 månedene) har «blitt tilbudt hasj eller marihuana» i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder vises ikke",
+            "ANTALL_GANGER",
+            "Sosial status vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:50:49.098887Z"
+        },
+        {
+          "tableId": 812,
+          "title": "Andel ungdomsskoleelever som svarer «Bruker ukentlig, men ikke hver dag» eller «bruker…",
+          "internalName": "Røyk_Ungdata",
+          "description": "Andel ungdomsskoleelever som svarer «Bruker ukentlig, men ikke hver dag» eller «bruker daglig» på spørsmålet om de røyker sigaretter, i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder vises ikke",
+            "ANTALL_GANGER",
+            "Sosial status vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:51:09.025294Z"
+        },
+        {
+          "tableId": 813,
+          "title": "Andel ungdomsskoleelever som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11…",
+          "internalName": "Skulketskolen_Ungdata",
+          "description": "Andel ungdomsskoleelever som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11 ganger eller mer» på spørsmålet om de det siste året (de siste 12 månedene) har skulket skolen i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder vises ikke",
+            "ANTALL_GANGER",
+            "Sosial status vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:52:35.342286Z"
+        },
+        {
+          "tableId": 814,
+          "title": "Andel ungdomsskoleelever som svarer «Bruker ukentlig, men ikke hver dag» eller «bruker…",
+          "internalName": "Snus_Ungdata",
+          "description": "Andel ungdomsskoleelever som svarer «Bruker ukentlig, men ikke hver dag» eller «bruker daglig» på spørsmålet om de bruker snus, i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2012",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder vises ikke",
+            "ANTALL_GANGER",
+            "Sosial status vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:51:27.901878Z"
+        },
+        {
+          "tableId": 815,
+          "title": "Andel ungdomsskoleelever som svarer «Bruker ukentlig, men ikke hver dag» eller «bruker…",
+          "internalName": "Vape_Ungdata",
+          "description": "Andel ungdomsskoleelever som svarer «Bruker ukentlig, men ikke hver dag» eller «bruker daglig» på spørsmålet om de bruker vape/e-sigaretter, i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2021",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder vises ikke",
+            "ANTALL_GANGER",
+            "Sosial status vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-05-06T12:49:47.062429Z"
+        },
+        {
+          "tableId": 826,
+          "title": "Legemeldt sykefravær",
+          "internalName": "SYKEFRAV_SSB",
+          "description": "Legemeldt sykefravær. Årsgjennomsnitt.",
+          "firstPeriod": "2015",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Måltall"
+          ],
+          "updated": "2026-02-23T07:49:54.660396Z"
+        },
+        {
+          "tableId": 839,
+          "title": "Andel voksne som selv rapporterer at de er dagligrøykere eller av-og-til-røykere",
+          "internalName": "ROYK_STATBANK",
+          "description": "Andel voksne som selv rapporterer at de er dagligrøykere eller av-og-til-røykere. Statistikken vises for fylkes- og helseregionsinndeling per 1.1.2025.",
+          "firstPeriod": "2004-2008",
+          "lastPeriod": "2021-2025",
+          "timeUnit": null,
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "Alder",
+            "Røykevaner",
+            "Måltall"
+          ],
+          "updated": "2026-03-04T12:48:25.93093Z"
+        },
+        {
+          "tableId": 852,
+          "title": "Andel elever på videregående som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11…",
+          "internalName": "Andrenarko_Ungdata_VGO",
+          "description": "Andel elever på videregående som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11 ganger eller mer» på spørsmålet om de det siste året (de siste 12 månedene) har «brukt andre narkotiske stoff enn hasj eller marihuana» i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "ALDER vises ikke",
+            "ANTALL_GANGER",
+            "Sosial status vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-03-23T10:36:27.084296Z"
+        },
+        {
+          "tableId": 859,
+          "title": "Andel elever på videregående som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11…",
+          "internalName": "Hasjbruk_Ungdata_VGO",
+          "description": "Andel elever på videregående som svarer «1 gang», «2-5 ganger», «6-10 ganger» eller «11 ganger eller mer» på spørsmålet om de det siste året (de siste 12 månedene) har «brukt hasj/marihuana/cannabis» i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "ALDER vises ikke",
+            "ANTALL_GANGER",
+            "SOES vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-03-23T10:35:53.428247Z"
+        },
+        {
+          "tableId": 860,
+          "title": "Andel elever på videregående som svarer «Bruker ukentlig, men ikke hver dag» eller…",
+          "internalName": "Røyk_Ungdata_VGO",
+          "description": "Andel elever på videregående som svarer «Bruker ukentlig, men ikke hver dag» eller «bruker daglig» på spørsmålet om de røyker sigaretter, i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "ALDER vises ikke",
+            "ANTALL_GANGER",
+            "SOES vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-03-23T10:39:47.298723Z"
+        },
+        {
+          "tableId": 862,
+          "title": "Andel elever på videregående som svarer «Bruker ukentlig, men ikke hver dag» eller…",
+          "internalName": "Snus_Ungdata_VGO",
+          "description": "Andel elever på videregående som svarer «Bruker ukentlig, men ikke hver dag» eller «bruker daglig» på spørsmålet om de bruker snus, i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "ALDER vises ikke",
+            "ANTALL_GANGER",
+            "SOES vises ikke",
+            "Måltall"
+          ],
+          "updated": "2026-03-23T10:34:30.503179Z"
+        },
+        {
+          "tableId": 863,
+          "title": "Andel elever på videregående som svarer «Bruker ukentlig, men ikke hver dag» eller…",
+          "internalName": "Vape_Ungdata_VGO",
+          "description": "Andel elever på videregående som svarer «Bruker ukentlig, men ikke hver dag» eller «bruker daglig» på spørsmålet om de bruker vape/e-sigaretter, i prosent av alle som svarte på dette spørsmålet i ungdataundersøkelsen.",
+          "firstPeriod": "2021",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Geografi",
+            "År",
+            "Kjønn",
+            "ALDER",
+            "ANTALL_GANGER",
+            "SOES",
+            "Måltall"
+          ],
+          "updated": "2026-03-23T10:37:45.600809Z"
+        }
+      ]
+    },
+    "mfr": {
+      "title": "Medisinsk fødselsregister (MFR)",
+      "tables": [
+        {
+          "tableId": 411,
+          "title": "F0: Fødte og fødsler per år og måned",
+          "internalName": "F0: Fødte og fødsler per år og måned",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødselsmåned",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.655082Z"
+        },
+        {
+          "tableId": 412,
+          "title": "F1a: Fødte per år, mors bosted og kjønn",
+          "internalName": "F1a: Fødte per år, mors bosted og kjønn",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Kjønn",
+            "Måltall"
+          ],
+          "updated": "2026-04-14T09:22:02.955437Z"
+        },
+        {
+          "tableId": 413,
+          "title": "F1b: Fødsler per år, mors bosted og enkelt-/flerfødsel",
+          "internalName": "F1b: Fødsler per år, mors bosted og enkelt-/flerfødsel",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Enkelt-/flerfødsel",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.705897Z"
+        },
+        {
+          "tableId": 414,
+          "title": "F2b-5: Fødte iht. MFR per år, mors bosted og perinatal levestatus",
+          "internalName": "F2b-5: Fødte iht. MFR per år, mors bosted og perinatal levestatus",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Perinatal levestatus iht. MFR",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.731839Z"
+        },
+        {
+          "tableId": 415,
+          "title": "F2b-6: Fødte iht. Euro-Peristat (f.o.m. 22 uker) per år og perinatal levestatus ",
+          "internalName": "F2b-6: Fødte iht. Euro-Peristat (f.o.m. 22 uker) per år og perinatal levestatus ",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Perinatal levestatus iht. Euro-Peristat (f.o.m. 22 uker)",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.668515Z"
+        },
+        {
+          "tableId": 416,
+          "title": "F2b-7: Fødte iht. WHO (f.o.m. 500 g) per år og perinatal levestatus ",
+          "internalName": "F2b-7: Fødte iht. WHO (f.o.m. 500 g) per år og perinatal levestatus ",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Perinatal levestatus iht. WHO (f.o.m. 500 g)",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.806916Z"
+        },
+        {
+          "tableId": 417,
+          "title": "F2b-8: Fødte iht. WHO (f.o.m. 1000 g) per år og perinatal levestatus",
+          "internalName": "F2b-8: Fødte iht. WHO (f.o.m. 1000 g) per år og perinatal levestatus",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Perinatal levestatus iht. WHO (f.o.m. 1000 g)",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.807923Z"
+        },
+        {
+          "tableId": 418,
+          "title": "F2c: Levendefødte per år, mors bosted og levestatus i spedbarnsperioden",
+          "internalName": "F2c: Levendefødte per år, mors bosted og levestatus i spedbarnsperioden",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Levestatus i spedbarnsperioden",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.671027Z"
+        },
+        {
+          "tableId": 420,
+          "title": "F3a: Fødsler per år, mors bosted og mors alder",
+          "internalName": "F3a: Fødsler per år, mors bosted og mors alder",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Mors alder detaljert",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.809272Z"
+        },
+        {
+          "tableId": 421,
+          "title": "F3b: Mors gjennomsnittsalder per år, mors bosted og tidligere fødte",
+          "internalName": "F3b: Mors gjennomsnittsalder per år, mors bosted og tidligere fødte",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Tidligere fødte",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T08:25:21.688074Z"
+        },
+        {
+          "tableId": 422,
+          "title": "F3c: Fødsler per år, mors bosted og fars alder",
+          "internalName": "F3c: Fødsler per år, mors bosted og fars alder",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fars alder",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.672434Z"
+        },
+        {
+          "tableId": 423,
+          "title": "F3d: Fars gjennomsnittsalder per år og mors bosted",
+          "internalName": "F3d: Fars gjennomsnittsalder per år og mors bosted",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.812255Z"
+        },
+        {
+          "tableId": 424,
+          "title": "F4a: Fødsler per år, mors bosted og tidligere fødte",
+          "internalName": "F4a: Fødsler per år, mors bosted og tidligere fødte",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Tidligere fødte",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T08:30:02.114672Z"
+        },
+        {
+          "tableId": 425,
+          "title": "F4b: Fødsler per år, mors bosted og mors sivilstatus",
+          "internalName": "F4b: Fødsler per år, mors bosted og mors sivilstatus",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Mors sivilstatus",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.673454Z"
+        },
+        {
+          "tableId": 426,
+          "title": "F5a: Fødte med fødselsvekt per år, mors bosted og fødselsvekt",
+          "internalName": "F5a: Fødte med fødselsvekt per år, mors bosted og fødselsvekt",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fødselsvekt",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.815394Z"
+        },
+        {
+          "tableId": 428,
+          "title": "Is1: Fødsler per år, fødeinstitusjon, fødestedtype og enkelt-/flerfødsel",
+          "internalName": "Is1: Fødsler per år, fødeinstitusjon, fødestedtype og enkelt-/flerfødsel",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Fødestedtype",
+            "Enkelt-/flerfødsel",
+            "Måltall"
+          ],
+          "updated": "2026-04-14T14:57:38.801601Z"
+        },
+        {
+          "tableId": 429,
+          "title": "Is2: Fødte ved institusjon per år, fødeinstitusjon og levestatus ved fødsel",
+          "internalName": "Is2: Fødte ved institusjon per år, fødeinstitusjon og levestatus ved fødsel",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Levestatus ved fødsel",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.58321Z"
+        },
+        {
+          "tableId": 430,
+          "title": "F6a: Fødsler med svangerskapsvarighet per år, mors bosted og svangerskapsvarighet",
+          "internalName": "F6a: Fødsler med svangerskapsvarighet per år, mors bosted og svangerskapsvarighet",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Svangerskapsvarighet",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.674785Z"
+        },
+        {
+          "tableId": 431,
+          "title": "F6b: Gjennomsnittlig svangerskapsvarighet per år og mors bosted",
+          "internalName": "F6b: Gjennomsnittlig svangerskapsvarighet per år og mors bosted",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.793306Z"
+        },
+        {
+          "tableId": 432,
+          "title": "F7a: Fødsler per år, mors bosted og sykdom hos mor før svangerskapet",
+          "internalName": "F7a: Fødsler per år, mors bosted og sykdom hos mor før svangerskapet",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Sykdom hos mor før svangerskapet",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:55.527297Z"
+        },
+        {
+          "tableId": 433,
+          "title": "F7c: Fødsler per år, mors bosted og hypertensive tilstander hos mor i svangerskapet",
+          "internalName": "F7c: Fødsler per år, mors bosted og hypertensive tilstander hos mor i svangerskapet",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Hypertensive tilstander hos mor i svangerskapet",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:55.547151Z"
+        },
+        {
+          "tableId": 434,
+          "title": "F7d: Fødsler per år, mors bosted og diabetes hos mor",
+          "internalName": "F7d: Fødsler per år, mors bosted og diabetes hos mor",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Diabetes hos mor",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:55.52845Z"
+        },
+        {
+          "tableId": 435,
+          "title": "F8a: Fødsler per år, mors bosted og fødselsstart",
+          "internalName": "F8a: Fødsler per år, mors bosted og fødselsstart",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fødselsstart",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.817878Z"
+        },
+        {
+          "tableId": 436,
+          "title": "F8b: Induserte fødsler per år, mors bosted og induksjonsmetode",
+          "internalName": "F8b: Induserte fødsler per år, mors bosted og induksjonsmetode",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Induksjonsmetode",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.675785Z"
+        },
+        {
+          "tableId": 437,
+          "title": "F9a: Fødsler per år, mors bosted og komplikasjoner under fødselen",
+          "internalName": "F9a: Fødsler per år, mors bosted og komplikasjoner under fødselen",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Komplikasjoner under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.677666Z"
+        },
+        {
+          "tableId": 438,
+          "title": "F9b: Fødte per år, mors bosted og leie ved fødsel",
+          "internalName": "F9b: Fødte per år, mors bosted og leie ved fødsel",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Barnets leie ved fødsel",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.818937Z"
+        },
+        {
+          "tableId": 440,
+          "title": "F10a: Vaginalt fødte per år, mors bosted og inngrep og tiltak under fødselen",
+          "internalName": "F10a: Vaginalt fødte per år, mors bosted og inngrep og tiltak under fødselen",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Inngrep og tiltak under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.678712Z"
+        },
+        {
+          "tableId": 441,
+          "title": "F10b: Fødte i seteleie per år, mors bosted og inngrep og tiltak under fødselen",
+          "internalName": "F10b: Fødte i seteleie per år, mors bosted og inngrep og tiltak under fødselen",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Inngrep og tiltak under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.820276Z"
+        },
+        {
+          "tableId": 442,
+          "title": "F10c-1: Fødsler per år, mors bosted og forløsningstype",
+          "internalName": "F10c-1: Fødsler per år, mors bosted og forløsningstype",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Forløsningstype",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.652646Z"
+        },
+        {
+          "tableId": 443,
+          "title": "F10c-3: Keisersnittfødsler per år, mors bosted og keisersnittype",
+          "internalName": "F10c-3: Keisersnittfødsler per år, mors bosted og keisersnittype",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Keisersnittype",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.653717Z"
+        },
+        {
+          "tableId": 444,
+          "title": "F10d: Fødsler per år, mors bosted, forløsningstype og anestesi/analgesi brukt under fødselen",
+          "internalName": "F10d: Fødsler per år, mors bosted, forløsningstype og anestesi/analgesi brukt under fødselen",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Forløsningstype",
+            "Anestesi/analgesi brukt under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.790922Z"
+        },
+        {
+          "tableId": 445,
+          "title": "Is3a: Fødsler ved institusjon per år, fødeinstitusjon og sykdom hos mor i svangerskapet",
+          "internalName": "Is3a: Fødsler ved institusjon per år, fødeinstitusjon og sykdom hos mor i svangerskapet",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Sykdom hos mor i svangerskapet",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:52:12.955066Z"
+        },
+        {
+          "tableId": 446,
+          "title": "Is3b: Fødsler ved institusjon per år, fødeinstitusjon og komplikasjoner under fødselen",
+          "internalName": "Is3b: Fødsler ved institusjon per år, fødeinstitusjon og komplikasjoner under fødselen",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Komplikasjoner under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.576745Z"
+        },
+        {
+          "tableId": 447,
+          "title": "Is3c: Fødsler ved institusjon per år, fødeinstitusjon og fødselsstart",
+          "internalName": "Is3c: Fødsler ved institusjon per år, fødeinstitusjon og fødselsstart",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Fødselsstart",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.540684Z"
+        },
+        {
+          "tableId": 448,
+          "title": "Is3d: Fødsler ved institusjon per år, fødeinstitusjon og anestesi/analgesi brukt under fødselen",
+          "internalName": "Is3d: Fødsler ved institusjon per år, fødeinstitusjon og anestesi/analgesi brukt under fødselen",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Anestesi/analgesi brukt under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.58454Z"
+        },
+        {
+          "tableId": 449,
+          "title": "Is4a-1: Vaginalt fødte ved institusjon per år, fødeinstitusjon og inngrep og tiltak under fødselen",
+          "internalName": "Is4a-1: Vaginalt fødte ved institusjon per år, fødeinstitusjon og inngrep og tiltak under fødselen",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Inngrep og tiltak under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.542057Z"
+        },
+        {
+          "tableId": 450,
+          "title": "Is4a-2: Fødsler ved institusjon per år, fødeinstitusjon og forløsningstype",
+          "internalName": "Is4a-2: Fødsler ved institusjon per år, fødeinstitusjon og forløsningstype",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Forløsningstype",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.54308Z"
+        },
+        {
+          "tableId": 451,
+          "title": "F11: Fødte per år, mors bosted og fødestedtype",
+          "internalName": "F11: Fødte per år, mors bosted og fødestedtype",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fødestedtype",
+            "Måltall"
+          ],
+          "updated": "2026-04-14T14:56:00.890131Z"
+        },
+        {
+          "tableId": 452,
+          "title": "F12a: Fødte per år, mors bosted og neonatale tilstander",
+          "internalName": "F12a: Fødte per år, mors bosted og neonatale tilstander",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Neonatale tilstander",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:49:45.806684Z"
+        },
+        {
+          "tableId": 453,
+          "title": "F12b: Fødte per år, mors bosted og behandling av barnet",
+          "internalName": "F12b: Fødte per år, mors bosted og behandling av barnet",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Behandling av barnet",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:49:45.7999Z"
+        },
+        {
+          "tableId": 454,
+          "title": "F13: Fødsler per år, mors bosted og spesielle forhold ved fostervann",
+          "internalName": "F13: Fødsler per år, mors bosted og spesielle forhold ved fostervann",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Spesielle forhold ved fostervann",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.795738Z"
+        },
+        {
+          "tableId": 455,
+          "title": "M1: Fødte og aborterte per år, dødstidspunkt og medfødte misdannelser",
+          "internalName": "M1: Fødte og aborterte per år, dødstidspunkt og medfødte misdannelser",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om medfødte misdannelser i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Dødstidspunkt",
+            "Medfødte misdannelser",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:46:55.864214Z"
+        },
+        {
+          "tableId": 456,
+          "title": "A1: Fødte etter assistert befruktning i Norge per år, institusjon og enkelt-/flerfødt",
+          "internalName": "A1: Fødte etter assistert befruktning i Norge per år, institusjon og enkelt-/flerfødt",
+          "description": "Formålet med statistikken er å gi allmennheten, fertilitetsklinikkene, myndighetene og andre grunnlag for kunnskap om assistert befruktning i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1984",
+          "lastPeriod": "2023",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Institusjon for assistert befruktning",
+            "Enkelt-/flerfødt",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:48:26.909883Z"
+        },
+        {
+          "tableId": 457,
+          "title": "A2: Fødte etter assistert befruktning i Norge per år, metode og enkelt-/flerfødt",
+          "internalName": "A2: Fødte etter assistert befruktning i Norge per år, metode og enkelt-/flerfødt",
+          "description": "Formålet med statistikken er å gi allmennheten, fertilitetsklinikkene, myndighetene og andre grunnlag for kunnskap om assistert befruktning i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1984",
+          "lastPeriod": "2023",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Metode for assistert befruktning",
+            "Enkelt-/flerfødt",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:48:26.904022Z"
+        },
+        {
+          "tableId": 458,
+          "title": "Is5a: Vaginale fødsler ved institusjon per år, fødeinstitusjon, inngrep og tiltak under fødselen og sphincterruptur (grad 3-4)",
+          "internalName": "Is5a: Vaginale fødsler ved institusjon per år, fødeinstitusjon, inngrep og tiltak under fødselen og sphincterruptur (grad 3-4)",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Inngrep og tiltak under fødselen",
+            "Sphincterruptur (grad 3-4)",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.587387Z"
+        },
+        {
+          "tableId": 459,
+          "title": "Is6: Fødte ved institusjon per år, fødeinstitusjon og barnets tilstand ved fødsel",
+          "internalName": "Is6: Fødte ved institusjon per år, fødeinstitusjon og barnets tilstand ved fødsel",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Barnets tilstand ved fødsel",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.588547Z"
+        },
+        {
+          "tableId": 468,
+          "title": "F16a-2: Fødsler med opplysning om mors røykevaner i 1. trimester per år, mors bosted og mors røykevaner i 1. trimester",
+          "internalName": "F16a-2: Fødsler med opplysning om mors røykevaner i 1. trimester per år, mors bosted og mors røykevaner i 1. trimester",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1999",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Mors røykevaner",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.661213Z"
+        },
+        {
+          "tableId": 469,
+          "title": "F16a-3: Fødsler med opplysning om mors røykevaner i siste trimester per år, mors bosted og mors røykevaner i siste trimester",
+          "internalName": "F16a-3: Fødsler med opplysning om mors røykevaner i siste trimester per år, mors bosted og mors røykevaner i siste trimester",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1999",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Mors røykevaner",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.723555Z"
+        },
+        {
+          "tableId": 470,
+          "title": "F16b-2: Fødsler med opplysning om mors røykevaner i 1. trimester per år, mors alder og mors røykevaner i 1. trimester",
+          "internalName": "F16b-2: Fødsler med opplysning om mors røykevaner i 1. trimester per år, mors alder og mors røykevaner i 1. trimester",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1999",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors alder",
+            "Mors røykevaner",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.662642Z"
+        },
+        {
+          "tableId": 471,
+          "title": "F16b-3: Fødsler med opplysning om mors røykevaner i siste trimester per år, mors alder og mors røykevaner i siste trimester",
+          "internalName": "F16b-3: Fødsler med opplysning om mors røykevaner i siste trimester per år, mors alder og mors røykevaner i siste trimester",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1999",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors alder",
+            "Mors røykevaner",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.663672Z"
+        },
+        {
+          "tableId": 472,
+          "title": "F16a-1: Fødsler per år, mors bosted og om det finnes opplysninger om mors røykevaner",
+          "internalName": "F16a-1: Fødsler per år, mors bosted og om det finnes opplysninger om mors røykevaner",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1999",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Finnes det opplysning om mors røykevaner?",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.804438Z"
+        },
+        {
+          "tableId": 473,
+          "title": "F16b-1: Fødsler per år, mors alder og om det finnes opplysninger om mors røykevaner",
+          "internalName": "F16b-1: Fødsler per år, mors alder og om det finnes opplysninger om mors røykevaner",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1999",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors alder",
+            "Finnes det opplysning om mors røykevaner?",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.805548Z"
+        },
+        {
+          "tableId": 474,
+          "title": "F16e-1: Elektronisk (f.o.m. versjon 1.2) meldte fødsler per år, mors alder og om det finnes opplysninger om mors snusvaner",
+          "internalName": "F16e-1: Elektronisk (f.o.m. versjon 1.2) meldte fødsler per år, mors alder og om det finnes opplysninger om mors snusvaner",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2021",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors alder",
+            "Finnes det opplysning om mors snusvaner?",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.66014Z"
+        },
+        {
+          "tableId": 475,
+          "title": "F16e-2: Fødsler med opplysning om mors snusvaner i 1. trimester per år, mors alder og mors snusvaner i 1. trimester",
+          "internalName": "F16e-2: Fødsler med opplysning om mors snusvaner i 1. trimester per år, mors alder og mors snusvaner i 1. trimester",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2021",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors alder",
+            "Mors snusvaner",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.71648Z"
+        },
+        {
+          "tableId": 476,
+          "title": "F16e-3: Fødsler med opplysning om mors snusvaner i siste trimester per år, mors alder og mors snusvaner i siste trimester",
+          "internalName": "F16e-3: Fødsler med opplysning om mors snusvaner i siste trimester per år, mors alder og mors snusvaner i siste trimester",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2021",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors alder",
+            "Mors snusvaner",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.803021Z"
+        },
+        {
+          "tableId": 477,
+          "title": "F17a: Fødsler per år, mors bosted og mors bruk av kosttilskudd",
+          "internalName": "F17a: Fødsler per år, mors bosted og mors bruk av kosttilskudd",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1999",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Mors bruk av kosttilskudd",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:55.524655Z"
+        },
+        {
+          "tableId": 478,
+          "title": "F17b: Fødsler per år, mors alder og mors bruk av folsyre før svangerskapet",
+          "internalName": "F17b: Fødsler per år, mors alder og mors bruk av folsyre før svangerskapet",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1999",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors alder",
+            "Mors bruk av folsyre",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:55.525849Z"
+        },
+        {
+          "tableId": 479,
+          "title": "F17c: Fødsler per år, mors alder og mors bruk av folsyre i svangerskapet",
+          "internalName": "F17c: Fødsler per år, mors alder og mors bruk av folsyre i svangerskapet",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1999",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors alder",
+            "Mors bruk av folsyre",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:55.535991Z"
+        },
+        {
+          "tableId": 480,
+          "title": "F18a-1: Fødsler per år, mors bosted og om det finnes opplysning om mors kroppsmasseindeks (KMI) før svangerskapet",
+          "internalName": "F18a-1: Fødsler per år, mors bosted og om det finnes opplysning om mors kroppsmasseindeks (KMI) før svangerskapet",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2007",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Finnes det opplysning om mors kroppsmasseindeks (KMI) før svangerskapet?",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.798188Z"
+        },
+        {
+          "tableId": 481,
+          "title": "F18a-2: Fødsler med opplysning om mors kroppsmasseindeks (KMI) før svangerskapet per år, mors bosted og mors KMI før svangerskapet",
+          "internalName": "F18a-2: Fødsler med opplysning om mors kroppsmasseindeks (KMI) før svangerskapet per år, mors bosted og mors KMI før svangerskapet",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2007",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Kroppsmasseindeks (KMI)",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.656143Z"
+        },
+        {
+          "tableId": 482,
+          "title": "F18a-3: Gjennomsnittlig kroppsmasseindeks (KMI) for mor før svangerskapet per år og mors bosted",
+          "internalName": "F18a-3: Gjennomsnittlig kroppsmasseindeks (KMI) for mor før svangerskapet per år og mors bosted",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2007",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.711335Z"
+        },
+        {
+          "tableId": 487,
+          "title": "P1a: Fødte per måned og mors bosted",
+          "internalName": "P1a: Fødte per måned og mors bosted",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fødselsmåned",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:38:23.3897Z"
+        },
+        {
+          "tableId": 490,
+          "title": "P3a: Forløsningstype per måned og mors bosted",
+          "internalName": "P3a: Forløsningstype per måned og mors bosted",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fødselsmåned",
+            "Forløsningstype",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:39:26.357828Z"
+        },
+        {
+          "tableId": 491,
+          "title": "P1b: Fødte per måned og fødeinstitusjon",
+          "internalName": "P1b: Fødte per måned og fødeinstitusjon",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Fødselsmåned",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:38:42.218649Z"
+        },
+        {
+          "tableId": 492,
+          "title": "F10c-2: Keisersnittfødsler per år, mors bosted og fødselsstart",
+          "internalName": "F10c-2: Keisersnittfødsler per år, mors bosted og fødselsstart",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fødselsstart",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:50:04.786712Z"
+        },
+        {
+          "tableId": 493,
+          "title": "Is7a: Fødsler ved institusjon per år, fødeinstitusjon og om det finnes opplysninger om mors røykevaner",
+          "internalName": "Is7a: Fødsler ved institusjon per år, fødeinstitusjon og om det finnes opplysninger om mors røykevaner",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Finnes det opplysning om mors røykevaner?",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.59028Z"
+        },
+        {
+          "tableId": 494,
+          "title": "Is7b: Fødsler ved institusjon med opplysning om mors røykevaner i 1. trimester per år, fødeinstitusjon og mors røykevaner i 1. trimester",
+          "internalName": "Is7b: Fødsler ved institusjon med opplysning om mors røykevaner i 1. trimester per år, fødeinstitusjon og mors røykevaner i 1. trimester",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Mors røykevaner",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.544473Z"
+        },
+        {
+          "tableId": 495,
+          "title": "Is7c: Fødsler ved institusjon med opplysning om mors røykevaner i siste trimester per år, fødeinstitusjon og mors røykevaner i siste trimester",
+          "internalName": "Is7c: Fødsler ved institusjon med opplysning om mors røykevaner i siste trimester per år, fødeinstitusjon og mors røykevaner i siste trimester",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Mors røykevaner",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.591335Z"
+        },
+        {
+          "tableId": 496,
+          "title": "Is8: Fødsler ved institusjon per år, fødeinstitusjon og om det finnes opplysninger om mors kroppsmasseindeks (KMI)",
+          "internalName": "Is8: Fødsler ved institusjon per år, fødeinstitusjon og om det finnes opplysninger om mors kroppsmasseindeks (KMI)",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2007",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Finnes det opplysning om mors kroppsmasseindeks (KMI)?",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.545572Z"
+        },
+        {
+          "tableId": 497,
+          "title": "Is9a: Fødte per år, fødehelseregion, mors fødeland og perinatal/neonatal levestatus",
+          "internalName": "Is9a: Fødte per år, fødehelseregion, mors fødeland og perinatal/neonatal levestatus",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "1999",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødehelseregion",
+            "Mors fødeland",
+            "Perinatal/neonatal levestatus",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.585993Z"
+        },
+        {
+          "tableId": 498,
+          "title": "Is9b: Fødsler per år, fødehelseregion, mors fødeland og forhold ved mor og svangerskap",
+          "internalName": "Is9b: Fødsler per år, fødehelseregion, mors fødeland og forhold ved mor og svangerskap",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "1999",
+          "lastPeriod": "2024",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødehelseregion",
+            "Mors fødeland",
+            "Forhold ved mor og svangerskap",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:52:12.956103Z"
+        },
+        {
+          "tableId": 499,
+          "title": "Is10: Fødsler ved institusjon per år, fødeinstitusjon, forløsningstype og mors liggetid etter fødsel",
+          "internalName": "Is10: Fødsler ved institusjon per år, fødeinstitusjon, forløsningstype og mors liggetid etter fødsel",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2005",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Forløsningstype",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.592687Z"
+        },
+        {
+          "tableId": 500,
+          "title": "P3b: Forløsningstype per måned og fødeinstitusjon ",
+          "internalName": "P3b: Forløsningstype per måned og fødeinstitusjon ",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Fødselsmåned",
+            "Forløsningstype",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:39:40.000722Z"
+        },
+        {
+          "tableId": 502,
+          "title": "P6a: Barnets tilstand ved fødsel per måned og mors bosted",
+          "internalName": "P6a: Barnets tilstand ved fødsel per måned og mors bosted",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fødselsmåned",
+            "Barnets tilstand ved fødsel",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:41:00.725104Z"
+        },
+        {
+          "tableId": 503,
+          "title": "P6b: Barnets tilstand ved fødsel per måned og fødeinstitusjon",
+          "internalName": "P6b: Barnets tilstand ved fødsel per måned og fødeinstitusjon",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Fødselsmåned",
+            "Barnets tilstand ved fødsel",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:41:32.208543Z"
+        },
+        {
+          "tableId": 505,
+          "title": "P2a: Fødselsstart per måned og mors bosted",
+          "internalName": "P2a: Fødselsstart per måned og mors bosted",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fødselsmåned",
+            "Fødselsstart",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:38:58.163141Z"
+        },
+        {
+          "tableId": 506,
+          "title": "P2b: Fødselsstart per måned og fødeinstitusjon",
+          "internalName": "P2b: Fødselsstart per måned og fødeinstitusjon",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Fødselsmåned",
+            "Fødselsstart",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:39:10.608098Z"
+        },
+        {
+          "tableId": 512,
+          "title": "P4a: Komplikasjoner under fødselen per måned og mors bosted",
+          "internalName": "P4a: Komplikasjoner under fødselen per måned og mors bosted",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fødselsmåned",
+            "Komplikasjoner under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:39:59.801112Z"
+        },
+        {
+          "tableId": 513,
+          "title": "P4b: Komplikasjoner under fødselen per måned og fødeinstitusjon",
+          "internalName": "P4b: Komplikasjoner under fødselen per måned og fødeinstitusjon",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Fødselsmåned",
+            "Komplikasjoner under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:40:15.943993Z"
+        },
+        {
+          "tableId": 514,
+          "title": "P5a: Vaginalt fødte: Inngrep og tiltak under fødselen per måned og mors bosted",
+          "internalName": "P5a: Vaginalt fødte: Inngrep og tiltak under fødselen per måned og mors bosted",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fødselsmåned",
+            "Inngrep og tiltak under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:40:30.703471Z"
+        },
+        {
+          "tableId": 515,
+          "title": "P5b: Vaginalt fødte: Inngrep og tiltak under fødselen per måned og fødeinstitusjon",
+          "internalName": "P5b: Vaginalt fødte: Inngrep og tiltak under fødselen per måned og fødeinstitusjon",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Fødselsmåned",
+            "Inngrep og tiltak under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:40:46.381016Z"
+        },
+        {
+          "tableId": 696,
+          "title": "R1: Keisersnitt per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "internalName": "R1: Keisersnitt per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Robsongruppe",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T08:19:37.376551Z"
+        },
+        {
+          "tableId": 748,
+          "title": "Is13: Levendefødte ved institusjon per år, fødeinstitusjon og pH navlesnorarterie",
+          "internalName": "Is13: Levendefødte ved institusjon per år, fødeinstitusjon og pH navlesnorarterie",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2019-2020",
+          "lastPeriod": "2023-2025",
+          "timeUnit": null,
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "pH navlesnorarterie",
+            "Måltall"
+          ],
+          "updated": "2026-04-13T17:51:23.593722Z"
+        },
+        {
+          "tableId": 757,
+          "title": "R2: Tang eller vakuumekstraksjon per Robsongruppe og fødeinstitusjon (alle institusjoner) ",
+          "internalName": "R2: Tang eller vakuumekstraksjon per Robsongruppe og fødeinstitusjon (alle institusjoner) ",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Robsongruppe",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T08:19:37.380789Z"
+        },
+        {
+          "tableId": 758,
+          "title": "R3: Tang per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "internalName": "R3: Tang per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Robsongruppe",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T08:19:37.381922Z"
+        },
+        {
+          "tableId": 759,
+          "title": "R4: Vakuumekstraksjon per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "internalName": "R4: Vakuumekstraksjon per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Robsongruppe",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T08:19:37.311862Z"
+        },
+        {
+          "tableId": 760,
+          "title": "R5: Episiotomi per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "internalName": "R5: Episiotomi per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Robsongruppe",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T08:19:37.352531Z"
+        },
+        {
+          "tableId": 761,
+          "title": "R6: Blødning under/etter fødsel per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "internalName": "R6: Blødning under/etter fødsel per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Robsongruppe",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T08:19:37.383353Z"
+        },
+        {
+          "tableId": 762,
+          "title": "R7: Lav apgar score per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "internalName": "R7: Lav apgar score per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Robsongruppe",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T08:19:37.313901Z"
+        },
+        {
+          "tableId": 763,
+          "title": "R8: Overflyttet barneavdeling per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "internalName": "R8: Overflyttet barneavdeling per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Robsongruppe",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T08:19:37.354025Z"
+        },
+        {
+          "tableId": 796,
+          "title": "P0b: Fødte per måned og fødeinstitusjon (med og uten fødselsmelding i MFR)",
+          "internalName": "P0b: Fødte per måned og fødeinstitusjon (med og uten fødselsmelding i MFR)",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Fødselsmåned",
+            "Datakilde",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:38:00.803955Z"
+        },
+        {
+          "tableId": 797,
+          "title": "P0a: Fødte per måned og mors bosted (med og uten fødselsmelding i MFR)",
+          "internalName": "P0a: Fødte per måned og mors bosted (med og uten fødselsmelding i MFR)",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "2020",
+          "lastPeriod": "2026",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Fødselsmåned",
+            "Datakilde",
+            "Måltall"
+          ],
+          "updated": "2026-05-20T11:37:17.78135Z"
+        },
+        {
+          "tableId": 817,
+          "title": "R9: Robsongruppe 5: Fødselsstart og inngrep under fødselen",
+          "internalName": "R9: Robsongruppe 5: Fødselsstart og inngrep under fødselen",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Den brukes for eksempel til fødeinstitusjonenes evaluering av egen virksomhet og kvalitetsarbeidet innen svangerskapsomsorg, fødselshjelp og nyfødtomsorg.",
+          "firstPeriod": "2016",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Fødeinstitusjon",
+            "Fødselsstart",
+            "Inngrep og tiltak under fødselen",
+            "Måltall"
+          ],
+          "updated": "2026-04-15T08:19:37.372533Z"
+        },
+        {
+          "tableId": 837,
+          "title": "F5b: Gjennomsnittlig fødselsvekt per år, kjønn og mors bosted",
+          "internalName": "F5b: Gjennomsnittlig fødselsvekt per år, kjønn og mors bosted",
+          "description": "Formålet med statistikken er å gi allmennheten, fødeinstitusjonene, myndighetene og andre grunnlag for kunnskap om svangerskap, fødsler, og mors og barns helse i Norge. Lovhjemmel Innsamling og behandling av helseopplysninger i Medisinsk fødselsregister er regulert i helseregisterloven og Medisinsk fødselsregisterforskriften.",
+          "firstPeriod": "1967",
+          "lastPeriod": "2025",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Fødselstidspunkt (år)",
+            "Mors bosted",
+            "Kjønn",
+            "Måltall"
+          ],
+          "updated": "2026-04-14T09:22:41.572104Z"
+        }
+      ]
+    },
+    "daar": {
+      "title": "Dødsårsaksregisteret (DÅR)",
+      "tables": [
+        {
+          "tableId": 268,
+          "title": "Dødsfall etter dødssted og bostedsfylke",
+          "internalName": "D3a_flagg",
+          "description": "Dødsfall etter dødssted og bostedsfylke. Antall døde per år.",
+          "firstPeriod": "1986",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Bofylke",
+            "Dødssted",
+            "Måltall"
+          ],
+          "updated": "2026-04-22T11:08:52.79446Z"
+        },
+        {
+          "tableId": 269,
+          "title": "Dødsfall med underliggende dødsårsak hjerte- og karsykdom",
+          "internalName": "D5b_hjertekar",
+          "description": "Dødsfall med underliggende dødsårsak hjerte- og karsykdom. Antall døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-24T13:10:13.273405Z"
+        },
+        {
+          "tableId": 270,
+          "title": "Dødsfall med underliggende dødsårsak selvmord",
+          "internalName": "D10b_selvmord",
+          "description": "Dødsfall med underliggende dødsårsak selvmord. Antall døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-24T13:12:25.773216Z"
+        },
+        {
+          "tableId": 277,
+          "title": "Dødsfall med underliggende dødsårsak ulykke",
+          "internalName": "D8b_ulykker",
+          "description": "Dødsfall med underliggende dødsårsak ulykke. Antall døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-24T13:11:43.256461Z"
+        },
+        {
+          "tableId": 290,
+          "title": "Dødsfall etter dødsfylke og obduksjonstype",
+          "internalName": "D13_obduksjoner",
+          "description": "Dødsfall etter dødsfylke og obduksjonstype. Antall og andel (%) døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Dødsfylke",
+            "Obduksjonstype",
+            "Måltall"
+          ],
+          "updated": "2026-04-22T11:11:10.525392Z"
+        },
+        {
+          "tableId": 310,
+          "title": "Dødsfall med underliggende dødsårsak selvmord",
+          "internalName": "D10a_selvmord",
+          "description": "Dødsfall med underliggende dødsårsak selvmord. Antall døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Alder",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-22T11:10:05.165409Z"
+        },
+        {
+          "tableId": 312,
+          "title": "Dødsfall med underliggende dødsårsak hjerte- og karsykdom",
+          "internalName": "D5a_hjertekar",
+          "description": "Dødsfall med underliggende dødsårsak hjerte- og karsykdom. Antall døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Alder",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-22T11:09:30.857588Z"
+        },
+        {
+          "tableId": 314,
+          "title": "Dødsfall med underliggende dødsårsak ulykke",
+          "internalName": "D8a_ulykker",
+          "description": "Dødsfall med underliggende dødsårsak ulykke. Antall døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Alder",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-22T11:09:48.875649Z"
+        },
+        {
+          "tableId": 325,
+          "title": "Dødsfall som følge av narkotika",
+          "internalName": "D7a_narkotika_antall",
+          "description": "Dødsfall som følge av narkotika. Antall døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Bofylke",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-22T11:14:20.888704Z"
+        },
+        {
+          "tableId": 327,
+          "title": "Dødsfall som følge av alkohol",
+          "internalName": "D7c_alkohol_antall",
+          "description": "Dødsfall som følge av alkohol. Antall døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Bofylke",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-22T11:15:35.348405Z"
+        },
+        {
+          "tableId": 642,
+          "title": "Dødsfall etter kjønn, alder og dødsårsak",
+          "internalName": "D3b_ny",
+          "description": "Dødsfall etter kjønn, alder og dødsårsak. Antall døde per år.",
+          "firstPeriod": "1986",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Dødssted",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-22T11:08:13.797028Z"
+        },
+        {
+          "tableId": 643,
+          "title": "Dødsfall etter kjønn, alder og dødsårsak",
+          "internalName": "D1_ny",
+          "description": "Dødsfall etter kjønn, alder og dødsårsak. Antall døde per år.",
+          "firstPeriod": "1951",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Kjønn",
+            "Alder",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-24T13:07:50.126286Z"
+        },
+        {
+          "tableId": 644,
+          "title": "Dødsfall etter kjønn, alder og dødsårsak",
+          "internalName": "D2_ny",
+          "description": "Dødsfall etter kjønn, alder og dødsårsak. Antall døde per år.",
+          "firstPeriod": "1951",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Bofylke",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-24T13:09:29.402832Z"
+        },
+        {
+          "tableId": 645,
+          "title": "Dødsfall etter kjønn, alder og dødsårsak",
+          "internalName": "D4_ny",
+          "description": "Dødsfall etter kjønn, alder og dødsårsak. Antall døde per år.",
+          "firstPeriod": "1951",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Måned",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-22T11:12:40.567478Z"
+        },
+        {
+          "tableId": 647,
+          "title": "Dødsfall etter bokommune, kjønn og dødsårsak",
+          "internalName": "D12_ny",
+          "description": "Dødsfall etter bokommune, kjønn og dødsårsak. Antall døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Bokommune",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-24T13:13:18.914445Z"
+        },
+        {
+          "tableId": 742,
+          "title": "Dødsfall etter bofylke, kjønn og dødsårsak",
+          "internalName": "D11_rater",
+          "description": "Dødsfall etter bofylke, kjønn og dødsårsak. Aldersstandardiserte rater for dødsfall.",
+          "firstPeriod": "1971",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Bofylke",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-24T13:12:52.555952Z"
+        },
+        {
+          "tableId": 746,
+          "title": "Dødsfall som følge av narkotika",
+          "internalName": "D7b_narkotika_rater",
+          "description": "Dødsfall som følge av narkotika. Aldersstandardiserte rater for dødsfall.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Bofylke",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-05-26T13:29:41.189342Z"
+        },
+        {
+          "tableId": 747,
+          "title": "Dødsfall som følge av alkohol",
+          "internalName": "D7d_alkohol_rater",
+          "description": "Dødsfall som følge av alkohol. Aldersstandardiserte rater for dødsfall.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Bofylke",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-05-26T13:30:01.149195Z"
+        },
+        {
+          "tableId": 754,
+          "title": "Dødsfall med underliggende dødsårsak hjerte- og karsykdom",
+          "internalName": "D5c_hjertekar_rater",
+          "description": "Dødsfall med underliggende dødsårsak hjerte- og karsykdom. Aldersstandardiserte rater for dødsfall.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-05-26T13:25:14.437201Z"
+        },
+        {
+          "tableId": 756,
+          "title": "Dødsfall med underliggende dødsårsak ulykke",
+          "internalName": "D8c_ulykker_rater",
+          "description": "Dødsfall med underliggende dødsårsak ulykke. Aldersstandardiserte rater for dødsfall.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-05-26T13:26:16.043674Z"
+        },
+        {
+          "tableId": 868,
+          "title": "Dødsfall med underliggende dødsårsak kreft (ondartede svulster)",
+          "internalName": "D6a_kreft_krg",
+          "description": "Dødsfall med underliggende dødsårsak kreft (ondartede svulster). Antall døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Alder",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-22T11:17:35.706849Z"
+        },
+        {
+          "tableId": 869,
+          "title": "Dødsfall med underliggende dødsårsak kreft (ondartede svulster)",
+          "internalName": "D6b_kreft_krg",
+          "description": "Dødsfall med underliggende dødsårsak kreft (ondartede svulster). Antall døde per år.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-24T13:10:52.157138Z"
+        },
+        {
+          "tableId": 870,
+          "title": "Dødsfall med underliggende dødsårsak demens inkludert Alzheimers sykdom",
+          "internalName": "D14a_demens",
+          "description": "Dødsfall med underliggende dødsårsak demens inkludert Alzheimers sykdom. Antall døde per år.",
+          "firstPeriod": "1986",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Alder",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-22T11:18:00.557318Z"
+        },
+        {
+          "tableId": 871,
+          "title": "Dødsfall med underliggende dødsårsak demens inkludert Alzheimers sykdom",
+          "internalName": "D14c_demens",
+          "description": "Dødsfall med underliggende dødsårsak demens inkludert Alzheimers sykdom. Aldersstandardiserte rater for dødsfall.",
+          "firstPeriod": "1986",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-24T13:13:52.781148Z"
+        },
+        {
+          "tableId": 872,
+          "title": "Dødsfall med underliggende dødsårsak demens inkludert Alzheimers sykdom",
+          "internalName": "D14b_demens",
+          "description": "Dødsfall med underliggende dødsårsak demens inkludert Alzheimers sykdom. Antall døde per år.",
+          "firstPeriod": "1986",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-24T13:13:39.037632Z"
+        },
+        {
+          "tableId": 873,
+          "title": "Dødsfall med underliggende dødsårsak kreft (ondartede svulster)",
+          "internalName": "D6c_kreft_krg",
+          "description": "Dødsfall med underliggende dødsårsak kreft (ondartede svulster). Aldersstandardiserte rater for dødsfall.",
+          "firstPeriod": "1996",
+          "lastPeriod": "2025*",
+          "timeUnit": "Annual",
+          "variableNames": [
+            "Dødsår",
+            "Kjønn",
+            "Dødsårsak",
+            "Måltall"
+          ],
+          "updated": "2026-04-24T13:11:09.555143Z"
+        }
+      ]
+    }
+  }
+}

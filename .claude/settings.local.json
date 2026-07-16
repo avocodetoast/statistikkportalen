@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node repro-issues.js)",
+      "Bash(curl -s \"https://data.norges-bank.no/api/data/EXR/?detail=serieskeysonly&format=sdmx-json\")",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s \"https://statistikk-data.fhi.no/api/open/v1/daar/Table/270/metadata\")",
+      "Bash(curl -s \"https://statistikk-data.fhi.no/api/open/v1/daar/table\")",
+      "Bash(python3 -c \"import json,sys; [print\\(t\\) for t in json.load\\(sys.stdin\\)[:4]]\")",
+      "WebFetch(domain:query.norges-bank.no)",
+      "WebFetch(domain:www.fhi.no)"
+    ]
+  }
+}

@@ -330,15 +330,25 @@ function _topicRenderSubtree(node, depth, mh, filters) {
 
     if (tables.length > 0) {
       const tableGroups = mh.groupTables(tables);
-      html += tableGroups.map(group => `
-        <details class="table-group" open>
-          <summary class="table-group-header">
-            <span class="expand-icon">&#9660;</span>
-            ${escapeHtml(group.name)}
-          </summary>
-          ${BrowserState.renderTableListHTML(group.tables)}
-        </details>
-      `).join('');
+      const onlyFallbackGroup = tableGroups.length === 1 && tableGroups[0].isFallback;
+
+      if (onlyFallbackGroup) {
+        // Every table landed in the generic "Andre tabeller" catch-all (no
+        // base year / no SSB-style timeUnit to group by — typical for
+        // foreign-source nodes like NB or FHI). A single meaningless group
+        // header is just noise, so render the plain table list instead.
+        html += BrowserState.renderTableListHTML(tableGroups[0].tables);
+      } else {
+        html += tableGroups.map(group => `
+          <details class="table-group" open>
+            <summary class="table-group-header">
+              <span class="expand-icon">&#9660;</span>
+              ${escapeHtml(group.name)}
+            </summary>
+            ${BrowserState.renderTableListHTML(group.tables)}
+          </details>
+        `).join('');
+      }
     }
   }
 

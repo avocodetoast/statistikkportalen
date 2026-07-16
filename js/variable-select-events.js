@@ -268,9 +268,10 @@ function setupKeyboardShortcuts() {
       // Switch to specific mode (individual selections)
       container.dataset.mode = 'specific';
 
-      // Select all VISIBLE items (respects both codelist and text filter)
+      // Select all VISIBLE, ENABLED items (respects codelist, text filter and
+      // cross-filter — never selects values muted as «gir ingen data»)
       container.querySelectorAll('.value-list-item').forEach(item => {
-        if (item.style.display !== 'none') {
+        if (item.style.display !== 'none' && !item.classList.contains('value-disabled')) {
           item.classList.add('selected');
         }
       });

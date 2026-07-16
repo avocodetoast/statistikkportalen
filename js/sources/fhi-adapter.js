@@ -1,6 +1,6 @@
 /**
- * FHI source adapter — Statistikkportalen 2.0  (Fase C)
- * =======================================================
+ * FHI source adapter — Statistikkportalen 2.0  (Fase C, katalog-berikelse Fase G)
+ * =================================================================================
  *
  * Implementerer adapterkontrakten i js/sources/source-registry.js for FHIs
  * åpne statistikk-API (statistikk-data.fhi.no), som leverer JSON-Stat2
@@ -8,6 +8,22 @@
  * over AppConfig.sources.fhi.sourceIds — en ny FHI-kilde (fra «senere»-lista:
  * msis, sysvak, npr, kpr, lmr, gs, hkr, abr, ngs, skast) koster kun én
  * konfiglinje der + en tilhørende rad i AppConfig.sourceNodes.
+ *
+ * PREGENERERT KATALOG (Fase G)
+ * -----------------------------
+ * FHI-API-et mangler et vennlig tittelfelt (mange tabeller heter kun et
+ * internt kodenavn, f.eks. «D10b_selvmord») og gjør det for dyrt å slå opp
+ * tidsperiode for alle ~240 tabeller ved hvert sideoppslag (krever ett
+ * /dimension-kall PER TABELL). scripts/update-fhi-catalog.mjs løser begge
+ * ved BYGGETID og skriver data/sources/fhi-catalog.json (utledet tittel,
+ * beskrivelse, first/lastPeriod, timeUnit, variableNames per tabell). Denne
+ * fila hentes RELATIVT til siden (`fetch('data/sources/fhi-catalog.json')`,
+ * fungerer fra index.html i repo-roten), caches kun i minnet (se
+ * getCatalog/_catalogPromise), og brukes av getTables (buildSourceCatalogue)
+ * og getTableMetadata (buildMetadataCore) til å berike katalogoppføringer og
+ * metadata-tittel/-note. Mangler fila (aldri kjørt scriptet, eller
+ * utilgjengelig fra siden som laster adapteren), faller alt tilbake til
+ * dagens rå API-tittel/tomme periodefelt — se getCatalog sin warn-logging.
  *
  * KILDE / ÅPENT API
  * -----------------
@@ -123,6 +139,50 @@
     if (!labelObj) return '';
     const l = uiLabelLang(lang);
     return labelObj[l] || labelObj.nb || labelObj.en || '';
+  }
+
+  // ---- Pregenerert katalog (data/sources/fhi-catalog.json, se
+  // scripts/update-fhi-catalog.mjs) — tittel/periode-berikelse bygget ved
+  // byggetid, IKKE live-hentet (240 tabeller × 2 kall er for dyrt per
+  // sideoppslag). Hentes relativt til siden (index.html ligger i repo-roten,
+  // så 'data/...' er korrekt) og caches KUN i minnet (ren lokal statisk fil,
+  // ingen grunn til IndexedDB/localStorage-runde). Mangler filen (aldri
+  // kjørt scriptet, eller kjøring feilet/filen er utilgjengelig fra siden som
+  // laster adapteren — f.eks. en SEO-underside på annet stinivå), faller vi
+  // tilbake til dagens live /table-liste uten berikelse; se getTables/
+  // buildMetadataCore.
+
+  let _catalogPromise = null;
+  function getCatalog() {
+    if (_catalogPromise) return _catalogPromise;
+    _catalogPromise = fetch('data/sources/fhi-catalog.json', { headers: JSON_HEADERS })
+      .then(res => {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(json => {
+        if (!json || typeof json !== 'object' || !json.sources) {
+          throw new Error('Uventet format (mangler sources)');
+        }
+        return json;
+      })
+      .catch(e => {
+        logger.warn(
+          '[FHIAdapter] Klarte ikke laste data/sources/fhi-catalog.json ' +
+          '(kjør «node scripts/update-fhi-catalog.mjs» for å generere den) — ' +
+          'faller tilbake til live /table-liste uten tittel-/periodeberikelse:', e
+        );
+        return null;
+      });
+    return _catalogPromise;
+  }
+
+  /** Slå opp én tabells katalogoppføring (eller null om katalog/rad mangler). */
+  async function getCatalogEntry(source, rawId) {
+    const catalog = await getCatalog();
+    const src = catalog && catalog.sources && catalog.sources[source];
+    if (!src || !Array.isArray(src.tables)) return null;
+    return src.tables.find(t => String(t.tableId) === String(rawId)) || null;
   }
 
   let _cache = null;
@@ -263,6 +323,10 @@
 
   async function buildSourceCatalogue(source, titleMap, lang) {
     const rows = await getSourceTableList(source); // kaster ved nettverksfeil → fanges av allSettled i getTables
+    const catalog = await getCatalog(); // null hvis fila mangler/feiler — se getCatalog
+    const catRows = (catalog && catalog.sources && catalog.sources[source] && catalog.sources[source].tables) || [];
+    const catById = new Map(catRows.map(t => [String(t.tableId), t]));
+
     const nodes = (window.AppConfig && window.AppConfig.sourceNodes) || {};
     const subjectNames = (window.SubjectConfig && window.SubjectConfig.subjectNames) || {};
     const nodeId = 'fhi-' + source;
@@ -280,41 +344,55 @@
     };
     const sourceTitle = titleMap[source] || source;
 
-    return (rows || []).map(row => ({
-      id: 'fhi-' + source + '-' + row.tableId,
-      label: (row.title || String(row.tableId)) + ' (FHI)',
-      // NB: 'updated' MÅ være en streng (aldri null) — menu-hierarchy.js
-      // _collectAllTables() sorterer via table.updated.localeCompare(...)
-      // uten null-guard.
-      updated: row.modifiedAt || row.publishedAt || '',
-      firstPeriod: '',
-      lastPeriod: '',
-      discontinued: false,
-      // sortCode brukes av menu-hierarchy.groupTables()/search-view.js for å
-      // sortere tabeller innad i en gruppe (samme udokumenterte-men-påkrevde
-      // felt som norges-bank-adapter.js setter defensivt). Zero-padded FHI
-      // tableId gir stabil, leksikografisk korrekt rekkefølge.
-      sortCode: String(row.tableId).padStart(6, '0'),
-      // Tidsenhet kan ikke fastslås billig på katalog-nivå: den reelle
-      // periodelengden varierer sterkt på tvers av FHI-tabeller (5-årige
-      // glidende snitt, kalenderår, skoleår, fødselskohorter …), og å
-      // fastslå den ekte enheten per tabell krever et eget /dimension-kall
-      // PER RAD (urealistisk for et katalogbygg over ~100+ tabeller per
-      // kilde). Vi lar frekvensfilteret degradere pent til «Andre tabeller»
-      // (jf. browser-state.calcFrequencyCounts/filterTables, som allerede
-      // håndterer null/ukjent timeUnit) i stedet for å gjette feil.
-      timeUnit: null,
-      variableNames: [],
-      // Kreves av browser-state.js (_filterNonQuery/calcSubjectCounts) og
-      // search-view.js (_searchGroupBySubject) for emnefilter/-gruppering —
-      // udokumentert i source-registry.js sin katalog-kontrakt, men satt av
-      // norges-bank-adapter.js (jf. subjectCode der) og av SSBs eget API.
-      // Uten dette havner FHI-tabeller i «other»-bøtta og filtrerte søk på
-      // emnet «Helse og samfunn» ekskluderer dem feilaktig.
-      subjectCode: SUBJECT_ID,
-      paths: [[subjectSeg, nodeSeg]],
-      source: 'FHI/' + sourceTitle
-    }));
+    return (rows || []).map(row => {
+      // Katalogoppføringen (data/sources/fhi-catalog.json) gir en tittel
+      // utledet fra tabellens metadata-sammendrag der API-tittelen bare er et
+      // internt kodenavn (f.eks. «D10b_selvmord» → «Dødsfall med
+      // underliggende dødsårsak selvmord»), pluss first/lastPeriod og
+      // timeUnit fra en /dimension-analyse gjort ved byggetid — se
+      // scripts/update-fhi-catalog.mjs. Uten katalogen (fila mangler/feiler
+      // å laste) faller alt dette tilbake til den rå API-tittelen og tomme
+      // periodefelt, akkurat som før katalogen fantes.
+      const cat = catById.get(String(row.tableId));
+      const title = (cat && cat.title) || row.title || String(row.tableId);
+
+      return {
+        id: 'fhi-' + source + '-' + row.tableId,
+        label: title + ' (FHI)',
+        // NB: 'updated' MÅ være en streng (aldri null) — menu-hierarchy.js
+        // _collectAllTables() sorterer via table.updated.localeCompare(...)
+        // uten null-guard.
+        updated: row.modifiedAt || row.publishedAt || (cat && cat.updated) || '',
+        firstPeriod: (cat && cat.firstPeriod) || '',
+        lastPeriod: (cat && cat.lastPeriod) || '',
+        discontinued: false,
+        // sortCode brukes av menu-hierarchy.groupTables()/search-view.js for å
+        // sortere tabeller innad i en gruppe (samme udokumenterte-men-påkrevde
+        // felt som norges-bank-adapter.js setter defensivt). Zero-padded FHI
+        // tableId gir stabil, leksikografisk korrekt rekkefølge.
+        sortCode: String(row.tableId).padStart(6, '0'),
+        // 'Annual' når katalogen har fastslått at samtlige perioder i
+        // tidsdimensjonen er enkeltår (se deriveTimeInfo i byggescriptet);
+        // ellers null (5-årige glidende snitt, skoleår, fødselskohorter …) —
+        // browser-state.calcFrequencyCounts/filterTables degraderer null
+        // pent til «Andre tabeller» i stedet for å gjette feil.
+        timeUnit: (cat && cat.timeUnit) || null,
+        variableNames: (cat && cat.variableNames) || [],
+        // Brukes av browser-state.renderTableListHTML som hover-tooltip på
+        // tabellenken (rendrer kun når feltet er satt) — utledet fra samme
+        // metadata-sammendrag som tittelen, se byggescriptet.
+        description: (cat && cat.description) || '',
+        // Kreves av browser-state.js (_filterNonQuery/calcSubjectCounts) og
+        // search-view.js (_searchGroupBySubject) for emnefilter/-gruppering —
+        // udokumentert i source-registry.js sin katalog-kontrakt, men satt av
+        // norges-bank-adapter.js (jf. subjectCode der) og av SSBs eget API.
+        // Uten dette havner FHI-tabeller i «other»-bøtta og filtrerte søk på
+        // emnet «Helse og samfunn» ekskluderer dem feilaktig.
+        subjectCode: SUBJECT_ID,
+        paths: [[subjectSeg, nodeSeg]],
+        source: 'FHI/' + sourceTitle
+      };
+    });
   }
 
   async function getTables(options) {
@@ -410,13 +488,29 @@
       logger.warn('[FHIAdapter] Klarte ikke slå opp tabelltittel for ' + source + '/' + rawId + ':', e);
     }
 
+    // Pregenerert katalog (se getCatalog) foretrekkes for tittelen — utledet
+    // fra metadata-sammendraget der API-tittelen bare er et internt kodenavn
+    // (se scripts/update-fhi-catalog.mjs) — og gir en beskrivelse som legges
+    // inn som en metadata-note under (append, ikke erstatning — se
+    // getTableMetadata som ev. legger til EN-språknoten i tillegg).
+    let description = null;
+    try {
+      const catEntry = await getCatalogEntry(source, rawId);
+      if (catEntry) {
+        if (catEntry.title) title = catEntry.title;
+        if (catEntry.description) description = catEntry.description;
+      }
+    } catch (e) {
+      logger.warn('[FHIAdapter] Klarte ikke slå opp katalogoppføring for ' + source + '/' + rawId + ':', e);
+    }
+
     const titles = await getSourceTitles();
     const sourceTitle = titles[source] || source;
 
     const heading = id.filter(c => role.time.indexOf(c) === -1);
     const stub = id.filter(c => role.time.indexOf(c) !== -1);
 
-    return {
+    const meta = {
       id: id,
       size: size,
       label: title,
@@ -430,6 +524,8 @@
       // med metadata, uten et ekstra /dimension-kall.
       _fhiDepth: depthByDim
     };
+    if (description) meta.note = [description];
+    return meta;
   }
 
   async function getTableMetadata(tableId, useCache, lang) {
@@ -452,9 +548,16 @@
 
     // Språknote regnes ut PER KALL (ikke persistert i cachen) slik at bytte
     // av UI-språk ikke krever et nytt nettverkskall eller gir en stale note.
+    // meta.note kan allerede inneholde en katalog-utledet beskrivelse (satt i
+    // buildMetadataCore, cachet sammen med resten av metadataene) — den
+    // beholdes ALLTID (også når lang='en', beskrivelsen finnes kun på norsk
+    // uansett), EN-språknoten LEGGES TIL i tillegg, den erstatter ikke.
     const out = Object.assign({}, meta);
+    const baseNotes = Array.isArray(meta.note) ? meta.note.slice() : [];
     if (uiLabelLang(lang) === 'en') {
-      out.note = [EN_LANGUAGE_NOTE];
+      out.note = baseNotes.concat([EN_LANGUAGE_NOTE]);
+    } else if (baseNotes.length) {
+      out.note = baseNotes;
     } else {
       delete out.note;
     }

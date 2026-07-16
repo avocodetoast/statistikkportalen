@@ -231,6 +231,9 @@
     opts = opts || {};
     const lang = normLang(opts.lang);
     const dimLabels = opts.dimLabels || {};
+    // {dimId: [koder]} som faktisk forekommer i ekte serier (serieskeysonly).
+    // Når satt, begrenses hver seriedims kategori til disse kodene.
+    const seriesValues = opts.seriesValues || null;
 
     const dsd = dsdJson && dsdJson.data && Array.isArray(dsdJson.data.dataStructures)
       ? dsdJson.data.dataStructures[0] : null;
@@ -261,11 +264,31 @@
       );
       const cl = clId ? codelists[clId] : null;
 
+      // Etiketter + rekkefølge fra DSD-kodelista.
+      const clLabels = {};
+      const clOrder = [];
+      ((cl && cl.codes) || []).forEach(code => {
+        clLabels[code.id] = pickName(code, lang) || code.id;
+        clOrder.push(code.id);
+      });
+
+      // Begrens til faktiske serieverdier når serieskeysonly-proben er tilgjengelig.
+      // Behold DSD-kodelistas rekkefølge; legg til evt. faktiske koder som mangler i DSD.
+      let codes;
+      if (seriesValues && Array.isArray(seriesValues[dimId])) {
+        const allowed = new Set(seriesValues[dimId]);
+        codes = clOrder.filter(c => allowed.has(c));
+        const have = new Set(codes);
+        seriesValues[dimId].forEach(c => { if (!have.has(c)) { codes.push(c); have.add(c); } });
+      } else {
+        codes = clOrder.slice();
+      }
+
       const index = {};
       const label = {};
-      ((cl && cl.codes) || []).forEach((code, i) => {
-        index[code.id] = i;
-        label[code.id] = pickName(code, lang) || code.id;
+      codes.forEach((c, i) => {
+        index[c] = i;
+        label[c] = clLabels[c] || c;
       });
 
       // Foretrekk friendly dim-navn fra data-probe; ellers kodelistenavn; ellers id.
@@ -277,7 +300,7 @@
         extension: { elimination: false, show: 'value' }
       };
       id.push(dimId);
-      size.push(Object.keys(index).length);
+      size.push(codes.length);
       heading.push(dimId);
 
       // Heuristikk: måleenhet-dimensjoner spiller metrisk rolle.

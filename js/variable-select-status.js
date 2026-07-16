@@ -57,6 +57,125 @@ function updateValueCounter(card) {
 }
 
 // ============================================================
+// Cross-filtering (generic, source-agnostic)
+// ============================================================
+//
+// When the metadata carries extension.validKeys — a compact enumeration of the
+// dimension-value combinations that actually have data (currently produced by the
+// Norges Bank adapter from a serieskeysonly probe) — the selection UI cross-filters:
+// values that cannot produce any data given the other dimensions' selections are
+// muted + made non-selectable (and auto-deselected if they were selected). A live
+// counter shows how many series match the current selection.
+//
+// validKeys format: { dims: ['FREQ','BASE_CUR','QUOTE_CUR','TENOR'],
+//                     keys: ['B.USD.NOK.SP', 'A.EUR.NOK.SP', ...] }  (codes, '.'-joined,
+// segment order matches dims). Absent for SSB/FHI → every function here is a no-op.
+
+/** Return the validKeys spec if present and non-empty, else null. */
+function getValidKeys() {
+  const vk = tableMetadata && tableMetadata.extension && tableMetadata.extension.validKeys;
+  if (!vk || !Array.isArray(vk.dims) || !Array.isArray(vk.keys) || vk.keys.length === 0) return null;
+  return vk;
+}
+
+/** Lazily parse keys into per-dimension code segment arrays (cached on the spec). */
+function getParsedValidKeys(vk) {
+  if (!vk._parsed) vk._parsed = vk.keys.map(k => k.split('.'));
+  return vk._parsed;
+}
+
+/**
+ * Read the current per-dimension constraint from the DOM for cross-filtering.
+ * Returns { dimId: Set<code> | null } where null = no constraint (star/top mode
+ * or empty specific selection — a value that constrains nothing).
+ */
+function readCrossFilterConstraints(vk) {
+  const constraints = {};
+  vk.dims.forEach(dimId => {
+    const card = document.querySelector('.variable-card[data-dimension="' + dimId + '"]');
+    const container = card && card.querySelector('.value-list-container');
+    if (!container || container.dataset.mode !== 'specific') { constraints[dimId] = null; return; }
+    const sel = Array.from(container.querySelectorAll('.value-list-item.selected'))
+      .map(it => it.dataset.code);
+    constraints[dimId] = sel.length ? new Set(sel) : null;
+  });
+  return constraints;
+}
+
+/**
+ * Standard cross-filter: for each dimension D, a value v is enabled iff some valid
+ * key has v in D AND matches every OTHER dimension's non-empty selection.
+ */
+function computeCrossFilterEnabled(vk, constraints) {
+  const dims = vk.dims;
+  const parsed = getParsedValidKeys(vk);
+  const enabled = {};
+  dims.forEach(d => { enabled[d] = new Set(); });
+
+  parsed.forEach(seg => {
+    for (let di = 0; di < dims.length; di++) {
+      let ok = true;
+      for (let oi = 0; oi < dims.length; oi++) {
+        if (oi === di) continue;
+        const c = constraints[dims[oi]];
+        if (c && !c.has(seg[oi])) { ok = false; break; }
+      }
+      if (ok) enabled[dims[di]].add(seg[di]);
+    }
+  });
+  return enabled;
+}
+
+/** Count valid keys matching every dimension's current constraint. */
+function countCrossFilterMatches(vk, constraints) {
+  const dims = vk.dims;
+  const parsed = getParsedValidKeys(vk);
+  let n = 0;
+  parsed.forEach(seg => {
+    for (let i = 0; i < dims.length; i++) {
+      const c = constraints[dims[i]];
+      if (c && !c.has(seg[i])) return;
+    }
+    n++;
+  });
+  return n;
+}
+
+/**
+ * Apply cross-filtering to the DOM: mute + disable values incompatible with the
+ * current selection in other dimensions, auto-deselecting any that were selected.
+ * Returns { matchCount } for the status counter, or null when no validKeys (no-op).
+ */
+function applyCrossFilter() {
+  const vk = getValidKeys();
+  if (!vk) return null;
+
+  const constraints = readCrossFilterConstraints(vk);
+  const enabled = computeCrossFilterEnabled(vk, constraints);
+
+  vk.dims.forEach(dimId => {
+    const card = document.querySelector('.variable-card[data-dimension="' + dimId + '"]');
+    const container = card && card.querySelector('.value-list-container');
+    if (!container) return;
+    const en = enabled[dimId];
+    container.querySelectorAll('.value-list-item').forEach(item => {
+      if (en.has(item.dataset.code)) {
+        item.classList.remove('value-disabled');
+        item.removeAttribute('aria-disabled');
+      } else {
+        item.classList.add('value-disabled');
+        item.setAttribute('aria-disabled', 'true');
+        item.classList.remove('selected'); // auto-deselect incompatible value
+      }
+    });
+    if (card) updateValueCounter(card);
+  });
+
+  // Re-read after auto-deselection so the counter reflects the effective selection.
+  return { matchCount: countCrossFilterMatches(vk, readCrossFilterConstraints(vk)) };
+}
+
+// ============================================================
 // Selection status and validation
 // ============================================================
 
@@ -77,6 +196,10 @@ function setCardStatus(card, status) {
  * Also updates per-card summaries and the API query preview.
  */
 function updateSelectionStatus() {
+  // Cross-filter first (may auto-deselect incompatible values) so the selection
+  // read below already reflects the muted state. No-op without extension.validKeys.
+  const crossFilter = applyCrossFilter();
+
   const selection = getVariableSelection();
   const statusElement = document.getElementById('selection-status');
   const fetchButton = document.getElementById('fetch-data-btn');
@@ -144,6 +267,28 @@ function updateSelectionStatus() {
     statusElement.textContent = t('status.tooManyCells');
     statusElement.className = 'selection-status-invalid';
     fetchButton.disabled = true;
+  }
+
+  // Cross-filter series counter + N=0 guard (only when validKeys present).
+  const seriesMatchEl = document.getElementById('series-match-display');
+  if (crossFilter) {
+    if (seriesMatchEl) {
+      if (crossFilter.matchCount > 0) {
+        seriesMatchEl.textContent = tpl('status.seriesMatch', crossFilter.matchCount.toLocaleString('nb-NO'));
+        seriesMatchEl.style.color = '';
+      } else {
+        seriesMatchEl.textContent = t('status.noSeriesMatch');
+        seriesMatchEl.style.color = 'var(--color-error)';
+      }
+    }
+    // Should not normally happen (disabling prevents empty combos), but guard anyway.
+    if (crossFilter.matchCount === 0) {
+      statusElement.textContent = t('status.noSeriesMatch');
+      statusElement.className = 'selection-status-invalid';
+      fetchButton.disabled = true;
+    }
+  } else if (seriesMatchEl) {
+    seriesMatchEl.textContent = '';
   }
 
   // Update URL with current selections (debounced to avoid excessive history entries)

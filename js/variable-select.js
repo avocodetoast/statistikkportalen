@@ -212,6 +212,7 @@ async function renderVariableSelection(container) {
         <div class="selection-summary">
           <span id="selection-status">${t('variable.selectValuesAll')}</span>
           <div id="cell-count-display" class="cell-count-display"></div>
+          <div id="series-match-display" class="cell-count-display"></div>
         </div>
       </div>
     </div>

@@ -303,9 +303,9 @@ const BrowserState = {
             const isDiscontinued = table.discontinued === true;
             return `
               <tr class="table-row ${isDiscontinued ? 'discontinued' : ''}" data-table-id="${table.id}">
-                <td>${escapeHtml(table.id)}</td>
+                <td title="${escapeHtml(table.id)}">${escapeHtml(table.id)}</td>
                 <td>
-                  <a href="#variables/${table.id}" class="table-link">${escapeHtml(this.cleanTableLabel(table.label, table.firstPeriod, table.lastPeriod))}</a>
+                  <a href="#variables/${table.id}" class="table-link"${table.description ? ` title="${escapeHtml(table.description)}"` : ''}>${escapeHtml(this.cleanTableLabel(table.label, table.firstPeriod, table.lastPeriod))}</a>
                   ${isDiscontinued ? '<span class="discontinued-badge">Avsluttet</span>' : ''}
                 </td>
                 <td>${escapeHtml(table.firstPeriod || '')} - ${escapeHtml(table.lastPeriod || '')}</td>

@@ -163,45 +163,54 @@ async function displayVariables() {
 }
 
 /**
- * Auto-select mandatory dimensions that have only one value.
- * This saves the user from having to manually click single-option mandatory dimensions
- * like "Personer" in the Statistikkvariabel dimension.
+ * Auto-select any non-time dimension that has exactly one value and no existing
+ * selection, so users aren't forced to click through degenerate choices.
+ *
+ * Applies to both mandatory (e.g. "Personer") and optional single-value dimensions,
+ * and to foreign sources with degenerate dimensions (Norges Bank QUOTE_CUR=NOK,
+ * TENOR=SP; single-value FHI dims).
+ *
+ * Must not fight restoreSelections()/URL state: a dimension already present in
+ * AppState.variableSelection, already in a non-specific mode, or already holding a
+ * selected value is left untouched.
  */
 function autoSelectSingleValueDimensions() {
-  logger.log('[VariableSelect] Checking for single-value mandatory dimensions to auto-select');
+  logger.log('[VariableSelect] Checking for single-value dimensions to auto-select');
+
+  const savedSelection = AppState.variableSelection || {};
+
+  // Time dimensions are excluded — a lone period is left to the user (Siste N etc.).
+  const timeDims = new Set((tableMetadata.role && tableMetadata.role.time) || []);
 
   let didAutoSelect = false;
 
   document.querySelectorAll('.variable-card').forEach(card => {
     const dimCode = card.dataset.dimension;
-    const isElimination = card.dataset.elimination === 'true';
     const container = card.querySelector('.value-list-container');
+    if (!container) return;
 
-    if (!container || isElimination) return; // Skip optional dimensions
+    // Respect URL/restore state and any existing selection.
+    if (savedSelection[dimCode] !== undefined) return;
+    if (container.dataset.mode !== 'specific') return;
+    if (container.querySelector('.value-list-item.selected')) return;
 
-    // Get all value items (visible or not)
+    // Skip time dimensions.
+    if (timeDims.has(dimCode) || dimCode === 'Tid' || dimCode.toLowerCase().includes('tid')) return;
+
     const allItems = container.querySelectorAll('.value-list-item');
-
-    // Only auto-select if exactly one value exists
     if (allItems.length === 1) {
-      const singleItem = allItems[0];
       const dimension = tableMetadata.dimension[dimCode];
       const dimLabel = dimension ? dimension.label : dimCode;
+      logger.log('[VariableSelect] Auto-selecting single value for dimension "' + dimLabel + '"');
 
-      logger.log('[VariableSelect] Auto-selecting single value for mandatory dimension "' + dimLabel + '"');
-
-      // Select the item (set mode to specific)
       container.dataset.mode = 'specific';
-      singleItem.classList.add('selected');
-
-      // Update visuals
+      allItems[0].classList.add('selected');
       updateModeVisuals(card);
       updateValueCounter(card);
       didAutoSelect = true;
     }
   });
 
-  // Update selection status if we auto-selected anything
   if (didAutoSelect) {
     updateSelectionStatus();
   }
