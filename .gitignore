@@ -26,3 +26,5 @@ CLAUDE.md
 
 # Git
 .gitignore.local
+# Lokale Claude Code-innstillinger
+.claude/
