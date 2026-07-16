@@ -71,6 +71,10 @@ function setupListSelectionEvents() {
       // Prevent Safari from text-selecting list content on any interaction with an item
       if (item && item.style.display !== 'none') e.preventDefault();
 
+      // Single-select dimensions (data-singleselect, e.g. Norges Bank FREQ):
+      // no drag-paint — the click handler applies radio-style selection alone.
+      if (card.dataset.singleselect === 'true') return;
+
       // Shift drag/click: anchor-based range selection handled entirely by the click event
       if (e.shiftKey) return;
 
@@ -157,10 +161,14 @@ function setupListSelectionEvents() {
       const clickedIndex = parseInt(item.dataset.index, 10);
       const allItems = Array.from(container.querySelectorAll('.value-list-item'));
 
+      // Single-select dimensions: mutually exclusive values — every click acts
+      // as a plain click (radio behaviour), regardless of Shift/Ctrl modifiers.
+      const singleSelect = card.dataset.singleselect === 'true';
+
       if (!_committedSelection[dimCode]) _committedSelection[dimCode] = new Set();
       const committed = _committedSelection[dimCode];
 
-      if (e.shiftKey && lastClickedIndex[dimCode] !== undefined && (e.ctrlKey || e.metaKey)) {
+      if (!singleSelect && e.shiftKey && lastClickedIndex[dimCode] !== undefined && (e.ctrlKey || e.metaKey)) {
         // Shift+Ctrl: add range to committed selection (fully additive, anchor advances)
         const start = Math.min(lastClickedIndex[dimCode], clickedIndex);
         const end   = Math.max(lastClickedIndex[dimCode], clickedIndex);
@@ -172,7 +180,7 @@ function setupListSelectionEvents() {
           }
         });
         lastClickedIndex[dimCode] = clickedIndex;
-      } else if (e.shiftKey && lastClickedIndex[dimCode] !== undefined) {
+      } else if (!singleSelect && e.shiftKey && lastClickedIndex[dimCode] !== undefined) {
         // Shift-click (no Ctrl): replace shift range but preserve committed items
         const start = Math.min(lastClickedIndex[dimCode], clickedIndex);
         const end   = Math.max(lastClickedIndex[dimCode], clickedIndex);
@@ -184,7 +192,7 @@ function setupListSelectionEvents() {
             it.classList.remove('selected');
         });
         // anchor and committed stay unchanged
-      } else if (e.ctrlKey || e.metaKey) {
+      } else if (!singleSelect && (e.ctrlKey || e.metaKey)) {
         // Ctrl/Cmd-click: commit current display (incl. any active shift range), then toggle
         const current = new Set(
           allItems.filter(it => it.classList.contains('selected'))
@@ -260,6 +268,8 @@ function setupKeyboardShortcuts() {
       if (!container) return;
       // Only act when within the variable-select view
       if (!container.closest('#variables-container')) return;
+      // Single-select dimensions: "select all" contradicts mutual exclusivity
+      if (container.closest('.variable-card')?.dataset.singleselect === 'true') return;
 
       e.preventDefault();
 

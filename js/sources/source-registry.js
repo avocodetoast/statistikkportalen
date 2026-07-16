@@ -53,6 +53,21 @@
  * den — kast en Error eller returner en tom/degradert verdi. UI-en (Fase D)
  * gater knappene på capabilities, men fasaden kaller aldri en manglende metode.
  *
+ * METADATA-UTVIDELSER (valgfrie — konsumeres generisk av variable-select)
+ * -----------------------------------------------------------------------
+ * getTableMetadata-resultatet kan bære disse; alle er no-op når de mangler:
+ *   extension.validKeys              — { dims:[dimId...], keys:['B.USD.NOK.SP',...] }
+ *                                      → krysfiltrering av verdilister
+ *                                      (variable-select-status applyCrossFilter).
+ *   extension.timePeriodsByFreq      — { freqDim, timeDim, byFreq:{frekvens:[perioder]} }
+ *                                      → frekvensbevisst tidsperiodeliste
+ *                                      (applyTimeFreqFilter); SDMX-tidskoder er
+ *                                      frekvensspesifikke.
+ *   dimension[id].extension.singleSelect — true → gjensidig utelukkende verdier;
+ *                                      UI-en håndhever radio-adferd (ett valg,
+ *                                      ingen «Velg alle»/Ctrl+A/drag-paint).
+ *                                      Brukes av NB for FREQ.
+ *
  * RUTING
  * ------
  *  • Id-baserte metoder (getTableMetadata, getTableData, getCodeList,

@@ -85,13 +85,18 @@ async function displayVariables() {
     // Elimination: can this dimension be omitted from the query?
     const elimination = dimension.extension?.elimination === true;
 
+    // Single-select: values are mutually exclusive (e.g. Norges Bank FREQ —
+    // mixing frequencies gives a near-empty cross matrix). Radio-style
+    // selection is enforced in variable-select-events.js via the card attribute.
+    const singleSelect = dimension.extension?.singleSelect === true;
+
     // Codelists: alternative value groupings for this dimension
     const codelists = dimension.extension?.codelists || [];
     const hasCodelists = codelists.length > 0;
     const sortedCodelists = hasCodelists ? sortCodelistOptions(codelists) : [];
 
     html += `
-      <div class="variable-card" data-dimension="${escapeHtml(dimCode)}" data-elimination="${elimination}">
+      <div class="variable-card" data-dimension="${escapeHtml(dimCode)}" data-elimination="${elimination}" data-singleselect="${singleSelect}">
         <div class="variable-header">
           <h3 class="variable-name">${escapeHtml(dimension.label || dimCode)}</h3>
           ${roleBadgeHtml}
@@ -115,7 +120,7 @@ async function displayVariables() {
           ` : ''}
 
           <div class="control-row">
-            <button class="btn-secondary btn-sm select-all-btn">${t('variable.btn.selectAll')}</button>
+            ${singleSelect ? '' : `<button class="btn-secondary btn-sm select-all-btn">${t('variable.btn.selectAll')}</button>`}
             <button class="btn-secondary btn-sm select-none-btn">${t('variable.btn.deselectAll')}</button>
             ${isTimeDim ? `
               <span class="top-n-group">
@@ -299,11 +304,22 @@ async function restoreSelections() {
     const container = card.querySelector('.value-list-container');
     if (!container) return;
 
-    const dimSelection = savedSelection[dimCode];
+    let dimSelection = savedSelection[dimCode];
 
     if (!dimSelection) {
       // No saved selection for this dimension (was eliminated or not selected)
       return;
+    }
+
+    // Single-select dimensions (e.g. Norges Bank FREQ): only one specific code
+    // is meaningful — trim multi-code URL/back-navigation state to the first
+    // code, and ignore star/top modes entirely (they imply multiple values).
+    if (card.dataset.singleselect === 'true') {
+      if (!Array.isArray(dimSelection)) {
+        updateValueCounter(card);
+        return;
+      }
+      dimSelection = dimSelection.slice(0, 1);
     }
 
     if (dimSelection === '*') {

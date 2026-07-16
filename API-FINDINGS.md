@@ -40,3 +40,11 @@ tidsvinduet én gang pr. faktisk frekvens (frekvensene hentes fra
 `detail=serieskeysonly`-proben) og emitterer `extension.timePeriodsByFreq`
 i metadataene; `variable-select-status.js` (`applyTimeFreqFilter`) bruker
 den til å begrense tidslisten til perioder som finnes for valgt frekvens.
+
+API-et godtar riktignok flere frekvenser i ett kall (`+`-syntaks i
+nøkkelsegmentet, f.eks. `/data/EXR/A+M.USD.NOK.SP`), men periodene aligner
+aldri på tvers av frekvenser, så resultatet blir en nesten tom
+FREQ×TIME_PERIOD-kryssmatrise — og `startPeriod`/`endPeriod` kan bare
+uttrykkes i én granularitet. Adapteren merker derfor FREQ med
+`dimension.FREQ.extension.singleSelect = true`, som UI-en håndhever som
+radio-adferd (kun én frekvens kan velges).

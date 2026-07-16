@@ -418,7 +418,9 @@
     const flow = flowForId(tableId);
     if (!flow) throw new Error('[NBAdapter] Ukjent tabell: ' + tableId);
     const locale = apiLang(lang || currentLang());
-    const cacheKey = 'table_' + tableId + '_meta_' + locale;
+    // 'v2' = metadata-skjema med timePeriodsByFreq + FREQ.singleSelect — ny
+    // nøkkel så gamle cacheoppføringer (uten utvidelsene) ikke serveres i 24 t.
+    const cacheKey = 'table_' + tableId + '_meta_v2_' + locale;
 
     if (useCache !== false) {
       const cached = await cacheGet(cacheKey);
@@ -470,6 +472,16 @@
       const timeId = (meta.role && meta.role.time && meta.role.time[0]) || 'TIME_PERIOD';
       meta.extension = meta.extension || {};
       meta.extension.timePeriodsByFreq = { freqDim: 'FREQ', timeDim: timeId, byFreq: probe.byFreq };
+    }
+
+    // FREQ er gjensidig utelukkende: SDMX-nøkkelen støtter riktignok 'A+M',
+    // men periodene aligner aldri på tvers av frekvenser (2024 vs 2024-06 vs
+    // 2024-06-28), så en kombinert tabell blir en nesten tom kryssmatrise —
+    // og startPeriod/endPeriod kan ikke uttrykkes i én granularitet. UI-en
+    // (variable-select) håndhever radio-adferd for singleSelect-dimensjoner.
+    if (meta.dimension.FREQ) {
+      meta.dimension.FREQ.extension = meta.dimension.FREQ.extension || {};
+      meta.dimension.FREQ.extension.singleSelect = true;
     }
 
     // Datatorg-beskrivelse → Tabellinfo (meta.note er en streng-array).
