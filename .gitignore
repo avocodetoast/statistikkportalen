@@ -21,9 +21,6 @@ $RECYCLE.BIN/
 # leses av scripts/generate-seo-pages.mjs)
 data/table-metadata/*.json
 
-# AI
-CLAUDE.md
-
 # Git
 .gitignore.local
 # Lokale Claude Code-innstillinger
