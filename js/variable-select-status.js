@@ -126,6 +126,27 @@ function computeCrossFilterEnabled(vk, constraints) {
   return enabled;
 }
 
+/**
+ * Er én eller flere av validKeys-dimensjonene i spesifikt utvalg med NULL
+ * valgte verdier, og dimensjonen er obligatorisk (ikke elimination)? Da har
+ * brukeren ikke fullført utvalget ennå — readCrossFilterConstraints()
+ * behandler et slikt tomt utvalg som «ingen begrensning» (nødvendig for at
+ * kryssfiltreringen av verdilister i ANDRE dimensjoner skal fungere som før),
+ * men det gjør countCrossFilterMatches() sitt treffantall optimistisk/
+ * villedende — samtidig som validateSelection() sperrer Hent-knappen for
+ * nøyaktig denne dimensjonen. Brukes til å vise en nøytral tellertekst i
+ * stedet for et (feilaktig komplett) antall.
+ */
+function hasPendingMandatorySelection(vk) {
+  return vk.dims.some(dimId => {
+    const card = document.querySelector('.variable-card[data-dimension="' + dimId + '"]');
+    const container = card && card.querySelector('.value-list-container');
+    if (!container || container.dataset.mode !== 'specific') return false;
+    if (card.dataset.elimination === 'true') return false; // valgfri — tomt utvalg er en gyldig sluttilstand
+    return container.querySelectorAll('.value-list-item.selected').length === 0;
+  });
+}
+
 /** Count valid keys matching every dimension's current constraint. */
 function countCrossFilterMatches(vk, constraints) {
   const dims = vk.dims;
@@ -172,7 +193,13 @@ function applyCrossFilter() {
   });
 
   // Re-read after auto-deselection so the counter reflects the effective selection.
-  return { matchCount: countCrossFilterMatches(vk, readCrossFilterConstraints(vk)) };
+  return {
+    matchCount: countCrossFilterMatches(vk, readCrossFilterConstraints(vk)),
+    // Se hasPendingMandatorySelection(): sant når treffantallet over er
+    // optimistisk fordi minst én obligatorisk dimensjon ennå ikke har noe
+    // spesifikt utvalg — telleren skal da vise en nøytral melding, ikke tallet.
+    pending: hasPendingMandatorySelection(vk)
+  };
 }
 
 // ============================================================
@@ -273,7 +300,14 @@ function updateSelectionStatus() {
   const seriesMatchEl = document.getElementById('series-match-display');
   if (crossFilter) {
     if (seriesMatchEl) {
-      if (crossFilter.matchCount > 0) {
+      if (crossFilter.pending) {
+        // Minst én obligatorisk dimensjon mangler ennå spesifikt utvalg —
+        // matchCount er optimistisk (se hasPendingMandatorySelection), så vis
+        // en nøytral melding i stedet for et (feilaktig komplett) antall.
+        // Samsvarer med validateSelection() som sperrer Hent-knappen her.
+        seriesMatchEl.textContent = t('status.seriesMatchPending');
+        seriesMatchEl.style.color = '';
+      } else if (crossFilter.matchCount > 0) {
         seriesMatchEl.textContent = tpl('status.seriesMatch', crossFilter.matchCount.toLocaleString('nb-NO'));
         seriesMatchEl.style.color = '';
       } else {
@@ -282,7 +316,10 @@ function updateSelectionStatus() {
       }
     }
     // Should not normally happen (disabling prevents empty combos), but guard anyway.
-    if (crossFilter.matchCount === 0) {
+    // Kun relevant når utvalget faktisk er komplett (!pending) — ellers er
+    // matchCount===0 en forventet mellomtilstand som validateSelection() (og
+    // "Velg verdier"-meldingen over) allerede dekker.
+    if (!crossFilter.pending && crossFilter.matchCount === 0) {
       statusElement.textContent = t('status.noSeriesMatch');
       statusElement.className = 'selection-status-invalid';
       fetchButton.disabled = true;

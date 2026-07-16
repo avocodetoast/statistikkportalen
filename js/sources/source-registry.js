@@ -61,11 +61,14 @@
  *  • getConfig + savedquery-metodene (saveSavedQuery, getSavedQuery,
  *    getSavedQueryData) → KUN SSB-adapteren.
  *  • getTables/getAllTables → aggregerer alle *enabled* kilder med
- *    Promise.allSettled. Oppfylte resultater konkateneres (SSB-tabeller først),
- *    avviste kilder logges med logger.warn — én kilde nede bryter ikke
- *    portalen. Når options.query eller options.pastDays er satt (server-søk /
- *    nylig oppdaterte tabeller — SSB-only semantikk) returnerer fremmede
- *    adaptere []; kun SSB besvarer disse.
+ *    Promise.allSettled. Oppfylte resultater konkateneres i registrerings-
+ *    rekkefølgen (= script-lasterekkefølgen i index.html: norges-bank → fhi
+ *    → ssb, altså SSB SIST — rekkefølgen er uten betydning siden
+ *    menu-hierarchy.js uansett sorterer emnetreet), avviste kilder logges med
+ *    logger.warn — én kilde nede bryter ikke portalen. Når options.query
+ *    eller options.pastDays er satt (server-søk / nylig oppdaterte tabeller —
+ *    SSB-only semantikk) returnerer fremmede adaptere []; kun SSB besvarer
+ *    disse.
  *  • Cache-metodene (cleanupCache, clearCache, getCacheStats) → delegeres til
  *    SSB-adapterens underliggende CacheManager (delt av alle kilder), så
  *    oppførselen er uendret. Fremmede kilder cacher under samme CacheManager
@@ -194,10 +197,12 @@
 
   /**
    * Aggreger katalogen på tvers av alle aktiverte kilder.
-   * Bruker Promise.allSettled: avviste kilder logges, oppfylte konkateneres
-   * (SSB-tabeller først via registreringsrekkefølgen). Fremmede kilder som ikke
-   * støtter server-søk/nylig-oppdaterte (options.query / options.pastDays)
-   * returnerer [] og hoppes effektivt over.
+   * Bruker Promise.allSettled: avviste kilder logges, oppfylte konkateneres i
+   * registreringsrekkefølgen (= script-lasterekkefølgen i index.html:
+   * norges-bank → fhi → ssb, altså SSB SIST — rekkefølgen er funksjonelt
+   * likegyldig, menu-hierarchy.js sorterer uansett emnetreet). Fremmede kilder
+   * som ikke støtter server-søk/nylig-oppdaterte (options.query /
+   * options.pastDays) returnerer [] og hoppes effektivt over.
    */
   async function aggregateTables(method, options) {
     const opts = options || {};

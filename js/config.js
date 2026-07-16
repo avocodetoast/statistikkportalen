@@ -186,6 +186,11 @@ const AppConfig = {
    * og at kildens tabeller ikke rutes — resten av portalen påvirkes ikke.
    */
   sources: {
+    // Timeout (ms) for fremmedkilders nettverkskall (NB/FHI) — en hengende
+    // kilde skal feile innen dette og ikke blokkere app-initialiseringen
+    // (BrowserState venter på hele katalogaggregeringen).
+    fetchTimeoutMs: 15000,
+
     // Statistisk sentralbyrå (PxWebApi v2) — apiBaseUrl over.
     ssb: { adapter: 'ssb', enabled: true },
 

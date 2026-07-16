@@ -118,7 +118,24 @@
     // Format velges via ?format=sdmx-json i URL-en. En spesifikk vnd.sdmx-Accept
     // kolliderer med format-parameteren og gir 406 på strukturendepunktet, så vi
     // holder oss til et generisk Accept.
-    const res = await fetch(url, { headers: { Accept: 'application/json, */*' } });
+    // Timeout via AbortSignal slik at et hengende NB-API ikke blokkerer hele
+    // app-initialiseringen (katalogaggregeringen venter på alle kilder). Verdien
+    // leses fra AppConfig.sources.fetchTimeoutMs med 15 s fallback.
+    const timeoutMs = (window.AppConfig && window.AppConfig.sources &&
+      window.AppConfig.sources.fetchTimeoutMs) || 15000;
+    let res;
+    try {
+      res = await fetch(url, {
+        headers: { Accept: 'application/json, */*' },
+        signal: AbortSignal.timeout(timeoutMs)
+      });
+    } catch (e) {
+      // AbortSignal.timeout gir DOMException 'TimeoutError' (noen miljøer 'AbortError').
+      if (e && (e.name === 'TimeoutError' || e.name === 'AbortError')) {
+        throw new Error('[NBAdapter] Tidsavbrudd etter ' + timeoutMs + ' ms mot Norges Bank: ' + url);
+      }
+      throw e; // Ekte nettverksfeil.
+    }
     if (res.status === 404) return { status: 404, json: null };
     if (!res.ok) {
       // Norges Bank returnerer XML-feil; vi trenger bare statuskoden.
@@ -460,6 +477,90 @@
     return { key, params };
   }
 
+  /** Radmajor-strides for en size-array: strides[i] = produkt(size[i+1..]). */
+  function stridesFor(size) {
+    const s = new Array(size.length);
+    let acc = 1;
+    for (let i = size.length - 1; i >= 0; i--) { s[i] = acc; acc *= size[i]; }
+    return s;
+  }
+
+  /**
+   * Filtrer et JSON-Stat2-datasett ned til NØYAKTIG de valgte tidskodene.
+   *
+   * SDMX REST støtter kun sammenhengende tidsintervaller (startPeriod/endPeriod),
+   * så et ikke-sammenhengende tidsutvalg henter hele intervallet fra API-et.
+   * Her fjernes periodene brukeren ikke valgte etter konvertering. Bygger om
+   * Tid-dimensjonens category.index/label, size-arrayen OG den radmajor-flate
+   * value-/status-arrayen konsistent. Returnerer datasettet uendret hvis alle
+   * tilstedeværende koder beholdes (utvalget = «alle» eller komplett intervall).
+   */
+  function filterDatasetToTimeCodes(dataset, timeId, wantedCodes) {
+    const dim = dataset.dimension && dataset.dimension[timeId];
+    const dimPos = dataset.id.indexOf(timeId);
+    if (!dim || !dim.category || !dim.category.index || dimPos < 0) return dataset;
+
+    const oldIndex = dim.category.index;
+    const oldLabel = (dim.category.label) || {};
+    const wanted = new Set(wantedCodes.map(String));
+    // Behold datasettets egen (stigende) rekkefølge; ta kun med valgte koder.
+    const keptCodes = Object.keys(oldIndex)
+      .filter(c => wanted.has(String(c)))
+      .sort((a, b) => oldIndex[a] - oldIndex[b]);
+
+    // Ingenting å fjerne → returner uendret (unødvendig ombygging unngås).
+    if (keptCodes.length === Object.keys(oldIndex).length) return dataset;
+
+    const oldSize = dataset.size;
+    const newSize = oldSize.slice();
+    newSize[dimPos] = keptCodes.length;
+    const oldStrides = stridesFor(oldSize);
+    const newStrides = stridesFor(newSize);
+
+    // Gammel Tid-koordinat → ny Tid-koordinat (kun beholdte perioder).
+    const oldToNewTime = {};
+    keptCodes.forEach((c, newPos) => { oldToNewTime[oldIndex[c]] = newPos; });
+
+    const oldValue = dataset.value || [];
+    const oldStatus = dataset.status || null;
+    const newTotal = newSize.reduce((a, b) => a * b, 1);
+    const newValue = new Array(newTotal).fill(null);
+    const newStatus = {};
+    let hasStatus = false;
+
+    for (let oldFlat = 0; oldFlat < oldValue.length; oldFlat++) {
+      let newFlat = 0;
+      let skip = false;
+      for (let d = 0; d < oldSize.length; d++) {
+        const coord = Math.floor(oldFlat / oldStrides[d]) % oldSize[d];
+        let newCoord = coord;
+        if (d === dimPos) {
+          if (!(coord in oldToNewTime)) { skip = true; break; }
+          newCoord = oldToNewTime[coord];
+        }
+        newFlat += newCoord * newStrides[d];
+      }
+      if (skip) continue;
+      newValue[newFlat] = oldValue[oldFlat];
+      if (oldStatus) {
+        const s = oldStatus[String(oldFlat)];
+        if (s !== undefined) { newStatus[String(newFlat)] = s; hasStatus = true; }
+      }
+    }
+
+    // Bygg om Tid-kategorien (index/label) i beholdt rekkefølge.
+    const newCatIndex = {};
+    const newCatLabel = {};
+    keptCodes.forEach((c, i) => { newCatIndex[c] = i; newCatLabel[c] = oldLabel[c] || c; });
+    dim.category.index = newCatIndex;
+    dim.category.label = newCatLabel;
+
+    dataset.size = newSize;
+    dataset.value = newValue;
+    if (hasStatus) dataset.status = newStatus; else delete dataset.status;
+    return dataset;
+  }
+
   async function getTableData(tableId, valueCodes, lang, codelistIds) {
     const flow = flowForId(tableId);
     if (!flow) throw new Error('[NBAdapter] Ukjent tabell: ' + tableId);
@@ -490,13 +591,25 @@
       return emptyDataFromSelection(meta, valueCodes);
     }
 
-    return window.SdmxToJsonStat.dataToJsonStat(json, {
+    const dataset = window.SdmxToJsonStat.dataToJsonStat(json, {
       lang: locale,
       source: 'Norges Bank',
       label: meta.label,
       updated: (json.meta && json.meta.prepared) || meta.updated || null,
       metricDims: metricDims
     });
+
+    // Fler-verdi tidsutvalg hentes som intervall (SDMX støtter kun intervaller);
+    // filtrer bort perioder brukeren ikke valgte. Hopp over for '*' og top(N)
+    // (hele intervallet/siste N ønskes), og filterfunksjonen no-op-er dessuten
+    // når alt beholdes (komplett intervall).
+    const dsTimeId = (dataset.role && dataset.role.time && dataset.role.time[0]) ||
+      (meta.role && meta.role.time && meta.role.time[0]) || 'TIME_PERIOD';
+    const timeSel = (valueCodes || {})[dsTimeId];
+    if (Array.isArray(timeSel) && timeSel.length) {
+      return filterDatasetToTimeCodes(dataset, dsTimeId, timeSel);
+    }
+    return dataset;
   }
 
   /**

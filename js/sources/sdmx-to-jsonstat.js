@@ -96,7 +96,16 @@
     const dims = structure && structure.dimensions;
     const dataSet = data && Array.isArray(data.dataSets) ? data.dataSets[0] : null;
 
-    const seriesDims = (dims && Array.isArray(dims.series)) ? dims.series : [];
+    // Sorter seriedimensjonene på keyPosition slik at array-indeks == posisjon i
+    // serienøkkelen "i:j:k". SDMX kan i prinsippet levere series[] i en annen
+    // rekkefølge enn keyPosition; da ville verdiene ellers havne i feil celler.
+    // structureToMetadata sorterer tilsvarende på `position`. Sorteringen er
+    // stabil, så et svar uten keyPosition (eller allerede i riktig rekkefølge)
+    // gir identisk resultat som før.
+    const rawSeriesDims = (dims && Array.isArray(dims.series)) ? dims.series : [];
+    const seriesDims = rawSeriesDims.slice().sort((a, b) =>
+      ((a && a.keyPosition != null ? a.keyPosition : 0) -
+       (b && b.keyPosition != null ? b.keyPosition : 0)));
     const obsDims = (dims && Array.isArray(dims.observation)) ? dims.observation : [];
     const timeDim = obsDims[0] || null;
     const seriesObj = (dataSet && dataSet.series) || {};

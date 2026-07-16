@@ -117,6 +117,12 @@
   const NOT_SIGN = '¬'; // SSB-hierarkiprefiks (se ARCHITECTURE.md)
   const SUBJECT_ID = 'he'; // Helse
 
+  // Timeout for nettverkskall mot FHI-API-et — en hengende FHI-server skal
+  // ikke blokkere app-initialiseringen (BrowserState venter på hele
+  // katalogaggregeringen i source-registry.js). Delt nøkkel med
+  // norges-bank-adapter.js.
+  const FETCH_TIMEOUT_MS = (window.AppConfig.sources && window.AppConfig.sources.fetchTimeoutMs) || 15000;
+
   // Emnesubjektets sortCode — kun kosmetisk (SSB-tabeller under 'he' oppretter
   // subjektnoden i emnetreet først; jf. tilsvarende resonnement i
   // norges-bank-adapter.js). Satt likevel defensivt for å unngå
@@ -155,7 +161,10 @@
   let _catalogPromise = null;
   function getCatalog() {
     if (_catalogPromise) return _catalogPromise;
-    _catalogPromise = fetch('data/sources/fhi-catalog.json', { headers: JSON_HEADERS })
+    _catalogPromise = fetch('data/sources/fhi-catalog.json', {
+      headers: JSON_HEADERS,
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS)
+    })
       .then(res => {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();
@@ -216,7 +225,8 @@
    * og 422 «One or more validation errors occurred»).
    */
   async function fetchJson(url, options) {
-    const res = await fetch(url, options || {});
+    const opts = Object.assign({ signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }, options || {});
+    const res = await fetch(url, opts);
     if (!res.ok) {
       let message = '';
       try {

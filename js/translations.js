@@ -149,6 +149,7 @@ const translations = {
     'status.cellsSelected': '{0} {1} valgt (av maks {2} mulige)',
     'status.seriesMatch':   '{0} serier matcher valget',
     'status.noSeriesMatch': 'Ingen serier matcher valget',
+    'status.seriesMatchPending': 'Velg verdier i alle dimensjoner for å se antall serier',
     'status.exceedsLimit': '\u2014 overskrider API-grensen på 800\u202f000!',
 
     // API builder
@@ -372,6 +373,7 @@ const translations = {
     'status.cellsSelected': '{0} {1} selected (of max {2} possible)',
     'status.seriesMatch':   '{0} series match your selection',
     'status.noSeriesMatch': 'No series match your selection',
+    'status.seriesMatchPending': 'Select values in all dimensions to see the number of series',
     'status.exceedsLimit': '\u2014 exceeds the API limit of 800,000!',
 
     'api.builder':          'API builder',
@@ -590,6 +592,7 @@ const translations = {
     'status.cellsSelected': '{0} {1} valda (av max {2} m\u00F6jliga)',
     'status.seriesMatch':   '{0} serier matchar valet',
     'status.noSeriesMatch': 'Inga serier matchar valet',
+    'status.seriesMatchPending': 'Välj värden i alla dimensioner för att se antalet serier',
     'status.exceedsLimit': '\u2014 \u00F6verskrider API-gr\u00E4nsen p\u00E5 800\u202F000!',
 
     'api.builder':          'API-byggare',
