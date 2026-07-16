@@ -18,6 +18,16 @@ Open `index.html` in a browser. No build step or server required.
 
 `test.html` contains a minimal browser-based test suite (assertion helpers `suite()`/`assert()`/`assertEqual()`) covering `AppConfig`, subjects/menu-hierarchy and search-enhanced logic — open it directly in a browser to run it. There is no CLI test runner, linter, or build system configured.
 
+## Subagent Model Selection
+
+When spawning subagents (via the `Agent`/`Task` tool) to work in this repo, pick the model to match the task's complexity rather than defaulting to the same model every time:
+
+- **Sonnet — default for most work.** Code changes, multi-file investigation, writing or refactoring adapters/views, debugging, and any task that requires reading this file's architecture notes and applying judgement. Use Sonnet unless the task clearly falls into one of the tiers below.
+- **Opus — escalate for high-stakes or architecturally significant work.** Cross-cutting refactors that touch the module load order or the source-adapter contract, non-trivial debugging with an unclear root cause, security-relevant changes, or planning/design work where getting the approach wrong is costly to unwind.
+- **Haiku — acceptable only for small, mechanical, well-defined tasks.** Simple lookups, formatting/renaming, single-file grep-and-report summaries, or other tasks with no real judgement calls and an easily verifiable output.
+
+Default to Sonnet when in doubt — it's the safe middle ground. Don't route a task to Haiku just to save cost if it involves multi-step reasoning or touches shared state (`AppState`, `BrowserState`, the source-adapter facade); a wrong or shallow subagent result there costs more to debug than the model savings are worth.
+
 ## Architecture
 
 ### Global State & Routing
