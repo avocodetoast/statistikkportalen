@@ -853,3 +853,10 @@
   pointer-events: none;
   cursor: not-allowed;
 }
+
+/* Frequency-aware time filter: periods that don't exist for the selected
+   frequency are hidden entirely (see variable-select-status.js
+   applyTimeFreqFilter) — a daily date can never match annual/monthly data. */
+.value-list-item.value-freq-hidden {
+  display: none;
+}

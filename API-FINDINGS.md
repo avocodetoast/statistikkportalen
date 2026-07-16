@@ -28,3 +28,15 @@ URN-oppløsning:
 Enkelte tabeller har åpenbart ugyldige `updated`-verdier (f.eks. tabell 04197
 med `"0003-10-13"`). Google avviser slike i sitemap/JSON-LD — `isoDate()` i
 `scripts/generate-seo-pages.mjs` dropper datoer utenfor 1900–(inneværende år + 1).
+
+## Norges Bank (SDMX): TIME_PERIOD-koder er frekvensspesifikke
+
+TIME_PERIOD-kodene i Norges Banks SDMX-API følger frekvensen til serien:
+`B` (virkedag) → `2025-07-15`, `M` → `2025-07`, `A` → `2025`. Et
+`startPeriod`/`endPeriod`-intervall uttrykt som daglige datoer gir derfor
+aldri treff mot års-/månedsserier — tidsutvalget må uttrykkes i samme
+granularitet som valgt frekvens. `norges-bank-adapter.js` prober derfor
+tidsvinduet én gang pr. faktisk frekvens (frekvensene hentes fra
+`detail=serieskeysonly`-proben) og emitterer `extension.timePeriodsByFreq`
+i metadataene; `variable-select-status.js` (`applyTimeFreqFilter`) bruker
+den til å begrense tidslisten til perioder som finnes for valgt frekvens.
