@@ -1,21 +1,30 @@
 # Architecture
 
-Statistikkportalen is a single-page application built with vanilla JavaScript — an alternative interface for browsing and downloading statistics from SSB (Statistics Norway). No build step, no bundler, no package manager. All modules are loaded via `<script>` tags in `index.html` and communicate through global objects on `window`.
+Statistikkportalen is a single-page application built with vanilla JavaScript — an alternative interface for browsing and downloading statistics. No build step, no bundler, no package manager. All modules are loaded via `<script>` tags in `index.html` and communicate through global objects on `window`.
 
-The app fetches the full table catalogue (~7 000 tables) from SSB's PxWebApi v2, lets users search, browse by topic, select variables, and view/export data — all in the browser with aggressive local caching.
+As of **Statistikkportalen 2.0** the app is a multi-source hub: a source-adapter layer (`js/sources/`) sits behind the SSB API client and lets additional PxWebApi-incompatible sources — currently **Norges Bank** (SDMX) and **FHI** (native JSON-Stat2) — plug into the same catalogue, topic tree and search as SSB. See "Multi-source architecture" below and [ROADMAP.md](ROADMAP.md) for what's enabled. The app fetches the full SSB table catalogue (~10 000 tables) plus the Norges Bank/FHI catalogues via `BrowserState.init()`, lets users search, browse by topic, select variables, and view/export data — all in the browser with aggressive local caching. `test.html` provides a minimal browser-run assertion suite; there is no CLI test runner, linter, or bundler.
+
+The app is also designed to be re-pointed at other PxWebApi v2 instances (e.g. SCB, Sweden's statistics bank) by swapping `config.js`, `subjects.js` and `synonyms.js` — `config-sv.js`/`subjects-sv.js` are a working example of the SCB variant.
 
 ## Load order and dependencies
 
 Scripts are loaded in this exact order (each depends on those above it):
 
 ```
-version.js          — VERSION constant (displayed in footer)
+version.js          — VERSION constant (displayed in footer; also used in cache-busting ?v= query strings)
 config.js           — AppConfig, logger
 translations.js     — t(), tpl(), setLanguage(), getCurrentApiLang(); translation dictionary for all UI strings
 cache.js            — CacheManager (IndexedDBCache + localStorage hybrid)
 api.js              — SSBApi (uses CacheManager, AppConfig)
-utils.js            — AppState, renderCurrentView(), helpers, addEscapeHandler()
+sources/sdmx-to-jsonstat.js    ─┐
+sources/norges-bank-adapter.js  │  Source adapters: each pushes itself onto
+sources/fhi-adapter.js          │  window.SourceAdapters (uses AppConfig.sources.*)
+sources/ssb-adapter.js          │  Thin wrapper around the SSBApi instance from api.js
+sources/source-registry.js     ─┘  Loads LAST: consumes window.SourceAdapters and
+                                    REPLACES window.api with the multi-source facade
+utils.js            — AppState, renderCurrentView(), helpers, addEscapeHandler() (uses api = facade)
 router.js           — URLRouter, SSBURLMapper (uses AppState, BrowserState, render*)
+seo-head.js         — SEOHead: syncs canonical/og:-tags/meta description/JSON-LD with the route (uses URLRouter, AppConfig, BrowserState)
 subjects.js         — SubjectConfig: subjectGroups + subjectNames (instance-specific, swapped per data source)
 menu-hierarchy.js   — MenuHierarchy class (uses SubjectConfig)
 browser-state.js    — BrowserState (uses api, MenuHierarchy, SearchEnhanced, AppState)
@@ -34,10 +43,12 @@ variable-select-api.js        │
 variable-select.js           ─┘  Main entry: renderVariableSelection()
 table-display.js    — renderTableDisplay, displayData, buildHtmlTable (uses api, AppState)
 table-metadata.js   — buildMetadataSection (uses currentFullMetadata from table-display)
-table-save-query.js — showSaveQueryDialog (uses currentData, AppState, api)
+table-save-query.js — showSaveQueryDialog (uses currentData, AppState, api — SSB-only)
 table-rotation.js   — openRotationDialog (uses AppState, re-calls displayData)
 export.js           — showExportDialog, quickExportXlsx (uses api, AppState)
 ```
+
+Everything from `utils.js` onward calls the global `api` object as if it were a single source — `window.api` is a mutable property, not a lexical `const`, so `source-registry.js` swapping it out after `api.js` has already run is transparent to every module that references `api` at call time (see the comment at the top of `sources/source-registry.js`).
 
 ## Global state objects
 
@@ -64,7 +75,7 @@ Long-lived browsing state. Initialized once (lazy, on first use) and persists ac
 
 ```
 menuHierarchy       — MenuHierarchy instance (tree of subjects → topics → tables)
-allTables           — Full array of ~7000+ table objects from API
+allTables           — Full array of ~10 000+ table objects, aggregated across all enabled sources (SSB + Norges Bank + FHI)
 recentTables        — Tables updated in the last 7 days (from pastDays=7 API call, used by front page)
 isLoaded            — Whether init() has completed
 searchFilters       — { query, includeDiscontinued, subjectFilter, frequencyFilter, updatedFilter, enhanced }
@@ -92,6 +103,32 @@ currentData         — Raw JSON-Stat2 data response (the flat value array and d
 currentFullMetadata — Full metadata for the current table (source, notes, contacts, etc.)
 ```
 
+## Multi-source architecture (Statistikkportalen 2.0)
+
+```
+window.api (facade, built by sources/source-registry.js)
+├── ssb-adapter.js           — sourceId 'ssb', fallback owner of every table id
+│     wraps the existing SSBApi instance from api.js 1:1
+├── norges-bank-adapter.js   — sourceId 'nb', owns ids prefixed 'nb-'
+│     SDMX REST (data.norges-bank.no) → sources/sdmx-to-jsonstat.js → JSON-Stat2
+└── fhi-adapter.js           — sourceId 'fhi', owns ids prefixed 'fhi-'
+      statistikk-data.fhi.no, JSON-Stat2 native; catalogue enriched from
+      data/sources/fhi-catalog.json (pre-built, see scripts/update-fhi-catalog.mjs)
+```
+
+`sources/source-registry.js` documents the full adapter contract in its header comment. The key points:
+
+- **Registration**: each adapter file pushes one adapter object onto `window.SourceAdapters` before `source-registry.js` runs. `source-registry.js` loads last among `js/sources/*.js` and consumes that list, then **replaces `window.api`** with the facade — so `ssb-adapter.js`'s adapter must exist and be pulled in first for the facade to have an SSB fallback.
+- **Method surface**: every adapter implements the same async methods as `SSBApi` (`getTables`, `getTableMetadata`, `getTableData`, `getCodeList`, `downloadTableData`, `getDefaultSelection`, plus cache introspection). A method a source can't support must still exist — throw or return a degraded value — because the facade never checks before calling.
+- **Routing by table id**: `getTableMetadata`, `getTableData`, `getCodeList`, `downloadTableData`, `getDefaultSelection` are routed to whichever adapter's `ownsTableId(id)` returns true. Foreign adapters (`nb`, `fhi`) are checked first; SSB is the fallback (`ownsTableId` always `true`), so unprefixed ids always land on SSB.
+- **Catalogue aggregation**: `getTables`/`getAllTables` call every *enabled* adapter (per `AppConfig.sources.<id>.enabled`) via `Promise.allSettled` and concatenate the fulfilled results. A source that throws is logged with `logger.warn` and simply omitted — one source being down never breaks the rest of the portal. Server-side search (`options.query`) and "recently updated" (`options.pastDays`) are SSB-only semantics; foreign adapters return `[]` for those calls.
+- **SSB-only methods**: `getConfig()` and the saved-query methods (`saveSavedQuery`, `getSavedQuery`, `getSavedQueryData`) always go straight to the SSB adapter — Norges Bank and FHI have no equivalent concept.
+- **Shared cache**: `cleanupCache`/`clearCache`/`getCacheStats` delegate to the SSB adapter's underlying `CacheManager`, which all adapters actually share — foreign adapters just use different key infixes (`nb_`/`fhi_`) so `cache.js`'s SSB-update-schedule staleness check skips them in favor of a plain 24h TTL.
+- **Catalogue entry shape**: foreign adapters synthesize a `paths[]` array (subject code + a node from `AppConfig.sourceNodes`) so their tables slot into the existing `menu-hierarchy.js` topic tree without any view-layer changes. `AppConfig.sources` (`ssb`/`nb`/`fhi`) holds each source's adapter name, `enabled` flag, and adapter-specific config (Norges Bank's `dataflows`, FHI's `sourceIds`).
+- **Failure isolation**: `nb`/`fhi` adapters treat their own HTTP 404 as an empty result (not an error) since that's how those APIs signal "no observations." A genuinely down foreign source is isolated by the `Promise.allSettled` aggregation above and never blocks SSB.
+
+Enabling more of either source (additional Norges Bank dataflows, additional FHI `sourceIds`) is pure configuration in `AppConfig.sources` plus a `sourceNodes` entry — see [ROADMAP.md](ROADMAP.md) for the current status and the list of what's queued but not yet turned on.
+
 ## What happens when...
 
 ### The user opens the app
@@ -108,11 +145,13 @@ DOMContentLoaded
 ```
 renderFrontPage()
   → BrowserState.init()                        // Lazy: fetches three things in parallel:
-     1. Full table list (~7000 tables)          //   for subject grid and search
-     2. api.getConfig()                         //   server limits → AppConfig.limits.maxCells
-     3. api.getTables({ pastDays: 7 })          //   recently updated tables (small response)
+     1. api.getTables()                         //   full catalogue, aggregated across all enabled
+                                                 //   sources (SSB + Norges Bank + FHI, ~10 000 tables)
+     2. api.getConfig()                         //   server limits → AppConfig.limits.maxCells (SSB-only)
+     3. api.getTables({ pastDays: 7 })          //   recently updated tables — SSB-only semantics;
+                                                 //   foreign adapters return [] for this call
   → _collectRecentUpdateGroups(mh, recentTables)
-     → Uses pre-fetched recentTables when available (avoids scanning all 7000 tables)
+     → Uses pre-fetched recentTables when available (avoids scanning the full table list)
      → Groups by topic node path from each table's paths[] field
      → Buckets: "I dag", "I går"/"Forrige virkedag", "Siste 7 dager"
      → Falls back to walking the full hierarchy tree if pastDays call failed
@@ -123,7 +162,7 @@ renderFrontPage()
 
 ```
 renderSearchView()
-  → BrowserState.init()                    // Lazy: fetch all ~7000 tables, build MenuHierarchy
+  → BrowserState.init()                    // Lazy: fetch full aggregated table list, build MenuHierarchy
   → _handleSearchInput()                   // Debounced (500ms)
      → BrowserState.filterTables()         // Client-side: filter allTables by query + filters
         → If enhanced: SearchEnhanced.buildIndex() (once), then filterAndRank()
@@ -284,6 +323,7 @@ What gets cached:
 - **Codelists** (`codelist_{id}_no`): 7 day TTL, ~1-20KB → localStorage
 - **Query results**: Never cached (each user query is unique)
 - **Server search results** (`tables_no_true_10000_q_{query}`): 24h TTL
+- **Foreign source catalogue/metadata** (`tables_nb_no`, `table_nb-IR_no`, `table_fhi-daar-344_no`, ...): same CacheManager, key infix `nb_`/`fhi_`; plain 24h TTL (the SSB-update-schedule staleness check below is skipped for these keys — see "Multi-source architecture")
 
 ## URL state encoding
 
@@ -307,7 +347,7 @@ The `v`, `c`, and `l` parameters are JSON objects encoded as URL-safe Base64:
 
 ## SSB API integration
 
-All API calls go through `SSBApi` (api.js) which enforces 100ms minimum spacing between requests (SSB rate limit: 30/min). The API follows the [PxWebApi v2 spec](https://github.com/PxTools/PxApiSpecs/blob/master/PxAPI-2.yml).
+Every call from the app goes through `window.api`, the multi-source facade built by `sources/source-registry.js` (see "Multi-source architecture" above); this section covers the SSB leg specifically, which is the one implemented directly in `api.js`/`ssb-adapter.js` and used as the fallback for any table id without a foreign prefix. `SSBApi` (api.js) enforces 100ms minimum spacing between requests (SSB rate limit: 30/min). The API follows the [PxWebApi v2 spec](https://github.com/PxTools/PxApiSpecs/blob/master/PxAPI-2.yml). Norges Bank (SDMX REST, `data.norges-bank.no`) and FHI (JSON-Stat2-native, `statistikk-data.fhi.no`) have their own endpoint shapes, documented in the header comments of `sources/norges-bank-adapter.js` and `sources/fhi-adapter.js` respectively.
 
 ```
 GET  /config                          — API limits and capabilities (cached 24h)

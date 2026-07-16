@@ -1,11 +1,13 @@
 # Statistikkportalen
 Statistikkportalen er et uoffisielt grensesnitt som forbedrer tilgangen til SSBs data. Applikasjonen gir rask navigering gjennom lokal caching, et kompakt grensesnitt for å minimere scrolling, og enklere oppdagelse av tabeller gjennom menynavigering.
 
-Applikasjonen kan tilpasses andre systemer som bruker PxWebApi v2, eksempelvis SCBs statistikkbank. Det krever kun at tre filer byttes ut: `config.js` (API-URL, kilde, språk), `subjects.js` (emnehierarki) og `synonyms.js` (søkesynonymer).
+Fra og med **Statistikkportalen 2.0** er appen en multi-kilde-hub: i tillegg til SSB integrerer den også **Norges Bank** (renter, valutakurser) og **FHI** (Folkehelseinstituttet) via en kildeadapter i `js/sources/`, slik at tabeller fra alle tre kildene dukker opp side om side i samme emnehierarki og søk. Se [ROADMAP.md](ROADMAP.md) for hva som er aktivert og hva som gjenstår.
+
+Applikasjonen kan i tillegg tilpasses andre systemer som bruker PxWebApi v2, eksempelvis SCBs statistikkbank. Det krever kun at tre filer byttes ut: `config.js` (API-URL, kilde, språk), `subjects.js` (emnehierarki) og `synonyms.js` (søkesynonymer) — se `config-sv.js`/`subjects-sv.js` for et fungerende eksempel på SCB-varianten.
 
 ## Funksjonalitet
 1. **Oppdag tabeller raskt og enkelt**
-   - Søk gjennom alle SSBs tilgjengelige tabeller
+   - Søk gjennom alle tilgjengelige tabeller — SSB, Norges Bank og FHI i samme søk og emnehierarki
    - Filtrer etter emne og frekvens
    - Oversiktlige kort med metadata (periode, oppdateringsdato, antall variabler)
 
@@ -47,12 +49,17 @@ Applikasjonen kan tilpasses andre systemer som bruker PxWebApi v2, eksempelvis S
    - Intelligent caching av API-kall i localStorage
    - Automatisk opprydding av utdaterte data
 
-8. **Lagrede spørringer**
+8. **Lagrede spørringer** (kun SSB-tabeller)
    - Lagre spørringer som kan gjenfinnes med lenke
    - Åpne en SSB-spørring ved å lime lenken inn i søkefeltet
 
 9. **Smart søk (beta)**
    - Finn flere tabeller enn ved den vanlige søkemodusen
+   - Synonymutvidelse (f.eks. «bnp» finner også «bruttonasjonalprodukt») og enkel fuzzy-fallback ved null treff
+
+10. **Flerspråklig grensesnitt**
+    - Norsk bokmål og engelsk (SCB-varianten: svensk og engelsk)
+    - Språkvalg lagres i nettleseren og huskes til neste besøk
 
 ## Kom i gang
 1. Åpne `index.html` i en moderne nettleser
@@ -99,3 +106,4 @@ metadatafilene kan være gamle, hentes tidsperiode og oppdatert-dato alltid fra 
 Denne koden er lisensiert under [MIT-lisens](LICENCE.md).
 Data fra Statistisk sentralbyrå er lisensiert under [CC BY 4.0](https://www.ssb.no/diverse/lisens).
 Data fra Statistiska centralbyrån er lisensiert under [CC0](https://www.scb.se/en/services/open-data-api/).
+Data fra Norges Bank og Folkehelseinstituttet (FHI) hentes fra deres respektive åpne API-er og er underlagt disse etatenes egne vilkår for viderebruk.
