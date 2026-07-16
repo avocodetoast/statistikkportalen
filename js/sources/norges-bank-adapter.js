@@ -227,11 +227,17 @@
   }
 
   /**
-   * Hent seriedim-navn + TIME_PERIOD-vindu via en FREQ=B data-probe.
-   * Returnerer { dimLabels:{id:name}, timeValues:[{id,name}], timeLabel }.
-   * Prøver FREQ=B (rene virkedagsperioder); faller tilbake til /all om tomt.
+   * Hent seriedim-navn + TIME_PERIOD-vindu via data-prober.
+   *
+   * SDMX-tidskoder er FREKVENSSPESIFIKKE (B → '2025-07-15', M → '2025-07',
+   * A → '2025'), så tidsvinduet probes pr. frekvens som faktisk har data
+   * (freqCodes fra serieskeysonly-proben). Uten freqCodes probes FREQ=B med
+   * fallback til /all som før.
+   *
+   * Returnerer { dimLabels:{id:name}, timeValues:[{id,name}] (union, stigende),
+   *              timeLabel, byFreq:{freqCode:[periodekoder]}|null }.
    */
-  async function probeTime(flow, nSeriesDims, locale) {
+  async function probeTime(flow, nSeriesDims, locale, freqCodes) {
     async function run(key) {
       const url = BASE + '/data/' + encodeURIComponent(flow.flow) + '/' + key +
         '?format=sdmx-json&lastNObservations=' + TIME_PROBE_N + '&locale=' + locale;
@@ -240,34 +246,64 @@
       return json;
     }
 
-    // Nøkkel «B» + tomme segmenter for resten (FREQ er alltid dim 0).
-    const bKey = 'B' + '.'.repeat(Math.max(0, nSeriesDims - 1));
+    /** Trekk ut dim-navn + tidsverdier fra ett datasvar (dedupet, stigende, siste N). */
+    function extract(json) {
+      const struct = pickStructure(json);
+      const dims = struct && struct.dimensions;
+      const timeDim = dims && (dims.observation || [])[0];
+      if (!timeDim) return null;
+      const dimLabels = {};
+      (dims.series || []).forEach(d => { dimLabels[d.id] = d.name || d.id; });
+      dimLabels[timeDim.id] = timeDim.name || timeDim.id;
+      const seen = {};
+      (timeDim.values || []).forEach(v => { seen[v.id] = v.name || v.id; });
+      const values = Object.keys(seen)
+        .sort((a, b) => a.localeCompare(b))
+        .slice(-TIME_PROBE_N)
+        .map(pid => ({ id: pid, name: seen[pid] }));
+      return { dimLabels, timeLabel: timeDim.name || null, values };
+    }
+
+    const tail = '.'.repeat(Math.max(0, nSeriesDims - 1));
+    const result = { dimLabels: {}, timeValues: [], timeLabel: 'Tidsperiode', byFreq: null };
+
+    // Frekvensbevisst probing: ett kall pr. faktisk frekvens, parallelt.
+    const freqs = Array.isArray(freqCodes) ? freqCodes.filter(Boolean) : [];
+    if (freqs.length) {
+      const jsons = await Promise.all(freqs.map(f => run(f + tail).catch(() => null)));
+      const byFreq = {};
+      const union = {};
+      jsons.forEach((json, i) => {
+        if (!hasObservations(json)) return;
+        const ex = extract(json);
+        if (!ex || !ex.values.length) return;
+        Object.assign(result.dimLabels, ex.dimLabels);
+        if (ex.timeLabel && result.timeLabel === 'Tidsperiode') result.timeLabel = ex.timeLabel;
+        byFreq[freqs[i]] = ex.values.map(v => v.id);
+        ex.values.forEach(v => { union[v.id] = v.name; });
+      });
+      if (Object.keys(byFreq).length) {
+        result.byFreq = byFreq;
+        result.timeValues = Object.keys(union)
+          .sort((a, b) => a.localeCompare(b))
+          .map(pid => ({ id: pid, name: union[pid] }));
+        return result;
+      }
+    }
+
+    // Fallback: nøkkel «B» + tomme segmenter (FREQ er alltid dim 0); så /all.
     let json = null;
-    try { json = await run(bKey); } catch (e) { json = null; }
+    try { json = await run('B' + tail); } catch (e) { json = null; }
     if (!hasObservations(json)) {
       try { json = await run('all'); } catch (e) { json = null; }
     }
-
-    const dimLabels = {};
-    let timeValues = [];
-    let timeLabel = 'Tidsperiode';
-    const struct = json && json.data && json.data.structure && json.data.structure.dimensions;
-    if (struct) {
-      (struct.series || []).forEach(d => { dimLabels[d.id] = d.name || d.id; });
-      const timeDim = (struct.observation || [])[0];
-      if (timeDim) {
-        timeLabel = timeDim.name || timeLabel;
-        dimLabels[timeDim.id] = timeDim.name || timeDim.id;
-        // Dedupe + sorter stigende + behold de nyeste TIME_PROBE_N.
-        const seen = {};
-        (timeDim.values || []).forEach(v => { seen[v.id] = v.name || v.id; });
-        timeValues = Object.keys(seen)
-          .sort((a, b) => a.localeCompare(b))
-          .slice(-TIME_PROBE_N)
-          .map(pid => ({ id: pid, name: seen[pid] }));
-      }
+    const ex = json ? extract(json) : null;
+    if (ex) {
+      result.dimLabels = ex.dimLabels;
+      if (ex.timeLabel) result.timeLabel = ex.timeLabel;
+      result.timeValues = ex.values;
     }
-    return { dimLabels, timeValues, timeLabel };
+    return result;
   }
 
   function hasObservations(json) {
@@ -402,11 +438,12 @@
       dsd.dataStructureComponents.dimensionList &&
       (dsd.dataStructureComponents.dimensionList.dimensions || []).length || 0;
 
-    // 2) TIME_PERIOD-probe (+ friendly dim-navn) og serieskeysonly-probe parallelt.
-    const [probe, seriesKeys] = await Promise.all([
-      probeTime(flow, nSeriesDims, locale),
-      fetchSeriesKeys(flow)
-    ]);
+    // 2) serieskeysonly-probe FØRST (de faktiske frekvensene styrer tidsprobene),
+    //    deretter TIME_PERIOD-probe pr. frekvens (tidskodene er frekvensspesifikke:
+    //    B → '2025-07-15', M → '2025-07', A → '2025').
+    const seriesKeys = await fetchSeriesKeys(flow);
+    const freqCodes = (seriesKeys && seriesKeys.seriesValues && seriesKeys.seriesValues.FREQ) || null;
+    const probe = await probeTime(flow, nSeriesDims, locale, freqCodes);
 
     const meta = window.SdmxToJsonStat.structureToMetadata(dsdRes.json, flow, {
       lang: locale,
@@ -424,6 +461,15 @@
     if (seriesKeys && Array.isArray(seriesKeys.keys) && seriesKeys.keys.length) {
       meta.extension = meta.extension || {};
       meta.extension.validKeys = { dims: seriesKeys.dims, keys: seriesKeys.keys };
+    }
+
+    // Frekvens → tilgjengelige tidsperioder, for frekvensbevisst tidsliste i
+    // UI-en (variable-select applyTimeFreqFilter): daglige datoer gir aldri
+    // treff for FREQ=A/M, så tidslisten må følge valgt frekvens.
+    if (probe.byFreq && meta.id.includes('FREQ')) {
+      const timeId = (meta.role && meta.role.time && meta.role.time[0]) || 'TIME_PERIOD';
+      meta.extension = meta.extension || {};
+      meta.extension.timePeriodsByFreq = { freqDim: 'FREQ', timeDim: timeId, byFreq: probe.byFreq };
     }
 
     // Datatorg-beskrivelse → Tabellinfo (meta.note er en streng-array).

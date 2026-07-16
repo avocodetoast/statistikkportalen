@@ -203,6 +203,92 @@ function applyCrossFilter() {
 }
 
 // ============================================================
+// Frequency-aware time period filtering (generic, source-agnostic)
+// ============================================================
+//
+// When the metadata carries extension.timePeriodsByFreq — { freqDim, timeDim,
+// byFreq: {freqCode: [periodCodes]} }, currently produced by the Norges Bank
+// adapter — the time dimension's value list is limited to the periods that
+// actually exist for the selected frequency. SDMX time codes are
+// frequency-specific ('2025-07-15' daily vs '2025-07' monthly vs '2025'
+// annual), so without this a daily date selected together with FREQ=A can
+// never match any data. Absent for SSB/FHI → no-op.
+
+/** Return the timePeriodsByFreq spec if present and applicable, else null. */
+function getTimeFreqSpec() {
+  const s = tableMetadata && tableMetadata.extension && tableMetadata.extension.timePeriodsByFreq;
+  if (!s || !s.freqDim || !s.timeDim || !s.byFreq) return null;
+  return s;
+}
+
+/**
+ * Limit the time dimension's value list to periods available for the selected
+ * frequency: incompatible periods are hidden (value-freq-hidden) + disabled,
+ * and auto-deselected if they were selected. No frequency selection (or
+ * star/top mode on the frequency card) means no constraint — all periods show.
+ */
+function applyTimeFreqFilter() {
+  const spec = getTimeFreqSpec();
+  if (!spec) return;
+
+  const timeCard = document.querySelector('.variable-card[data-dimension="' + spec.timeDim + '"]');
+  const timeContainer = timeCard && timeCard.querySelector('.value-list-container');
+  if (!timeContainer) return;
+
+  // Read the frequency selection (specific mode only — star/top = no constraint).
+  const freqCard = document.querySelector('.variable-card[data-dimension="' + spec.freqDim + '"]');
+  const freqContainer = freqCard && freqCard.querySelector('.value-list-container');
+  let freqCodes = null;
+  if (freqContainer && freqContainer.dataset.mode === 'specific') {
+    const sel = Array.from(freqContainer.querySelectorAll('.value-list-item.selected'))
+      .map(it => it.dataset.code);
+    if (sel.length) freqCodes = sel;
+  }
+  if (!freqCodes) freqCodes = Object.keys(spec.byFreq);
+
+  // Union of period codes across the effective frequencies. A selected
+  // frequency without a probed period list (adapter probe failed) makes the
+  // constraint unknowable — degrade to showing everything rather than nothing.
+  const allowed = new Set();
+  let unknownFreq = false;
+  freqCodes.forEach(f => {
+    const codes = spec.byFreq[f];
+    if (Array.isArray(codes)) codes.forEach(c => allowed.add(String(c)));
+    else unknownFreq = true;
+  });
+
+  timeContainer.querySelectorAll('.value-list-item').forEach(item => {
+    const ok = unknownFreq || allowed.has(item.dataset.code);
+    item.classList.toggle('value-freq-hidden', !ok);
+    item.classList.toggle('value-disabled', !ok);
+    if (ok) {
+      item.removeAttribute('aria-disabled');
+    } else {
+      item.setAttribute('aria-disabled', 'true');
+      item.classList.remove('selected'); // auto-deselect incompatible period
+    }
+  });
+
+  // Keep the visible total + the time-format hint in the filter placeholder in
+  // sync with the periods actually shown (e.g. '2025' for annual, '2025-07' monthly).
+  const totalEl = timeCard.querySelector('.total-count');
+  if (totalEl) {
+    totalEl.textContent =
+      timeContainer.querySelectorAll('.value-list-item:not(.value-freq-hidden)').length;
+  }
+  if (!unknownFreq && allowed.size > 0) {
+    const input = timeCard.querySelector('.value-filter-input');
+    if (input && typeof tpl === 'function') {
+      const sample = Array.from(allowed).sort().slice(-1)[0];
+      const hint = tpl('variable.timeFormatHint', sample);
+      if (hint) input.placeholder = hint;
+    }
+  }
+
+  updateValueCounter(timeCard);
+}
+
+// ============================================================
 // Selection status and validation
 // ============================================================
 
@@ -223,8 +309,10 @@ function setCardStatus(card, status) {
  * Also updates per-card summaries and the API query preview.
  */
 function updateSelectionStatus() {
-  // Cross-filter first (may auto-deselect incompatible values) so the selection
-  // read below already reflects the muted state. No-op without extension.validKeys.
+  // Frequency-aware time filter + cross-filter first (both may auto-deselect
+  // incompatible values) so the selection read below already reflects the
+  // muted/hidden state. No-ops without the respective metadata extensions.
+  applyTimeFreqFilter();
   const crossFilter = applyCrossFilter();
 
   const selection = getVariableSelection();
@@ -553,8 +641,10 @@ function getVariableSelection() {
 
       // Time dimensions: restore chronological order (oldest first).
       // The UI shows newest first for convenience, but the API and table
-      // display expect chronological order.
-      const isTimeDim = dimCode === 'Tid' || dimCode.toLowerCase().includes('tid');
+      // display expect chronological order. Recognize both SSB's 'Tid' and
+      // role.time dims (e.g. Norges Bank's 'TIME_PERIOD').
+      const isTimeDim = dimCode === 'Tid' || dimCode.toLowerCase().includes('tid') ||
+        ((tableMetadata?.role?.time || []).includes(dimCode));
       if (isTimeDim && tableMetadata?.dimension[dimCode]?.category?.index) {
         const indexMap = tableMetadata.dimension[dimCode].category.index;
         values.sort((a, b) => (indexMap[a] ?? 0) - (indexMap[b] ?? 0));
