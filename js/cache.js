@@ -484,6 +484,62 @@ class CacheManager {
   }
 
   /**
+   * Retrieve the raw cache entry WITHOUT deleting anything — including
+   * expired and schedule-stale entries. Used for stale-if-error fallback:
+   * when a source's network fetch fails, an expired catalogue copy is
+   * better than nothing.
+   *
+   * @param {string} key - Cache key
+   * @returns {Promise<{value:any, stored:number, expires:number, expired:boolean, fresh:boolean}|null>}
+   *   `fresh` is false when the entry is expired OR (for SSB-owned keys)
+   *   stale by the SSB update schedule — i.e. a normal get() would refetch.
+   */
+  async getEntry(key) {
+    try {
+      let item = null;
+
+      // IndexedDB path (via _ref) — _getRaw is non-destructive
+      const refKey = this.prefix + key + '_ref';
+      const ref = localStorage.getItem(refKey);
+      if (ref) {
+        try {
+          const refData = JSON.parse(ref);
+          if (refData.storage === 'indexeddb') {
+            await this._initPromise;
+            item = await this.indexedDBCache._getRaw(key);
+          }
+        } catch (e) {
+          item = null;
+        }
+      }
+
+      if (!item) {
+        const itemStr = localStorage.getItem(this.prefix + key);
+        if (!itemStr) return null;
+        item = JSON.parse(itemStr);
+      }
+
+      if (!item || item.value === undefined) return null;
+
+      const expired = Date.now() > item.expires;
+      const scheduleStale = !!(item.stored &&
+        !this._isForeignSourceKey(key) &&
+        this._isStaleBySSBSchedule(item.stored));
+
+      return {
+        value: item.value,
+        stored: item.stored,
+        expires: item.expires,
+        expired: expired,
+        fresh: !expired && !scheduleStale
+      };
+    } catch (error) {
+      logger.error('[Cache] Failed to read entry:', key, error);
+      return null;
+    }
+  }
+
+  /**
    * Delete a specific cache entry (from both storages)
    * @param {string} key - Cache key
    */
@@ -533,6 +589,41 @@ class CacheManager {
       await this.indexedDBCache.clear();
     } catch (error) {
       logger.error('[Cache] Failed to clear cache:', error);
+    }
+  }
+
+  /**
+   * Clear all cache entries belonging to one source ('ssb'|'nb'|'fhi').
+   * Speiler _isForeignSourceKey: nb/fhi-nøkler inneholder kildesegmentet,
+   * SSB eier alt annet. delete() håndterer IndexedDB via _ref-nøklene, så
+   * skannet over localStorage dekker begge lagre.
+   * @returns {Promise<number>} antall slettede nøkler
+   */
+  async clearForSource(sourceId) {
+    try {
+      const matchesSource = (key) => {
+        const foreign = this._isForeignSourceKey(key);
+        if (sourceId === 'ssb') return !foreign;
+        if (sourceId === 'nb') return key.includes('nb-') || key.includes('nb_');
+        if (sourceId === 'fhi') return key.includes('fhi-') || key.includes('fhi_');
+        return false;
+      };
+
+      const unprefixed = Object.keys(localStorage)
+        .filter(k => k.startsWith(this.prefix))
+        .map(k => k.slice(this.prefix.length))
+        .map(k => k.endsWith('_ref') ? k.slice(0, -'_ref'.length) : k);
+
+      const toDelete = [...new Set(unprefixed)].filter(matchesSource);
+      for (const key of toDelete) {
+        await this.delete(key);
+      }
+
+      logger.log('[Cache] Cleared ' + toDelete.length + ' entries for source: ' + sourceId);
+      return toDelete.length;
+    } catch (error) {
+      logger.error('[Cache] Failed to clear source cache:', sourceId, error);
+      return 0;
     }
   }
 
@@ -589,12 +680,23 @@ class CacheManager {
   }
 
   /**
-   * Clean up expired entries
+   * Clean up expired entries.
+   *
+   * Katalognøkler ('tables_…', både SSB og FHI) beholdes i et
+   * retensjonsvindu (AppConfig.cache.staleRetentionMs, fallback 7 dager)
+   * ETTER utløp, slik at stale-if-error-fallbacken i getEntry() har noe å
+   * servere når kilden er nede — cleanup kjøres ved oppstart, FØR
+   * katalogene hentes.
    */
   cleanup() {
     try {
       const keys = Object.keys(localStorage)
         .filter(k => k.startsWith(this.prefix) && !k.endsWith('_ref'));
+
+      const retentionMs = (typeof AppConfig !== 'undefined' &&
+        AppConfig.cache && AppConfig.cache.staleRetentionMs)
+        ? AppConfig.cache.staleRetentionMs
+        : 7 * 24 * 60 * 60 * 1000;
 
       let removedCount = 0;
 
@@ -603,7 +705,10 @@ class CacheManager {
           const itemStr = localStorage.getItem(k);
           const item = JSON.parse(itemStr);
 
-          if (Date.now() > item.expires) {
+          const isCatalogueKey = k.slice(this.prefix.length).startsWith('tables_');
+          const deadline = isCatalogueKey ? item.expires + retentionMs : item.expires;
+
+          if (Date.now() > deadline) {
             localStorage.removeItem(k);
             removedCount++;
           }

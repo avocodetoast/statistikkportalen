@@ -321,40 +321,82 @@
 
   // ---- Katalog per kilde (cached) ----
 
-  async function getSourceTableList(source) {
+  /**
+   * Hent tabell-listen for én delkilde med cache- og stale-håndtering.
+   * !force + fersk cache → cachet liste. Ellers nettverk; ved nettverksfeil
+   * serveres en (utløpt) cachet kopi som stale fallback hvis den finnes,
+   * ellers kastes feilen (fanges per delkilde av allSettled i getTables).
+   * @returns {Promise<{list:Array, fromCache:boolean, stale:boolean, fetchedAt:number}>}
+   */
+  async function fetchSourceTableList(source, force) {
     const key = 'tables_fhi_' + source;
-    const cached = await cacheGet(key);
-    if (cached) return cached;
-    const rows = await fetchJson(BASE + '/' + encodeURIComponent(source) + '/table', { headers: JSON_HEADERS });
-    const list = rows || [];
-    await cacheSet(key, list);
-    return list;
+    const c = cache();
+    let entry = null;
+    if (c && typeof c.getEntry === 'function') {
+      try { entry = await c.getEntry(key); } catch (e) { entry = null; }
+    }
+    if (!force && entry && entry.fresh) {
+      return { list: entry.value, fromCache: true, stale: false, fetchedAt: entry.stored };
+    }
+    try {
+      const rows = await fetchJson(BASE + '/' + encodeURIComponent(source) + '/table', { headers: JSON_HEADERS });
+      const list = rows || [];
+      await cacheSet(key, list);
+      return { list: list, fromCache: false, stale: false, fetchedAt: Date.now() };
+    } catch (e) {
+      if (entry && Array.isArray(entry.value)) {
+        logger.warn('[FHIAdapter] Kilde «' + source + '» nede — serverer eldre cachet liste (' +
+                    entry.value.length + ' tabeller):', e);
+        return { list: entry.value, fromCache: true, stale: true, fetchedAt: entry.stored };
+      }
+      throw e;
+    }
   }
 
-  async function buildSourceCatalogue(source, titleMap, lang) {
-    const rows = await getSourceTableList(source); // kaster ved nettverksfeil → fanges av allSettled i getTables
+  async function getSourceTableList(source) {
+    return (await fetchSourceTableList(source, false)).list;
+  }
+
+  async function buildSourceCatalogue(source, titleMap, lang, force) {
+    const fetched = await fetchSourceTableList(source, force); // kaster ved nettverksfeil uten cache → fanges av allSettled i getTables
+    const rows = fetched.list;
     const catalog = await getCatalog(); // null hvis fila mangler/feiler — se getCatalog
     const catRows = (catalog && catalog.sources && catalog.sources[source] && catalog.sources[source].tables) || [];
     const catById = new Map(catRows.map(t => [String(t.tableId), t]));
 
     const nodes = (window.AppConfig && window.AppConfig.sourceNodes) || {};
     const subjectNames = (window.SubjectConfig && window.SubjectConfig.subjectNames) || {};
-    const nodeId = 'fhi-' + source;
-    const node = nodes[nodeId] || {};
 
-    const subjectSeg = {
-      id: SUBJECT_ID,
-      label: pickLabel(subjectNames[SUBJECT_ID], lang) || SUBJECT_ID,
-      sortCode: SUBJECT_SORTCODE[SUBJECT_ID] || '0009999'
-    };
-    const nodeSeg = {
-      id: nodeId,
-      label: pickLabel(node.label, lang) || nodeId,
-      sortCode: node.sortCode || '999'
-    };
+    // En delkilde kan plasseres flere steder i emnetreet via
+    // AppConfig.sources.fhi.paths[source] = [[subjektkode, node-id], …];
+    // default er én plassering under 'he' med den kildespesifikke noden.
+    // Subjektkoder må finnes i subjects.js (subjectNames + en gruppe) og
+    // node-id-er i AppConfig.sourceNodes, ellers rendres ikke plasseringen.
+    const placements = (cfg.paths && Array.isArray(cfg.paths[source]) && cfg.paths[source].length)
+      ? cfg.paths[source]
+      : [[SUBJECT_ID, 'fhi-' + source]];
+    const subjectCode = placements[0][0];
+
+    const paths = placements.map(p => {
+      const subjId = p[0];
+      const nodeId = p[1];
+      const node = nodes[nodeId] || {};
+      return [
+        {
+          id: subjId,
+          label: pickLabel(subjectNames[subjId], lang) || subjId,
+          sortCode: SUBJECT_SORTCODE[subjId] || '0009999'
+        },
+        {
+          id: nodeId,
+          label: pickLabel(node.label, lang) || nodeId,
+          sortCode: node.sortCode || '999'
+        }
+      ];
+    });
     const sourceTitle = titleMap[source] || source;
 
-    return (rows || []).map(row => {
+    const tables = (rows || []).map(row => {
       // Katalogoppføringen (data/sources/fhi-catalog.json) gir en tittel
       // utledet fra tabellens metadata-sammendrag der API-tittelen bare er et
       // internt kodenavn (f.eks. «D10b_selvmord» → «Dødsfall med
@@ -398,17 +440,23 @@
         // norges-bank-adapter.js (jf. subjectCode der) og av SSBs eget API.
         // Uten dette havner FHI-tabeller i «other»-bøtta og filtrerte søk på
         // emnet «Helse og samfunn» ekskluderer dem feilaktig.
-        subjectCode: SUBJECT_ID,
-        paths: [[subjectSeg, nodeSeg]],
+        subjectCode: subjectCode,
+        paths: paths,
         source: 'FHI/' + sourceTitle
       };
     });
+
+    return {
+      tables: tables,
+      meta: { fromCache: fetched.fromCache, stale: fetched.stale, fetchedAt: fetched.fetchedAt }
+    };
   }
 
   async function getTables(options) {
     const opts = options || {};
     // Server-søk / nylig-oppdaterte er SSB-only semantikk.
     if (opts.query || opts.pastDays) return { tables: [] };
+    const force = opts.useCache === false;
 
     const lang = currentLang();
     const titleMap = await getSourceTitles();
@@ -416,18 +464,39 @@
     // Promise.allSettled PER FHI-kilde (nokkel/mfr/daar …) — én kilde nede
     // (f.eks. mfr) skal ikke hindre at nokkel/daar vises i katalogen.
     const settled = await Promise.allSettled(
-      SOURCE_IDS.map(source => buildSourceCatalogue(source, titleMap, lang))
+      SOURCE_IDS.map(source => buildSourceCatalogue(source, titleMap, lang, force))
     );
 
     const tables = [];
+    const metas = [];
+    const failed = [];
     settled.forEach((r, i) => {
       if (r.status === 'fulfilled') {
-        tables.push.apply(tables, r.value);
+        tables.push.apply(tables, r.value.tables);
+        metas.push(r.value.meta);
       } else {
+        failed.push(SOURCE_IDS[i]);
         logger.warn('[FHIAdapter] Kilde «' + SOURCE_IDS[i] + '» feilet under getTables (hoppes over):', r.reason);
       }
     });
-    return { tables: tables };
+
+    // Adapterkontrakten (source-registry.js): en kilde HELT uten data skal
+    // kaste, slik at fasadens allSettled ser kilden som feilet i stedet for
+    // en stille tom katalog.
+    if (SOURCE_IDS.length > 0 && failed.length === SOURCE_IDS.length) {
+      const reasons = settled
+        .map((r, i) => SOURCE_IDS[i] + ': ' + ((r.reason && r.reason.message) || r.reason))
+        .join('; ');
+      throw new Error('[FHIAdapter] Alle FHI-kilder feilet: ' + reasons);
+    }
+
+    const sourceMeta = {
+      fromCache: metas.length > 0 && metas.every(m => m.fromCache),
+      stale: metas.some(m => m.stale),
+      fetchedAt: metas.reduce((max, m) => Math.max(max, m.fetchedAt || 0), 0) || Date.now()
+    };
+    if (failed.length) sourceMeta.partial = failed;
+    return { tables: tables, sourceMeta: sourceMeta };
   }
 
   // ---- Metadata ----
