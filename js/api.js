@@ -74,8 +74,12 @@ class SSBApi {
    * Fetch all tables across all pages and return a merged result.
    * Uses the same cache key as getTables() so cached results are shared.
    *
+   * Stale-if-error: når nettverket feiler og en (utløpt) cachet kopi finnes,
+   * serveres den i stedet, markert med sourceMeta.stale — kilderegistryet
+   * viser dette i statuspanelet. sourceMeta caches aldri.
+   *
    * @param {object} options - Same options as getTables() (query, lang, includeDiscontinued, pastDays, useCache)
-   * @returns {Promise<object>} - { tables: [...all tables] }
+   * @returns {Promise<object>} - { tables, sourceMeta: { fromCache, stale, fetchedAt, error? } }
    */
   async getAllTables(options = {}) {
     const {
@@ -92,44 +96,61 @@ class SSBApi {
     const cacheKey = 'tables_' + resolvedLang + '_' + includeDiscontinued + '_' + pageSize +
                      (query ? '_q_' + query : '') +
                      (pastDays ? '_pd_' + pastDays : '');
-    if (useCache) {
-      const cached = await this.cache.get(cacheKey);
-      if (cached) {
-        logger.log('[API] Using cached table list (' + (cached.tables ? cached.tables.length : 0) + ' tables)');
-        return cached;
-      }
+    const entry = await this.cache.getEntry(cacheKey);
+    if (useCache && entry && entry.fresh) {
+      const cached = entry.value;
+      logger.log('[API] Using cached table list (' + (cached.tables ? cached.tables.length : 0) + ' tables)');
+      return {
+        tables: cached.tables,
+        sourceMeta: { fromCache: true, stale: false, fetchedAt: entry.stored }
+      };
     }
 
-    // Fetch first page
-    const firstPage = await this.getTables({ query, includeDiscontinued, lang: resolvedLang, pageSize, pastDays, useCache: false });
-    const allTables = firstPage.tables ? [...firstPage.tables] : [];
-    const totalPages = firstPage.page ? firstPage.page.totalPages : 1;
+    try {
+      // Fetch first page
+      const firstPage = await this.getTables({ query, includeDiscontinued, lang: resolvedLang, pageSize, pastDays, useCache: false });
+      const allTables = firstPage.tables ? [...firstPage.tables] : [];
+      const totalPages = firstPage.page ? firstPage.page.totalPages : 1;
 
-    logger.log('[API] Tables: page 1/' + totalPages + ', got ' + allTables.length + ' tables');
+      logger.log('[API] Tables: page 1/' + totalPages + ', got ' + allTables.length + ' tables');
 
-    // Fetch remaining pages if needed
-    if (totalPages > 1) {
-      for (let pageNumber = 2; pageNumber <= totalPages; pageNumber++) {
-        try {
-          const pageResult = await this.getTables({
-            query, includeDiscontinued, lang: resolvedLang, pageSize, pastDays, useCache: false,
-            pageNumber
-          });
-          const batch = pageResult.tables || [];
-          allTables.push(...batch);
-          logger.log('[API] Tables: page ' + pageNumber + '/' + totalPages + ', got ' + batch.length + ' tables (total so far: ' + allTables.length + ')');
-        } catch (error) {
-          logger.error('[API] Pagination failed at page ' + pageNumber + '/' + totalPages +
-                       ' (' + allTables.length + ' tables fetched before failure)');
-          throw error;
+      // Fetch remaining pages if needed
+      if (totalPages > 1) {
+        for (let pageNumber = 2; pageNumber <= totalPages; pageNumber++) {
+          try {
+            const pageResult = await this.getTables({
+              query, includeDiscontinued, lang: resolvedLang, pageSize, pastDays, useCache: false,
+              pageNumber
+            });
+            const batch = pageResult.tables || [];
+            allTables.push(...batch);
+            logger.log('[API] Tables: page ' + pageNumber + '/' + totalPages + ', got ' + batch.length + ' tables (total so far: ' + allTables.length + ')');
+          } catch (error) {
+            logger.error('[API] Pagination failed at page ' + pageNumber + '/' + totalPages +
+                         ' (' + allTables.length + ' tables fetched before failure)');
+            throw error;
+          }
         }
       }
-    }
 
-    const result = { tables: allTables };
-    await this.cache.set(cacheKey, result, AppConfig.cache.tableListTTL);
-    logger.log('[API] Fetched all ' + allTables.length + ' tables across ' + totalPages + ' page(s)');
-    return result;
+      const result = { tables: allTables };
+      await this.cache.set(cacheKey, result, AppConfig.cache.tableListTTL);
+      logger.log('[API] Fetched all ' + allTables.length + ' tables across ' + totalPages + ' page(s)');
+      return {
+        tables: allTables,
+        sourceMeta: { fromCache: false, stale: false, fetchedAt: Date.now() }
+      };
+    } catch (error) {
+      if (entry && entry.value && Array.isArray(entry.value.tables)) {
+        logger.warn('[API] Table list fetch failed — serving stale cached copy (' +
+                    entry.value.tables.length + ' tables):', error.message || error);
+        return {
+          tables: entry.value.tables,
+          sourceMeta: { fromCache: true, stale: true, fetchedAt: entry.stored, error: error.message || String(error) }
+        };
+      }
+      throw error;
+    }
   }
 
   /**

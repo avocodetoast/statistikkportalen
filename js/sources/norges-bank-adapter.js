@@ -12,6 +12,8 @@
  *   .baseUrl    // 'https://data.norges-bank.no/api'
  *   .enabled    // hopp over registrering hvis false
  *   .dataflows  // [{ flow, version, tableId, path, label:{nb,en} }]
+ *               // path: ['bf','nb-renter'] = én emnetre-plassering; alternativt
+ *               // paths: [['bf','nb-renter'], …] for flere plasseringer.
  * Kjerneutvalg: EXR, IR, SHORT_RATES, GOVT_GENERIC_RATES.
  *
  *   Datastruktur : GET /datastructure/NB/DSD_{FLOW}?references=codelist&format=sdmx-json
@@ -156,21 +158,28 @@
     const nodes = (window.AppConfig && window.AppConfig.sourceNodes) || {};
     const subjectNames = (window.SubjectConfig && window.SubjectConfig.subjectNames) || {};
 
-    return dataflows.map((flow, i) => {
-      const subjectId = flow.path[0];
-      const nodeId = flow.path[1];
+    const makeSubjectSeg = (subjectId) => ({
+      id: subjectId,
+      label: pickLabel(subjectNames[subjectId], lang) || subjectId,
+      sortCode: SUBJECT_SORTCODE[subjectId] || '0009999'
+    });
+    const makeNodeSeg = (nodeId) => {
       const node = nodes[nodeId] || {};
-
-      const subjectSeg = {
-        id: subjectId,
-        label: pickLabel(subjectNames[subjectId], lang) || subjectId,
-        sortCode: SUBJECT_SORTCODE[subjectId] || '0009999'
-      };
-      const nodeSeg = {
+      return {
         id: nodeId,
         label: pickLabel(node.label, lang) || nodeId,
         sortCode: node.sortCode || '999'
       };
+    };
+
+    return dataflows.map((flow, i) => {
+      // En flow kan plasseres flere steder i emnetreet via `paths` (array av
+      // [subjektkode, node-id]-par); legacy-formen `path` gir én plassering.
+      // Emnesubjekt/node-id-ene må finnes i subjects.js/AppConfig.sourceNodes.
+      const placements = (Array.isArray(flow.paths) && flow.paths.length)
+        ? flow.paths
+        : [flow.path];
+      const subjectId = placements[0][0];
 
       return {
         id: flow.tableId,
@@ -190,7 +199,7 @@
         timeUnit: 'Business',
         variableNames: (VARIABLE_NAMES[flow.flow] || []).slice(),
         subjectCode: subjectId,
-        paths: [[subjectSeg, nodeSeg]],
+        paths: placements.map(p => [makeSubjectSeg(p[0]), makeNodeSeg(p[1])]),
         source: 'Norges Bank'
       };
     });
@@ -200,6 +209,7 @@
     const opts = options || {};
     // Server-søk / nylig-oppdaterte er SSB-only semantikk.
     if (opts.query || opts.pastDays) return { tables: [] };
+    const force = opts.useCache === false;
 
     const tables = buildCatalogue(currentLang());
     // Fyll Tidsperiode/Sist oppdatert fra ett lite, cachet kall pr. flow (24 t).
@@ -208,7 +218,7 @@
       const flow = flowForId(entry.id);
       if (!flow) return;
       try {
-        const period = await fetchCataloguePeriod(flow);
+        const period = await fetchCataloguePeriod(flow, force);
         if (period) {
           entry.firstPeriod = period.firstPeriod || '';
           entry.lastPeriod = period.lastPeriod || '';
@@ -216,7 +226,13 @@
         }
       } catch (e) { /* behold tomme strenger */ }
     }));
-    return { tables };
+    // Katalogen er config-bygget og kan ikke reelt feile — sourceMeta
+    // rapporterer derfor alltid ferskt resultat (statuspanelet i
+    // source-registry/source-status bruker dette).
+    return {
+      tables,
+      sourceMeta: { fromCache: false, stale: false, fetchedAt: Date.now() }
+    };
   }
 
   // ---- Metadata ----
@@ -376,10 +392,12 @@
    * eller null. Cachet 24 t (språkuavhengig). Kalles fra getTables (hver app-init)
    * — derfor cachet og feiltolerant.
    */
-  async function fetchCataloguePeriod(flow) {
+  async function fetchCataloguePeriod(flow, force) {
     const cacheKey = 'nb-catperiod-' + flow.flow;
-    const cached = await cacheGet(cacheKey);
-    if (cached) return cached;
+    if (!force) {
+      const cached = await cacheGet(cacheKey);
+      if (cached) return cached;
+    }
 
     const url = BASE + '/data/' + encodeURIComponent(flow.flow) +
       '/?format=sdmx-json&firstNObservations=1&lastNObservations=1';

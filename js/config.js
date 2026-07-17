@@ -84,7 +84,13 @@ const AppConfig = {
     metadataTTL: 7 * 24 * 60 * 60 * 1000,
 
     // Codelist cache duration (7 days)
-    codelistTTL: 7 * 24 * 60 * 60 * 1000
+    codelistTTL: 7 * 24 * 60 * 60 * 1000,
+
+    // Hvor lenge UTLØPTE katalogoppføringer (tables_*) beholdes som
+    // stale-if-error-fallback: er en kilde nede, serveres den utløpte kopien
+    // (merket «stale» i statuspanelet) i stedet for en tom katalog. Utenfor
+    // vinduet fjernes de av cleanup() som vanlig. (7 dager)
+    staleRetentionMs: 7 * 24 * 60 * 60 * 1000
   },
 
   /**
@@ -192,19 +198,30 @@ const AppConfig = {
     fetchTimeoutMs: 15000,
 
     // Statistisk sentralbyrå (PxWebApi v2) — apiBaseUrl over.
-    ssb: { adapter: 'ssb', enabled: true },
+    // displayName brukes i API-statuspanelet (source-status.js).
+    ssb: {
+      adapter: 'ssb',
+      enabled: true,
+      displayName: { nb: 'Statistisk sentralbyrå (SSB)', en: 'Statistics Norway (SSB)' }
+    },
 
     // Norges Bank (SDMX REST). Kjerneutvalg av dataflows; flere aktiveres ved
     // å legge til rader her (se «Senere» i planen). `flow`/`version` er SDMX-
     // dataflow-id og -versjon; `tableId` er den namnerommede portal-id-en;
     // `path` er de to emnetre-segmentene (subjektkode + node i sourceNodes).
+    // Alternativt kan en rad angi `paths: [[subjekt, node], ...]` for å
+    // plassere tabellen under FLERE emnestier (som SSBs multi-mappe-tabeller).
+    // Hver node-id må finnes i sourceNodes under, og hver subjektkode i
+    // subjects.js (subjectNames + en subjectGroups-gruppe) — ellers rendres
+    // ikke plasseringen.
     nb: {
       adapter: 'norges-bank',
       enabled: true,
       baseUrl: 'https://data.norges-bank.no/api',
+      displayName: { nb: 'Norges Bank', en: 'Norges Bank' },
       dataflows: [
         { flow: 'EXR', version: '1.0', tableId: 'nb-EXR',
-          path: ['bf', 'nb-valutakurser'],
+          paths: [['bf', 'nb-valutakurser'], ['ut', 'nb-valutakurser']],
           label: { nb: 'Valutakurser', en: 'Exchange rates' } },
         { flow: 'IR', version: '1.1', tableId: 'nb-IR',
           path: ['bf', 'nb-renter'],
@@ -221,10 +238,15 @@ const AppConfig = {
     // Folkehelseinstituttet (åpent statistikk-API, JSON-Stat2 native).
     // Adapteren er generisk over `sourceIds` — flere kilder aktiveres ved å
     // legge til en id her (se «Senere» i planen).
+    // Valgfri `paths: { <sourceId>: [[subjekt, node], ...] }` overstyrer
+    // standardplasseringen (['he', 'fhi-<sourceId>']) med én eller flere
+    // emnetre-plasseringer — samme krav til sourceNodes/subjects.js som for
+    // Norges Bank-dataflows over.
     fhi: {
       adapter: 'fhi',
       enabled: true,
       baseUrl: 'https://statistikk-data.fhi.no/api/open/v1',
+      displayName: { nb: 'Folkehelseinstituttet (FHI)', en: 'Norwegian Institute of Public Health (FHI)' },
       sourceIds: ['nokkel', 'mfr', 'daar']
     }
   },

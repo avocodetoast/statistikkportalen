@@ -262,6 +262,30 @@ const translations = {
     'cache.clear':        'T\u00F8m hurtigbuffer',
     'cache.clearTooltip': 'T\u00F8m hurtigbuffer og last inn data p\u00E5 nytt',
 
+    // API-kildestatus (badge i headeren + statuspanel \u2014 source-status.js)
+    'apiStatus.badge':            '{0}/{1} API-er lastet inn',
+    'apiStatus.badgeTitle':       'Vis status for datakildene',
+    'apiStatus.title':            'Status for datakilder',
+    'apiStatus.ok':               'Lastet',
+    'apiStatus.partial':          'Delvis lastet',
+    'apiStatus.error':            'Feilet',
+    'apiStatus.loading':          'Laster\u2026',
+    'apiStatus.stale':            'Viser eldre mellomlagret kopi',
+    'apiStatus.fromCache':        'Fra mellomlager',
+    'apiStatus.fetchedAgo':       'Hentet for {0} siden',
+    'apiStatus.age.minutes':      '{0} min',
+    'apiStatus.age.hours':        '{0} t',
+    'apiStatus.age.days':         '{0} d',
+    'apiStatus.tableCount':       '{0} tabeller',
+    'apiStatus.retry':            'Pr\u00F8v igjen',
+    'apiStatus.refresh':          'Oppdater',
+    'apiStatus.refreshAll':       'Oppdater alle',
+    'apiStatus.clearSourceCache': 'T\u00F8m mellomlager',
+    'apiStatus.failedSubsources': 'Feilet: {0}',
+    'apiStatus.rateLimitNote':    'SSB-konfigurasjonen kunne ikke hentes \u2014 standardgrenser brukes.',
+    'apiStatus.allSourcesFailed': 'Ingen datakilder kunne lastes. Sjekk nettverkstilkoblingen og pr\u00F8v igjen.',
+    'apiStatus.close':            'Lukk',
+
     // Search
     'search.found': 'funnet',
 
@@ -501,6 +525,30 @@ const translations = {
     'cache.clear':        'Clear cache',
     'cache.clearTooltip': 'Clear cache and reload data',
 
+    // API source status (header badge + status panel — source-status.js)
+    'apiStatus.badge':            '{0}/{1} APIs loaded',
+    'apiStatus.badgeTitle':       'Show data source status',
+    'apiStatus.title':            'Data source status',
+    'apiStatus.ok':               'Loaded',
+    'apiStatus.partial':          'Partially loaded',
+    'apiStatus.error':            'Failed',
+    'apiStatus.loading':          'Loading…',
+    'apiStatus.stale':            'Showing an older cached copy',
+    'apiStatus.fromCache':        'From cache',
+    'apiStatus.fetchedAgo':       'Fetched {0} ago',
+    'apiStatus.age.minutes':      '{0} min',
+    'apiStatus.age.hours':        '{0} h',
+    'apiStatus.age.days':         '{0} d',
+    'apiStatus.tableCount':       '{0} tables',
+    'apiStatus.retry':            'Try again',
+    'apiStatus.refresh':          'Refresh',
+    'apiStatus.refreshAll':       'Refresh all',
+    'apiStatus.clearSourceCache': 'Clear cache',
+    'apiStatus.failedSubsources': 'Failed: {0}',
+    'apiStatus.rateLimitNote':    'The SSB configuration could not be fetched — default limits apply.',
+    'apiStatus.allSourcesFailed': 'No data sources could be loaded. Check your network connection and try again.',
+    'apiStatus.close':            'Close',
+
     // Search
     'search.found': 'found',
 
@@ -738,6 +786,30 @@ const translations = {
     // Cache
     'cache.clear':        'Rensa cache',
     'cache.clearTooltip': 'Rensa cache och ladda om data',
+
+    // API-källstatus (badge i sidhuvudet + statuspanel — source-status.js)
+    'apiStatus.badge':            '{0}/{1} API:er laddade',
+    'apiStatus.badgeTitle':       'Visa status för datakällorna',
+    'apiStatus.title':            'Status för datakällor',
+    'apiStatus.ok':               'Laddad',
+    'apiStatus.partial':          'Delvis laddad',
+    'apiStatus.error':            'Misslyckades',
+    'apiStatus.loading':          'Laddar…',
+    'apiStatus.stale':            'Visar en äldre cachad kopia',
+    'apiStatus.fromCache':        'Från cache',
+    'apiStatus.fetchedAgo':       'Hämtad för {0} sedan',
+    'apiStatus.age.minutes':      '{0} min',
+    'apiStatus.age.hours':        '{0} tim',
+    'apiStatus.age.days':         '{0} d',
+    'apiStatus.tableCount':       '{0} tabeller',
+    'apiStatus.retry':            'Försök igen',
+    'apiStatus.refresh':          'Uppdatera',
+    'apiStatus.refreshAll':       'Uppdatera alla',
+    'apiStatus.clearSourceCache': 'Rensa cache',
+    'apiStatus.failedSubsources': 'Misslyckades: {0}',
+    'apiStatus.rateLimitNote':    'SSB-konfigurationen kunde inte hämtas — standardgränser används.',
+    'apiStatus.allSourcesFailed': 'Inga datakällor kunde laddas. Kontrollera nätverksanslutningen och försök igen.',
+    'apiStatus.close':            'Stäng',
 
     // Search
     'search.found': 'hittade',

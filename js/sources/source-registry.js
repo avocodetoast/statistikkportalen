@@ -34,8 +34,14 @@
  * ADAPTERKONTRAKT (API-flate — alle metoder, samme signatur som SSBApi)
  * --------------------------------------------------------------------
  *   getConfig()                                   → Promise<object|null>
- *   getTables(options)                            → Promise<{tables:[]}>
- *   getAllTables(options)                         → Promise<{tables:[]}>
+ *   getTables(options)                            → Promise<{tables:[], sourceMeta?}>
+ *   getAllTables(options)                         → Promise<{tables:[], sourceMeta?}>
+ *       sourceMeta (valgfri, konsumeres av fasaden — lekker ALDRI ut til
+ *       callere): { fromCache:bool, stale:bool, fetchedAt:number,
+ *       partial?:string[] (feilede FHI-delkilder), error?:string }.
+ *       sourceMeta må ALDRI caches (ellers replays en stale fetchedAt).
+ *       Katalogmetodene skal respektere options.useCache === false
+ *       (bypass cache — brukes av reloadSource ved manuell «Oppdater»).
  *   getTableMetadata(id, useCache?, lang?)        → Promise<JSONStat2Meta>
  *   getTableData(id, valueCodes, lang?, codelistIds?) → Promise<JSONStat2Data>
  *   getCodeList(codelistId, useCache?, lang?)     → Promise<object>
@@ -145,8 +151,26 @@
  * --------------
  *   • Katalog (getTables/getAllTables): kast ved feil — fasaden isolerer via
  *     allSettled og logger.warn, så én kilde nede tar ikke ned portalen.
+ *     «Feil» betyr HELT uten data: en adapter med delkilder (FHI) kaster kun
+ *     når ALLE delkilder feilet, og rapporterer delvise utfall via
+ *     sourceMeta.partial. Stale-if-error: adaptere med katalogcache serverer
+ *     en utløpt kopi (sourceMeta.stale=true) i stedet for å kaste når
+ *     nettverket feiler men cachen finnes.
  *   • Norges Bank: HTTP 404 = TOMT resultat (tom tabell), ikke feil.
  *   • Bruk `logger.warn`/`logger.error`, aldri console.* direkte.
+ *
+ * KATALOGSTATUS / RELOAD (API-statusbadgen — js/source-status.js)
+ * ---------------------------------------------------------------
+ *   Fasaden sporer per-kilde-status for fulle getAllTables-aggregeringer
+ *   (IKKE søk/pastDays) og eksponerer:
+ *     api.getSourceStatus()            → [{ sourceId, status:'loading'|'ok'|
+ *         'partial'|'error', tableCount, fromCache, stale, fetchedAt,
+ *         lastAttemptAt, partial, error }] (aktiverte kilder, reg.rekkefølge)
+ *     api.onSourceStatusChange(cb) / api.offSourceStatusChange(cb)
+ *     api.reloadSource(sourceId, {force=true}) → { tables } for kilden;
+ *         kaster ved feil. force omgår kildens katalogcache.
+ *   BrowserState.reloadSource() bruker denne og merger resultatet inn i
+ *   den aggregerte tabellisten (se browser-state.js applySourceTables).
  *
  * CACHING
  * -------
@@ -205,8 +229,59 @@
       if (ssb) return ssb;
       // Siste utvei: hvilken som helst adapter som påstår eierskap.
       return this.adapters.find(a => a.ownsTableId(tableId)) || null;
+    },
+
+    // ---- Katalogstatus per kilde (grunnlag for API-statusbadgen) ----
+    // sourceId → { sourceId, status:'loading'|'ok'|'partial'|'error',
+    //              tableCount, fromCache, stale, fetchedAt, lastAttemptAt,
+    //              partial (feilede FHI-delkilder), error }
+    catalogueStatus: {},
+    _statusListeners: [],
+
+    /** Abonner på statusendringer; cb får hele snapshot-arrayen. */
+    onStatusChange(cb) {
+      if (typeof cb === 'function') this._statusListeners.push(cb);
+    },
+    offStatusChange(cb) {
+      this._statusListeners = this._statusListeners.filter(l => l !== cb);
+    },
+
+    /** Merge inn et statuspatch og varsle lytterne (feiltolerant). */
+    _setStatus(sourceId, patch) {
+      const prev = this.catalogueStatus[sourceId] || { sourceId: sourceId };
+      this.catalogueStatus[sourceId] = Object.assign({}, prev, patch);
+      const snapshot = this.getStatusSnapshot();
+      this._statusListeners.forEach(cb => {
+        try { cb(snapshot); } catch (e) {
+          logger.error('[SourceRegistry] Statuslytter kastet:', e);
+        }
+      });
+    },
+
+    /** Status for alle aktiverte kilder, i registreringsrekkefølge. */
+    getStatusSnapshot() {
+      return this.adapters
+        .filter(a => this.isEnabled(a))
+        .map(a => this.catalogueStatus[a.sourceId])
+        .filter(Boolean)
+        .map(s => Object.assign({}, s));
     }
   };
+
+  /** Statuspatch for et vellykket katalogresultat ({tables, sourceMeta?}). */
+  function statusPatchFromResult(result) {
+    const tables = (result && Array.isArray(result.tables)) ? result.tables : [];
+    const meta = (result && result.sourceMeta) || {};
+    return {
+      status: (meta.partial && meta.partial.length) ? 'partial' : 'ok',
+      tableCount: tables.length,
+      fromCache: !!meta.fromCache,
+      stale: !!meta.stale,
+      fetchedAt: meta.fetchedAt || Date.now(),
+      partial: (meta.partial && meta.partial.length) ? meta.partial.slice() : null,
+      error: meta.error || null
+    };
+  }
 
   // Konsumer adaptere som ble dyttet på window.SourceAdapters før denne filen.
   (window.SourceAdapters || []).forEach(a => registry.register(a));
@@ -246,25 +321,52 @@
     const opts = options || {};
     const foreignSkip = !!(opts.query || opts.pastDays);
 
+    // Katalogstatus spores KUN for fulle getAllTables-aggregeringer — søk
+    // (query) og nylig-oppdaterte (pastDays) skal ikke flippe statusbadgen.
+    const track = method === 'getAllTables' && !foreignSkip;
+
     const enabled = registry.adapters.filter(a => registry.isEnabled(a));
+    if (track) {
+      enabled.forEach(a => registry._setStatus(a.sourceId, {
+        status: 'loading',
+        lastAttemptAt: Date.now()
+      }));
+    }
+
     const settled = await Promise.allSettled(enabled.map(a => {
       if (foreignSkip && a.sourceId !== 'ssb') {
         return Promise.resolve({ sourceId: a.sourceId, tables: [] });
       }
       return Promise.resolve(a[method](opts)).then(
-        r => ({ sourceId: a.sourceId, tables: (r && Array.isArray(r.tables)) ? r.tables : [] }),
+        r => ({
+          sourceId: a.sourceId,
+          tables: (r && Array.isArray(r.tables)) ? r.tables : [],
+          sourceMeta: (r && r.sourceMeta) || null
+        }),
         err => Promise.reject({ sourceId: a.sourceId, error: err })
       );
     }));
 
+    // sourceMeta konsumeres her (→ katalogstatus) og lekker aldri ut til
+    // callere — returverdien forblir nøyaktig { tables }.
     const tables = [];
     for (const s of settled) {
       if (s.status === 'fulfilled') {
         tables.push(...s.value.tables);
+        if (track) {
+          registry._setStatus(s.value.sourceId, statusPatchFromResult(s.value));
+        }
       } else {
         const info = s.reason || {};
         logger.warn('[SourceRegistry] Kilde «' + (info.sourceId || '?') + '» feilet under ' +
                     method + ' (hoppes over):', info.error || s.reason);
+        if (track && info.sourceId) {
+          registry._setStatus(info.sourceId, {
+            status: 'error',
+            tableCount: 0,
+            error: (info.error && info.error.message) || String(info.error || s.reason)
+          });
+        }
       }
     }
     return { tables };
@@ -323,6 +425,46 @@
     cleanupCache(...a) { return requireSSB('cleanupCache').cleanupCache(...a); },
     clearCache(...a) { return requireSSB('clearCache').clearCache(...a); },
     getCacheStats(...a) { return requireSSB('getCacheStats').getCacheStats(...a); },
+
+    // ---- Katalogstatus + per-kilde reload (API-statusbadgen) ----
+    /** Snapshot av katalogstatus for alle aktiverte kilder. */
+    getSourceStatus() { return registry.getStatusSnapshot(); },
+    /** Abonner/avslutt abonnement på statusendringer (cb får snapshot-arrayen). */
+    onSourceStatusChange(cb) { registry.onStatusChange(cb); },
+    offSourceStatusChange(cb) { registry.offStatusChange(cb); },
+
+    /**
+     * Hent én kildes katalog på nytt (retry etter feil, eller manuell
+     * refresh). force=true (default) omgår kildens katalogcache.
+     * Returnerer { tables } for kilden; kaster ved feil (status settes til
+     * 'error' først, så statuspanelet viser hva som gikk galt).
+     */
+    async reloadSource(sourceId, options) {
+      const opts = options || {};
+      const force = opts.force !== false;
+      const adapter = registry.adapters.find(a => a.sourceId === sourceId);
+      if (!adapter || !registry.isEnabled(adapter)) {
+        throw new Error('[SourceRegistry] Ukjent eller deaktivert kilde: ' + sourceId);
+      }
+      registry._setStatus(sourceId, { status: 'loading', lastAttemptAt: Date.now() });
+      try {
+        // Samme options som BrowserState._doInit bruker for aggregeringen.
+        const result = await adapter.getAllTables({
+          lang: (typeof getCurrentApiLang === 'function' ? getCurrentApiLang() : 'no'),
+          includeDiscontinued: true,
+          useCache: !force
+        });
+        registry._setStatus(sourceId, statusPatchFromResult(result));
+        return { tables: (result && Array.isArray(result.tables)) ? result.tables : [] };
+      } catch (e) {
+        registry._setStatus(sourceId, {
+          status: 'error',
+          tableCount: 0,
+          error: (e && e.message) || String(e)
+        });
+        throw e;
+      }
+    },
 
     // ---- Introspeksjon (Fase D: capability-gates i UI) ----
     /** Capabilities-objektet til kilden som eier tabell-id-en. */

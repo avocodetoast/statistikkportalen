@@ -75,22 +75,23 @@ Scripts must load in this order in `index.html`:
 12. `js/browser-state.js` — BrowserState (depends on api, MenuHierarchy, URLRouter)
 13. `js/menu-bar.js` — MenuBar shared component (depends on escapeHtml, URLRouter)
 14. `js/front-page.js` — Front page view (depends on BrowserState, URLRouter)
-15. `js/synonyms.js` — SearchSynonyms: synonym groups for enhanced search (instance-specific)
-16. `js/search-enhanced.js` — SearchEnhanced (uses SearchSynonyms; pure scoring/ranking, no side effects)
-17. `js/search-view.js` — Search view (depends on BrowserState, SearchEnhanced, MenuBar, URLRouter)
-18. `js/topic-view.js` — Topic navigation view (depends on BrowserState, MenuBar, URLRouter)
-19. `js/variable-select-state.js` — Module state variables + `debouncedURLUpdate()`
-20. `js/variable-select-status.js` — Visual updates, selection status, cell count, `getVariableSelection()`
-21. `js/variable-select-codelists.js` — Codelist fetch/apply/restore + `setupCodelistDropdowns()`
-22. `js/variable-select-render.js` — Dimension card rendering, value lists, `restoreSelections()`
-23. `js/variable-select-events.js` — Click/keyboard/filter/mode button event wiring
-24. `js/variable-select-api.js` — API query preview, API builder UI, `handleFetchData()`
-25. `js/variable-select.js` — Main entry: `renderVariableSelection()` + `loadTableMetadata()`
-26. `js/table-display.js` — Data fetch and table rendering; owns `currentData`/`currentFullMetadata` globals
-27. `js/table-metadata.js` — Collapsible "Tabellinfo" section (depends on table-display)
-28. `js/table-save-query.js` — Save/share query dialog (SSB-only; depends on table-display, api)
-29. `js/table-rotation.js` — Drag-and-drop pivot (depends on table-display)
-30. `js/export.js` — CSV/Excel export (depends on table-display)
+15. `js/source-status.js` — SourceStatusUI: API-statusbadge i headeren + statuspanel med per-kilde retry/refresh (depends on api-fasaden, BrowserState, translations)
+16. `js/synonyms.js` — SearchSynonyms: synonym groups for enhanced search (instance-specific)
+17. `js/search-enhanced.js` — SearchEnhanced (uses SearchSynonyms; pure scoring/ranking, no side effects)
+18. `js/search-view.js` — Search view (depends on BrowserState, SearchEnhanced, MenuBar, URLRouter)
+19. `js/topic-view.js` — Topic navigation view (depends on BrowserState, MenuBar, URLRouter)
+20. `js/variable-select-state.js` — Module state variables + `debouncedURLUpdate()`
+21. `js/variable-select-status.js` — Visual updates, selection status, cell count, `getVariableSelection()`
+22. `js/variable-select-codelists.js` — Codelist fetch/apply/restore + `setupCodelistDropdowns()`
+23. `js/variable-select-render.js` — Dimension card rendering, value lists, `restoreSelections()`
+24. `js/variable-select-events.js` — Click/keyboard/filter/mode button event wiring
+25. `js/variable-select-api.js` — API query preview, API builder UI, `handleFetchData()`
+26. `js/variable-select.js` — Main entry: `renderVariableSelection()` + `loadTableMetadata()`
+27. `js/table-display.js` — Data fetch and table rendering; owns `currentData`/`currentFullMetadata` globals
+28. `js/table-metadata.js` — Collapsible "Tabellinfo" section (depends on table-display)
+29. `js/table-save-query.js` — Save/share query dialog (SSB-only; depends on table-display, api)
+30. `js/table-rotation.js` — Drag-and-drop pivot (depends on table-display)
+31. `js/export.js` — CSV/Excel export (depends on table-display)
 
 ### Views & Data Flow
 
@@ -110,7 +111,8 @@ Scripts must load in this order in `index.html`:
 - Each adapter (`ssb-adapter.js`, `norges-bank-adapter.js`, `fhi-adapter.js`) registers itself onto `window.SourceAdapters` before `source-registry.js` loads, exposing `sourceId`, `capabilities`, `ownsTableId(id)`, and the same method surface as `SSBApi` (`getTableMetadata`, `getTableData`, `getTables`, etc.).
 - Table-id prefixes decide ownership/routing: `nb-*` → Norges Bank, `fhi-*` → FHI, everything else → SSB (fallback). `getTables`/`getAllTables` aggregate all enabled sources with `Promise.allSettled` (one source failing doesn't break the catalogue); `getConfig` and the saved-query methods are SSB-only.
 - Norges Bank's SDMX responses are converted to JSON-Stat2 by `js/sources/sdmx-to-jsonstat.js`. FHI's API returns JSON-Stat2 natively but has no friendly title field, so `scripts/update-fhi-catalog.mjs` pre-builds `data/sources/fhi-catalog.json` (titles, periods, descriptions) at build time; `fhi-adapter.js` fetches it at runtime to enrich the catalogue and falls back to raw API titles if the file is missing.
-- Sources are enabled/configured in `AppConfig.sources` (`ssb`/`nb`/`fhi`, each with `enabled: true/false`); foreign tables are placed in the topic tree via synthetic `paths[]` built from `AppConfig.sourceNodes`.
+- Sources are enabled/configured in `AppConfig.sources` (`ssb`/`nb`/`fhi`, each with `enabled: true/false`); foreign tables are placed in the topic tree via synthetic `paths[]` built from `AppConfig.sourceNodes`. Foreign tables can be placed under MULTIPLE topic paths (like SSB multi-folder tables): NB dataflows via `paths: [[subject, node], ...]` (legacy single `path` still works), FHI via `AppConfig.sources.fhi.paths[sourceId]`.
+- **Per-source status & resilience:** the facade tracks catalogue status per source (`api.getSourceStatus()`, `api.onSourceStatusChange(cb)`, `api.reloadSource(id, {force})`) for full `getAllTables` aggregations. Adapters attach `sourceMeta { fromCache, stale, fetchedAt, partial? }` (never cached, never leaked to callers) and must throw when a source has NO data at all (FHI throws only when every sub-source fails). Stale-if-error: when a source's network fetch fails, an expired cached catalogue is served instead (marked stale); expired `tables_*` cache keys are retained for `AppConfig.cache.staleRetentionMs` (7 days) as fallback copies. The header badge + status panel (`js/source-status.js`) surface this and offer per-source retry/refresh via `BrowserState.reloadSource()` (merges one source's tables, invalidates the search index, rebuilds the hierarchy).
 - See [ROADMAP.md](ROADMAP.md) for what's currently enabled vs. queued (additional Norges Bank dataflows, additional FHI sources, per-source update schedules, etc.).
 
 ### API Integration
@@ -171,6 +173,7 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 | `browser-state.js` | Shared state for browse views: aggregated table list, independent search/topic filters, shared render helpers | `BrowserState` | api, MenuHierarchy, SearchEnhanced, URLRouter, AppState | Adding/renaming filter fields, changing filter↔URL sync, changing table-list HTML, shared search input behaviour |
 | `menu-bar.js` | Compact hover-dropdown subject-group menu bar (search + topic views) | `MenuBar` | escapeHtml, URLRouter | Changing menu bar layout or adding items to the navigation bar |
 | `front-page.js` | Landing page: search input + expanded subject grid | `renderFrontPage()` | BrowserState, URLRouter | Changing front-page layout or adding widgets to the home view |
+| `source-status.js` | API-statusbadge i headeren («3/3 API-er lastet inn», grønn/gul/rød) + statuspanel med per-kilde status, cache-info, retry/refresh, «Oppdater alle» og tøm cache per kilde | `SourceStatusUI` (`init()`, `refresh()`) | api-fasaden (`getSourceStatus`/`onSourceStatusChange`/`reloadSource`), BrowserState, translations | Changing badge/panel layout, colour semantics, or per-source actions |
 | `synonyms.js` | Search synonym groups for enhanced search (instance-specific) | `SearchSynonyms` | — | Adding/removing synonym groups |
 | `search-enhanced.js` | Beta search engine: multi-word AND matching, diacritic normalization, relevance ranking, synonym expansion | `SearchEnhanced` | SearchSynonyms | Changing search scoring/ranking logic |
 | `search-view.js` | Search results: filters (subject, frequency, updated), live hit counts, grouped results, standard/enhanced toggle | `renderSearchView()` | BrowserState, SearchEnhanced, MenuBar, URLRouter | Adding/changing search filters, changing result grouping or display |
@@ -208,6 +211,8 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 | Change SSB API request details | `api.js` |
 | Enable more Norges Bank dataflows / FHI sources | `config.js` (`AppConfig.sources.nb.dataflows` / `.fhi.sourceIds`, plus `sourceNodes`), see [ROADMAP.md](ROADMAP.md) |
 | Add or change a source adapter | `js/sources/{source}-adapter.js`, contract documented in `js/sources/source-registry.js` |
+| Change the API status badge / status panel | `source-status.js` (UI), `source-registry.js` (status tracking), `translations.js` (`apiStatus.*` keys) |
+| Place a foreign (NB/FHI) table under more topic paths | `config.js` (`sources.nb.dataflows[].paths` / `sources.fhi.paths`, plus `sourceNodes`; subjects must exist in `subjects.js`) |
 | Add/change a UI string or language | `translations.js` (dictionary), `config.js` (`languages`/`defaultLanguage`) |
 | Re-skin for another PxWebApi v2 instance | `config.js`, `subjects.js`, `synonyms.js` (see `config-sv.js`/`subjects-sv.js` for a worked example) |
 | Change URL encoding for state | `router.js` (`encode`/`decode`), `utils.js` (`AppState._updateHash`) |
