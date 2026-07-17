@@ -844,6 +844,17 @@ button {
   min-width: 8rem;
 }
 
+.api-max-rows-input {
+  width: 7em;
+  font-size: var(--font-size-sm);
+  padding: 2px 6px;
+}
+
+.api-builder-hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
 .api-pill-group {
   display: flex;
   flex-wrap: wrap;

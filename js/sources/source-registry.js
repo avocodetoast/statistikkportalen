@@ -49,9 +49,25 @@
  *       API-bygger-forhåndsvisning: { method:'GET'|'POST', url, body:object|null,
  *       metadataUrl }. options.meta = allerede lastet tabellmetadata (PÅKREVD;
  *       metoden er synkron og henter aldri selv), options.lang = API-språk.
- *       Skal beskrive NØYAKTIG samme kall som adapterens getTableData sender.
+ *       Valgfrie byggervalg (ukjente/ugyldige verdier faller tilbake til
+ *       standard, så utelatte options gir NØYAKTIG samme kall som adapterens
+ *       getTableData sender):
+ *         options.format         — responsformat fra adapterens formatliste
+ *                                  (jf. getApiBuilderOptions)
+ *         options.maxRowCount    — (FHI) tall → verdien; undefined → standard
+ *                                  50000; null → feltet utelates (ubegrenset)
+ *         options.detail         — (NB) 'dataonly'|'serieskeysonly'|'nodata';
+ *                                  undefined/'full' → parameter utelates
+ *         options.includeHistory — (NB) true → &includeHistory=true
+ *         options.bom            — (NB) true → &bom=true (UTF-8 BOM for CSV)
  *       Gates i UI-en på capabilities.supportsApiQuery; SSB kaster (bruker det
  *       dedikerte fullpanelet, jf. supportsGetUrlBuilder).)
+ *   getApiBuilderOptions()                        → object  (synkron, VALGFRI —
+ *       beskriver valgene API-byggeren skal tilby for kilden:
+ *       { formats:[{value, label?|labelKey?},...], defaultFormat,
+ *         csvFormats:[...], maxRowCount:{default}|null, nbAdvanced?:true }.
+ *       labelKey oversettes med t() av visningen. Adaptere uten metoden
+ *       (SSB) gir null via fasadens apiBuilderOptionsFor().)
  *   cleanupCache()                                → number
  *   clearCache()                                  → void|Promise<void>
  *   getCacheStats()                               → object|null
@@ -318,6 +334,16 @@
     sourceFor(tableId) {
       const adapter = registry.adapterForTableId(tableId);
       return adapter ? adapter.sourceId : null;
+    },
+    /**
+     * API-byggervalgene (formater m.m.) til kilden som eier tabell-id-en,
+     * eller null når kilden ikke tilbyr noen (SSB — fullpanelet brukes der).
+     */
+    apiBuilderOptionsFor(tableId) {
+      const adapter = registry.adapterForTableId(tableId);
+      return (adapter && typeof adapter.getApiBuilderOptions === 'function')
+        ? adapter.getApiBuilderOptions()
+        : null;
     }
   };
 

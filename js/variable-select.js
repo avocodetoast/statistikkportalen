@@ -95,13 +95,54 @@ async function renderVariableSelection(container) {
   // live data URL (GET) or endpoint + POST body (FHI), plus metadata URL, with
   // copy/open actions. Same element ids as the full panel so updateQueryPreview()
   // and setupApiBuilderEvents() operate on both — the SSB-specific option rows
-  // (method/format/display/separator) are simply absent.
+  // (method/display/separator) are simply absent. Source-specific options
+  // (format, NB advanced params, FHI max rows) come from the owning adapter
+  // via api.apiBuilderOptionsFor() and only affect the previewed URL/body —
+  // never the app's own data fetching.
+  const builderOpts = caps.supportsApiQuery ? api.apiBuilderOptionsFor(table.id) : null;
+
+  const foreignFormatRowHtml = builderOpts ? `
+          <div class="api-builder-options" id="api-builder-options">
+            <div class="api-option-row">
+              <span class="api-builder-label">${t('api.format')}</span>
+              <!-- NOT id="api-format-group": that group is trimmed against SSB's
+                   /config dataFormats in setupApiBuilderEvents() -->
+              <div class="api-pill-group" id="api-foreign-format-group" role="radiogroup" aria-label="${t('api.format')}">
+                ${builderOpts.formats.map(f => `
+                <label class="api-pill"><input type="radio" name="api-output-format" value="${escapeHtml(f.value)}"${f.value === builderOpts.defaultFormat ? ' checked' : ''}><span>${escapeHtml(f.labelKey ? t(f.labelKey) : f.label)}</span></label>`).join('')}
+              </div>
+            </div>
+            ${builderOpts.nbAdvanced ? `
+            <div class="api-option-row">
+              <span class="api-builder-label">${t('api.detail')}</span>
+              <div class="api-pill-group" role="radiogroup" aria-label="${t('api.detail')}">
+                <label class="api-pill"><input type="radio" name="api-nb-detail" value="" checked><span>${t('api.detailFull')}</span></label>
+                <label class="api-pill"><input type="radio" name="api-nb-detail" value="dataonly"><span>${t('api.detailDataonly')}</span></label>
+                <label class="api-pill"><input type="radio" name="api-nb-detail" value="serieskeysonly"><span>${t('api.detailSerieskeys')}</span></label>
+                <label class="api-pill"><input type="radio" name="api-nb-detail" value="nodata"><span>${t('api.detailNodata')}</span></label>
+              </div>
+            </div>
+            <div class="api-option-row">
+              <label class="api-builder-checkbox-label"><input type="checkbox" id="api-include-history-cb"> ${t('api.includeHistory')}</label>
+              <label class="api-builder-checkbox-label" id="api-bom-option" style="display: none;"><input type="checkbox" id="api-bom-cb"> ${t('api.bom')}</label>
+            </div>` : ''}
+            ${builderOpts.maxRowCount ? `
+            <div class="api-option-row">
+              <span class="api-builder-label">${t('api.maxRowCount')}</span>
+              <input type="number" id="api-max-rows-input" class="api-max-rows-input"
+                     value="${builderOpts.maxRowCount.default}" min="1" step="1000"
+                     title="${t('api.maxRowCountHint')}">
+              <span class="api-builder-hint">${t('api.maxRowCountHint')}</span>
+            </div>` : ''}
+          </div>` : '';
+
   const simpleApiBuilderHtml = `
       <div class="query-preview-container">
         <button class="query-preview-toggle" id="query-preview-toggle">
           <span class="query-toggle-icon">&#9654;</span> ${t('api.builder')}
         </button>
         <div class="query-preview-content" id="query-preview-content" style="display: none;">
+${foreignFormatRowHtml}
 
           <div class="api-builder-section">
             <div class="api-builder-section-header">

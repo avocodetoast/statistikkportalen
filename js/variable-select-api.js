@@ -169,11 +169,36 @@ function updateQueryPreview() {
 function updateForeignQueryPreview(previewUrl, metaUrl, tableId) {
   if (!tableMetadata || !Array.isArray(tableMetadata.id)) return; // metadata not loaded yet
 
+  // Source-specific builder options (format pills, NB advanced params, FHI max
+  // rows) — controls only exist when the adapter's getApiBuilderOptions()
+  // declared them, so absent elements simply leave the option undefined.
+  const format = getApiRadioValue('api-output-format') || undefined;
+  const detail = getApiRadioValue('api-nb-detail') || undefined;
+  const includeHistory = document.getElementById('api-include-history-cb')?.checked || undefined;
+  const maxRowsInput = document.getElementById('api-max-rows-input');
+  // Empty field → null (property omitted = unlimited); absent input → undefined (adapter default)
+  const maxRowCount = maxRowsInput
+    ? (maxRowsInput.value.trim() === '' ? null : parseInt(maxRowsInput.value, 10))
+    : undefined;
+
+  // The UTF-8 BOM param only applies to CSV output — hide the checkbox for
+  // other formats and keep its state out of the URL while hidden.
+  const csvFormats = api.apiBuilderOptionsFor(tableId)?.csvFormats || [];
+  const bomApplies = csvFormats.includes(format);
+  const bomOption = document.getElementById('api-bom-option');
+  if (bomOption) bomOption.style.display = bomApplies ? '' : 'none';
+  const bom = (bomApplies && document.getElementById('api-bom-cb')?.checked) || undefined;
+
   let query;
   try {
     query = api.buildApiQuery(tableId, getVariableSelection(), {
       meta: tableMetadata,
-      lang: getCurrentApiLang()
+      lang: getCurrentApiLang(),
+      format: format,
+      detail: detail,
+      includeHistory: includeHistory,
+      bom: bom,
+      maxRowCount: maxRowCount
     });
   } catch (err) {
     logger.warn('[ApiBuilder] buildApiQuery failed for ' + tableId + ':', err);
@@ -238,6 +263,12 @@ function setupApiBuilderEvents() {
 
   // Decode URL checkbox
   document.getElementById('api-decode-url-cb')?.addEventListener('change', () => {
+    updateQueryPreview();
+  });
+
+  // FHI max-rows field: update the previewed body live while typing
+  // ('change' on the delegated container only fires on blur/Enter)
+  document.getElementById('api-max-rows-input')?.addEventListener('input', () => {
     updateQueryPreview();
   });
 
