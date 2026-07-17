@@ -75,7 +75,7 @@ const BrowserState = {
       // Alle kilder nede med tom cache → tydelig, retry-bar feil i stedet
       // for et stille tomt emnegrid (feilvisningen i front-page.js).
       if (this.allTables.length === 0) {
-        throw new Error(t('status.allSourcesFailed'));
+        throw new Error(t('apiStatus.allSourcesFailed'));
       }
 
       this.menuHierarchy = new MenuHierarchy();
