@@ -535,6 +535,46 @@
     return { key, params };
   }
 
+  /**
+   * Bygg den fulle data-URL-en for et utvalg (delt mellom getTableData og
+   * buildApiQuery slik at API-bygger-forhåndsvisningen aldri divergerer fra
+   * det appen faktisk sender).
+   */
+  function buildDataUrl(flow, meta, valueCodes, locale) {
+    const { key, params } = buildKeyAndParams(meta, valueCodes);
+    const qs = ['format=sdmx-json', 'locale=' + locale];
+    Object.keys(params).forEach(k => qs.push(k + '=' + encodeURIComponent(params[k])));
+    return BASE + '/data/' + encodeURIComponent(flow.flow) + '/' + key + '?' + qs.join('&');
+  }
+
+  /**
+   * API-bygger-spørring (kontrakten i source-registry.js): synkron beskrivelse
+   * av GET-kallet mot Norges Banks SDMX-API for gjeldende utvalg.
+   * options.meta (allerede lastet tabellmetadata) er PÅKREVD — metoden er
+   * synkron og kan ikke hente metadata selv; UI-en (variable-select) har den
+   * alltid lastet før forhåndsvisningen oppdateres.
+   *
+   * NB: Fler-verdi tidsutvalg vises som start-/endPeriod-intervall — nøyaktig
+   * det appen selv sender (ikke-sammenhengende perioder filtreres først
+   * klientside etter henting, se getTableData/filterDatasetToTimeCodes).
+   */
+  function buildApiQuery(tableId, valueCodes, options) {
+    const flow = flowForId(tableId);
+    if (!flow) throw new Error('[NBAdapter] Ukjent tabell: ' + tableId);
+    const opts = options || {};
+    if (!opts.meta || !Array.isArray(opts.meta.id)) {
+      throw new Error('[NBAdapter] buildApiQuery krever options.meta (lastet tabellmetadata)');
+    }
+    const locale = apiLang(opts.lang || currentLang());
+    return {
+      method: 'GET',
+      url: buildDataUrl(flow, opts.meta, valueCodes, locale),
+      body: null,
+      metadataUrl: BASE + '/datastructure/NB/DSD_' + encodeURIComponent(flow.flow) +
+        '?references=codelist&format=sdmx-json'
+    };
+  }
+
   /** Radmajor-strides for en size-array: strides[i] = produkt(size[i+1..]). */
   function stridesFor(size) {
     const s = new Array(size.length);
@@ -626,11 +666,7 @@
 
     // Metadata trengs for dimensjonsrekkefølge (cachet).
     const meta = await getTableMetadata(tableId, true, locale);
-    const { key, params } = buildKeyAndParams(meta, valueCodes);
-
-    const qs = ['format=sdmx-json', 'locale=' + locale];
-    Object.keys(params).forEach(k => qs.push(k + '=' + encodeURIComponent(params[k])));
-    const url = BASE + '/data/' + encodeURIComponent(flow.flow) + '/' + key + '?' + qs.join('&');
+    const url = buildDataUrl(flow, meta, valueCodes, locale);
 
     const metricDims = (meta.role && meta.role.metric) || [];
 
@@ -731,6 +767,9 @@
       supportsServerExport: false,
       supportsCodelists: false,
       supportsGetUrlBuilder: false,
+      // Forenklet API-bygger (data-URL + metadata-URL) via buildApiQuery —
+      // gjenbruker samme URL-bygging som getTableData.
+      supportsApiQuery: true,
       supportsDefaultSelection: false,
       supportsAggregation: false
     },
@@ -745,6 +784,7 @@
 
     getTableMetadata: getTableMetadata,
     getTableData: getTableData,
+    buildApiQuery: buildApiQuery,
 
     getCodeList: async () => { throw new Error('[NBAdapter] Norges Bank har ikke kodelister'); },
     downloadTableData: async () => { throw new Error('[NBAdapter] Server-eksport støttes ikke — bruk klientside CSV'); },

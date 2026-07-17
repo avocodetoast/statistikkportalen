@@ -615,6 +615,44 @@
   }
 
   /**
+   * Bygg POST-bodyen for et utvalg (delt mellom getTableData og buildApiQuery
+   * slik at API-bygger-forhåndsvisningen aldri divergerer fra det appen
+   * faktisk sender).
+   */
+  function buildDataBody(meta, valueCodes) {
+    const sel = valueCodes || {};
+    return {
+      dimensions: meta.id.map(dimCode => buildDimensionRequest(dimCode, sel[dimCode], meta)),
+      response: { format: 'json-stat2', maxRowCount: 50000 }
+    };
+  }
+
+  /**
+   * API-bygger-spørring (kontrakten i source-registry.js): synkron beskrivelse
+   * av POST-kallet mot FHIs åpne API for gjeldende utvalg. options.meta
+   * (allerede lastet tabellmetadata) er PÅKREVD — metoden er synkron og kan
+   * ikke hente metadata selv; UI-en (variable-select) har den alltid lastet
+   * før forhåndsvisningen oppdateres. FHI har ingen lang-parameter, så
+   * options.lang ignoreres.
+   */
+  function buildApiQuery(tableId, valueCodes, options) {
+    const parsed = parseId(tableId);
+    if (!parsed) throw new Error('[FHIAdapter] Ukjent tabell-id: ' + tableId);
+    const opts = options || {};
+    if (!opts.meta || !Array.isArray(opts.meta.id)) {
+      throw new Error('[FHIAdapter] buildApiQuery krever options.meta (lastet tabellmetadata)');
+    }
+    const base = BASE + '/' + encodeURIComponent(parsed.source) +
+      '/Table/' + encodeURIComponent(parsed.rawId);
+    return {
+      method: 'POST',
+      url: base + '/data',
+      body: buildDataBody(opts.meta, valueCodes),
+      metadataUrl: base + '/dimension'
+    };
+  }
+
+  /**
    * Normaliser FHIs native JSON-Stat2-respons til formen app-koden forventer:
    * category.index som objekt (ikke array), ¬-prefikserte etiketter
    * (konsistent med metadata), egenutledet role (ikke API-ets upålitelige
@@ -699,13 +737,7 @@
     const { source, rawId } = parsed;
 
     const meta = await getTableMetadata(tableId, true, lang); // cachet — trengs for dimensjonsrekkefølge/roller
-    const sel = valueCodes || {};
-
-    const dimensions = meta.id.map(dimCode => buildDimensionRequest(dimCode, sel[dimCode], meta));
-    const body = {
-      dimensions: dimensions,
-      response: { format: 'json-stat2', maxRowCount: 50000 }
-    };
+    const body = buildDataBody(meta, valueCodes);
 
     const json = await fetchJson(
       BASE + '/' + encodeURIComponent(source) + '/Table/' + encodeURIComponent(rawId) + '/data',
@@ -751,6 +783,9 @@
       supportsServerExport: false,
       supportsCodelists: false,
       supportsGetUrlBuilder: false,
+      // Forenklet API-bygger (POST-endepunkt + JSON-body + metadata-URL) via
+      // buildApiQuery — gjenbruker samme body-bygging som getTableData.
+      supportsApiQuery: true,
       supportsDefaultSelection: true,
       supportsAggregation: false
     },
@@ -765,6 +800,7 @@
 
     getTableMetadata: getTableMetadata,
     getTableData: getTableData,
+    buildApiQuery: buildApiQuery,
     getDefaultSelection: getDefaultSelection,
 
     getCodeList: async () => { throw new Error('[FHIAdapter] FHI har ikke kodelister'); },

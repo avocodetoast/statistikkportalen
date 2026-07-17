@@ -208,6 +208,11 @@ BrowserState.selectTable("09772")
 
 The API builder panel is rendered inside the variable selection view by `variable-select-api.js`. It generates a live preview of the GET and POST URLs for the current selection, and is updated on every selection change.
 
+The panel comes in two variants, gated on the owning source's capabilities (`api.capabilitiesFor(tableId)`):
+
+- **SSB** (`supportsGetUrlBuilder`): the full builder described below, with method (GET/POST), output format, display, and separator options.
+- **Norges Bank / FHI** (`supportsApiQuery`): a simplified builder. `updateQueryPreview()` delegates to `updateForeignQueryPreview()`, which calls the facade's synchronous `api.buildApiQuery(tableId, selection, { meta, lang })`. The owning adapter returns `{ method, url, body, metadataUrl }` describing **exactly** the request its own `getTableData` would send (the URL/body building is shared code inside the adapter): a GET URL against Norges Bank's SDMX API (`/data/{FLOW}/{key}?format=sdmx-json&...`), or FHI's POST endpoint plus the JSON body (`{dimensions:[...], response:{format:'json-stat2',...}}`). Copy/open buttons and the metadata URL section work as in the full panel; "open in browser" is disabled for FHI's POST-only data endpoint.
+
 ```
 setupApiBuilder()
   → updateApiPreview()           // Called on every selection change
