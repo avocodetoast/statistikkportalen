@@ -153,6 +153,116 @@ describe('FHI — buildApiQuery', () => {
   });
 });
 
+describe('Norges Bank — buildApiQuery byggervalg (format/detail/includeHistory/bom)', () => {
+  const codes = { FREQ: ['B'], BASE_CUR: ['USD'], QUOTE_CUR: ['NOK'], TENOR: ['SP'], TIME_PERIOD: '*' };
+
+  it('setter format-parameteren for hvert gyldig formatvalg', () => {
+    ['csv', 'csv-ts', 'excel-both', 'excel-ts'].forEach(format => {
+      const q = app.api.buildApiQuery('nb-EXR', codes, { meta: nbMeta, lang: 'no', format });
+      assert.ok(q.url.includes('?format=' + format + '&locale=no'),
+        format + ': ' + q.url);
+    });
+  });
+
+  it('faller tilbake til sdmx-json for ukjent eller utelatt format', () => {
+    const unknown = app.api.buildApiQuery('nb-EXR', codes, { meta: nbMeta, lang: 'no', format: 'xml' });
+    assert.ok(unknown.url.includes('format=sdmx-json'));
+    const omitted = app.api.buildApiQuery('nb-EXR', codes, { meta: nbMeta, lang: 'no' });
+    assert.ok(omitted.url.includes('format=sdmx-json'));
+  });
+
+  it("legger til detail-parameteren for ikke-standard verdier, aldri for 'full'/utelatt", () => {
+    ['dataonly', 'serieskeysonly', 'nodata'].forEach(detail => {
+      const q = app.api.buildApiQuery('nb-EXR', codes, { meta: nbMeta, lang: 'no', detail });
+      assert.ok(q.url.includes('detail=' + detail), detail + ': ' + q.url);
+    });
+    const full = app.api.buildApiQuery('nb-EXR', codes, { meta: nbMeta, lang: 'no', detail: 'full' });
+    assert.ok(!full.url.includes('detail='));
+    const none = app.api.buildApiQuery('nb-EXR', codes, { meta: nbMeta, lang: 'no' });
+    assert.ok(!none.url.includes('detail='));
+  });
+
+  it('legger til includeHistory=true og bom=true kun når de er valgt', () => {
+    const q = app.api.buildApiQuery('nb-EXR', codes,
+      { meta: nbMeta, lang: 'no', format: 'csv', includeHistory: true, bom: true });
+    assert.ok(q.url.includes('includeHistory=true'));
+    assert.ok(q.url.includes('bom=true'));
+
+    const off = app.api.buildApiQuery('nb-EXR', codes, { meta: nbMeta, lang: 'no' });
+    assert.ok(!off.url.includes('includeHistory') && !off.url.includes('bom'));
+  });
+
+  it('endrer ikke metadataUrl uansett byggervalg', () => {
+    const q = app.api.buildApiQuery('nb-EXR', codes,
+      { meta: nbMeta, lang: 'no', format: 'excel-both', detail: 'dataonly', includeHistory: true });
+    assert.equal(
+      q.metadataUrl,
+      'https://data.norges-bank.no/api/datastructure/NB/DSD_EXR?references=codelist&format=sdmx-json'
+    );
+  });
+});
+
+describe('FHI — buildApiQuery byggervalg (format/maxRowCount)', () => {
+  const codes = { AAR: '*', GEO: ['0'], MEASURE_TYPE: '*' };
+
+  it('setter response.format for hvert gyldig formatvalg (maxRowCount uendret)', () => {
+    ['csv2', 'csv3', 'parquet'].forEach(format => {
+      const q = app.api.buildApiQuery('fhi-nokkel-123', codes, { meta: fhiMeta, format });
+      assert.equal(q.body.response.format, format);
+      assert.equal(q.body.response.maxRowCount, 50000);
+    });
+  });
+
+  it('faller tilbake til json-stat2 for ukjent format', () => {
+    const q = app.api.buildApiQuery('fhi-nokkel-123', codes, { meta: fhiMeta, format: 'csv' });
+    assert.equal(q.body.response.format, 'json-stat2');
+  });
+
+  it('respekterer eksplisitt maxRowCount og utelater feltet ved null (= ubegrenset)', () => {
+    const explicit = app.api.buildApiQuery('fhi-nokkel-123', codes, { meta: fhiMeta, maxRowCount: 10000 });
+    assert.equal(explicit.body.response.maxRowCount, 10000);
+
+    const unlimited = app.api.buildApiQuery('fhi-nokkel-123', codes, { meta: fhiMeta, maxRowCount: null });
+    assert.ok(!('maxRowCount' in unlimited.body.response));
+
+    const dflt = app.api.buildApiQuery('fhi-nokkel-123', codes, { meta: fhiMeta });
+    assert.equal(dflt.body.response.maxRowCount, 50000);
+  });
+
+  it('faller tilbake til 50000 for ugyldig maxRowCount', () => {
+    [-5, 0, 1.5, 'abc', NaN].forEach(bad => {
+      const q = app.api.buildApiQuery('fhi-nokkel-123', codes, { meta: fhiMeta, maxRowCount: bad });
+      assert.equal(q.body.response.maxRowCount, 50000, 'maxRowCount=' + String(bad));
+    });
+  });
+});
+
+describe('Facade — apiBuilderOptionsFor', () => {
+  it('beskriver Norges Banks formater og avanserte valg', () => {
+    const opts = app.api.apiBuilderOptionsFor('nb-EXR');
+    assert.deepEqual(opts.formats.map(f => f.value),
+      ['sdmx-json', 'csv', 'csv-ts', 'excel-both', 'excel-ts']);
+    assert.equal(opts.defaultFormat, 'sdmx-json');
+    assert.deepEqual(opts.csvFormats, ['csv', 'csv-ts']);
+    assert.equal(opts.nbAdvanced, true);
+    assert.equal(opts.maxRowCount, null);
+    opts.formats.forEach(f => assert.ok(f.label || f.labelKey, f.value + ' mangler etikett'));
+  });
+
+  it('beskriver FHIs formater og maxRowCount', () => {
+    const opts = app.api.apiBuilderOptionsFor('fhi-nokkel-123');
+    assert.deepEqual(opts.formats.map(f => f.value),
+      ['json-stat2', 'csv2', 'csv3', 'parquet']);
+    assert.equal(opts.defaultFormat, 'json-stat2');
+    assert.equal(opts.maxRowCount.default, 50000);
+    assert.ok(!opts.nbAdvanced);
+  });
+
+  it('returnerer null for SSB-tabeller (fullt panel brukes der)', () => {
+    assert.equal(app.api.apiBuilderOptionsFor('13760'), null);
+  });
+});
+
 describe('Facade — routing & capabilities', () => {
   it('exposes supportsApiQuery=true for nb/fhi and false for ssb', () => {
     assert.equal(app.api.capabilitiesFor('nb-EXR').supportsApiQuery, true);

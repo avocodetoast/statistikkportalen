@@ -614,16 +614,32 @@
     return { code: dimCode, filter: 'all', values: ['*'] };
   }
 
+  // Responsformater FHIs API faktisk støtter (verifisert mot det levende
+  // API-et; andre verdier avvises med 422). json-stat2 er det appen selv
+  // konsumerer og dermed standardvalget i API-byggeren.
+  const API_FORMATS = ['json-stat2', 'csv2', 'csv3', 'parquet'];
+  const DEFAULT_MAX_ROW_COUNT = 50000;
+
   /**
    * Bygg POST-bodyen for et utvalg (delt mellom getTableData og buildApiQuery
    * slik at API-bygger-forhåndsvisningen aldri divergerer fra det appen
-   * faktisk sender).
+   * faktisk sender). responseOptions ({format, maxRowCount}) settes kun av
+   * API-byggeren — getTableData utelater dem og får dermed alltid dagens
+   * json-stat2-body uendret. maxRowCount: null utelater feltet (API-et
+   * tolker det som ubegrenset); ugyldige verdier faller tilbake til standard.
    */
-  function buildDataBody(meta, valueCodes) {
+  function buildDataBody(meta, valueCodes, responseOptions) {
     const sel = valueCodes || {};
+    const ro = responseOptions || {};
+    const response = { format: API_FORMATS.includes(ro.format) ? ro.format : 'json-stat2' };
+    if (ro.maxRowCount !== null) {
+      response.maxRowCount = Number.isInteger(ro.maxRowCount) && ro.maxRowCount > 0
+        ? ro.maxRowCount
+        : DEFAULT_MAX_ROW_COUNT;
+    }
     return {
       dimensions: meta.id.map(dimCode => buildDimensionRequest(dimCode, sel[dimCode], meta)),
-      response: { format: 'json-stat2', maxRowCount: 50000 }
+      response: response
     };
   }
 
@@ -647,7 +663,10 @@
     return {
       method: 'POST',
       url: base + '/data',
-      body: buildDataBody(opts.meta, valueCodes),
+      body: buildDataBody(opts.meta, valueCodes, {
+        format: opts.format,
+        maxRowCount: opts.maxRowCount
+      }),
       metadataUrl: base + '/dimension'
     };
   }
@@ -802,6 +821,19 @@
     getTableData: getTableData,
     buildApiQuery: buildApiQuery,
     getDefaultSelection: getDefaultSelection,
+
+    // Valgene API-byggeren (variable-select) skal tilby for denne kilden.
+    getApiBuilderOptions: () => ({
+      formats: [
+        { value: 'json-stat2', label: 'JSON-stat2' },
+        { value: 'csv2', label: 'CSV2' },
+        { value: 'csv3', label: 'CSV3' },
+        { value: 'parquet', label: 'Parquet' }
+      ],
+      defaultFormat: 'json-stat2',
+      csvFormats: ['csv2', 'csv3'],
+      maxRowCount: { default: DEFAULT_MAX_ROW_COUNT }
+    }),
 
     getCodeList: async () => { throw new Error('[FHIAdapter] FHI har ikke kodelister'); },
     downloadTableData: async () => { throw new Error('[FHIAdapter] Server-eksport støttes ikke — bruk klientside CSV'); },

@@ -569,15 +569,29 @@
     return { key, params };
   }
 
+  // Responsformater Norges Banks SDMX-API faktisk støtter (verifisert mot
+  // det levende API-et; XML-varianter avvises med 406). sdmx-json er det
+  // appen selv konsumerer og dermed standardvalget i API-byggeren.
+  const API_FORMATS = ['sdmx-json', 'csv', 'csv-ts', 'excel-both', 'excel-ts'];
+  // detail-verdier utover standard 'full' (ugyldig verdi gir 400 fra API-et)
+  const API_DETAIL_VALUES = ['dataonly', 'serieskeysonly', 'nodata'];
+
   /**
    * Bygg den fulle data-URL-en for et utvalg (delt mellom getTableData og
    * buildApiQuery slik at API-bygger-forhåndsvisningen aldri divergerer fra
-   * det appen faktisk sender).
+   * det appen faktisk sender). builderOpts ({format, detail, includeHistory,
+   * bom}) settes kun av API-byggeren — getTableData utelater dem og får
+   * dermed alltid dagens sdmx-json-URL uendret.
    */
-  function buildDataUrl(flow, meta, valueCodes, locale) {
+  function buildDataUrl(flow, meta, valueCodes, locale, builderOpts) {
+    const bo = builderOpts || {};
+    const format = API_FORMATS.includes(bo.format) ? bo.format : 'sdmx-json';
     const { key, params } = buildKeyAndParams(meta, valueCodes);
-    const qs = ['format=sdmx-json', 'locale=' + locale];
+    const qs = ['format=' + format, 'locale=' + locale];
     Object.keys(params).forEach(k => qs.push(k + '=' + encodeURIComponent(params[k])));
+    if (API_DETAIL_VALUES.includes(bo.detail)) qs.push('detail=' + bo.detail);
+    if (bo.includeHistory === true) qs.push('includeHistory=true');
+    if (bo.bom === true) qs.push('bom=true');
     return BASE + '/data/' + encodeURIComponent(flow.flow) + '/' + key + '?' + qs.join('&');
   }
 
@@ -602,7 +616,12 @@
     const locale = apiLang(opts.lang || currentLang());
     return {
       method: 'GET',
-      url: buildDataUrl(flow, opts.meta, valueCodes, locale),
+      url: buildDataUrl(flow, opts.meta, valueCodes, locale, {
+        format: opts.format,
+        detail: opts.detail,
+        includeHistory: opts.includeHistory,
+        bom: opts.bom
+      }),
       body: null,
       metadataUrl: BASE + '/datastructure/NB/DSD_' + encodeURIComponent(flow.flow) +
         '?references=codelist&format=sdmx-json'
@@ -819,6 +838,22 @@
     getTableMetadata: getTableMetadata,
     getTableData: getTableData,
     buildApiQuery: buildApiQuery,
+
+    // Valgene API-byggeren (variable-select) skal tilby for denne kilden.
+    // labelKey oversettes med t() av visningen; label brukes som den er.
+    getApiBuilderOptions: () => ({
+      formats: [
+        { value: 'sdmx-json', label: 'SDMX-JSON' },
+        { value: 'csv', label: 'CSV' },
+        { value: 'csv-ts', labelKey: 'api.formatCsvTs' },
+        { value: 'excel-both', label: 'Excel' },
+        { value: 'excel-ts', labelKey: 'api.formatExcelTs' }
+      ],
+      defaultFormat: 'sdmx-json',
+      csvFormats: ['csv', 'csv-ts'],
+      maxRowCount: null,
+      nbAdvanced: true
+    }),
 
     getCodeList: async () => { throw new Error('[NBAdapter] Norges Bank har ikke kodelister'); },
     downloadTableData: async () => { throw new Error('[NBAdapter] Server-eksport støttes ikke — bruk klientside CSV'); },

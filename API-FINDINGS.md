@@ -48,3 +48,33 @@ FREQ×TIME_PERIOD-kryssmatrise — og `startPeriod`/`endPeriod` kan bare
 uttrykkes i én granularitet. Adapteren merker derfor FREQ med
 `dimension.FREQ.extension.singleSelect = true`, som UI-en håndhever som
 radio-adferd (kun én frekvens kan velges).
+
+## Norges Bank (SDMX): responsformater og valgfrie parametere (verifisert 2026-07)
+
+Verifisert mot det levende API-et (`/api/data/{FLOW}/{key}`):
+
+- `format=`-verdier som fungerer (HTTP 200): `sdmx-json`, `csv`, `csv-ts`
+  (én tidsserie per rad), `excel-both` (API-ets egen standard), `excel-ts`.
+  `sdmx-csv` fungerer også, men er udokumentert. XML-varianter
+  (`genericdata`, `structurespecificdata`, `jsondata`, `xml`) avvises med 406.
+- `detail=` godtar `full` (standard), `dataonly`, `serieskeysonly`, `nodata`;
+  ugyldig verdi gir 400.
+- `includeHistory=true`, `bom=true` (UTF-8 BOM, Excel-vennlig CSV) og
+  `updatedAfter=`/`dimensionAtObservation=` aksepteres. `locale=no|en`.
+
+API-byggeren (variable-select) eksponerer format, detail, includeHistory og
+bom via `buildApiQuery`-options; appen selv henter alltid `sdmx-json`.
+
+## FHI: responsformater og maxRowCount (verifisert 2026-07)
+
+Verifisert mot det levende API-et (`POST /api/open/v1/{source}/Table/{id}/data`):
+
+- Gyldige `response.format`-verdier: `json-stat2`, `csv2`, `csv3` (to
+  CSV-varianter, `text/csv`) og `parquet` (`application/vnd.apache.parquet`).
+  Alle andre verdier avvises med 422 før spørringen kjøres.
+- `response.maxRowCount` er valgfri: utelatt felt betyr ubegrenset; en
+  spørring som overskrider grensen gir feil (ikke trunkert svar).
+- Dimensjonsfiltre: `item`, `top`, `bottom` og `all` (med `*`-jokertegn).
+
+API-byggeren eksponerer format og maxRowCount via `buildApiQuery`-options;
+appen selv henter alltid `json-stat2` med `maxRowCount: 50000`.
