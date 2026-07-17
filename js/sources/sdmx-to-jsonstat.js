@@ -354,9 +354,151 @@
     };
   }
 
+  // ============================================================
+  // Periodehjelpere for intervallbasert tidsvelger (variable-select)
+  // ============================================================
+  //
+  // SDMX-tidskoder er frekvensspesifikke og leksikografisk sorterbare innen én
+  // granularitet: A → '2025', Q → '2025-Q3', M → '2025-07', B/D → '2025-07-15'.
+  // Utvalgs-tokenet `range(from,to)` (tomme sider tillatt = åpen ende) bæres
+  // som streng gjennom AppState/URL og oversettes av norges-bank-adapterens
+  // buildKeyAndParams til startPeriod/endPeriod. Alt her er rent og DOM-fritt
+  // (testes i tests/unit/nb-period-range.test.js).
+
+  const GRAN_BY_FREQ = { A: 'year', Q: 'quarter', M: 'month', B: 'day', D: 'day' };
+  // Grovhetsrang: konvertering er kun lov mot grovere (høyere rang).
+  const GRAN_RANK = { day: 0, month: 1, quarter: 2, year: 3 };
+
+  /** SDMX-frekvenskode → inputgranularitet. Ukjent/tom → 'day' (fineste). */
+  function periodGranularity(freqCode) {
+    return GRAN_BY_FREQ[String(freqCode || '').toUpperCase()] || 'day';
+  }
+
+  /** Granularitet utledet av en periodekodes form, eller null (f.eks. FHI-skoleår). */
+  function periodCodeGranularity(code) {
+    const c = String(code || '');
+    if (/^\d{4}$/.test(c)) return 'year';
+    if (/^\d{4}-Q[1-4]$/i.test(c)) return 'quarter';
+    if (/^\d{4}-\d{2}$/.test(c)) return 'month';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(c)) return 'day';
+    return null;
+  }
+
+  /** 'range(from,to)' → {from, to} (trimmet; tom side = åpen ende), ellers null. */
+  function parsePeriodRange(token) {
+    if (typeof token !== 'string') return null;
+    const m = token.match(/^range\(([^,()]*),([^,()]*)\)$/);
+    if (!m) return null;
+    return { from: m[1].trim(), to: m[2].trim() };
+  }
+
+  /** Bygg 'range(from,to)'-tokenet (trimmer; tomme sider tillatt). */
+  function formatPeriodRange(from, to) {
+    return 'range(' + String(from || '').trim() + ',' + String(to || '').trim() + ')';
+  }
+
+  /**
+   * Konverter en periodekode til en annen granularitet. Kun mot grovere er
+   * deterministisk ('2024-03-15' → '2024-03' → '2024'; måned/dag → 'YYYY-QN');
+   * mot finere (eller uparserbar kode) → null, så kalleren kan tømme feltet.
+   */
+  function convertPeriod(code, toGran) {
+    const c = String(code || '').trim();
+    const fromGran = periodCodeGranularity(c);
+    if (!fromGran || !(toGran in GRAN_RANK)) return null;
+    if (fromGran === toGran) return c;
+    if (GRAN_RANK[toGran] < GRAN_RANK[fromGran]) return null; // finere → udefinert
+
+    const year = c.slice(0, 4);
+    if (toGran === 'year') return year;
+    if (toGran === 'month') {
+      // Kun dag → måned er mulig (kvartal/år er grovere og fanget over).
+      return fromGran === 'day' ? c.slice(0, 7) : null;
+    }
+    if (toGran === 'quarter') {
+      // Dag/måned har månedsdel i posisjon 5-6.
+      const month = parseInt(c.slice(5, 7), 10);
+      if (!month || month < 1 || month > 12) return null;
+      return year + '-Q' + Math.ceil(month / 3);
+    }
+    return null;
+  }
+
+  /**
+   * Klem en kode innenfor [min, max] (leksikografisk — gyldig innen én
+   * granularitet). Tomme/manglende grenser ignoreres.
+   */
+  function clampPeriod(code, minCode, maxCode) {
+    let c = String(code || '');
+    if (minCode && c < minCode) c = minCode;
+    if (maxCode && c > maxCode) c = maxCode;
+    return c;
+  }
+
+  /** Antall virkedager (man-fre) i [d1, d2], begge ISO-datoer, inklusiv. */
+  function businessDayCount(d1, d2) {
+    const start = new Date(d1 + 'T00:00:00Z');
+    const end = new Date(d2 + 'T00:00:00Z');
+    if (isNaN(start) || isNaN(end) || end < start) return 0;
+    const days = Math.round((end - start) / 86400000) + 1;
+    let count = Math.floor(days / 7) * 5;
+    const startDow = start.getUTCDay();
+    for (let i = 0; i < days % 7; i++) {
+      const dow = (startDow + i) % 7;
+      if (dow !== 0 && dow !== 6) count++;
+    }
+    return count;
+  }
+
+  /**
+   * Estimer antall perioder i [from, to] for en granularitet (inklusiv).
+   * Dag-granularitet teller virkedager (NB-frekvens B). Invertert eller
+   * uparserbar range → 0. Brukes kun til celletall-estimatet i UI-en.
+   */
+  function estimatePeriodCount(from, to, gran) {
+    const f = String(from || '').trim();
+    const t = String(to || '').trim();
+    if (periodCodeGranularity(f) !== gran || periodCodeGranularity(t) !== gran) return 0;
+    if (t < f) return 0;
+
+    const fy = parseInt(f.slice(0, 4), 10);
+    const ty = parseInt(t.slice(0, 4), 10);
+    if (gran === 'year') return ty - fy + 1;
+    if (gran === 'quarter') {
+      return (ty * 4 + parseInt(t.slice(6), 10)) - (fy * 4 + parseInt(f.slice(6), 10)) + 1;
+    }
+    if (gran === 'month') {
+      return (ty * 12 + parseInt(t.slice(5, 7), 10)) - (fy * 12 + parseInt(f.slice(5, 7), 10)) + 1;
+    }
+    return businessDayCount(f, t);
+  }
+
+  /**
+   * Tidligste/seneste periodekode i et årstall for en granularitet — brukes som
+   * min/max-attributter på fra/til-inputene (årstall fra katalogens
+   * firstPeriod/lastPeriod). Ikke-årstall → null (ingen grense).
+   */
+  function periodBoundsForYear(year, gran) {
+    const y = String(year || '').trim();
+    if (!/^\d{4}$/.test(y)) return null;
+    if (gran === 'year') return { min: y, max: y };
+    if (gran === 'quarter') return { min: y + '-Q1', max: y + '-Q4' };
+    if (gran === 'month') return { min: y + '-01', max: y + '-12' };
+    return { min: y + '-01-01', max: y + '-12-31' };
+  }
+
   window.SdmxToJsonStat = {
     dataToJsonStat: dataToJsonStat,
     structureToMetadata: structureToMetadata,
+    // Periodehjelpere for intervallvelgeren (delt mellom UI og NB-adapteren).
+    periodGranularity: periodGranularity,
+    periodCodeGranularity: periodCodeGranularity,
+    parsePeriodRange: parsePeriodRange,
+    formatPeriodRange: formatPeriodRange,
+    convertPeriod: convertPeriod,
+    clampPeriod: clampPeriod,
+    estimatePeriodCount: estimatePeriodCount,
+    periodBoundsForYear: periodBoundsForYear,
     // Eksponert for gjenbruk/testing.
     _pickName: pickName,
     _codelistIdFromUrn: codelistIdFromUrn

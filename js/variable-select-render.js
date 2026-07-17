@@ -90,6 +90,24 @@ async function displayVariables() {
     // selection is enforced in variable-select-events.js via the card attribute.
     const singleSelect = dimension.extension?.singleSelect === true;
 
+    // Interval time picker (Norges Bank): the SDMX API is interval-based
+    // (startPeriod/endPeriod/lastNObservations), so the adapter marks the time
+    // dimension with extension.intervalPicker and the card renders a
+    // Siste N / Fra–til / Hele historikken picker instead of a value list.
+    if (dimension.extension?.intervalPicker === true) {
+      html += renderTimePickerCard(dimCode, dimension, roleBadgeHtml);
+      return;
+    }
+
+    // Small single-select dimensions (Norges Bank FREQ) render as a radio
+    // pill row — mutual exclusivity is then inherent in the control instead of
+    // being enforced as list-interaction rules. Large singleSelect dimensions
+    // fall back to the value list with radio behaviour.
+    if (singleSelect && valueCount <= 12) {
+      html += renderPillGroupCard(dimCode, dimension, roleBadgeHtml, elimination, valueCount);
+      return;
+    }
+
     // Codelists: alternative value groupings for this dimension
     const codelists = dimension.extension?.codelists || [];
     const hasCodelists = codelists.length > 0;
@@ -168,6 +186,193 @@ async function displayVariables() {
 }
 
 /**
+ * Render the interval-based time picker card (dimensions flagged with
+ * extension.intervalPicker — Norges Bank's TIME_PERIOD). Three pill modes
+ * matching the SDMX API's real semantics:
+ *   «Siste N»          → top(N)          → lastNObservations=N
+ *   «Fra–til»          → range(from,to)  → startPeriod/endPeriod
+ *   «Hele historikken» → '*'             → no period params
+ * Defaults to Siste 10 so the time dimension never blocks «Hent data».
+ * The from/til inputs are rendered lazily by syncTimePicker()
+ * (variable-select-status.js) since their granularity follows the selected
+ * frequency (B → date, M → month, Q → year+quarter, A → year).
+ */
+function renderTimePickerCard(dimCode, dimension, roleBadgeHtml) {
+  const name = escapeHtml(dimension.label || dimCode);
+  return `
+    <div class="variable-card" data-dimension="${escapeHtml(dimCode)}" data-elimination="false"
+         data-singleselect="false" data-time-picker="interval" data-picker-mode="top">
+      <div class="variable-header">
+        <h3 class="variable-name">${name}</h3>
+        ${roleBadgeHtml}
+        <span class="variable-badge badge-required">${t('variable.required')}</span>
+      </div>
+
+      <div class="variable-controls">
+        <div class="api-pill-group tp-modes" role="radiogroup" aria-label="${name}">
+          <label class="api-pill"><input type="radio" name="tp-mode-${escapeHtml(dimCode)}" value="top" checked><span>${t('variable.btn.last')} N</span></label>
+          <label class="api-pill"><input type="radio" name="tp-mode-${escapeHtml(dimCode)}" value="range"><span>${t('variable.timePicker.range')}</span></label>
+          <label class="api-pill"><input type="radio" name="tp-mode-${escapeHtml(dimCode)}" value="star"><span>${t('variable.timePicker.all')}</span></label>
+        </div>
+
+        <div class="tp-pane tp-pane-top">
+          <label class="tp-label">${t('variable.btn.last')}</label>
+          <input type="number" class="top-n-input" value="10" min="1">
+          <span class="top-n-label">${t('unit.value.many')}</span>
+        </div>
+
+        <div class="tp-pane tp-pane-range" hidden>
+          <div class="tp-range-inputs"></div>
+        </div>
+
+        <div class="tp-pane tp-pane-star" hidden>
+          <p class="tp-hint">${t('variable.timePicker.allHint')}</p>
+        </div>
+      </div>
+
+      <div class="variable-selection-summary"></div>
+    </div>
+  `;
+}
+
+/**
+ * Render a small single-select dimension (e.g. Norges Bank FREQ) as a radio
+ * pill row. Emits the same selection shape as a one-item list selection
+ * (array of one code) via the pill branch in getVariableSelection().
+ */
+function renderPillGroupCard(dimCode, dimension, roleBadgeHtml, elimination, valueCount) {
+  const name = escapeHtml(dimension.label || dimCode);
+  const labels = dimension.category.label;
+  const index = dimension.category.index || {};
+  const codes = Object.keys(labels).sort((a, b) => (index[a] ?? 0) - (index[b] ?? 0));
+
+  const pills = codes.map(code =>
+    `<label class="api-pill"><input type="radio" name="dim-${escapeHtml(dimCode)}" value="${escapeHtml(code)}"><span>${escapeHtml(labels[code] || code)}</span></label>`
+  ).join('');
+
+  return `
+    <div class="variable-card" data-dimension="${escapeHtml(dimCode)}" data-elimination="${elimination}"
+         data-singleselect="true" data-pill-group="true">
+      <div class="variable-header">
+        <h3 class="variable-name">${name}</h3>
+        ${roleBadgeHtml}
+        <span class="variable-badge ${elimination ? 'badge-optional' : 'badge-required'}">
+          ${elimination ? t('variable.optional') : t('variable.required')}
+        </span>
+        <span class="variable-info">${valueCount} ${t('unit.value.many')}</span>
+      </div>
+
+      <div class="variable-controls">
+        <div class="api-pill-group dim-pill-group" role="radiogroup" aria-label="${name}">
+          ${pills}
+        </div>
+      </div>
+
+      <div class="variable-selection-summary"></div>
+    </div>
+  `;
+}
+
+/**
+ * Render the from/til inputs for a granularity. Native input types map 1:1 to
+ * the SDMX period formats: date → 'YYYY-MM-DD', month → 'YYYY-MM',
+ * year (number) → 'YYYY'; quarter needs a year input + Q1–Q4 select.
+ * bounds {min,max} become min/max attributes where known.
+ */
+function renderPeriodInputsHtml(gran, bounds, fromVal, toVal) {
+  const b = bounds || {};
+
+  const sideHtml = (side, val) => {
+    if (gran === 'quarter') {
+      const y = val ? val.slice(0, 4) : '';
+      const q = val && /Q[1-4]$/.test(val) ? val.slice(-2) : '';
+      const yMin = b.min ? b.min.slice(0, 4) : '';
+      const yMax = b.max ? b.max.slice(0, 4) : '';
+      const options = ['', 'Q1', 'Q2', 'Q3', 'Q4'].map(o =>
+        `<option value="${o}"${o === q ? ' selected' : ''}>${o || '–'}</option>`
+      ).join('');
+      return `<input type="number" class="tp-${side}-year"` +
+        (yMin ? ` min="${escapeHtml(yMin)}" placeholder="${escapeHtml(yMin)}"` : '') +
+        (yMax ? ` max="${escapeHtml(yMax)}"` : '') +
+        ` value="${escapeHtml(y)}">` +
+        `<select class="tp-${side}-q" aria-label="${t('variable.timePicker.quarterLabel')}">${options}</select>`;
+    }
+    const type = gran === 'day' ? 'date' : (gran === 'month' ? 'month' : 'number');
+    const min = b.min ? (gran === 'year' ? b.min.slice(0, 4) : b.min) : '';
+    const max = b.max ? (gran === 'year' ? b.max.slice(0, 4) : b.max) : '';
+    return `<input type="${type}" class="tp-${side}"` +
+      (min ? ` min="${escapeHtml(min)}"` : '') +
+      (max ? ` max="${escapeHtml(max)}"` : '') +
+      (gran === 'year' && min ? ` placeholder="${escapeHtml(min)}"` : '') +
+      ` value="${escapeHtml(val || '')}">`;
+  };
+
+  return `<label class="tp-label">${t('variable.timePicker.from')}</label>${sideHtml('from', fromVal)}` +
+         `<label class="tp-label">${t('variable.timePicker.to')}</label>${sideHtml('to', toVal)}`;
+}
+
+/** Show the pane matching card.dataset.pickerMode, hide the others. */
+function toggleTimePickerPanes(card) {
+  const mode = card.dataset.pickerMode || 'top';
+  card.querySelector('.tp-pane-top')?.toggleAttribute('hidden', mode !== 'top');
+  card.querySelector('.tp-pane-range')?.toggleAttribute('hidden', mode !== 'range');
+  card.querySelector('.tp-pane-star')?.toggleAttribute('hidden', mode !== 'star');
+}
+
+/**
+ * Restore a saved selection onto an interval time picker card.
+ * Handles '*', 'top(N)', 'range(from,to)' and — for legacy deep links created
+ * by the old value-list UI — explicit code arrays, which collapse to a
+ * contiguous range(min,max) (the adapter fetched min..max as an interval for
+ * arrays anyway; only the client-side subset filter is lost).
+ */
+function restoreTimePickerSelection(card, dimSelection) {
+  if (!dimSelection) return; // keep the Siste 10 default
+
+  const P = window.SdmxToJsonStat;
+  let mode = null, topN = null, from = '', to = '';
+
+  if (dimSelection === '*') {
+    mode = 'star';
+  } else if (typeof dimSelection === 'string' && dimSelection.startsWith('top(')) {
+    mode = 'top';
+    topN = dimSelection.match(/\d+/)?.[0] || '10';
+  } else if (typeof dimSelection === 'string' && P?.parsePeriodRange(dimSelection)) {
+    const r = P.parsePeriodRange(dimSelection);
+    mode = 'range';
+    from = r.from;
+    to = r.to;
+  } else if (Array.isArray(dimSelection) && dimSelection.length > 0) {
+    const sorted = dimSelection.map(String).slice().sort();
+    mode = 'range';
+    from = sorted[0];
+    to = sorted[sorted.length - 1];
+  }
+  if (!mode) return;
+
+  card.dataset.pickerMode = mode;
+  card.querySelectorAll('.tp-modes input[type="radio"]').forEach(r => {
+    r.checked = (r.value === mode);
+  });
+  toggleTimePickerPanes(card);
+
+  if (mode === 'top' && topN) {
+    const input = card.querySelector('.top-n-input');
+    if (input) input.value = topN;
+  }
+  if (mode === 'range' && (from || to)) {
+    // Render the inputs now at the granularity the saved codes dictate, so the
+    // values can be set; syncTimePicker() leaves matching granularity alone.
+    const gran = P?.periodCodeGranularity(from || to) || 'day';
+    const wrap = card.querySelector('.tp-range-inputs');
+    if (wrap) {
+      wrap.innerHTML = renderPeriodInputsHtml(gran, timePickerBounds(card, gran, null), from, to);
+      card.dataset.pickerGran = gran;
+    }
+  }
+}
+
+/**
  * Auto-select any non-time dimension that has exactly one value and no existing
  * selection, so users aren't forced to click through degenerate choices.
  *
@@ -191,6 +396,21 @@ function autoSelectSingleValueDimensions() {
 
   document.querySelectorAll('.variable-card').forEach(card => {
     const dimCode = card.dataset.dimension;
+
+    // Radio pill dimensions (e.g. Norges Bank FREQ): auto-check the pill when
+    // there is exactly one option — common for the NB core flows, where only
+    // one frequency actually has data, and required for the time picker to
+    // know its input granularity without a user click.
+    if (card.dataset.pillGroup === 'true') {
+      if (savedSelection[dimCode] !== undefined) return;
+      const radios = card.querySelectorAll('.dim-pill-group input[type="radio"]');
+      if (radios.length === 1 && !card.querySelector('.dim-pill-group input:checked')) {
+        radios[0].checked = true;
+        didAutoSelect = true;
+      }
+      return;
+    }
+
     const container = card.querySelector('.value-list-container');
     if (!container) return;
 
@@ -301,6 +521,25 @@ async function restoreSelections() {
   // Second pass: restore value selections
   document.querySelectorAll('.variable-card').forEach(card => {
     const dimCode = card.dataset.dimension;
+
+    // Interval time picker card: token-based restore (no value list to mark).
+    if (card.dataset.timePicker === 'interval') {
+      restoreTimePickerSelection(card, savedSelection[dimCode]);
+      return;
+    }
+
+    // Radio pill card: check the pill matching the saved (single) code.
+    if (card.dataset.pillGroup === 'true') {
+      const sel = savedSelection[dimCode];
+      const code = Array.isArray(sel) && sel.length > 0 ? String(sel[0]) : null;
+      if (code !== null) {
+        card.querySelectorAll('.dim-pill-group input[type="radio"]').forEach(r => {
+          r.checked = (r.value === code);
+        });
+      }
+      return;
+    }
+
     const container = card.querySelector('.value-list-container');
     if (!container) return;
 

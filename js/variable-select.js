@@ -57,10 +57,12 @@ async function renderVariableSelection(container) {
   }
 
   const table = AppState.selectedTable;
-  // Capability gates: the API-builder panel (GET/POST URL preview) and the
-  // "load default selection" button are SSB-only features — Norges Bank has
-  // neither; FHI has a default selection but no API-builder. See
-  // js/sources/*-adapter.js capabilities and js/sources/source-registry.js.
+  // Capability gates (see js/sources/*-adapter.js capabilities and
+  // js/sources/source-registry.js): SSB gets the full API-builder panel
+  // (supportsGetUrlBuilder — GET/POST with format options); Norges Bank and
+  // FHI get the simplified panel (supportsApiQuery — data URL/POST body +
+  // metadata URL via api.buildApiQuery). The "load default selection" button
+  // is gated separately (supportsDefaultSelection: SSB + FHI, not NB).
   const caps = api.capabilitiesFor(table.id) || {};
 
   // Pre-rendrede tabellsider (/table/{id}/) har en generert tittel som skal stå
@@ -89,7 +91,60 @@ async function renderVariableSelection(container) {
           ${t('variable.defaultSelection')}
         </button>` : '';
 
-  // API builder panel (GET/POST URL preview) — SSB-only (capabilities.supportsGetUrlBuilder).
+  // Simplified API builder panel (Norges Bank / FHI — capabilities.supportsApiQuery):
+  // live data URL (GET) or endpoint + POST body (FHI), plus metadata URL, with
+  // copy/open actions. Same element ids as the full panel so updateQueryPreview()
+  // and setupApiBuilderEvents() operate on both — the SSB-specific option rows
+  // (method/format/display/separator) are simply absent.
+  const simpleApiBuilderHtml = `
+      <div class="query-preview-container">
+        <button class="query-preview-toggle" id="query-preview-toggle">
+          <span class="query-toggle-icon">&#9654;</span> ${t('api.builder')}
+        </button>
+        <div class="query-preview-content" id="query-preview-content" style="display: none;">
+
+          <div class="api-builder-section">
+            <div class="api-builder-section-header">
+              <span class="api-builder-section-title">${t('api.dataUrl')}</span>
+              <div class="api-builder-actions">
+                <label class="api-builder-checkbox-label" title="${t('api.decodedUrlTooltip')}"><input type="checkbox" id="api-decode-url-cb" checked> ${t('api.showPlaintext')}</label>
+                <button class="btn-secondary btn-sm" id="api-copy-url-btn" title="${t('api.copyUrl')}">${t('api.copyUrl')}</button>
+                <button class="btn-secondary btn-sm" id="api-open-btn" title="${t('api.openNewTab')}">${t('api.openBrowser')}</button>
+              </div>
+            </div>
+            <code class="query-preview-url" id="query-preview-url">
+              ${t('variable.selectValues')}
+            </code>
+          </div>
+
+          <div class="api-builder-section" id="api-post-body-section" style="display: none;">
+            <div class="api-builder-section-header">
+              <span class="api-builder-section-title">${t('api.postBody')}</span>
+              <div class="api-builder-actions">
+                <button class="btn-secondary btn-sm" id="api-copy-post-body-btn" title="${t('api.copyBody')}">${t('api.copyBody')}</button>
+              </div>
+            </div>
+            <code class="query-preview-url" id="api-post-body-preview" style="white-space: pre;"></code>
+          </div>
+
+          <div class="api-builder-section">
+            <div class="api-builder-section-header">
+              <span class="api-builder-section-title">${t('api.metadataUrl')}</span>
+              <div class="api-builder-actions">
+                <button class="btn-secondary btn-sm" id="api-copy-meta-btn" title="${t('api.copyMetadataUrl')}">${t('api.copyMetadataUrl')}</button>
+                <button class="btn-secondary btn-sm" id="api-open-meta-btn" title="${t('api.openMetadata')}">${t('api.openBrowser')}</button>
+              </div>
+            </div>
+            <code class="query-preview-url" id="query-preview-meta-url"></code>
+          </div>
+
+          <div class="api-copy-toast" id="api-copy-toast" style="display: none;">${t('api.copied')}</div>
+        </div>
+      </div>`;
+
+  // Full API builder panel (GET/POST URL preview with format options) — SSB-only
+  // (capabilities.supportsGetUrlBuilder). NB/FHI fall back to the simplified
+  // panel above (capabilities.supportsApiQuery).
   const apiBuilderHtml = caps.supportsGetUrlBuilder ? `
       <div class="query-preview-container">
         <button class="query-preview-toggle" id="query-preview-toggle">
@@ -180,7 +235,7 @@ async function renderVariableSelection(container) {
 
           <div class="api-copy-toast" id="api-copy-toast" style="display: none;">${t('api.copied')}</div>
         </div>
-      </div>` : '';
+      </div>` : (caps.supportsApiQuery ? simpleApiBuilderHtml : '');
 
   container.innerHTML = `
     <div class="view-container">

@@ -418,9 +418,10 @@
     const flow = flowForId(tableId);
     if (!flow) throw new Error('[NBAdapter] Ukjent tabell: ' + tableId);
     const locale = apiLang(lang || currentLang());
-    // 'v2' = metadata-skjema med timePeriodsByFreq + FREQ.singleSelect — ny
-    // nøkkel så gamle cacheoppføringer (uten utvidelsene) ikke serveres i 24 t.
-    const cacheKey = 'table_' + tableId + '_meta_v2_' + locale;
+    // 'v3' = metadata-skjema med intervalPicker/timeBounds på tidsdimensjonen
+    // (v2: timePeriodsByFreq + FREQ.singleSelect) — ny nøkkel så gamle
+    // cacheoppføringer (uten utvidelsene) ikke serveres i 24 t.
+    const cacheKey = 'table_' + tableId + '_meta_v3_' + locale;
 
     if (useCache !== false) {
       const cached = await cacheGet(cacheKey);
@@ -474,6 +475,32 @@
       meta.extension.timePeriodsByFreq = { freqDim: 'FREQ', timeDim: timeId, byFreq: probe.byFreq };
     }
 
+    // Intervallbasert tidsvelger (variable-select renderTimePickerCard):
+    // SDMX-API-et er intervallbasert (startPeriod/endPeriod/lastNObservations),
+    // så tidsdimensjonen får en fra–til/Siste N/alt-velger i stedet for
+    // verdilisten (som uansett bare dekker de siste TIME_PROBE_N probede
+    // periodene). Settes kun når timePeriodsByFreq finnes — uten frekvenskart
+    // kan ikke velgeren utlede inputgranularitet, og verdilisten beholdes.
+    // timeBounds (årstall fra katalogproben) gir min/max på fra/til-inputene;
+    // feiltolerant — velgeren virker uten grenser.
+    if (meta.extension && meta.extension.timePeriodsByFreq) {
+      const timeId = meta.extension.timePeriodsByFreq.timeDim;
+      if (meta.dimension[timeId]) {
+        const timeExt = meta.dimension[timeId].extension =
+          meta.dimension[timeId].extension || {};
+        timeExt.intervalPicker = true;
+        try {
+          const period = await fetchCataloguePeriod(flow);
+          if (period) {
+            timeExt.timeBounds = {
+              firstPeriod: period.firstPeriod || '',
+              lastPeriod: period.lastPeriod || ''
+            };
+          }
+        } catch (e) { /* uten grenser — velgeren degraderer pent */ }
+      }
+    }
+
     // FREQ er gjensidig utelukkende: SDMX-nøkkelen støtter riktignok 'A+M',
     // men periodene aligner aldri på tvers av frekvenser (2024 vs 2024-06 vs
     // 2024-06-28), så en kombinert tabell blir en nesten tom kryssmatrise —
@@ -496,10 +523,12 @@
   // ---- Data ----
 
   /**
-   * Oversett appens utvalg {DimCode: [koder]|'*'|'top(N)'} til SDMX-nøkkel + params.
-   * Ikke-tidsdimensjoner → nøkkelsegmenter (koder join '+', '*'/mangler → tomt).
-   * TIME_PERIOD: 'top(N)' → lastNObservations=N; eksplisitt liste →
-   * startPeriod/endPeriod; '*' → ingen periodeparametre (full historikk).
+   * Oversett appens utvalg {DimCode: [koder]|'*'|'top(N)'|'range(a,b)'} til
+   * SDMX-nøkkel + params. Ikke-tidsdimensjoner → nøkkelsegmenter (koder join
+   * '+', '*'/mangler → tomt). TIME_PERIOD: 'top(N)' → lastNObservations=N;
+   * 'range(from,to)' → startPeriod/endPeriod (tom side utelates — åpen ende);
+   * eksplisitt liste → startPeriod/endPeriod (min/max); '*' → ingen
+   * periodeparametre (full historikk).
    */
   function buildKeyAndParams(meta, valueCodes) {
     const sel = valueCodes || {};
@@ -523,16 +552,61 @@
     const t = sel[timeId];
     if (typeof t === 'string') {
       const m = t.match(/^top\((\d+)\)$/i);
+      const range = m ? null : window.SdmxToJsonStat.parsePeriodRange(t);
       if (m) {
         params.lastNObservations = m[1];
+      } else if (range) {
+        // Intervallvelgeren (variable-select) — tom side = åpen ende.
+        if (range.from) params.startPeriod = range.from;
+        if (range.to) params.endPeriod = range.to;
       }
-      // '*' → ingen periodeparametre.
+      // '*' / helt åpen range → ingen periodeparametre.
     } else if (Array.isArray(t) && t.length > 0) {
       const sorted = t.slice().sort((a, b) => String(a).localeCompare(String(b)));
       params.startPeriod = sorted[0];
       params.endPeriod = sorted[sorted.length - 1];
     }
     return { key, params };
+  }
+
+  /**
+   * Bygg den fulle data-URL-en for et utvalg (delt mellom getTableData og
+   * buildApiQuery slik at API-bygger-forhåndsvisningen aldri divergerer fra
+   * det appen faktisk sender).
+   */
+  function buildDataUrl(flow, meta, valueCodes, locale) {
+    const { key, params } = buildKeyAndParams(meta, valueCodes);
+    const qs = ['format=sdmx-json', 'locale=' + locale];
+    Object.keys(params).forEach(k => qs.push(k + '=' + encodeURIComponent(params[k])));
+    return BASE + '/data/' + encodeURIComponent(flow.flow) + '/' + key + '?' + qs.join('&');
+  }
+
+  /**
+   * API-bygger-spørring (kontrakten i source-registry.js): synkron beskrivelse
+   * av GET-kallet mot Norges Banks SDMX-API for gjeldende utvalg.
+   * options.meta (allerede lastet tabellmetadata) er PÅKREVD — metoden er
+   * synkron og kan ikke hente metadata selv; UI-en (variable-select) har den
+   * alltid lastet før forhåndsvisningen oppdateres.
+   *
+   * NB: Fler-verdi tidsutvalg vises som start-/endPeriod-intervall — nøyaktig
+   * det appen selv sender (ikke-sammenhengende perioder filtreres først
+   * klientside etter henting, se getTableData/filterDatasetToTimeCodes).
+   */
+  function buildApiQuery(tableId, valueCodes, options) {
+    const flow = flowForId(tableId);
+    if (!flow) throw new Error('[NBAdapter] Ukjent tabell: ' + tableId);
+    const opts = options || {};
+    if (!opts.meta || !Array.isArray(opts.meta.id)) {
+      throw new Error('[NBAdapter] buildApiQuery krever options.meta (lastet tabellmetadata)');
+    }
+    const locale = apiLang(opts.lang || currentLang());
+    return {
+      method: 'GET',
+      url: buildDataUrl(flow, opts.meta, valueCodes, locale),
+      body: null,
+      metadataUrl: BASE + '/datastructure/NB/DSD_' + encodeURIComponent(flow.flow) +
+        '?references=codelist&format=sdmx-json'
+    };
   }
 
   /** Radmajor-strides for en size-array: strides[i] = produkt(size[i+1..]). */
@@ -626,11 +700,7 @@
 
     // Metadata trengs for dimensjonsrekkefølge (cachet).
     const meta = await getTableMetadata(tableId, true, locale);
-    const { key, params } = buildKeyAndParams(meta, valueCodes);
-
-    const qs = ['format=sdmx-json', 'locale=' + locale];
-    Object.keys(params).forEach(k => qs.push(k + '=' + encodeURIComponent(params[k])));
-    const url = BASE + '/data/' + encodeURIComponent(flow.flow) + '/' + key + '?' + qs.join('&');
+    const url = buildDataUrl(flow, meta, valueCodes, locale);
 
     const metricDims = (meta.role && meta.role.metric) || [];
 
@@ -731,6 +801,9 @@
       supportsServerExport: false,
       supportsCodelists: false,
       supportsGetUrlBuilder: false,
+      // Forenklet API-bygger (data-URL + metadata-URL) via buildApiQuery —
+      // gjenbruker samme URL-bygging som getTableData.
+      supportsApiQuery: true,
       supportsDefaultSelection: false,
       supportsAggregation: false
     },
@@ -745,6 +818,7 @@
 
     getTableMetadata: getTableMetadata,
     getTableData: getTableData,
+    buildApiQuery: buildApiQuery,
 
     getCodeList: async () => { throw new Error('[NBAdapter] Norges Bank har ikke kodelister'); },
     downloadTableData: async () => { throw new Error('[NBAdapter] Server-eksport støttes ikke — bruk klientside CSV'); },

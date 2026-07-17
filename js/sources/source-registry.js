@@ -45,6 +45,13 @@
  *   getSavedQueryData(id, lang?)                  → Promise<JSONStat2Data>
  *   getDefaultSelection(id, lang?)                → Promise<{selection:[]}>
  *   buildPostBody(valueCodes, options?)           → object  (synkron; SSB-only)
+ *   buildApiQuery(id, valueCodes, options?)       → object  (synkron; NB/FHI —
+ *       API-bygger-forhåndsvisning: { method:'GET'|'POST', url, body:object|null,
+ *       metadataUrl }. options.meta = allerede lastet tabellmetadata (PÅKREVD;
+ *       metoden er synkron og henter aldri selv), options.lang = API-språk.
+ *       Skal beskrive NØYAKTIG samme kall som adapterens getTableData sender.
+ *       Gates i UI-en på capabilities.supportsApiQuery; SSB kaster (bruker det
+ *       dedikerte fullpanelet, jf. supportsGetUrlBuilder).)
  *   cleanupCache()                                → number
  *   clearCache()                                  → void|Promise<void>
  *   getCacheStats()                               → object|null
@@ -289,6 +296,11 @@
     },
     getDefaultSelection(tableId, ...rest) {
       return requireAdapterForId(tableId, 'getDefaultSelection').getDefaultSelection(tableId, ...rest);
+    },
+    // Synkron API-bygger-forhåndsvisning (NB/FHI) — se adapterkontrakten over.
+    // UI-en gater på capabilities.supportsApiQuery; SSB-adapteren kaster.
+    buildApiQuery(tableId, ...rest) {
+      return requireAdapterForId(tableId, 'buildApiQuery').buildApiQuery(tableId, ...rest);
     },
 
     // ---- Cache → delt SSB-CacheManager (uendret oppførsel) ----

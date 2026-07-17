@@ -42,12 +42,15 @@
     // Rå SSBApi-instans — brukes av registryet for delt cache-delegering.
     instance: ssb,
 
-    // SSB støtter hele funksjonsflaten.
+    // SSB støtter hele funksjonsflaten. supportsApiQuery er false fordi SSB
+    // bruker det dedikerte fullpanelet i variable-select (supportsGetUrlBuilder,
+    // med format-/visningsvalg) i stedet for den forenklede buildApiQuery-veien.
     capabilities: {
       supportsSavedQueries: true,
       supportsServerExport: true,
       supportsCodelists: true,
       supportsGetUrlBuilder: true,
+      supportsApiQuery: false,
       supportsDefaultSelection: true,
       supportsAggregation: true
     },
@@ -72,6 +75,9 @@
     // SSB-only funksjon (capabilities.supportsGetUrlBuilder), men eksponeres på
     // fasaden for å bevare dagens oppførsel.
     buildPostBody:       (...a) => ssb.buildPostBody(...a),
+    // Forenklet API-bygger-spørring (NB/FHI) — SSB bruker fullpanelet i
+    // variable-select-api.js (GET/POST-URL med format-/visningsvalg) i stedet.
+    buildApiQuery:       () => { throw new Error('[SSBAdapter] buildApiQuery støttes ikke — SSB bruker det dedikerte API-bygger-panelet'); },
     cleanupCache:        (...a) => ssb.cleanupCache(...a),
     clearCache:          (...a) => ssb.clearCache(...a),
     getCacheStats:       (...a) => ssb.getCacheStats(...a)

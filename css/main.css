@@ -887,6 +887,68 @@ button {
   outline-offset: 2px;
 }
 
+.api-pill input:disabled + span {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Radio pill dimensions (variable-select, e.g. Norges Bank FREQ) */
+.dim-pill-group {
+  margin: var(--spacing-xs) 0 var(--spacing-sm);
+}
+
+.dim-pill-group .api-pill span {
+  padding: 0.3rem 0.9rem;
+}
+
+/* Interval time picker (variable-select, Norges Bank time dimensions) */
+.tp-modes {
+  margin-bottom: var(--spacing-sm);
+}
+
+.tp-pane {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.tp-pane[hidden] {
+  display: none;
+}
+
+.tp-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.tp-label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.tp-pane input,
+.tp-pane select {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-surface);
+  font-size: var(--font-size-sm);
+}
+
+.tp-pane input[type="number"] {
+  width: 6rem;
+}
+
+.tp-hint {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light, var(--color-text));
+}
+
 .api-builder-section {
   margin-bottom: var(--spacing-md);
 }

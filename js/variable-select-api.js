@@ -21,16 +21,26 @@ function getApiRadioValue(name) {
 
 /**
  * Update the real-time API query preview box.
- * Shows the full data URL and metadata URL for the SSB API.
- * Includes output format, format params, separator, and stub/heading layout.
+ *
+ * SSB (capabilities.supportsGetUrlBuilder): full builder — GET/POST data URL
+ * with output format, format params, separator, and stub/heading layout.
+ * Norges Bank / FHI (capabilities.supportsApiQuery): simplified builder —
+ * delegates to updateForeignQueryPreview(), which asks the owning adapter for
+ * the exact query via api.buildApiQuery().
  */
 function updateQueryPreview() {
   const previewUrl = document.getElementById('query-preview-url');
   const metaUrl = document.getElementById('query-preview-meta-url');
   if (!previewUrl || !AppState.selectedTable) return;
 
-  const selection = getVariableSelection();
   const tableId = AppState.selectedTable.id;
+  const caps = api.capabilitiesFor(tableId) || {};
+  if (!caps.supportsGetUrlBuilder) {
+    if (caps.supportsApiQuery) updateForeignQueryPreview(previewUrl, metaUrl, tableId);
+    return;
+  }
+
+  const selection = getVariableSelection();
   const mode = getApiRadioValue('api-method') || 'get';
   const urlDecoded = document.getElementById('api-decode-url-cb')?.checked || false;
 
@@ -143,6 +153,59 @@ function updateQueryPreview() {
   if (metaUrl) {
     metaUrl.textContent = AppConfig.apiBaseUrl + '/tables/' + tableId + '/metadata?lang=' + getCurrentApiLang();
   }
+}
+
+/**
+ * Update the simplified API query preview for foreign sources (Norges Bank /
+ * FHI). The owning adapter describes the exact request its getTableData would
+ * send — GET URL for Norges Bank's SDMX API, POST endpoint + JSON body for
+ * FHI's open API — via the facade's synchronous buildApiQuery().
+ * No-op until the table metadata has loaded (buildApiQuery requires it).
+ *
+ * @param {HTMLElement} previewUrl - The #query-preview-url element
+ * @param {HTMLElement|null} metaUrl - The #query-preview-meta-url element
+ * @param {string} tableId - Namespaced table id (nb-… or fhi-…)
+ */
+function updateForeignQueryPreview(previewUrl, metaUrl, tableId) {
+  if (!tableMetadata || !Array.isArray(tableMetadata.id)) return; // metadata not loaded yet
+
+  let query;
+  try {
+    query = api.buildApiQuery(tableId, getVariableSelection(), {
+      meta: tableMetadata,
+      lang: getCurrentApiLang()
+    });
+  } catch (err) {
+    logger.warn('[ApiBuilder] buildApiQuery failed for ' + tableId + ':', err);
+    return;
+  }
+
+  const urlDecoded = document.getElementById('api-decode-url-cb')?.checked || false;
+  // Keep the raw encoded URL for copy/open — the decoded display variant may not be a valid URL
+  previewUrl.dataset.rawUrl = query.url;
+  previewUrl.textContent = urlDecoded ? decodeURIComponent(query.url) : query.url;
+
+  const postBodySection = document.getElementById('api-post-body-section');
+  const openBtn = document.getElementById('api-open-btn');
+
+  if (query.method === 'POST' && query.body) {
+    const postBodyEl = document.getElementById('api-post-body-preview');
+    if (postBodyEl) postBodyEl.textContent = JSON.stringify(query.body, null, 2);
+    if (postBodySection) postBodySection.style.display = '';
+    // A POST data URL can't be opened directly in a browser tab
+    if (openBtn) {
+      openBtn.disabled = true;
+      openBtn.title = t('api.getOnlyFeature');
+    }
+  } else {
+    if (postBodySection) postBodySection.style.display = 'none';
+    if (openBtn) {
+      openBtn.disabled = false;
+      openBtn.title = t('api.openNewTab');
+    }
+  }
+
+  if (metaUrl) metaUrl.textContent = query.metadataUrl || '';
 }
 
 // ============================================================

@@ -204,9 +204,19 @@ BrowserState.selectTable("09772")
            → updateAllStatus()                     // Validate, show cell count, enable/disable "Hent data"
 ```
 
+Two alternative card representations exist besides the value list, both gated on metadata (not source):
+
+- **Interval time picker** (`dimension.extension.intervalPicker`, set by the Norges Bank adapter): the SDMX API is interval-based (`startPeriod`/`endPeriod`/`lastNObservations`), so the time card renders three mode pills — «Siste N» (default N=10, emits `top(N)`), «Fra–til» (emits the `range(from,to)` selection token → `startPeriod`/`endPeriod`), «Hele historikken» (emits `*`) — instead of a value list. The from/til inputs' granularity follows the selected frequency (`extension.timePeriodsByFreq`): B→`type=date`, M→`type=month`, Q→year+quarter select, A→year, with values converted/clamped on frequency change (`syncTimePicker` in variable-select-status.js, period math in `SdmxToJsonStat`). An inverted range (fra > til) blocks «Hent data».
+- **Radio pills** (`dimension.extension.singleSelect` with ≤12 values, e.g. Norges Bank FREQ): rendered as an `.api-pill-group` radio row — mutual exclusivity is inherent in the control. A lone pill is auto-checked (so single-frequency NB tables are immediately fetchable together with the Siste-10 default).
+
 ### The user opens the API builder
 
 The API builder panel is rendered inside the variable selection view by `variable-select-api.js`. It generates a live preview of the GET and POST URLs for the current selection, and is updated on every selection change.
+
+The panel comes in two variants, gated on the owning source's capabilities (`api.capabilitiesFor(tableId)`):
+
+- **SSB** (`supportsGetUrlBuilder`): the full builder described below, with method (GET/POST), output format, display, and separator options.
+- **Norges Bank / FHI** (`supportsApiQuery`): a simplified builder. `updateQueryPreview()` delegates to `updateForeignQueryPreview()`, which calls the facade's synchronous `api.buildApiQuery(tableId, selection, { meta, lang })`. The owning adapter returns `{ method, url, body, metadataUrl }` describing **exactly** the request its own `getTableData` would send (the URL/body building is shared code inside the adapter): a GET URL against Norges Bank's SDMX API (`/data/{FLOW}/{key}?format=sdmx-json&...`), or FHI's POST endpoint plus the JSON body (`{dimensions:[...], response:{format:'json-stat2',...}}`). Copy/open buttons and the metadata URL section work as in the full panel; "open in browser" is disabled for FHI's POST-only data endpoint.
 
 ```
 setupApiBuilder()
