@@ -72,6 +72,12 @@ const BrowserState = {
       this.allTables = response.tables;
       logger.log(`[BrowserState] Loaded ${this.allTables.length} tables`);
 
+      // Alle kilder nede med tom cache → tydelig, retry-bar feil i stedet
+      // for et stille tomt emnegrid (feilvisningen i front-page.js).
+      if (this.allTables.length === 0) {
+        throw new Error(t('status.allSourcesFailed'));
+      }
+
       this.menuHierarchy = new MenuHierarchy();
       this.menuHierarchy.buildHierarchy(this.allTables);
 
@@ -81,6 +87,54 @@ const BrowserState = {
       this._initPromise = null;
       throw error;
     }
+  },
+
+  /**
+   * Ren hjelper: erstatt én kildes tabeller i en aggregert tabelliste.
+   * Kilde-eierskap avgjøres av sourceForFn (fasadens api.sourceFor).
+   * Muterer ikke input; de øvrige kildenes rekkefølge bevares.
+   */
+  mergeSourceTables(allTables, sourceId, newTables, sourceForFn) {
+    return (allTables || [])
+      .filter(t => sourceForFn(t.id) !== sourceId)
+      .concat(newTables || []);
+  },
+
+  /**
+   * Ta i bruk en ny tabelliste for én kilde: merge inn, invalider
+   * søkeindeksen (ellers serverer enhanced-søket døde tabellobjekter),
+   * og bygg emnehierarkiet på nytt. Eneste mutasjonssti etter init.
+   */
+  applySourceTables(sourceId, tables) {
+    this.allTables = this.mergeSourceTables(
+      this.allTables, sourceId, tables, (id) => api.sourceFor(id)
+    );
+    this._searchIndex = null;
+    this.recentTables = null;
+    this.menuHierarchy = new MenuHierarchy();
+    this.menuHierarchy.buildHierarchy(this.allTables);
+    this.isLoaded = true;
+    logger.log('[BrowserState] Reloaded source «' + sourceId + '» — ' +
+               this.allTables.length + ' tables total');
+  },
+
+  /**
+   * Hent én kildes katalog på nytt (retry etter feil / manuell refresh) og
+   * merge resultatet inn. Re-rendering av visningen er callerens ansvar
+   * (source-status.js re-rendrer browse-visningene).
+   */
+  async reloadSource(sourceId, options) {
+    const opts = options || {};
+    const force = opts.force !== false;
+    if (!this.isLoaded) {
+      // Aldri initialisert (f.eks. alle kilder nede ved kald start) — kjør
+      // full init i stedet; _initPromise ble nullet ved feilen, så dette
+      // er et reelt nytt forsøk.
+      await this.init();
+      return;
+    }
+    const result = await api.reloadSource(sourceId, { force: force });
+    this.applySourceTables(sourceId, result.tables);
   },
 
   // ========== Filter ↔ URL sync ==========

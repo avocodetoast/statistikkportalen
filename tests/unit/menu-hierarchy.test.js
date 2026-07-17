@@ -30,12 +30,28 @@ const TABLES = [
   {
     id: 'nb-ir',
     label: 'Styringsrenten',
+    updated: '',
     paths: [[
       { id: 'nk', label: 'Nasjonalregnskap og konjunkturer' },
       { id: 'nb-renter', label: 'Renter' }
     ]]
   },
-  { id: '99999', label: 'Table without paths' }
+  { id: '99999', label: 'Table without paths' },
+  {
+    id: 'nb-exr',
+    label: 'Valutakurser',
+    updated: '',
+    paths: [
+      [
+        { id: 'nk', label: 'Nasjonalregnskap og konjunkturer' },
+        { id: 'nb-valuta', label: 'Valutakurser' }
+      ],
+      [
+        { id: 'nk', label: 'Nasjonalregnskap og konjunkturer' },
+        { id: 'nb-valuta-hist', label: 'Historiske valutakurser' }
+      ]
+    ]
+  }
 ];
 
 describe('MenuHierarchy.buildHierarchy', () => {
@@ -70,6 +86,25 @@ describe('MenuHierarchy.buildHierarchy', () => {
   it('getNodeForPath navigates to a nested node', () => {
     const node = mh.getNodeForPath(['be', 'be02']);
     assert.equal(node.label, 'Flytting');
+  });
+
+  it('places a multi-path table under every path (like SSB multi-folder tables)', () => {
+    assert.deepEqual(hierarchy.nk.children['nb-valuta'].tables.map(t => t.id), ['nb-exr']);
+    assert.deepEqual(hierarchy.nk.children['nb-valuta-hist'].tables.map(t => t.id), ['nb-exr']);
+  });
+
+  it('getNodeForPath reaches a multi-path table via either path', () => {
+    assert.equal(mh.getNodeForPath(['nk', 'nb-valuta']).tables[0].id, 'nb-exr');
+    assert.equal(mh.getNodeForPath(['nk', 'nb-valuta-hist']).tables[0].id, 'nb-exr');
+  });
+
+  it('deduplicates a multi-path table in collected/counted results', () => {
+    // 'nk'-treet inneholder nb-exr under BÅDE nb-valuta og nb-valuta-hist;
+    // innsamling fra felles forfader skal telle den ÉN gang (+ nb-ir = 2).
+    const collected = mh._collectAllTables(hierarchy.nk);
+    const ids = collected.map(t => t.id);
+    assert.equal(ids.filter(id => id === 'nb-exr').length, 1);
+    assert.equal(mh._countTables(hierarchy.nk), 2);
   });
 
   it('getBreadcrumbs prepends the subject group, then one crumb per segment', () => {
