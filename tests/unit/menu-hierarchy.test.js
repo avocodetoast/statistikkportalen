@@ -1,0 +1,83 @@
+/**
+ * menu-hierarchy.js — builds the subject→subtopic→table tree from the flat,
+ * cross-source table list. Tested against a small synthetic catalogue.
+ */
+'use strict';
+
+const { describe, it } = require('node:test');
+const assert = require('node:assert/strict');
+const { loadApp, SCRIPTS } = require('../helpers/app-env.js');
+
+const app = loadApp([...SCRIPTS.core, 'js/subjects.js', 'js/menu-hierarchy.js']);
+
+const TABLES = [
+  {
+    id: '07459',
+    label: 'Befolkning, etter kjønn og alder',
+    paths: [[
+      { id: 'be', label: 'Befolkning' },
+      { id: 'be01', label: 'Folketall' }
+    ]]
+  },
+  {
+    id: '05803',
+    label: 'Flyttinger',
+    paths: [[
+      { id: 'be', label: 'Befolkning' },
+      { id: 'be02', label: 'Flytting' }
+    ]]
+  },
+  {
+    id: 'nb-ir',
+    label: 'Styringsrenten',
+    paths: [[
+      { id: 'nk', label: 'Nasjonalregnskap og konjunkturer' },
+      { id: 'nb-renter', label: 'Renter' }
+    ]]
+  },
+  { id: '99999', label: 'Table without paths' }
+];
+
+describe('MenuHierarchy.buildHierarchy', () => {
+  const mh = new app.MenuHierarchy();
+  const hierarchy = mh.buildHierarchy(TABLES);
+
+  it('creates one top-level node per subject code', () => {
+    assert.deepEqual(Object.keys(hierarchy).sort(), ['be', 'nk']);
+    assert.equal(hierarchy.be.label, 'Befolkning');
+  });
+
+  it('nests subtopics under the subject', () => {
+    assert.deepEqual(Object.keys(hierarchy.be.children).sort(), ['be01', 'be02']);
+    assert.equal(hierarchy.be.children.be01.depth, 1);
+  });
+
+  it('attaches tables to the leaf node of their path', () => {
+    assert.deepEqual(hierarchy.be.children.be01.tables.map(t => t.id), ['07459']);
+    assert.deepEqual(hierarchy.nk.children['nb-renter'].tables.map(t => t.id), ['nb-ir']);
+  });
+
+  it('skips tables without paths (no crash, not placed)', () => {
+    const placed = [];
+    const collect = (node) => {
+      placed.push(...node.tables.map(t => t.id));
+      Object.values(node.children).forEach(collect);
+    };
+    Object.values(hierarchy).forEach(collect);
+    assert.ok(!placed.includes('99999'));
+  });
+
+  it('getNodeForPath navigates to a nested node', () => {
+    const node = mh.getNodeForPath(['be', 'be02']);
+    assert.equal(node.label, 'Flytting');
+  });
+
+  it('getBreadcrumbs prepends the subject group, then one crumb per segment', () => {
+    const crumbs = mh.getBreadcrumbs(['be', 'be01']);
+    assert.equal(crumbs.length, 3);
+    assert.deepEqual(crumbs[0].path, ['befolkning']); // subject group
+    assert.deepEqual(crumbs[1].path, ['be']);
+    assert.deepEqual(crumbs[2].path, ['be', 'be01']);
+    assert.equal(crumbs[2].label, 'Folketall');
+  });
+});

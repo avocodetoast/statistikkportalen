@@ -16,7 +16,27 @@ The app is also designed to be re-pointed at other PxWebApi v2 instances (e.g. S
 
 Open `index.html` in a browser. No build step or server required.
 
-`test.html` contains a minimal browser-based test suite (assertion helpers `suite()`/`assert()`/`assertEqual()`) covering `AppConfig`, subjects/menu-hierarchy and search-enhanced logic — open it directly in a browser to run it. There is no CLI test runner, linter, or build system configured.
+## Testing & TDD
+
+Tests live in `tests/` and run on Node's built-in test runner — **zero npm dependencies** (Node ≥ 20). See [tests/README.md](tests/README.md) for the harness details.
+
+```bash
+npm test                                        # whole suite
+node --test tests/unit/search-enhanced.test.js  # one file (prefer this while iterating)
+node --test --test-name-pattern="synonym" "tests/**/*.test.js"
+```
+
+The harness (`tests/helpers/app-env.js`) loads the unmodified `js/*.js` files into Node's global scope with browser shims, mirroring the `<script>`-tag load order — call `loadApp()` **once per test file**.
+
+Workflow rules:
+
+- **New pure-logic behaviour** (search scoring, SDMX conversion, hierarchy building, URL encoding, helpers): write the failing test FIRST, run it, confirm it fails for the right reason, then implement until green.
+- **Changing existing logic**: run that module's tests in `tests/unit/` first — they define the current contract.
+- **NEVER weaken, skip, or delete an existing test assertion to make it pass.** Fix the implementation, or stop and flag the conflict to the user.
+- Mock only true I/O boundaries (`fetch`, storage — the harness already disables network). Never mock internal functions or pure collaborators just to isolate a unit.
+- DOM-heavy view modules are exempt from unit-test-first: test extractable pure helpers, don't build elaborate DOM mocks.
+- A change isn't done until `npm test` passes — run it before every commit and show the output as evidence.
+- There is no linter or build system configured.
 
 ## Subagent Model Selection
 
@@ -172,6 +192,7 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 
 | Task | Files to touch |
 |------|---------------|
+| Add or change tests | `tests/unit/{module}.test.js`; harness + fixtures documented in [tests/README.md](tests/README.md) |
 | Add a new search filter | `browser-state.js` (add field + URL sync), `search-view.js` (render + apply filter) |
 | Add a topic filter | `browser-state.js` (add field + URL sync), `topic-view.js` (render + apply filter) |
 | Add a new route / view | `router.js` (new `_handle*Route`), `utils.js` (`renderCurrentView` switch), new view file |
