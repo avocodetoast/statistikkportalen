@@ -19,8 +19,50 @@ function setupVariableEvents() {
   setupListSelectionEvents();
   setupValueFilters();
   setupModeButtons();
+  setupTimePicker();
+  setupPillGroups();
   setupKeyboardShortcuts();
   setupCodelistDropdowns();
+}
+
+/**
+ * Interval time picker cards (data-time-picker="interval"): mode pills switch
+ * the visible pane + picker mode; edits to the N input or the from/til period
+ * inputs refresh the status/preview. The from/til inputs are re-rendered when
+ * the frequency changes granularity (syncTimePicker), so their edit handling
+ * is delegated to the card element, which survives the re-render.
+ */
+function setupTimePicker() {
+  document.querySelectorAll('.variable-card[data-time-picker="interval"]').forEach(card => {
+    card.querySelectorAll('.tp-modes input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        card.dataset.pickerMode = radio.value;
+        toggleTimePickerPanes(card);
+        updateSelectionStatus();
+      });
+    });
+
+    const onEdit = debounce((e) => {
+      if (e.target.closest('.tp-pane-range') || e.target.classList.contains('top-n-input')) {
+        updateSelectionStatus();
+      }
+    }, 200);
+    card.addEventListener('input', onEdit);
+    card.addEventListener('change', onEdit);
+  });
+}
+
+/**
+ * Radio pill dimensions (data-pill-group="true", e.g. Norges Bank FREQ):
+ * mutual exclusivity is inherent in the radio group — a change just refreshes
+ * status (which also re-syncs the time picker's input granularity).
+ */
+function setupPillGroups() {
+  document.querySelectorAll('.variable-card[data-pill-group="true"]').forEach(card => {
+    card.querySelectorAll('.dim-pill-group input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', () => updateSelectionStatus());
+    });
+  });
 }
 
 // Module-level drag state for paint-selection
@@ -315,6 +357,7 @@ function setupModeButtons() {
     input.addEventListener('input', () => {
       const card = input.closest('.variable-card');
       const container = card.querySelector('.value-list-container');
+      if (!container) return; // interval-picker card — setupTimePicker handles it
       container.dataset.mode = 'top';
       updateModeVisuals(card);
       updateValueCounter(card);

@@ -16,6 +16,7 @@
  */
 function updateModeVisuals(card) {
   const container = card.querySelector('.value-list-container');
+  if (!container) return; // pill/picker cards have no value list — pills' :checked CSS handles visuals
   const mode = container.dataset.mode;
 
   // Highlight active mode button
@@ -57,6 +58,157 @@ function updateValueCounter(card) {
 }
 
 // ============================================================
+// Radio pill dimensions + interval time picker (helpers)
+// ============================================================
+//
+// Two alternative card representations exist besides the classic value list:
+//   - data-pill-group="true"       — small singleSelect dims rendered as radio
+//                                    pills (NB FREQ); selection = checked radio.
+//   - data-time-picker="interval"  — interval-based time dims (NB TIME_PERIOD,
+//                                    extension.intervalPicker); selection is a
+//                                    token: 'top(N)' | 'range(from,to)' | '*'.
+// The helpers below let cross-filtering/status/counting read all three
+// representations without touching the value-list code paths (SSB/FHI).
+
+/** Checked radio codes for a pill card (0 or 1 entries). */
+function getPillSelectedCodes(card) {
+  return Array.from(
+    card.querySelectorAll('.dim-pill-group input[type="radio"]:checked')
+  ).map(r => r.value);
+}
+
+/**
+ * Read one side ('from'/'to') of the interval picker as an SDMX period code
+ * at the card's current granularity. Quarter granularity combines the year
+ * input with the Q-select (missing quarter defaults to Q1/Q4 so a bare year
+ * still forms a sensible bound). Empty/invalid input → '' (open end).
+ */
+function readPeriodSide(card, side) {
+  const gran = card.dataset.pickerGran || 'day';
+  if (gran === 'quarter') {
+    const y = (card.querySelector('.tp-' + side + '-year')?.value || '').trim();
+    if (!/^\d{4}$/.test(y)) return '';
+    const q = card.querySelector('.tp-' + side + '-q')?.value || '';
+    return y + '-' + (q || (side === 'from' ? 'Q1' : 'Q4'));
+  }
+  const v = (card.querySelector('.tp-' + side)?.value || '').trim();
+  if (!v) return '';
+  if (gran === 'year') return /^\d{4}$/.test(v) ? v : '';
+  return v; // date/month inputs guarantee the SDMX format
+}
+
+/** Current picker selection as an API token ('top(N)' | 'range(f,t)' | '*'). */
+function readTimePickerToken(card) {
+  const mode = card.dataset.pickerMode || 'top';
+  if (mode === 'star') return '*';
+  if (mode === 'range') {
+    return window.SdmxToJsonStat.formatPeriodRange(
+      readPeriodSide(card, 'from'), readPeriodSide(card, 'to'));
+  }
+  const n = parseInt(card.querySelector('.top-n-input')?.value, 10);
+  return 'top(' + (n > 0 ? n : 10) + ')';
+}
+
+/**
+ * min/max bounds for the picker inputs at a granularity: min from the
+ * catalogue's first year (extension.timeBounds), max preferably the newest
+ * probed period code for the frequency (exact), else the catalogue's last
+ * year. Either side may be '' (no bound).
+ */
+function timePickerBounds(card, gran, freq) {
+  const P = window.SdmxToJsonStat;
+  const ext = tableMetadata?.dimension?.[card.dataset.dimension]?.extension || {};
+  const tb = ext.timeBounds || {};
+  const minB = P.periodBoundsForYear(tb.firstPeriod, gran);
+  const maxB = P.periodBoundsForYear(tb.lastPeriod, gran);
+  const spec = getTimeFreqSpec();
+  const probed = freq && spec && Array.isArray(spec.byFreq[freq]) ? spec.byFreq[freq] : null;
+  return {
+    min: minB ? minB.min : '',
+    max: (probed && probed[probed.length - 1]) || (maxB ? maxB.max : '')
+  };
+}
+
+/**
+ * Keep the picker's from/til inputs in sync with the selected frequency:
+ * SDMX period codes are frequency-specific, so a FREQ change swaps the input
+ * granularity (date ↔ month ↔ quarter ↔ year). Existing values are converted
+ * where deterministic (coarsening) and clamped to the bounds; unconvertible
+ * values are cleared. No-op while the granularity is unchanged so typing in
+ * the inputs is never clobbered.
+ */
+function syncTimePicker(spec, timeCard) {
+  const P = window.SdmxToJsonStat;
+
+  const freqCard = document.querySelector('.variable-card[data-dimension="' + spec.freqDim + '"]');
+  const freqSel = freqCard ? getCardSelectedCodes(freqCard) : [];
+  const freq = freqSel.length === 1 ? freqSel[0] : null;
+
+  const gran = freq
+    ? P.periodGranularity(freq)
+    : (timeCard.dataset.pickerGran || P.periodGranularity(Object.keys(spec.byFreq)[0]));
+
+  const wrap = timeCard.querySelector('.tp-range-inputs');
+  if (!wrap) return;
+  if (timeCard.dataset.pickerGran === gran && wrap.innerHTML !== '') return;
+
+  // Convert + clamp existing values into the new granularity.
+  const oldFrom = readPeriodSide(timeCard, 'from');
+  const oldTo = readPeriodSide(timeCard, 'to');
+  const bounds = timePickerBounds(timeCard, gran, freq);
+  const newFrom = oldFrom ? (P.convertPeriod(oldFrom, gran) || '') : '';
+  const newTo = oldTo ? (P.convertPeriod(oldTo, gran) || '') : '';
+
+  wrap.innerHTML = renderPeriodInputsHtml(
+    gran, bounds,
+    newFrom ? P.clampPeriod(newFrom, bounds.min, bounds.max) : '',
+    newTo ? P.clampPeriod(newTo, bounds.min, bounds.max) : ''
+  );
+  timeCard.dataset.pickerGran = gran;
+}
+
+/**
+ * Find a picker card in range mode whose from/til are both set and inverted
+ * (from > til) — blocks «Hent data» with a message rather than silently
+ * swapping. Returns the card or null.
+ */
+function findInvertedRangePicker() {
+  let bad = null;
+  document.querySelectorAll('.variable-card[data-time-picker="interval"]').forEach(card => {
+    if ((card.dataset.pickerMode || 'top') !== 'range') return;
+    const from = readPeriodSide(card, 'from');
+    const to = readPeriodSide(card, 'to');
+    if (from && to && to < from) bad = card;
+  });
+  return bad;
+}
+
+/**
+ * Selected codes for a card regardless of representation: pills → checked
+ * radio; value list → .selected items; picker → [] (token-based, no codes).
+ */
+function getCardSelectedCodes(card) {
+  if (!card) return [];
+  if (card.dataset.pillGroup === 'true') return getPillSelectedCodes(card);
+  const container = card.querySelector('.value-list-container');
+  if (!container) return [];
+  return Array.from(container.querySelectorAll('.value-list-item.selected'))
+    .map(it => it.dataset.code);
+}
+
+/**
+ * Effective selection mode for a card: pills are always 'specific' (a radio
+ * choice is an explicit code); value lists report container.dataset.mode;
+ * cards without either (picker) report null.
+ */
+function getCardMode(card) {
+  if (!card) return null;
+  if (card.dataset.pillGroup === 'true') return 'specific';
+  const container = card.querySelector('.value-list-container');
+  return container ? container.dataset.mode : null;
+}
+
+// ============================================================
 // Cross-filtering (generic, source-agnostic)
 // ============================================================
 //
@@ -93,10 +245,8 @@ function readCrossFilterConstraints(vk) {
   const constraints = {};
   vk.dims.forEach(dimId => {
     const card = document.querySelector('.variable-card[data-dimension="' + dimId + '"]');
-    const container = card && card.querySelector('.value-list-container');
-    if (!container || container.dataset.mode !== 'specific') { constraints[dimId] = null; return; }
-    const sel = Array.from(container.querySelectorAll('.value-list-item.selected'))
-      .map(it => it.dataset.code);
+    if (!card || getCardMode(card) !== 'specific') { constraints[dimId] = null; return; }
+    const sel = getCardSelectedCodes(card);
     constraints[dimId] = sel.length ? new Set(sel) : null;
   });
   return constraints;
@@ -140,10 +290,9 @@ function computeCrossFilterEnabled(vk, constraints) {
 function hasPendingMandatorySelection(vk) {
   return vk.dims.some(dimId => {
     const card = document.querySelector('.variable-card[data-dimension="' + dimId + '"]');
-    const container = card && card.querySelector('.value-list-container');
-    if (!container || container.dataset.mode !== 'specific') return false;
+    if (!card || getCardMode(card) !== 'specific') return false;
     if (card.dataset.elimination === 'true') return false; // valgfri — tomt utvalg er en gyldig sluttilstand
-    return container.querySelectorAll('.value-list-item.selected').length === 0;
+    return getCardSelectedCodes(card).length === 0;
   });
 }
 
@@ -176,9 +325,22 @@ function applyCrossFilter() {
 
   vk.dims.forEach(dimId => {
     const card = document.querySelector('.variable-card[data-dimension="' + dimId + '"]');
-    const container = card && card.querySelector('.value-list-container');
-    if (!container) return;
+    if (!card) return;
     const en = enabled[dimId];
+
+    // Radio pill cards: disable incompatible pills, unchecking if needed.
+    if (card.dataset.pillGroup === 'true') {
+      card.querySelectorAll('.dim-pill-group input[type="radio"]').forEach(radio => {
+        const ok = en.has(radio.value);
+        radio.disabled = !ok;
+        radio.closest('.api-pill')?.classList.toggle('value-disabled', !ok);
+        if (!ok && radio.checked) radio.checked = false; // auto-deselect incompatible value
+      });
+      return;
+    }
+
+    const container = card.querySelector('.value-list-container');
+    if (!container) return;
     container.querySelectorAll('.value-list-item').forEach(item => {
       if (en.has(item.dataset.code)) {
         item.classList.remove('value-disabled');
@@ -189,7 +351,7 @@ function applyCrossFilter() {
         item.classList.remove('selected'); // auto-deselect incompatible value
       }
     });
-    if (card) updateValueCounter(card);
+    updateValueCounter(card);
   });
 
   // Re-read after auto-deselection so the counter reflects the effective selection.
@@ -232,16 +394,23 @@ function applyTimeFreqFilter() {
   if (!spec) return;
 
   const timeCard = document.querySelector('.variable-card[data-dimension="' + spec.timeDim + '"]');
-  const timeContainer = timeCard && timeCard.querySelector('.value-list-container');
+  if (!timeCard) return;
+
+  // Interval picker card: no list items to hide — the frequency instead
+  // drives the from/til inputs' granularity (date/month/quarter/year).
+  if (timeCard.dataset.timePicker === 'interval') {
+    syncTimePicker(spec, timeCard);
+    return;
+  }
+
+  const timeContainer = timeCard.querySelector('.value-list-container');
   if (!timeContainer) return;
 
   // Read the frequency selection (specific mode only — star/top = no constraint).
   const freqCard = document.querySelector('.variable-card[data-dimension="' + spec.freqDim + '"]');
-  const freqContainer = freqCard && freqCard.querySelector('.value-list-container');
   let freqCodes = null;
-  if (freqContainer && freqContainer.dataset.mode === 'specific') {
-    const sel = Array.from(freqContainer.querySelectorAll('.value-list-item.selected'))
-      .map(it => it.dataset.code);
+  if (freqCard && getCardMode(freqCard) === 'specific') {
+    const sel = getCardSelectedCodes(freqCard);
     if (sel.length) freqCodes = sel;
   }
   if (!freqCodes) freqCodes = Object.keys(spec.byFreq);
@@ -365,7 +534,14 @@ function updateSelectionStatus() {
       summary.textContent = t('status.allSelected');
       summary.className = 'variable-selection-summary summary-valid';
     } else if (typeof dimSelection === 'string' && dimSelection.startsWith('top(')) {
-      summary.textContent = dimSelection;
+      const n = dimSelection.match(/\d+/)?.[0];
+      summary.textContent = n ? tpl('status.topMode', n) : dimSelection;
+      summary.className = 'variable-selection-summary summary-valid';
+    } else if (typeof dimSelection === 'string' && dimSelection.startsWith('range(')) {
+      const r = window.SdmxToJsonStat?.parsePeriodRange(dimSelection);
+      summary.textContent = (r && (r.from || r.to))
+        ? tpl('status.rangeMode', r.from || '…', r.to || '…')
+        : t('status.allSelected'); // helt åpen range = full historikk
       summary.className = 'variable-selection-summary summary-valid';
     }
 
@@ -382,6 +558,21 @@ function updateSelectionStatus() {
     statusElement.textContent = t('status.tooManyCells');
     statusElement.className = 'selection-status-invalid';
     fetchButton.disabled = true;
+  }
+
+  // Inverted interval range (fra > til) blocks fetch with a message rather
+  // than silently swapping the values.
+  const invertedCard = findInvertedRangePicker();
+  if (invertedCard) {
+    statusElement.textContent = t('status.rangeInverted');
+    statusElement.className = 'selection-status-invalid';
+    fetchButton.disabled = true;
+    setCardStatus(invertedCard, 'invalid');
+    const summary = invertedCard.querySelector('.variable-selection-summary');
+    if (summary) {
+      summary.textContent = t('status.rangeInverted');
+      summary.className = 'variable-selection-summary summary-invalid';
+    }
   }
 
   // Cross-filter series counter + N=0 guard (only when validKeys present).
@@ -466,6 +657,52 @@ function updateSelectionCellCount() {
 
   document.querySelectorAll('.variable-card').forEach(card => {
     const dimCode = card.dataset.dimension;
+
+    // Interval time picker: estimate the period count from the mode.
+    if (card.dataset.timePicker === 'interval') {
+      const P = window.SdmxToJsonStat;
+      const pickerMode = card.dataset.pickerMode || 'top';
+      const gran = card.dataset.pickerGran || 'day';
+      const bounds = timePickerBounds(card, gran, null);
+      hasIncludedDimension = true;
+
+      let count;
+      if (pickerMode === 'top') {
+        const n = parseInt(card.querySelector('.top-n-input')?.value, 10);
+        count = n > 0 ? n : 10;
+      } else {
+        // range/star: tomme sider fylles med katalog-grensene der de finnes;
+        // uten grenser faller vi tilbake til den probede listens lengde.
+        let from = pickerMode === 'range' ? readPeriodSide(card, 'from') : '';
+        let to = pickerMode === 'range' ? readPeriodSide(card, 'to') : '';
+        if (!from) from = bounds.min;
+        if (!to) to = bounds.max;
+        count = (from && to)
+          ? P.estimatePeriodCount(from, to, gran)
+          : getTrueDimensionValueCount(dimCode);
+      }
+
+      if (count > 0) selectedCells *= count;
+      else hasMissingMandatory = true; // invertert/tomt intervall
+      const maxEstimate = (bounds.min && bounds.max)
+        ? P.estimatePeriodCount(bounds.min, bounds.max, gran)
+        : getTrueDimensionValueCount(dimCode);
+      maxCells *= Math.max(maxEstimate, 1);
+      return;
+    }
+
+    // Radio pill dimensions: 0 or 1 selected code.
+    if (card.dataset.pillGroup === 'true') {
+      const isElim = card.dataset.elimination === 'true';
+      const n = getPillSelectedCodes(card).length;
+      if (n === 0 && isElim) return; // omitted → eliminated
+      hasIncludedDimension = true;
+      if (n === 0) hasMissingMandatory = true;
+      else selectedCells *= n;
+      maxCells *= Math.max(getTrueDimensionValueCount(dimCode), 1);
+      return;
+    }
+
     const container = card.querySelector('.value-list-container');
     if (!container) return;
 
@@ -588,6 +825,23 @@ function getVariableSelection() {
 
   document.querySelectorAll('.variable-card').forEach(card => {
     const dimCode = card.dataset.dimension;
+
+    // Interval time picker: emits a token — top(N) / range(from,to) / '*'.
+    if (card.dataset.timePicker === 'interval') {
+      selection[dimCode] = readTimePickerToken(card);
+      return;
+    }
+
+    // Radio pill dimensions: the checked radio as a one-code array.
+    if (card.dataset.pillGroup === 'true') {
+      const codes = getPillSelectedCodes(card);
+      if (card.dataset.elimination === 'true' && codes.length === 0) {
+        return; // omit — API aggregates
+      }
+      selection[dimCode] = codes;
+      return;
+    }
+
     const container = card.querySelector('.value-list-container');
     if (!container) return;
 

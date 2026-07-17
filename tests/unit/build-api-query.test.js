@@ -84,6 +84,41 @@ describe('Norges Bank — buildApiQuery', () => {
     assert.throws(() => app.api.buildApiQuery('nb-NOPE', {}, { meta: nbMeta }));
     assert.throws(() => app.api.buildApiQuery('nb-EXR', {}, {}));
   });
+
+  it("maps a 'range(from,to)' time token to startPeriod/endPeriod", () => {
+    const q = app.api.buildApiQuery('nb-EXR', {
+      FREQ: ['B'],
+      BASE_CUR: ['USD'],
+      QUOTE_CUR: ['NOK'],
+      TENOR: ['SP'],
+      TIME_PERIOD: 'range(2023-12-29,2024-02-01)'
+    }, { meta: nbMeta, lang: 'no' });
+
+    assert.equal(
+      q.url,
+      'https://data.norges-bank.no/api/data/EXR/B.USD.NOK.SP' +
+      '?format=sdmx-json&locale=no&startPeriod=2023-12-29&endPeriod=2024-02-01'
+    );
+  });
+
+  it('supports open-ended ranges (empty side → param omitted)', () => {
+    const from = app.api.buildApiQuery('nb-EXR', { TIME_PERIOD: 'range(2020-01,)' },
+      { meta: nbMeta, lang: 'no' });
+    assert.ok(from.url.includes('startPeriod=2020-01'));
+    assert.ok(!from.url.includes('endPeriod'));
+
+    const to = app.api.buildApiQuery('nb-EXR', { TIME_PERIOD: 'range(,2024-06)' },
+      { meta: nbMeta, lang: 'no' });
+    assert.ok(to.url.includes('endPeriod=2024-06'));
+    assert.ok(!to.url.includes('startPeriod'));
+  });
+
+  it('treats a fully open range like * (no period params)', () => {
+    const q = app.api.buildApiQuery('nb-EXR', { TIME_PERIOD: 'range(,)' },
+      { meta: nbMeta, lang: 'no' });
+    assert.ok(!q.url.includes('startPeriod') && !q.url.includes('endPeriod') &&
+              !q.url.includes('lastNObservations'));
+  });
 });
 
 describe('FHI — buildApiQuery', () => {
