@@ -225,6 +225,34 @@ describe('buildFhiCatalogue', () => {
     const tables = buildFhiCatalogue(fhiCatalog, cfg, subjectNames, 'nb');
     assert.equal(tables.length, 1); // 'mfr' finnes ikke i fixture-katalogen
   });
+
+  it('bygger kategorisegment (register → kategori) fra katalogens categories', async () => {
+    const { buildFhiCatalogue } = await mod;
+    const catalog = {
+      sources: {
+        nokkel: {
+          title: 'Folkehelse: nøkkeltall',
+          categories: { befolkning: { label: 'Befolkning', sortCode: '010' } },
+          tables: [
+            { tableId: 171, title: 'Forventet levealder', category: 'befolkning' },
+            { tableId: 175, title: 'Uten kategori' },
+            { tableId: 180, title: 'Udefinert kategori', category: 'finnes-ikke' },
+          ],
+        },
+      },
+    };
+    const tables = buildFhiCatalogue(catalog, appConfig, subjectNames, 'nb');
+
+    const kategorisert = tables.find(t => t.id === 'fhi-nokkel-171');
+    assert.equal(kategorisert.paths.length, 1);
+    assert.equal(kategorisert.paths[0].length, 3);
+    assert.deepEqual(kategorisert.paths[0][2],
+      { id: 'fhi-nokkel-befolkning', label: 'Befolkning', sortCode: '010' });
+
+    // Uten kategori (eller med udefinert referanse) → dagens 2-segments path.
+    assert.equal(tables.find(t => t.id === 'fhi-nokkel-175').paths[0].length, 2);
+    assert.equal(tables.find(t => t.id === 'fhi-nokkel-180').paths[0].length, 2);
+  });
 });
 
 describe('enabledSourceNames / joinNamesNo', () => {

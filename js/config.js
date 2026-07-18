@@ -318,7 +318,11 @@ const AppConfig = {
         licenseUrl: 'https://creativecommons.org/licenses/by/4.0/deed.no',
         licenseName: 'CC BY 4.0'
       },
-      sourceIds: ['nokkel', 'mfr', 'daar']
+      sourceIds: [
+        'nokkel', 'mfr', 'daar',
+        'msis', 'sysvak', 'npr', 'kpr', 'lmr',
+        'gs', 'hkr', 'abr', 'ngs', 'skast'
+      ]
     }
   },
 
@@ -339,9 +343,21 @@ const AppConfig = {
     'nb-statsgjeld':   { sortCode: '902', label: { nb: 'Statsgjeld og statspapirer – Norges Bank', en: 'Government debt and securities – Norges Bank' } },
     'nb-likviditet':   { sortCode: '903', label: { nb: 'Likviditet og pengemarked – Norges Bank', en: 'Liquidity and money market – Norges Bank' } },
     'nb-indikatorer':  { sortCode: '904', label: { nb: 'Finansielle indikatorer og Regionalt nettverk – Norges Bank', en: 'Financial indicators and Regional network – Norges Bank' } },
-    'fhi-nokkel':      { sortCode: '990', label: { nb: 'Folkehelse – nøkkeltall (FHI)' } },
-    'fhi-mfr':         { sortCode: '991', label: { nb: 'Medisinsk fødselsregister (FHI)' } },
-    'fhi-daar':        { sortCode: '992', label: { nb: 'Dødsårsaksregisteret (FHI)' } }
+    // FHI-registrene: 4-sifrede '99xx'-koder (leksikografisk etter alle
+    // SSB-undertemaer og NB-nodene) med luft mellom for senere innskudd.
+    'fhi-nokkel':      { sortCode: '9900', label: { nb: 'Folkehelse – nøkkeltall (FHI)' } },
+    'fhi-mfr':         { sortCode: '9905', label: { nb: 'Medisinsk fødselsregister (FHI)' } },
+    'fhi-daar':        { sortCode: '9910', label: { nb: 'Dødsårsaksregisteret (FHI)' } },
+    'fhi-msis':        { sortCode: '9915', label: { nb: 'Smittsomme sykdommer – MSIS (FHI)' } },
+    'fhi-sysvak':      { sortCode: '9920', label: { nb: 'Vaksinasjonsregisteret SYSVAK (FHI)' } },
+    'fhi-npr':         { sortCode: '9925', label: { nb: 'Norsk pasientregister (FHI)' } },
+    'fhi-kpr':         { sortCode: '9930', label: { nb: 'Kommunalt pasient- og brukerregister (FHI)' } },
+    'fhi-lmr':         { sortCode: '9935', label: { nb: 'Legemiddelregisteret (FHI)' } },
+    'fhi-gs':          { sortCode: '9940', label: { nb: 'Grossistbasert legemiddelstatistikk (FHI)' } },
+    'fhi-hkr':         { sortCode: '9945', label: { nb: 'Hjerte- og karregisteret (FHI)' } },
+    'fhi-abr':         { sortCode: '9950', label: { nb: 'Abortregisteret (FHI)' } },
+    'fhi-ngs':         { sortCode: '9955', label: { nb: 'Mikrobiologisk genomovervåkning (FHI)' } },
+    'fhi-skast':       { sortCode: '9960', label: { nb: 'Skadedyrstatistikken (FHI)' } }
   },
 
   /**

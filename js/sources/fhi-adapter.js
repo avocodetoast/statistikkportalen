@@ -267,10 +267,20 @@
   // «år»/«aar» som selvstendig/suffiks-token, ikke som del av et annet ord
   // (unngår falskt treff i f.eks. «Dødsårsak»/«AARSAK»).
   const TIME_PATTERN = /(år|aar)(?![a-zæøåA-ZÆØÅ])/i;
+  // Eksakte dimensjonsnavn fra nye kilder som ikke inneholder et fritt «år»-
+  // token: «Årgang»/Argang (hkr — 'år' etterfulgt av bokstav), «Sesong»/season
+  // (msis/ngs), year/«Årstall» (sysvak), «Måned» (ngs) og «Uke»/week
+  // (sysvak/msis ukestall). EKSAKT match (ikke substring) slik at f.eks. mfr
+  // «Fødselsmåned» (sekundærdimensjon ved siden av årsdimensjonen) ikke
+  // feilklassifiseres.
+  const TIME_EXACT = /^(årgang|aargang|argang|sesong|season|year|årstall|måned|maaned|month|uke|week)$/i;
   const GEO_PATTERN = /geografi|fylke|kommune|bosted|region/i;
 
   function isTimeDim(code, label) {
-    return TIME_PATTERN.test(String(code || '')) || TIME_PATTERN.test(String(label || ''));
+    const c = String(code || '').trim();
+    const l = String(label || '').trim();
+    return TIME_PATTERN.test(c) || TIME_PATTERN.test(l) ||
+      TIME_EXACT.test(c) || TIME_EXACT.test(l);
   }
   function isGeoDim(code, label) {
     if (String(code || '').toUpperCase() === 'GEO') return true;
@@ -361,8 +371,15 @@
     const fetched = await fetchSourceTableList(source, force); // kaster ved nettverksfeil uten cache → fanges av allSettled i getTables
     const rows = fetched.list;
     const catalog = await getCatalog(); // null hvis fila mangler/feiler — se getCatalog
-    const catRows = (catalog && catalog.sources && catalog.sources[source] && catalog.sources[source].tables) || [];
+    const catSource = (catalog && catalog.sources && catalog.sources[source]) || null;
+    const catRows = (catSource && catSource.tables) || [];
     const catById = new Map(catRows.map(t => [String(t.tableId), t]));
+    // Kuraterte kategorier (register → kategori, se data/sources/fhi-curation.json
+    // og scripts/lib/fhi-curation.mjs): {katId: {label, sortCode}}. Tabeller med
+    // `category` i katalogen får et TREDJE path-segment under registernoden;
+    // tabeller uten (og hele kilden når katalogfila mangler) beholder dagens
+    // 2-segments plassering rett under registernoden.
+    const catCategories = (catSource && catSource.categories) || null;
 
     const nodes = (window.AppConfig && window.AppConfig.sourceNodes) || {};
     const subjectNames = (window.SubjectConfig && window.SubjectConfig.subjectNames) || {};
@@ -377,7 +394,7 @@
       : [[SUBJECT_ID, 'fhi-' + source]];
     const subjectCode = placements[0][0];
 
-    const paths = placements.map(p => {
+    const basePaths = placements.map(p => {
       const subjId = p[0];
       const nodeId = p[1];
       const node = nodes[nodeId] || {};
@@ -394,6 +411,17 @@
         }
       ];
     });
+    /** Paths for én tabell: basePaths + ev. kategorisegment (nb-only labels). */
+    function pathsForCategory(catId) {
+      if (!catId || !catCategories || !catCategories[catId]) return basePaths;
+      const def = catCategories[catId];
+      const seg = {
+        id: 'fhi-' + source + '-' + catId,
+        label: def.label || catId,
+        sortCode: def.sortCode || '999'
+      };
+      return basePaths.map(p => p.concat([seg]));
+    }
     const sourceTitle = titleMap[source] || source;
 
     const tables = (rows || []).map(row => {
@@ -441,7 +469,7 @@
         // Uten dette havner FHI-tabeller i «other»-bøtta og filtrerte søk på
         // emnet «Helse og samfunn» ekskluderer dem feilaktig.
         subjectCode: subjectCode,
-        paths: paths,
+        paths: pathsForCategory(cat && cat.category),
         source: 'FHI/' + sourceTitle
       };
     });

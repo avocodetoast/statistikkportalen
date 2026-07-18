@@ -1,0 +1,1641 @@
+{
+  "sources": {
+    "mfr": {
+      "categories": {
+        "fodte": {
+          "label": "Fødte og fødsler",
+          "sortCode": "010"
+        },
+        "mor": {
+          "label": "Mor og svangerskap",
+          "sortCode": "020"
+        },
+        "fodsel": {
+          "label": "Fødselsforløp og inngrep",
+          "sortCode": "030"
+        },
+        "barnet": {
+          "label": "Barnets helse",
+          "sortCode": "040"
+        },
+        "institusjon": {
+          "label": "Fødeinstitusjoner",
+          "sortCode": "050"
+        },
+        "robson": {
+          "label": "Robsongrupper",
+          "sortCode": "060"
+        },
+        "assistert": {
+          "label": "Assistert befruktning",
+          "sortCode": "070"
+        },
+        "maaned": {
+          "label": "Månedstall",
+          "sortCode": "080"
+        }
+      },
+      "tables": {
+        "411": {
+          "title": "Fødte og fødsler per år og måned",
+          "category": "fodte"
+        },
+        "412": {
+          "title": "Fødte per år, mors bosted og kjønn",
+          "category": "fodte"
+        },
+        "413": {
+          "title": "Fødsler per år, mors bosted og enkelt-/flerfødsel",
+          "category": "fodte"
+        },
+        "414": {
+          "title": "Fødte per år, mors bosted og perinatal levestatus (iht. MFR)",
+          "category": "fodte"
+        },
+        "415": {
+          "title": "Fødte per år og perinatal levestatus iht. Euro-Peristat (f.o.m. 22 uker)",
+          "category": "fodte"
+        },
+        "416": {
+          "title": "Fødte per år og perinatal levestatus iht. WHO (f.o.m. 500 g)",
+          "category": "fodte"
+        },
+        "417": {
+          "title": "Fødte per år og perinatal levestatus iht. WHO (f.o.m. 1000 g)",
+          "category": "fodte"
+        },
+        "418": {
+          "title": "Levendefødte per år, mors bosted og levestatus i spedbarnsperioden",
+          "category": "fodte"
+        },
+        "451": {
+          "title": "Fødte per år, mors bosted og fødestedtype",
+          "category": "fodte"
+        },
+        "420": {
+          "title": "Fødsler per år, mors bosted og mors alder",
+          "category": "mor"
+        },
+        "421": {
+          "title": "Mors gjennomsnittsalder per år, mors bosted og tidligere fødte",
+          "category": "mor"
+        },
+        "422": {
+          "title": "Fødsler per år, mors bosted og fars alder",
+          "category": "mor"
+        },
+        "423": {
+          "title": "Fars gjennomsnittsalder per år og mors bosted",
+          "category": "mor"
+        },
+        "424": {
+          "title": "Fødsler per år, mors bosted og tidligere fødte",
+          "category": "mor"
+        },
+        "425": {
+          "title": "Fødsler per år, mors bosted og mors sivilstatus",
+          "category": "mor"
+        },
+        "430": {
+          "title": "Fødsler per år, mors bosted og svangerskapsvarighet",
+          "category": "mor"
+        },
+        "431": {
+          "title": "Gjennomsnittlig svangerskapsvarighet per år og mors bosted",
+          "category": "mor"
+        },
+        "432": {
+          "title": "Fødsler per år, mors bosted og sykdom hos mor før svangerskapet",
+          "category": "mor"
+        },
+        "433": {
+          "title": "Fødsler per år, mors bosted og hypertensive tilstander hos mor i svangerskapet",
+          "category": "mor"
+        },
+        "434": {
+          "title": "Fødsler per år, mors bosted og diabetes hos mor",
+          "category": "mor"
+        },
+        "468": {
+          "title": "Fødsler med opplysning om mors røykevaner i 1. trimester, per år, mors bosted og røykevaner",
+          "category": "mor"
+        },
+        "469": {
+          "title": "Fødsler med opplysning om mors røykevaner i siste trimester, per år, mors bosted og røykevaner",
+          "category": "mor"
+        },
+        "470": {
+          "title": "Fødsler med opplysning om mors røykevaner i 1. trimester, per år, mors alder og røykevaner",
+          "category": "mor"
+        },
+        "471": {
+          "title": "Fødsler med opplysning om mors røykevaner i siste trimester, per år, mors alder og røykevaner",
+          "category": "mor"
+        },
+        "472": {
+          "title": "Fødsler per år, mors bosted og om det finnes opplysning om mors røykevaner",
+          "category": "mor"
+        },
+        "473": {
+          "title": "Fødsler per år, mors alder og om det finnes opplysning om mors røykevaner",
+          "category": "mor"
+        },
+        "474": {
+          "title": "Elektronisk meldte fødsler per år, mors alder og om det finnes opplysning om mors snusvaner",
+          "category": "mor"
+        },
+        "475": {
+          "title": "Fødsler med opplysning om mors snusvaner i 1. trimester, per år, mors alder og snusvaner",
+          "category": "mor"
+        },
+        "476": {
+          "title": "Fødsler med opplysning om mors snusvaner i siste trimester, per år, mors alder og snusvaner",
+          "category": "mor"
+        },
+        "477": {
+          "title": "Fødsler per år, mors bosted og mors bruk av kosttilskudd",
+          "category": "mor"
+        },
+        "478": {
+          "title": "Fødsler per år, mors alder og mors bruk av folsyre før svangerskapet",
+          "category": "mor"
+        },
+        "479": {
+          "title": "Fødsler per år, mors alder og mors bruk av folsyre i svangerskapet",
+          "category": "mor"
+        },
+        "480": {
+          "title": "Fødsler per år, mors bosted og om det finnes opplysning om mors KMI før svangerskapet",
+          "category": "mor"
+        },
+        "481": {
+          "title": "Fødsler med opplysning om mors KMI før svangerskapet, per år, mors bosted og KMI",
+          "category": "mor"
+        },
+        "482": {
+          "title": "Gjennomsnittlig KMI for mor før svangerskapet, per år og mors bosted",
+          "category": "mor"
+        },
+        "435": {
+          "title": "Fødsler per år, mors bosted og fødselsstart",
+          "category": "fodsel"
+        },
+        "436": {
+          "title": "Induserte fødsler per år, mors bosted og induksjonsmetode",
+          "category": "fodsel"
+        },
+        "437": {
+          "title": "Fødsler per år, mors bosted og komplikasjoner under fødselen",
+          "category": "fodsel"
+        },
+        "438": {
+          "title": "Fødte per år, mors bosted og barnets leie ved fødsel",
+          "category": "fodsel"
+        },
+        "440": {
+          "title": "Vaginalt fødte per år, mors bosted og inngrep og tiltak under fødselen",
+          "category": "fodsel"
+        },
+        "441": {
+          "title": "Fødte i seteleie per år, mors bosted og inngrep og tiltak under fødselen",
+          "category": "fodsel"
+        },
+        "442": {
+          "title": "Fødsler per år, mors bosted og forløsningstype",
+          "category": "fodsel"
+        },
+        "443": {
+          "title": "Keisersnittfødsler per år, mors bosted og keisersnittype",
+          "category": "fodsel"
+        },
+        "444": {
+          "title": "Fødsler per år, mors bosted, forløsningstype og anestesi/analgesi under fødselen",
+          "category": "fodsel"
+        },
+        "492": {
+          "title": "Keisersnittfødsler per år, mors bosted og fødselsstart",
+          "category": "fodsel"
+        },
+        "454": {
+          "title": "Fødsler per år, mors bosted og spesielle forhold ved fostervann",
+          "category": "fodsel"
+        },
+        "426": {
+          "title": "Fødte per år, mors bosted og fødselsvekt",
+          "category": "barnet"
+        },
+        "837": {
+          "title": "Gjennomsnittlig fødselsvekt per år, kjønn og mors bosted",
+          "category": "barnet"
+        },
+        "452": {
+          "title": "Fødte per år, mors bosted og neonatale tilstander",
+          "category": "barnet"
+        },
+        "453": {
+          "title": "Fødte per år, mors bosted og behandling av barnet",
+          "category": "barnet"
+        },
+        "455": {
+          "title": "Fødte og aborterte per år, dødstidspunkt og medfødte misdannelser",
+          "category": "barnet"
+        },
+        "428": {
+          "title": "Fødsler per år, fødeinstitusjon, fødestedtype og enkelt-/flerfødsel",
+          "category": "institusjon"
+        },
+        "429": {
+          "title": "Fødte ved institusjon per år, fødeinstitusjon og levestatus ved fødsel",
+          "category": "institusjon"
+        },
+        "445": {
+          "title": "Fødsler ved institusjon per år, fødeinstitusjon og sykdom hos mor i svangerskapet",
+          "category": "institusjon"
+        },
+        "446": {
+          "title": "Fødsler ved institusjon per år, fødeinstitusjon og komplikasjoner under fødselen",
+          "category": "institusjon"
+        },
+        "447": {
+          "title": "Fødsler ved institusjon per år, fødeinstitusjon og fødselsstart",
+          "category": "institusjon"
+        },
+        "448": {
+          "title": "Fødsler ved institusjon per år, fødeinstitusjon og anestesi/analgesi under fødselen",
+          "category": "institusjon"
+        },
+        "449": {
+          "title": "Vaginalt fødte ved institusjon per år, fødeinstitusjon og inngrep og tiltak under fødselen",
+          "category": "institusjon"
+        },
+        "450": {
+          "title": "Fødsler ved institusjon per år, fødeinstitusjon og forløsningstype",
+          "category": "institusjon"
+        },
+        "458": {
+          "title": "Vaginale fødsler ved institusjon per år, fødeinstitusjon, inngrep under fødselen og sphincterruptur (grad 3–4)",
+          "category": "institusjon"
+        },
+        "459": {
+          "title": "Fødte ved institusjon per år, fødeinstitusjon og barnets tilstand ved fødsel",
+          "category": "institusjon"
+        },
+        "493": {
+          "title": "Fødsler ved institusjon per år, fødeinstitusjon og om det finnes opplysning om mors røykevaner",
+          "category": "institusjon"
+        },
+        "494": {
+          "title": "Fødsler ved institusjon med opplysning om mors røykevaner i 1. trimester, per år, fødeinstitusjon og røykevaner",
+          "category": "institusjon"
+        },
+        "495": {
+          "title": "Fødsler ved institusjon med opplysning om mors røykevaner i siste trimester, per år, fødeinstitusjon og røykevaner",
+          "category": "institusjon"
+        },
+        "496": {
+          "title": "Fødsler ved institusjon per år, fødeinstitusjon og om det finnes opplysning om mors KMI",
+          "category": "institusjon"
+        },
+        "497": {
+          "title": "Fødte per år, fødehelseregion, mors fødeland og perinatal/neonatal levestatus",
+          "category": "institusjon"
+        },
+        "498": {
+          "title": "Fødsler per år, fødehelseregion, mors fødeland og forhold ved mor og svangerskap",
+          "category": "institusjon"
+        },
+        "499": {
+          "title": "Fødsler ved institusjon per år, fødeinstitusjon, forløsningstype og mors liggetid etter fødsel",
+          "category": "institusjon"
+        },
+        "748": {
+          "title": "Levendefødte ved institusjon per år, fødeinstitusjon og pH i navlesnorarterie",
+          "category": "institusjon"
+        },
+        "696": {
+          "title": "Keisersnitt per Robsongruppe og fødeinstitusjon",
+          "category": "robson"
+        },
+        "757": {
+          "title": "Tang eller vakuumekstraksjon per Robsongruppe og fødeinstitusjon",
+          "category": "robson"
+        },
+        "758": {
+          "title": "Tang per Robsongruppe og fødeinstitusjon",
+          "category": "robson"
+        },
+        "759": {
+          "title": "Vakuumekstraksjon per Robsongruppe og fødeinstitusjon",
+          "category": "robson"
+        },
+        "760": {
+          "title": "Episiotomi per Robsongruppe og fødeinstitusjon",
+          "category": "robson"
+        },
+        "761": {
+          "title": "Blødning under/etter fødsel per Robsongruppe og fødeinstitusjon",
+          "category": "robson"
+        },
+        "762": {
+          "title": "Lav apgarskår per Robsongruppe og fødeinstitusjon",
+          "category": "robson"
+        },
+        "763": {
+          "title": "Overflytting til barneavdeling per Robsongruppe og fødeinstitusjon",
+          "category": "robson"
+        },
+        "817": {
+          "title": "Robsongruppe 5: fødselsstart og inngrep under fødselen",
+          "category": "robson"
+        },
+        "456": {
+          "title": "Fødte etter assistert befruktning per år, institusjon og enkelt-/flerfødt",
+          "category": "assistert"
+        },
+        "457": {
+          "title": "Fødte etter assistert befruktning per år, metode og enkelt-/flerfødt",
+          "category": "assistert"
+        },
+        "487": {
+          "title": "Fødte per måned og mors bosted",
+          "category": "maaned"
+        },
+        "491": {
+          "title": "Fødte per måned og fødeinstitusjon",
+          "category": "maaned"
+        },
+        "796": {
+          "title": "Fødte per måned og fødeinstitusjon (med og uten fødselsmelding i MFR)",
+          "category": "maaned"
+        },
+        "797": {
+          "title": "Fødte per måned og mors bosted (med og uten fødselsmelding i MFR)",
+          "category": "maaned"
+        },
+        "505": {
+          "title": "Fødselsstart per måned og mors bosted",
+          "category": "maaned"
+        },
+        "506": {
+          "title": "Fødselsstart per måned og fødeinstitusjon",
+          "category": "maaned"
+        },
+        "490": {
+          "title": "Forløsningstype per måned og mors bosted",
+          "category": "maaned"
+        },
+        "500": {
+          "title": "Forløsningstype per måned og fødeinstitusjon",
+          "category": "maaned"
+        },
+        "512": {
+          "title": "Komplikasjoner under fødselen per måned og mors bosted",
+          "category": "maaned"
+        },
+        "513": {
+          "title": "Komplikasjoner under fødselen per måned og fødeinstitusjon",
+          "category": "maaned"
+        },
+        "514": {
+          "title": "Vaginalt fødte: inngrep og tiltak under fødselen per måned og mors bosted",
+          "category": "maaned"
+        },
+        "515": {
+          "title": "Vaginalt fødte: inngrep og tiltak under fødselen per måned og fødeinstitusjon",
+          "category": "maaned"
+        },
+        "502": {
+          "title": "Barnets tilstand ved fødsel per måned og mors bosted",
+          "category": "maaned"
+        },
+        "503": {
+          "title": "Barnets tilstand ved fødsel per måned og fødeinstitusjon",
+          "category": "maaned"
+        }
+      }
+    },
+    "daar": {
+      "categories": {
+        "aarsaker": {
+          "label": "Dødsfall etter dødsårsak",
+          "sortCode": "010"
+        },
+        "utvalgte": {
+          "label": "Utvalgte dødsårsaker",
+          "sortCode": "020"
+        },
+        "sted": {
+          "label": "Dødssted og obduksjon",
+          "sortCode": "030"
+        }
+      },
+      "tables": {
+        "643": {
+          "title": "Dødsfall etter kjønn, alder og dødsårsak (antall)",
+          "category": "aarsaker"
+        },
+        "644": {
+          "title": "Dødsfall etter bofylke, kjønn og dødsårsak (antall)",
+          "category": "aarsaker"
+        },
+        "645": {
+          "title": "Dødsfall etter måned og dødsårsak (antall)",
+          "category": "aarsaker"
+        },
+        "647": {
+          "title": "Dødsfall etter bokommune, kjønn og dødsårsak (antall)",
+          "category": "aarsaker"
+        },
+        "742": {
+          "title": "Dødsfall etter bofylke, kjønn og dødsårsak (aldersstandardiserte rater)",
+          "category": "aarsaker"
+        },
+        "312": {
+          "title": "Dødsfall av hjerte- og karsykdom, etter alder (antall)",
+          "category": "utvalgte"
+        },
+        "269": {
+          "title": "Dødsfall av hjerte- og karsykdom, etter kjønn (antall)",
+          "category": "utvalgte"
+        },
+        "754": {
+          "title": "Dødsfall av hjerte- og karsykdom, etter kjønn (aldersstandardiserte rater)",
+          "category": "utvalgte"
+        },
+        "868": {
+          "title": "Dødsfall av kreft, etter alder (antall)",
+          "category": "utvalgte"
+        },
+        "869": {
+          "title": "Dødsfall av kreft, etter kjønn (antall)",
+          "category": "utvalgte"
+        },
+        "873": {
+          "title": "Dødsfall av kreft, etter kjønn (aldersstandardiserte rater)",
+          "category": "utvalgte"
+        },
+        "325": {
+          "title": "Narkotikautløste dødsfall, etter bofylke (antall)",
+          "category": "utvalgte"
+        },
+        "746": {
+          "title": "Narkotikautløste dødsfall, etter bofylke (aldersstandardiserte rater)",
+          "category": "utvalgte"
+        },
+        "327": {
+          "title": "Alkoholutløste dødsfall, etter bofylke (antall)",
+          "category": "utvalgte"
+        },
+        "747": {
+          "title": "Alkoholutløste dødsfall, etter bofylke (aldersstandardiserte rater)",
+          "category": "utvalgte"
+        },
+        "314": {
+          "title": "Dødsfall av ulykker, etter alder (antall)",
+          "category": "utvalgte"
+        },
+        "277": {
+          "title": "Dødsfall av ulykker, etter kjønn (antall)",
+          "category": "utvalgte"
+        },
+        "756": {
+          "title": "Dødsfall av ulykker, etter kjønn (aldersstandardiserte rater)",
+          "category": "utvalgte"
+        },
+        "310": {
+          "title": "Selvmord, etter alder (antall)",
+          "category": "utvalgte"
+        },
+        "270": {
+          "title": "Selvmord, etter kjønn (antall)",
+          "category": "utvalgte"
+        },
+        "870": {
+          "title": "Dødsfall av demens (inkl. Alzheimers sykdom), etter alder (antall)",
+          "category": "utvalgte"
+        },
+        "872": {
+          "title": "Dødsfall av demens (inkl. Alzheimers sykdom), etter kjønn (antall)",
+          "category": "utvalgte"
+        },
+        "871": {
+          "title": "Dødsfall av demens (inkl. Alzheimers sykdom), etter kjønn (aldersstandardiserte rater)",
+          "category": "utvalgte"
+        },
+        "268": {
+          "title": "Dødsfall etter dødssted og bostedsfylke",
+          "category": "sted"
+        },
+        "642": {
+          "title": "Dødsfall etter dødssted og dødsårsak",
+          "category": "sted"
+        },
+        "290": {
+          "title": "Dødsfall etter dødsfylke og obduksjonstype",
+          "category": "sted"
+        }
+      }
+    },
+    "nokkel": {
+      "categories": {
+        "befolkning": {
+          "label": "Befolkning",
+          "sortCode": "010"
+        },
+        "oppvekst": {
+          "label": "Oppvekst og utdanning",
+          "sortCode": "020"
+        },
+        "levekaar": {
+          "label": "Arbeid, økonomi og levekår",
+          "sortCode": "030"
+        },
+        "helsetilstand": {
+          "label": "Helsetilstand og dødelighet",
+          "sortCode": "040"
+        },
+        "levevaner": {
+          "label": "Levevaner",
+          "sortCode": "050"
+        },
+        "psykisk": {
+          "label": "Psykisk helse og trivsel",
+          "sortCode": "060"
+        },
+        "miljo": {
+          "label": "Miljø, smittevern og vaksinasjon",
+          "sortCode": "070"
+        }
+      },
+      "tables": {
+        "171": {
+          "title": "Framskrevet folkemengde 2026–2050",
+          "category": "befolkning"
+        },
+        "175": {
+          "title": "Innvandrere og norskfødte med innvandrerforeldre, etter landbakgrunn",
+          "category": "befolkning"
+        },
+        "185": {
+          "title": "Befolkningsvekst",
+          "category": "befolkning"
+        },
+        "338": {
+          "title": "Befolkningen etter aldersgruppe (antall og andel)",
+          "category": "befolkning"
+        },
+        "650": {
+          "title": "Innvandrere og norskfødte med innvandrerforeldre (antall og andel)",
+          "category": "befolkning"
+        },
+        "335": {
+          "title": "Barn av sosialhjelpsmottakere",
+          "category": "oppvekst"
+        },
+        "336": {
+          "title": "Barn i barnehager som oppfyller bemannings- og pedagognormen",
+          "category": "oppvekst"
+        },
+        "337": {
+          "title": "Barn 0–17 år med barnevernstiltak",
+          "category": "oppvekst"
+        },
+        "346": {
+          "title": "Barn av enslige forsørgere",
+          "category": "oppvekst"
+        },
+        "356": {
+          "title": "Deltakelse i fritidsorganisasjoner blant ungdomsskoleelever (Ungdata)",
+          "category": "oppvekst"
+        },
+        "359": {
+          "title": "Gjennomføring i videregående skole, etter innvandringsbakgrunn, treårige tall",
+          "category": "oppvekst"
+        },
+        "360": {
+          "title": "Gjennomføring i videregående skole, etter foreldrenes utdanning, treårige tall",
+          "category": "oppvekst"
+        },
+        "361": {
+          "title": "Grunnskolepoeng, etter innvandringskategori",
+          "category": "oppvekst"
+        },
+        "362": {
+          "title": "Grunnskolepoeng, etter foreldrenes utdanning",
+          "category": "oppvekst"
+        },
+        "371": {
+          "title": "Mestringsnivå i lesing (5. og 8. trinn), etter foreldrenes utdanning, ettårige tall",
+          "category": "oppvekst"
+        },
+        "372": {
+          "title": "Mestringsnivå i lesing (5. og 8. trinn), etter innvandringskategori, treårige tall",
+          "category": "oppvekst"
+        },
+        "375": {
+          "title": "Treffsteder for unge (Ungdata)",
+          "category": "oppvekst"
+        },
+        "377": {
+          "title": "Mobbing, 7. og 10. trinn, treårige tall",
+          "category": "oppvekst"
+        },
+        "378": {
+          "title": "Mobbing, 7. og 10. trinn, ettårige tall",
+          "category": "oppvekst"
+        },
+        "379": {
+          "title": "Unge utenfor arbeid, utdanning og opplæring (NEET), etter innvandringskategori",
+          "category": "oppvekst"
+        },
+        "397": {
+          "title": "Elever som trives på skolen, ettårige tall",
+          "category": "oppvekst"
+        },
+        "600": {
+          "title": "Kollektivtilbud for ungdom (Ungdata)",
+          "category": "oppvekst"
+        },
+        "623": {
+          "title": "Gjennomføring i videregående opplæring, etter foreldrenes utdanning, ettårige tall",
+          "category": "oppvekst"
+        },
+        "641": {
+          "title": "Mestringsnivå i regning (5. og 8. trinn), etter innvandringskategori, treårige tall",
+          "category": "oppvekst"
+        },
+        "670": {
+          "title": "Mestringsnivå i lesing (5. og 8. trinn), etter foreldrenes utdanning, treårige tall",
+          "category": "oppvekst"
+        },
+        "671": {
+          "title": "Mestringsnivå i lesing (5. og 8. trinn), etter innvandringskategori, ettårige tall",
+          "category": "oppvekst"
+        },
+        "672": {
+          "title": "Mestringsnivå i regning (5. og 8. trinn), etter foreldrenes utdanning, ettårige tall",
+          "category": "oppvekst"
+        },
+        "677": {
+          "title": "Gjennomføring i videregående skole, etter innvandringsbakgrunn, ettårige tall",
+          "category": "oppvekst"
+        },
+        "685": {
+          "title": "Mestringsnivå i regning (5. og 8. trinn), etter foreldrenes utdanning, treårige tall",
+          "category": "oppvekst"
+        },
+        "689": {
+          "title": "Mestringsnivå i regning (5. og 8. trinn), etter innvandringskategori, ettårige tall",
+          "category": "oppvekst"
+        },
+        "805": {
+          "title": "Elever som trives på skolen, treårige tall",
+          "category": "oppvekst"
+        },
+        "806": {
+          "title": "Elever som har opplevd mobbing, treårige tall",
+          "category": "oppvekst"
+        },
+        "809": {
+          "title": "Unge utenfor arbeid, utdanning og opplæring (NEET), etter utdanning",
+          "category": "oppvekst"
+        },
+        "813": {
+          "title": "Skulking blant ungdomsskoleelever (Ungdata)",
+          "category": "oppvekst"
+        },
+        "181": {
+          "title": "Høyeste fullførte utdanningsnivå i befolkningen",
+          "category": "levekaar"
+        },
+        "186": {
+          "title": "Personer i eid og leid bolig",
+          "category": "levekaar"
+        },
+        "187": {
+          "title": "Personer som bor alene",
+          "category": "levekaar"
+        },
+        "358": {
+          "title": "Personer i husholdninger med høy gjeldsgrad",
+          "category": "levekaar"
+        },
+        "366": {
+          "title": "Inntektsulikhet (P90/P10 og Gini-koeffisient)",
+          "category": "levekaar"
+        },
+        "392": {
+          "title": "Mottakere av stønad til livsopphold fra NAV",
+          "category": "levekaar"
+        },
+        "401": {
+          "title": "Valgdeltakelse",
+          "category": "levekaar"
+        },
+        "403": {
+          "title": "Personer i husholdninger med vedvarende lavinntekt",
+          "category": "levekaar"
+        },
+        "583": {
+          "title": "Vedvarende lavinntekt, etter innvandringskategori",
+          "category": "levekaar"
+        },
+        "664": {
+          "title": "Sosialhjelpsmottakere",
+          "category": "levekaar"
+        },
+        "752": {
+          "title": "Sosialhjelpsmottakere, ettårige tall",
+          "category": "levekaar"
+        },
+        "787": {
+          "title": "Mottakere av uføretrygd, etter utdanning, ettårige tall",
+          "category": "levekaar"
+        },
+        "788": {
+          "title": "Mottakere av uføretrygd, etter utdanning, treårige tall",
+          "category": "levekaar"
+        },
+        "790": {
+          "title": "Mottakere av arbeidsavklaringspenger, etter utdanning, ettårige tall",
+          "category": "levekaar"
+        },
+        "791": {
+          "title": "Mottakere av arbeidsavklaringspenger, etter utdanning, treårige tall",
+          "category": "levekaar"
+        },
+        "794": {
+          "title": "Personer som bor trangt, etter utdanningsnivå",
+          "category": "levekaar"
+        },
+        "795": {
+          "title": "Personer som bor trangt, etter innvandringsbakgrunn",
+          "category": "levekaar"
+        },
+        "804": {
+          "title": "Sysselsatte etter utdanningsnivå og stillingsandel, ettårige tall",
+          "category": "levekaar"
+        },
+        "807": {
+          "title": "Sysselsatte etter innvandringsbakgrunn og stillingsandel, ettårige tall",
+          "category": "levekaar"
+        },
+        "826": {
+          "title": "Legemeldt sykefravær",
+          "category": "levekaar"
+        },
+        "342": {
+          "title": "Dødsårsaker, tiårige tall",
+          "category": "helsetilstand"
+        },
+        "343": {
+          "title": "Døde per 100 000 av utvalgte dødsårsaker, ettårige tall",
+          "category": "helsetilstand"
+        },
+        "344": {
+          "title": "Selvmord, femårige tall",
+          "category": "helsetilstand"
+        },
+        "345": {
+          "title": "Trafikkulykker med personskade, femårige tall",
+          "category": "helsetilstand"
+        },
+        "364": {
+          "title": "Hjerte- og karsykdom behandlet i spesialisthelsetjenesten, treårige tall",
+          "category": "helsetilstand"
+        },
+        "365": {
+          "title": "Hjerte- og karsykdom behandlet i spesialisthelsetjenesten, ettårige tall",
+          "category": "helsetilstand"
+        },
+        "367": {
+          "title": "Overvekt og fedme blant kvinner ved svangerskapets begynnelse (MFR)",
+          "category": "helsetilstand"
+        },
+        "368": {
+          "title": "Nye krefttilfeller, tiårige tall",
+          "category": "helsetilstand"
+        },
+        "369": {
+          "title": "Personer i kontakt med fastlege, legevakt, fysioterapeut eller kiropraktor (KPR), treårige tall",
+          "category": "helsetilstand"
+        },
+        "370": {
+          "title": "Personer i kontakt med fastlege, legevakt, fysioterapeut eller kiropraktor (KPR), ettårige tall",
+          "category": "helsetilstand"
+        },
+        "387": {
+          "title": "Overvekt blant 17-åringer (sesjon 1), ettårige tall",
+          "category": "helsetilstand"
+        },
+        "388": {
+          "title": "Overvekt blant 17-åringer (sesjon 1), fireårige tall",
+          "category": "helsetilstand"
+        },
+        "507": {
+          "title": "Forventet levealder, etter utdanning, sjuårige tall",
+          "category": "helsetilstand"
+        },
+        "508": {
+          "title": "Forventet levealder, etter utdanning, femtenårige tall",
+          "category": "helsetilstand"
+        },
+        "509": {
+          "title": "Forventet levealder, etter utdanning, ettårige tall",
+          "category": "helsetilstand"
+        },
+        "510": {
+          "title": "Utdanningsforskjeller i forventet levealder, femtenårige tall",
+          "category": "helsetilstand"
+        },
+        "511": {
+          "title": "Utdanningsforskjeller i forventet levealder, sjuårige tall",
+          "category": "helsetilstand"
+        },
+        "606": {
+          "title": "Barn uten karieserfaring (tannhelse)",
+          "category": "helsetilstand"
+        },
+        "619": {
+          "title": "Nye krefttilfeller, ettårige tall",
+          "category": "helsetilstand"
+        },
+        "660": {
+          "title": "Forventet levealder, etter utdanning, 25-årige tall",
+          "category": "helsetilstand"
+        },
+        "688": {
+          "title": "Forventede funksjonsfriske leveår, sjuårige tall",
+          "category": "helsetilstand"
+        },
+        "699": {
+          "title": "Pasienter innlagt i somatiske sykehus (NPR), ettårige tall",
+          "category": "helsetilstand"
+        },
+        "714": {
+          "title": "Pasienter innlagt i somatiske sykehus (NPR), treårige tall",
+          "category": "helsetilstand"
+        },
+        "332": {
+          "title": "Alkoholberuselse blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "350": {
+          "title": "17-åringer som kan svømme 200 meter (sesjon 1), treårige tall",
+          "category": "levevaner"
+        },
+        "351": {
+          "title": "17-åringer som kan svømme 200 meter (sesjon 1), ettårige tall",
+          "category": "levevaner"
+        },
+        "352": {
+          "title": "17-åringer som trener sjeldnere enn ukentlig (sesjon 1), treårige tall",
+          "category": "levevaner"
+        },
+        "353": {
+          "title": "17-åringer som trener sjeldnere enn ukentlig (sesjon 1), ettårige tall",
+          "category": "levevaner"
+        },
+        "357": {
+          "title": "Fysisk inaktivitet blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "363": {
+          "title": "Hasjbruk blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "389": {
+          "title": "Skjermtid blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "390": {
+          "title": "Bruk av reseptfrie smertestillende blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "391": {
+          "title": "Søvnproblemer blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "393": {
+          "title": "Røyking ved første svangerskapskontroll (MFR)",
+          "category": "levevaner"
+        },
+        "601": {
+          "title": "Tid brukt på data-/TV-spill blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "602": {
+          "title": "Tid brukt på sosiale medier blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "607": {
+          "title": "Ungdomsskoleelever som er med venner hjemme hos hverandre (Ungdata)",
+          "category": "levevaner"
+        },
+        "608": {
+          "title": "Ungdomsskoleelever som er ute med venner på kveldstid (Ungdata)",
+          "category": "levevaner"
+        },
+        "667": {
+          "title": "Tid brukt på film og serier blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "810": {
+          "title": "Bruk av andre narkotiske stoffer enn cannabis blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "811": {
+          "title": "Tilbud om hasj/marihuana blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "812": {
+          "title": "Røyking blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "814": {
+          "title": "Snusbruk blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "815": {
+          "title": "E-sigaretter/vaping blant ungdomsskoleelever (Ungdata)",
+          "category": "levevaner"
+        },
+        "839": {
+          "title": "Røyking blant voksne",
+          "category": "levevaner"
+        },
+        "852": {
+          "title": "Bruk av andre narkotiske stoffer enn cannabis blant elever i videregående (Ungdata)",
+          "category": "levevaner"
+        },
+        "859": {
+          "title": "Hasjbruk blant elever i videregående (Ungdata)",
+          "category": "levevaner"
+        },
+        "860": {
+          "title": "Røyking blant elever i videregående (Ungdata)",
+          "category": "levevaner"
+        },
+        "862": {
+          "title": "Snusbruk blant elever i videregående (Ungdata)",
+          "category": "levevaner"
+        },
+        "863": {
+          "title": "E-sigaretter/vaping blant elever i videregående (Ungdata)",
+          "category": "levevaner"
+        },
+        "339": {
+          "title": "Depressive symptomer blant ungdomsskoleelever (Ungdata)",
+          "category": "psykisk"
+        },
+        "348": {
+          "title": "Ensomhet blant ungdomsskoleelever (Ungdata)",
+          "category": "psykisk"
+        },
+        "349": {
+          "title": "Fornøydhet med egen helse blant ungdomsskoleelever (Ungdata)",
+          "category": "psykisk"
+        },
+        "354": {
+          "title": "Ungdomsskoleelever med fortrolig venn (Ungdata)",
+          "category": "psykisk"
+        },
+        "373": {
+          "title": "Høy tilfredshet med livet blant ungdomsskoleelever (Ungdata)",
+          "category": "psykisk"
+        },
+        "374": {
+          "title": "Fornøydhet med nærmiljøet blant ungdomsskoleelever (Ungdata)",
+          "category": "psykisk"
+        },
+        "380": {
+          "title": "Regelbrudd blant ungdomsskoleelever (Ungdata)",
+          "category": "psykisk"
+        },
+        "399": {
+          "title": "Trygghet i nærmiljøet blant ungdomsskoleelever (Ungdata)",
+          "category": "psykisk"
+        },
+        "334": {
+          "title": "Antibiotikaresepter utlevert fra apotek (0–79 år)",
+          "category": "miljo"
+        },
+        "341": {
+          "title": "Personer tilknyttet vannverk, etter drikkevannskvalitet",
+          "category": "miljo"
+        },
+        "385": {
+          "title": "Brukere av legemidler mot type 2-diabetes, treårige tall",
+          "category": "miljo"
+        },
+        "394": {
+          "title": "Fullvaksinerte barn (barnevaksinasjonsprogrammet), ettårige tall",
+          "category": "miljo"
+        },
+        "395": {
+          "title": "Fullvaksinerte barn ved 5-årsalder (barnevaksinasjonsprogrammet)",
+          "category": "miljo"
+        },
+        "396": {
+          "title": "Influensavaksinasjon blant personer 65 år og eldre",
+          "category": "miljo"
+        },
+        "800": {
+          "title": "Luftforurensning: overskridelser av grenseverdier",
+          "category": "miljo"
+        },
+        "803": {
+          "title": "Luftforurensning: befolkningsvektet eksponering (PWC)",
+          "category": "miljo"
+        }
+      }
+    },
+    "npr": {
+      "categories": {
+        "nokkeltal": {
+          "label": "Nøkkeltall per tjenesteområde",
+          "sortCode": "010"
+        },
+        "diagnoser": {
+          "label": "Diagnoser (ICD-10-kapittel)",
+          "sortCode": "020"
+        },
+        "prosedyrer": {
+          "label": "Prosedyrer (kapittel)",
+          "sortCode": "030"
+        },
+        "skader": {
+          "label": "Personskader",
+          "sortCode": "040"
+        },
+        "rus": {
+          "label": "Alkohol og rusmidler",
+          "sortCode": "050"
+        },
+        "pakkeforlop": {
+          "label": "Pakkeforløp",
+          "sortCode": "060"
+        }
+      },
+      "tables": {
+        "464": {
+          "title": "Nøkkeltall: psykisk helsevern for barn og unge (PHBU)",
+          "category": "nokkeltal"
+        },
+        "517": {
+          "title": "Nøkkeltall: somatiske spesialisthelsetjenester",
+          "category": "nokkeltal"
+        },
+        "518": {
+          "title": "Nøkkeltall: psykisk helsevern for voksne (PHV)",
+          "category": "nokkeltal"
+        },
+        "520": {
+          "title": "Nøkkeltall: tverrfaglig spesialisert rusbehandling (TSB)",
+          "category": "nokkeltal"
+        },
+        "636": {
+          "title": "Alkohol og rusmidler: pasienter etter tilstandsgruppe",
+          "category": "rus"
+        },
+        "637": {
+          "title": "Alkohol og rusmidler: pasienter etter alder og kjønn",
+          "category": "rus"
+        },
+        "638": {
+          "title": "Alkohol og rusmidler: pasienter etter tjenesteområde",
+          "category": "rus"
+        },
+        "770": {
+          "title": "Personskader, etter skadested",
+          "category": "skader"
+        },
+        "771": {
+          "title": "Personskader, etter aktivitet",
+          "category": "skader"
+        },
+        "775": {
+          "title": "Personskader, etter skademekanisme",
+          "category": "skader"
+        },
+        "778": {
+          "title": "Personskader, etter alvorlighetsgrad",
+          "category": "skader"
+        },
+        "779": {
+          "title": "Personskader, etter kontaktårsak",
+          "category": "skader"
+        },
+        "784": {
+          "title": "Personskader totalt, etter tjeneste",
+          "category": "skader"
+        },
+        "785": {
+          "title": "Pakkeforløp hjem for pasienter med kreft",
+          "category": "pakkeforlop"
+        },
+        "534": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel I (A00–B99): Infeksjons- og parasittsykdommer",
+          "category": "diagnoser"
+        },
+        "535": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel II (C00–D48): Svulster",
+          "category": "diagnoser"
+        },
+        "533": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel III (D50–D89): Sykdommer i blod og bloddannende organer",
+          "category": "diagnoser"
+        },
+        "524": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel IV (E00–E90): Endokrine sykdommer, ernærings- og stoffskiftesykdommer",
+          "category": "diagnoser"
+        },
+        "537": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel V (F00–F99): Psykiske lidelser og atferdsforstyrrelser",
+          "category": "diagnoser"
+        },
+        "538": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel VI (G00–G99): Sykdommer i nervesystemet",
+          "category": "diagnoser"
+        },
+        "521": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel VII (H00–H59): Sykdommer i øyet og øyets omgivelser",
+          "category": "diagnoser"
+        },
+        "539": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel VIII (H60–H95): Sykdommer i øret og ørebensknuten",
+          "category": "diagnoser"
+        },
+        "540": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel IX (I00–I99): Sykdommer i sirkulasjonssystemet",
+          "category": "diagnoser"
+        },
+        "541": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel X (J00–J99): Sykdommer i åndedrettssystemet",
+          "category": "diagnoser"
+        },
+        "542": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XI (K00–K93): Sykdommer i fordøyelsessystemet",
+          "category": "diagnoser"
+        },
+        "543": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XII (L00–L99): Sykdommer i hud og underhud",
+          "category": "diagnoser"
+        },
+        "544": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XIII (M00–M99): Sykdommer i muskel-skjelettsystemet og bindevev",
+          "category": "diagnoser"
+        },
+        "545": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XIV (N00–N99): Sykdommer i urin- og kjønnsorganene",
+          "category": "diagnoser"
+        },
+        "546": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XV (O00–O99): Svangerskap, fødsel og barseltid",
+          "category": "diagnoser"
+        },
+        "547": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XVI (P00–P96): Tilstander i perinatalperioden",
+          "category": "diagnoser"
+        },
+        "548": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XVII (Q00–Q99): Medfødte misdannelser og kromosomavvik",
+          "category": "diagnoser"
+        },
+        "549": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XVIII (R00–R99): Symptomer, tegn og unormale funn",
+          "category": "diagnoser"
+        },
+        "550": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XIX (S00–T98): Skader, forgiftninger og ytre årsaker",
+          "category": "diagnoser"
+        },
+        "551": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XX (V01–Y98): Ytre årsaker til sykdommer, skader og dødsfall",
+          "category": "diagnoser"
+        },
+        "552": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XXI (Z00–Z99): Kontakt med helsetjenesten",
+          "category": "diagnoser"
+        },
+        "553": {
+          "title": "Pasienter etter tilstandskode, ICD-10 kapittel XXII (U00–U85): Koder for spesielle formål",
+          "category": "diagnoser"
+        },
+        "555": {
+          "title": "Pasienter etter prosedyrekode, kapittel A: Nervesystemet",
+          "category": "prosedyrer"
+        },
+        "556": {
+          "title": "Pasienter etter prosedyrekode, kapittel B: Endokrine organer",
+          "category": "prosedyrer"
+        },
+        "557": {
+          "title": "Pasienter etter prosedyrekode, kapittel C: Øyet og øyeregionen",
+          "category": "prosedyrer"
+        },
+        "558": {
+          "title": "Pasienter etter prosedyrekode, kapittel D: Øre, nese, bihuler og strupehode",
+          "category": "prosedyrer"
+        },
+        "559": {
+          "title": "Pasienter etter prosedyrekode, kapittel E: Tenner, kjever, munn og svelg",
+          "category": "prosedyrer"
+        },
+        "560": {
+          "title": "Pasienter etter prosedyrekode, kapittel F: Hjertet og de store intratorakale kar",
+          "category": "prosedyrer"
+        },
+        "561": {
+          "title": "Pasienter etter prosedyrekode, kapittel G: Brystvegg, pleura, diafragma og bronkier",
+          "category": "prosedyrer"
+        },
+        "562": {
+          "title": "Pasienter etter prosedyrekode, kapittel H: Bryst (mamma)",
+          "category": "prosedyrer"
+        },
+        "563": {
+          "title": "Pasienter etter prosedyrekode, kapittel I: Psykisk helse og avhengighet",
+          "category": "prosedyrer"
+        },
+        "564": {
+          "title": "Pasienter etter prosedyrekode, kapittel J: Fordøyelsesorganer og milt",
+          "category": "prosedyrer"
+        },
+        "566": {
+          "title": "Pasienter etter prosedyrekode, kapittel K: Urinorganer, mannlige kjønnsorganer og retroperitoneum",
+          "category": "prosedyrer"
+        },
+        "567": {
+          "title": "Pasienter etter prosedyrekode, kapittel L: Kvinnelige kjønnsorganer",
+          "category": "prosedyrer"
+        },
+        "568": {
+          "title": "Pasienter etter prosedyrekode, kapittel M: Fødselshjelp og prosedyrer under svangerskap",
+          "category": "prosedyrer"
+        },
+        "569": {
+          "title": "Pasienter etter prosedyrekode, kapittel N: Bevegelsesapparatet",
+          "category": "prosedyrer"
+        },
+        "571": {
+          "title": "Pasienter etter prosedyrekode, kapittel O: Habilitering og rehabilitering",
+          "category": "prosedyrer"
+        },
+        "572": {
+          "title": "Pasienter etter prosedyrekode, kapittel P: Perifere kar og lymfesystemet",
+          "category": "prosedyrer"
+        },
+        "573": {
+          "title": "Pasienter etter prosedyrekode, kapittel Q: Hud",
+          "category": "prosedyrer"
+        },
+        "574": {
+          "title": "Pasienter etter prosedyrekode, kapittel R: Blod med bestanddeler",
+          "category": "prosedyrer"
+        },
+        "575": {
+          "title": "Pasienter etter prosedyrekode, kapittel S: Bildediagnostiske undersøkelser",
+          "category": "prosedyrer"
+        },
+        "576": {
+          "title": "Pasienter etter prosedyrekode, kapittel T: Nukleærmedisin",
+          "category": "prosedyrer"
+        },
+        "577": {
+          "title": "Pasienter etter prosedyrekode, kapittel W: Tiltak ikke klassifisert i andre kapitler",
+          "category": "prosedyrer"
+        },
+        "578": {
+          "title": "Pasienter etter prosedyrekode, kapittel Y: Uttak av organer eller vev til transplantasjon",
+          "category": "prosedyrer"
+        },
+        "579": {
+          "title": "Pasienter etter prosedyrekode, kapittel Z: Tilleggskoder",
+          "category": "prosedyrer"
+        }
+      }
+    },
+    "msis": {
+      "categories": {
+        "luftveis": {
+          "label": "Luftveisinfeksjoner",
+          "sortCode": "010"
+        },
+        "mage": {
+          "label": "Mage-tarminfeksjoner",
+          "sortCode": "020"
+        }
+      },
+      "tables": {
+        "724": {
+          "title": "Influensa: antall og andel positive (ukestall)",
+          "category": "luftveis"
+        },
+        "726": {
+          "title": "Influensa: subtyper (ukestall)",
+          "category": "luftveis"
+        },
+        "749": {
+          "title": "Influensa: sesongsammenligning",
+          "category": "luftveis"
+        },
+        "729": {
+          "title": "RS-virus: antall og andel positive (ukestall)",
+          "category": "luftveis"
+        },
+        "730": {
+          "title": "RS-virus: sesongsammenligning",
+          "category": "luftveis"
+        },
+        "731": {
+          "title": "Covid-19 (SARS-CoV-2): antall og andel positive (ukestall)",
+          "category": "luftveis"
+        },
+        "732": {
+          "title": "Covid-19 (SARS-CoV-2): sesongsammenligning",
+          "category": "luftveis"
+        },
+        "733": {
+          "title": "Luftveisagens: oversikt over påviste smittestoffer",
+          "category": "luftveis"
+        },
+        "768": {
+          "title": "Gastroenterittvirus: sesongsammenligning",
+          "category": "mage"
+        },
+        "769": {
+          "title": "Gastroenterittvirus: oversikt over påviste virus",
+          "category": "mage"
+        }
+      }
+    },
+    "sysvak": {
+      "tables": {
+        "648": {
+          "title": "Barnevaksinasjonsprogrammet: vaksinasjonsdekning"
+        },
+        "882": {
+          "title": "Kikhostevaksinasjon av gravide (maternell vaksinasjon)"
+        },
+        "324": {
+          "title": "Influensavaksinasjon, sesongen 2024/2025 (ukestall)"
+        },
+        "716": {
+          "title": "Influensavaksinasjon, sesongen 2025/2026 (ukestall)"
+        },
+        "753": {
+          "title": "Influensavaksinasjon blant personer 65 år og eldre (årlige tall)"
+        },
+        "484": {
+          "title": "Koronavaksinasjon, sesongen 2024/2025 (ukestall)"
+        },
+        "717": {
+          "title": "Koronavaksinasjon, sesongen 2025/2026 (ukestall)"
+        },
+        "750": {
+          "title": "Koronavaksinasjon blant personer 75 år og eldre (årlige tall)"
+        },
+        "751": {
+          "title": "Koronavaksinasjon blant personer 65 år og eldre (årlige tall)"
+        }
+      }
+    },
+    "kpr": {
+      "tables": {
+        "522": {
+          "title": "Legevakt: kontakter med alkohol- og rusrelaterte tilstander, etter kjønn"
+        },
+        "523": {
+          "title": "Legevakt: kontakter med alkohol- og rusrelaterte tilstander, etter alder"
+        },
+        "634": {
+          "title": "Helse- og omsorgstjenester: antall brukere per tjeneste"
+        }
+      }
+    },
+    "lmr": {
+      "tables": {
+        "819": {
+          "title": "Legemiddelbruk: ADHD-midler"
+        },
+        "820": {
+          "title": "Legemiddelbruk: hjerte- og karmidler"
+        },
+        "821": {
+          "title": "Legemiddelbruk: hormontilskudd"
+        },
+        "822": {
+          "title": "Legemiddelbruk: prevensjonsmidler"
+        },
+        "823": {
+          "title": "Legemiddelbruk: vektreduserende legemidler"
+        },
+        "824": {
+          "title": "Legemiddelbruk: øvrige legemiddelgrupper"
+        },
+        "825": {
+          "title": "Legemiddelbruk per ATC-kode"
+        }
+      }
+    },
+    "gs": {
+      "tables": {
+        "847": {
+          "title": "Grossistomsetning av legemidler per ATC-kode"
+        },
+        "848": {
+          "title": "Omsetning av paracetamol"
+        },
+        "849": {
+          "title": "Omsetning av ibuprofen"
+        },
+        "850": {
+          "title": "Omsetning av nødprevensjon"
+        },
+        "851": {
+          "title": "Omsetning av potensmidler"
+        },
+        "853": {
+          "title": "Omsetning av nesespray"
+        },
+        "856": {
+          "title": "Omsetning av antivirale legemidler"
+        },
+        "857": {
+          "title": "Omsetning av allergimidler (tabletter og miksturer)"
+        },
+        "858": {
+          "title": "Omsetning av melatonin"
+        },
+        "864": {
+          "title": "Omsetning av nikotinpreparater"
+        },
+        "865": {
+          "title": "Omsetning av avføringsmidler"
+        }
+      }
+    },
+    "hkr": {
+      "tables": {
+        "410": {
+          "title": "Hjerte- og karsykdommer: totalforekomst av utvalgte diagnoser (antall)"
+        },
+        "668": {
+          "title": "Hjerte- og karsykdommer: nye pasienter med utvalgte diagnoser (antall)"
+        },
+        "676": {
+          "title": "Hjerte- og karsykdommer: utvalgte prosedyrer (antall pasienter)"
+        },
+        "896": {
+          "title": "Hjerte- og karsykdommer: totalforekomst av utvalgte diagnoser (rater)"
+        },
+        "899": {
+          "title": "Hjerte- og karsykdommer: nye pasienter med utvalgte diagnoser (rater)"
+        }
+      }
+    },
+    "abr": {
+      "categories": {
+        "avbrot": {
+          "label": "Svangerskapsavbrot",
+          "sortCode": "010"
+        },
+        "nemnd": {
+          "label": "Nemndbehandling",
+          "sortCode": "020"
+        }
+      },
+      "tables": {
+        "280": {
+          "title": "Svangerskapsavbrot, etter type begjæring og utførtstatus",
+          "category": "avbrot"
+        },
+        "283": {
+          "title": "Svangerskapsavbrot, etter bustadfylke og alder",
+          "category": "avbrot"
+        },
+        "285": {
+          "title": "Svangerskapsavbrot, etter alder og type begjæring",
+          "category": "avbrot"
+        },
+        "286": {
+          "title": "Svangerskapsavbrot, etter metode, type begjæring og svangerskapslengde",
+          "category": "avbrot"
+        },
+        "263": {
+          "title": "Begjæringar om svangerskapsavbrot, etter institusjon og utførtstatus",
+          "category": "avbrot"
+        },
+        "588": {
+          "title": "Svangerskapsavbrot, etter prevensjonsbruk og alder",
+          "category": "avbrot"
+        },
+        "589": {
+          "title": "Svangerskapsavbrot, etter alder og registrert opplysning om prevensjonsbruk",
+          "category": "avbrot"
+        },
+        "253": {
+          "title": "Nemndbehandla svangerskapsavbrot, etter bustadsfylke",
+          "category": "nemnd"
+        },
+        "867": {
+          "title": "Nemndbehandla svangerskapsavbrot, etter abortlov og vedtaksgrunnlag",
+          "category": "nemnd"
+        },
+        "884": {
+          "title": "Nemndbehandla svangerskapsavbrot, etter abortlov, vedtaksgrunnlag og svangerskapslengde",
+          "category": "nemnd"
+        },
+        "261": {
+          "title": "Nemndbehandla begjæringar, etter type nemnd, vedtak og utførtstatus",
+          "category": "nemnd"
+        },
+        "264": {
+          "title": "Nemndbehandla begjæringar, etter vedtak og svangerskapslengde",
+          "category": "nemnd"
+        },
+        "262": {
+          "title": "Nemndbehandla begjæringar med vedtak, etter vedtak og svangerskapslengde",
+          "category": "nemnd"
+        }
+      }
+    },
+    "ngs": {
+      "categories": {
+        "sars": {
+          "label": "SARS-CoV-2",
+          "sortCode": "010"
+        },
+        "influensa": {
+          "label": "Influensa",
+          "sortCode": "020"
+        },
+        "rsv": {
+          "label": "RS-virus",
+          "sortCode": "030"
+        },
+        "hepatitt": {
+          "label": "Hepatitt",
+          "sortCode": "040"
+        }
+      },
+      "tables": {
+        "832": {
+          "title": "SARS-CoV-2-varianter per måned (Pangolin-nomenklatur)",
+          "category": "sars"
+        },
+        "842": {
+          "title": "Hyppigste SARS-CoV-2-varianter siste to måneder",
+          "category": "sars"
+        },
+        "844": {
+          "title": "SARS-CoV-2: varianter av interesse (VOI)",
+          "category": "sars"
+        },
+        "845": {
+          "title": "SARS-CoV-2: varianter under overvåkning (VUM)",
+          "category": "sars"
+        },
+        "911": {
+          "title": "Fordeling av SARS-CoV-2-varianter over tid",
+          "category": "sars"
+        },
+        "914": {
+          "title": "Influensa A(H1N1)pdm09: genetiske grupper per måned",
+          "category": "influensa"
+        },
+        "915": {
+          "title": "Influensa A(H3N2): genetiske grupper per måned",
+          "category": "influensa"
+        },
+        "916": {
+          "title": "Influensa B/Victoria: genetiske grupper per måned",
+          "category": "influensa"
+        },
+        "917": {
+          "title": "RS-virus type A: genetiske grupper per sesong",
+          "category": "rsv"
+        },
+        "918": {
+          "title": "RS-virus type B: genetiske grupper per sesong",
+          "category": "rsv"
+        },
+        "665": {
+          "title": "Hepatitt C: genotyper per år (helgenomsekvensering)",
+          "category": "hepatitt"
+        }
+      }
+    },
+    "skast": {
+      "tables": {
+        "773": {
+          "title": "Skadedyrbekjempelser per år"
+        },
+        "786": {
+          "title": "Skadedyrbekjempelser per måned, etter art"
+        }
+      }
+    }
+  }
+}

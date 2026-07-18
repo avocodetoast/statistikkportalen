@@ -159,9 +159,24 @@ export function buildFhiCatalogue(catalog, appConfig, subjectNames, lang) {
     const placements = (cfg.paths && Array.isArray(cfg.paths[source]) && cfg.paths[source].length)
       ? cfg.paths[source]
       : [['he', 'fhi-' + source]];
-    const paths = placements.map(p => buildPathSegments(p, subjectNames, nodes, lang));
+    const basePaths = placements.map(p => buildPathSegments(p, subjectNames, nodes, lang));
     const subjectCode = placements[0][0];
     const sourceTitle = catSource.title || source;
+
+    // Kuraterte kategorier (register → kategori) fra katalogfila — speiler
+    // pathsForCategory i fhi-adapter.js buildSourceCatalogue: tabeller med
+    // `category` får et tredje path-segment under registernoden.
+    const categories = catSource.categories || null;
+    const pathsForCategory = (catId) => {
+      if (!catId || !categories || !categories[catId]) return basePaths;
+      const def = categories[catId];
+      const seg = {
+        id: 'fhi-' + source + '-' + catId,
+        label: def.label || catId,
+        sortCode: def.sortCode || '999',
+      };
+      return basePaths.map(p => p.concat([seg]));
+    };
 
     for (const row of catSource.tables) {
       tables.push({
@@ -176,7 +191,7 @@ export function buildFhiCatalogue(catalog, appConfig, subjectNames, lang) {
         variableNames: row.variableNames || [],
         description: row.description || '',
         subjectCode,
-        paths,
+        paths: pathsForCategory(row.category),
         source: 'FHI/' + sourceTitle,
       });
     }

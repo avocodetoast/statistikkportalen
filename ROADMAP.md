@@ -6,12 +6,30 @@ uendret. Adapterkontrakten er dokumentert i `js/sources/source-registry.js`.
 
 ## Aktivert i prototypen
 
-- **Norges Bank** (under Økonomi → Bank og finansmarked): EXR (valutakurser),
-  IR (styringsrenten), SHORT_RATES (NOWA), GOVT_GENERIC_RATES
-  (statsobligasjonsrenter). Konfigureres i `AppConfig.sources.nb.dataflows`.
-- **FHI** (under Helse og samfunn → Helse): kildene `nokkel`
-  (Folkehelsestatistikk), `mfr` (Medisinsk fødselsregister), `daar`
-  (Dødsårsaksregisteret). Konfigureres i `AppConfig.sources.fhi.sourceIds`.
+- **Norges Bank** (under Økonomi → Bank og finansmarked): 18 dataflows fordelt
+  på fem emnenoder — renter (IR, SHORT_RATES, GOVT_GENERIC_RATES,
+  GOVT_ZEROCOUPON), valutakurser (EXR), statsgjeld/statspapirer (SEC,
+  GOVT_ZEROCOUPON, GOVT_KEYFIGURES, GOVT_PRIMARY_MARKET,
+  GOVT_SECONDARY_MARKET, GOVT_IRS — historisk, merket avsluttet),
+  likviditet/pengemarked (LIQUIDITY_STATISTICS, LIQUIDITY_FORECAST,
+  MONEY_MARKET, FAUCTION, CBC_TRANSACTIONS, SETTLEMENT_STATISTICS) og
+  indikatorer (FINANCIAL_INDICATORS, REGNET). Konfigureres i
+  `AppConfig.sources.nb.dataflows`; tunge flows bruker `probeKey` (smal
+  SDMX-nøkkel) for katalogperiode-/tidsprobene. Dimensjoner med koder som
+  ikke kan stå i nøkkelstien (punktum/skråstrek: GOVT_PRIMARY_MARKET
+  COUPON/INSTR, CBC_TRANSACTIONS INSTR) filtreres klientside.
+- **FHI** (under Helse og samfunn → Helse): alle 13 kilder i det åpne API-et
+  (`nokkel`, `mfr`, `daar`, `msis`, `sysvak`, `npr`, `kpr`, `lmr`, `gs`,
+  `hkr`, `abr`, `ngs`, `skast`). Konfigureres i
+  `AppConfig.sources.fhi.sourceIds`.
+- **FHI register → kategori-hierarki + kuraterte titler**: alle 370
+  FHI-tabeller har håndkuraterte visningstitler, og kilder med mange
+  tabeller er inndelt i kategorier på laveste emnetre-nivå (f.eks.
+  Medisinsk fødselsregister → «Fødsler og fødte», Norsk pasientregister →
+  «Diagnoser (ICD-10-kapittel)») — kuratert i
+  `data/sources/fhi-curation.json`, som `scripts/update-fhi-catalog.mjs`
+  fletter inn i `data/sources/fhi-catalog.json` ved hver regenerering
+  (kurateringen overskrives aldri; se scripts/lib/fhi-curation.mjs).
 - **Per-kilde status + resiliens**: portalen fungerer (degradert, tydelig
   merket) selv når SSB er nede. Statusbadge i headeren («3/3 API-er lastet
   inn», grønn/gul/rød) med panel per kilde: status, cache-info, tabellantall,
@@ -26,27 +44,26 @@ uendret. Adapterkontrakten er dokumentert i `js/sources/source-registry.js`.
 
 ## Gjenstår til senere
 
-### Norges Bank — 18 gjenstående dataflows
-Aktiveres ved å utvide `AppConfig.sources.nb.dataflows` (+ ev. nye nivå-2-noder
-i `AppConfig.sourceNodes`): ANN_KPRA, ANN_FX_SPU, SEC, GOVT_ZEROCOUPON,
-GOVT_IRS (historisk, t.o.m. 2014), GOVT_KEYFIGURES, GOVT_PRIMARY_MARKET,
-GOVT_SECONDARY_MARKET, CBC_CALENDAR, CBC_INSTRUMENTS, CBC_TRANSACTIONS,
-LIQUIDITY_STATISTICS, LIQUIDITY_FORECAST, MONEY_MARKET, FAUCTION,
-SETTLEMENT_STATISTICS, FINANCIAL_INDICATORS, REGNET.
-
-### FHI — 10 gjenstående kilder
-Aktiveres med én linje i `AppConfig.sources.fhi.sourceIds` (+ node i
-`sourceNodes`): msis, sysvak, npr, kpr, lmr, gs, hkr, abr, ngs, skast.
-NB: tids-/geodimensjonskoder varierer per kilde (DAAR/FYLKE,
-FODSELSTIDSPUNKT_*); rolledeteksjonen i `fhi-adapter.js` er heuristisk og bør
-sjekkes ved aktivering av nye kilder.
+### Norges Bank — 4 bevisst utsatte dataflows
+ANN_KPRA, ANN_FX_SPU, CBC_CALENDAR og CBC_INSTRUMENTS er register-/
+kunngjøringstabeller: én rad per hendelse der innholdet ligger i
+attributtkolonner (`VALID_FROM`, `DELTA_VALUE`, `AUCTION_DATE`, `TICKER`,
+`MATURITY`, …), ikke i observasjonsverdier. SDMX→JSON-Stat2-konverteringen
+(`sdmx-to-jsonstat.js`) bærer kun observasjonsverdier, så tabellene ville
+vist tomme/meningsløse celler i GUI-et. Krever attributt-støtte i
+konverteren (egen kolonne per attributt) før de kan aktiveres.
 
 ### Vedlikehold
 - FHI-katalogen (`data/sources/fhi-catalog.json` — titler, tidsperioder,
   beskrivelser) er et øyeblikksbilde; kjør `node scripts/update-fhi-catalog.mjs`
-  ved nye FHI-tabeller eller endrede sammendrag.
-- ~64 lange FHI-titler (mest nokkel) kuttes ved ~90 tegn; kan finpusses manuelt
-  i katalogfilen om ønskelig.
+  ved nye FHI-tabeller eller endrede sammendrag. Manuell kuratering
+  (visningstitler + kategorier) ligger i `data/sources/fhi-curation.json` og
+  flettes inn automatisk ved hver kjøring — nye tabeller uten kuratering
+  havner rett under registernoden og listes som advarsel av scriptet.
+- Rolledeteksjonen (tid/geo) i `fhi-adapter.js`/`update-fhi-catalog.mjs` er
+  heuristisk (`TIME_PATTERN`/`TIME_EXACT`, bevisst duplisert — hold i sync);
+  byggescriptet logger tabeller uten gjenkjent tidsdimensjon, sjekk loggen
+  ved nye kilder/tabeller.
 
 ### Øvrig
 - Kryssfiltrering av gyldige kombinasjoner finnes kun for Norges Bank
