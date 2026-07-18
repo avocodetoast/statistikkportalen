@@ -11,16 +11,22 @@
  * Base-URL og dataflows leses fra AppConfig.sources.nb:
  *   .baseUrl    // 'https://data.norges-bank.no/api'
  *   .enabled    // hopp over registrering hvis false
- *   .dataflows  // [{ flow, version, tableId, path, label:{nb,en} }]
+ *   .dataflows  // [{ flow, version, tableId, path, label:{nb,en},
+ *               //    discontinued?, probeKey? }]
  *               // path: ['bf','nb-renter'] = én emnetre-plassering; alternativt
  *               // paths: [['bf','nb-renter'], …] for flere plasseringer.
- * Kjerneutvalg: EXR, IR, SHORT_RATES, GOVT_GENERIC_RATES.
+ *               // discontinued: true = avsluttet serie (GOVT_IRS).
+ *               // probeKey: smal probenøkkel for tunge flows (se probeKeyFor).
  *
  *   Datastruktur : GET /datastructure/NB/DSD_{FLOW}?references=codelist&format=sdmx-json
  *   Data         : GET /data/{FLOW}/{key}?format=sdmx-json&locale=no|en[&lastNObservations=|startPeriod=|endPeriod=]
  *
  * Nøkkel = punktseparerte dimensjonskoder i DSD-rekkefølge; '+' for flere verdier
- * i én dimensjon; tom segment = alle verdier. FREQ er alltid første dimensjon.
+ * i én dimensjon; tom segment = alle verdier. NB: FREQ er IKKE alltid første
+ * dimensjon (GOVT_IRS: sist; GOVT_KEYFIGURES/SETTLEMENT_STATISTICS: midt i;
+ * FAUCTION mangler FREQ helt) — probene slår opp posisjonen fra serieskeysonly.
+ * Tunge flows (MONEY_MARKET m.fl.) angir `probeKey` i config: et smalt
+ * nøkkelutsnitt som periode-/tidsprobene bruker i stedet for åpne kall.
  *
  * KATALOG er nettverksfri (bygges fra config); metadata gjør DSD-fetch +
  * TIME_PERIOD-probe; data gjør ett datakall. HTTP 404 (også «traff ingen
@@ -58,7 +64,21 @@
     EXR: ['Valutakurser', 'Valuta', 'Basisvaluta', 'Kvoteringsvaluta', 'Kurs', 'Exchange rates', 'Currency'],
     IR: ['Styringsrenten', 'Styringsrente', 'Rente', 'Foliorente', 'Policy rate', 'Key policy rate'],
     SHORT_RATES: ['NOWA', 'Kortsiktige renter', 'Pengemarkedsrente', 'Rente', 'Short-term interest rates'],
-    GOVT_GENERIC_RATES: ['Statsobligasjonsrenter', 'Statsobligasjon', 'Statsrente', 'Rente', 'Government bond yields']
+    GOVT_GENERIC_RATES: ['Statsobligasjonsrenter', 'Statsobligasjon', 'Statsrente', 'Rente', 'Government bond yields'],
+    GOVT_ZEROCOUPON: ['Nullkupongrenter', 'Statspapirer', 'Rentekurve', 'Statsobligasjon', 'Statskasseveksel', 'Zero coupon yields', 'Yield curve'],
+    SEC: ['Statspapirer', 'Statsobligasjoner', 'Statskasseveksler', 'Kurser', 'Effektiv rente', 'ISIN', 'Government securities', 'Treasury bills'],
+    GOVT_KEYFIGURES: ['Statsgjeld', 'Nøkkeltall', 'Utestående volum', 'Opplåning', 'Durasjon', 'Government debt', 'Key figures'],
+    GOVT_PRIMARY_MARKET: ['Statspapirer', 'Auksjon', 'Emisjon', 'Førstehåndsmarkedet', 'Statsobligasjoner', 'Primary market', 'Auction'],
+    GOVT_SECONDARY_MARKET: ['Statspapirer', 'Annenhåndsmarkedet', 'Omsetning', 'Motpart', 'Secondary market', 'Turnover'],
+    GOVT_IRS: ['Rentebytteavtaler', 'Renteswap', 'Statsgjeld', 'Interest rate swaps'],
+    LIQUIDITY_STATISTICS: ['Likviditet', 'Likviditetsstatistikk', 'Sentralbankreserver', 'Banksystemet', 'Liquidity statistics', 'Reserves'],
+    LIQUIDITY_FORECAST: ['Likviditet', 'Likviditetsprognose', 'Strukturell likviditet', 'Prognose', 'Liquidity forecast', 'Structural liquidity'],
+    MONEY_MARKET: ['Pengemarkedet', 'Pengemarkedsdata', 'RPD', 'Usikrede lån', 'Sikrede lån', 'Valutabytteavtaler', 'Money market', 'Repo'],
+    FAUCTION: ['F-auksjoner', 'F-lån', 'F-innskudd', 'Auksjon', 'Markedsoperasjoner', 'F-auctions', 'F-loans', 'F-deposits'],
+    CBC_TRANSACTIONS: ['Sentralbanksertifikater', 'Sertifikater', 'Transaksjoner', 'Central bank certificates', 'Transactions'],
+    SETTLEMENT_STATISTICS: ['Oppgjørsstatistikk', 'Oppgjørssystem', 'NBO', 'Betalingsoppgjør', 'Settlement statistics', 'Payments'],
+    FINANCIAL_INDICATORS: ['Finansielle indikatorer', 'FCI', 'Indeks', 'Finansielle forhold', 'Financial indicators', 'Financial conditions index'],
+    REGNET: ['Regionalt nettverk', 'Forventninger', 'Produksjon', 'Sysselsetting', 'Bedriftsundersøkelse', 'Regional network', 'Expectations']
   };
 
   // Datatorg-beskrivelser per flow (norsk). Emitteres som `note` i metadata slik
@@ -68,7 +88,21 @@
     EXR: 'Norges Banks valutakurser. Kursene publiseres ca. kl. 16.00.',
     IR: 'Norges Banks styringsrente.',
     SHORT_RATES: 'NOWA – Norwegian Overnight Weighted Average.',
-    GOVT_GENERIC_RATES: 'Generisk rente er den effektive renten på et statspapir som er nærmest den oppgitte løpetiden målt fra dagens dato.'
+    GOVT_GENERIC_RATES: 'Generisk rente er den effektive renten på et statspapir som er nærmest den oppgitte løpetiden målt fra dagens dato.',
+    GOVT_ZEROCOUPON: 'Nullkupongrenter for statspapirer, beregnet med Nelson-Siegel-Svensson-metoden.',
+    SEC: 'Daglige kurser og effektive renter for statsobligasjoner og statskasseveksler (per ISIN).',
+    GOVT_KEYFIGURES: 'Nøkkeltall for statsgjelden: utestående volum, opplåning, rentebytteavtaler og durasjon per kvartal.',
+    GOVT_PRIMARY_MARKET: 'Emisjoner og auksjonsresultater for statsobligasjoner og statskasseveksler i førstehåndsmarkedet.',
+    GOVT_SECONDARY_MARKET: 'Omsetning av statspapirer i annenhåndsmarkedet, fordelt på motpartstype og motpartsområde.',
+    GOVT_IRS: 'Statens rentebytteavtaler 2005–2014. Ordningen er avsluttet og serien oppdateres ikke lenger.',
+    LIQUIDITY_STATISTICS: 'Likviditeten i banksystemet: sentralbankreserver, autonome faktorer og Norges Banks markedsoperasjoner.',
+    LIQUIDITY_FORECAST: 'Strukturell og total likviditet i banksystemet – statistikk og Norges Banks prognoser.',
+    MONEY_MARKET: 'Pengemarkedsdata rapportert til Norges Bank (RPD): usikrede og sikrede lån og valutabytteavtaler.',
+    FAUCTION: 'Kunngjøringer og resultater for Norges Banks F-låns- og F-innskuddsauksjoner.',
+    CBC_TRANSACTIONS: 'Transaksjoner i Norges Banks sentralbanksertifikater per ISIN og handledag.',
+    SETTLEMENT_STATISTICS: 'Oppgjørsstatistikk fra Norges Banks oppgjørssystem (NBO).',
+    FINANCIAL_INDICATORS: 'Finansielle indikatorer (FCI): samleindeks og delindekser for finansielle forhold i Norge.',
+    REGNET: 'Regionalt nettverk: indikatorer fra Norges Banks kvartalsvise bedriftsundersøkelse.'
   };
 
   // Emnesubjektets sortCode (samsvarer med SSBs 'bf'-node; kosmetisk siden
@@ -192,11 +226,13 @@
         updated: '',
         firstPeriod: '',
         lastPeriod: '',
-        discontinued: false,
         // FREQ=B for kjerneutvalget → daglige/virkedagsserier. 'Business' faller i
         // «Andre tabeller»/«Other»-bøtta i frekvensfilteret (ikke Monthly/Quarterly/Annual),
         // som degraderer pent (se browser-state.filterTables/calcFrequencyCounts).
         timeUnit: 'Business',
+        // Avsluttede serier (GOVT_IRS) merkes i config-raden og filtreres/
+        // merkes i UI-en som SSBs egne avsluttede tabeller.
+        discontinued: flow.discontinued === true,
         variableNames: (VARIABLE_NAMES[flow.flow] || []).slice(),
         subjectCode: subjectId,
         paths: placements.map(p => [makeSubjectSeg(p[0]), makeNodeSeg(p[1])]),
@@ -243,6 +279,20 @@
   }
 
   /**
+   * Smal probenøkkel fra config (flow.probeKey) for tunge flows der et åpent
+   * probekall er for stort (MONEY_MARKET: 3,5 MB katalogprobe / 15,6 MB
+   * tidsprobe uten nøkkel). Streng = samme nøkkel for begge prober;
+   * {period, time} = separate nøkler. null = ingen (åpne prober som før).
+   * @param {'period'|'time'} kind
+   */
+  function probeKeyFor(flow, kind) {
+    const pk = flow && flow.probeKey;
+    if (!pk) return null;
+    if (typeof pk === 'string') return pk;
+    return pk[kind] || null;
+  }
+
+  /**
    * Hent seriedim-navn + TIME_PERIOD-vindu via data-prober.
    *
    * SDMX-tidskoder er FREKVENSSPESIFIKKE (B → '2025-07-15', M → '2025-07',
@@ -252,8 +302,14 @@
    *
    * Returnerer { dimLabels:{id:name}, timeValues:[{id,name}] (union, stigende),
    *              timeLabel, byFreq:{freqCode:[periodekoder]}|null }.
+   *
+   * freqPos = FREQ-dimensjonens posisjon i serienøkkelen (fra serieskeysonly;
+   * -1 = flowen har ingen FREQ-dimensjon, f.eks. FAUCTION). FREQ er IKKE
+   * alltid først (GOVT_IRS: sist), så probenøklene bygges posisjonsbevisst.
+   * Flows med config-satt `probeKey` probes med den smale nøkkelen i stedet
+   * for åpne per-frekvens-nøkler (åpne kall er for tunge for disse).
    */
-  async function probeTime(flow, nSeriesDims, locale, freqCodes) {
+  async function probeTime(flow, nSeriesDims, locale, freqCodes, freqPos) {
     async function run(key) {
       const url = BASE + '/data/' + encodeURIComponent(flow.flow) + '/' + key +
         '?format=sdmx-json&lastNObservations=' + TIME_PROBE_N + '&locale=' + locale;
@@ -280,13 +336,45 @@
       return { dimLabels, timeLabel: timeDim.name || null, values };
     }
 
-    const tail = '.'.repeat(Math.max(0, nSeriesDims - 1));
+    const pos = (typeof freqPos === 'number' && freqPos >= 0) ? freqPos
+      : (freqPos === -1 ? -1 : 0); // udefinert (serieskeysonly feilet) → legacy-antakelse posisjon 0
+    /** Nøkkel med én frekvenskode på FREQ-posisjonen, resten åpne segmenter. */
+    function keyForFreq(f) {
+      const segs = new Array(Math.max(1, nSeriesDims)).fill('');
+      segs[pos] = f;
+      return segs.join('.');
+    }
+
     const result = { dimLabels: {}, timeValues: [], timeLabel: 'Tidsperiode', byFreq: null };
+    const freqs = Array.isArray(freqCodes) ? freqCodes.filter(Boolean) : [];
+
+    // Smal config-nøkkel (tunge flows): ett kall, ingen åpne segment-prober.
+    // byFreq settes kun når flowen har nøyaktig én frekvens (gjelder alle
+    // probeKey-flowene i dag) — uten byFreq beholdes verdiliste-UI-et.
+    const timeProbeKey = probeKeyFor(flow, 'time');
+    if (timeProbeKey) {
+      let json = null;
+      try { json = await run(timeProbeKey); } catch (e) { json = null; }
+      if (hasObservations(json)) {
+        const ex = extract(json);
+        if (ex && ex.values.length) {
+          result.dimLabels = ex.dimLabels;
+          if (ex.timeLabel) result.timeLabel = ex.timeLabel;
+          result.timeValues = ex.values;
+          if (freqs.length === 1) {
+            result.byFreq = {};
+            result.byFreq[freqs[0]] = ex.values.map(v => v.id);
+          }
+          return result;
+        }
+      }
+      // Nøkkelen ga ingenting (endret datastruktur?) — fall gjennom til de
+      // generiske probene under i stedet for å gi opp.
+    }
 
     // Frekvensbevisst probing: ett kall pr. faktisk frekvens, parallelt.
-    const freqs = Array.isArray(freqCodes) ? freqCodes.filter(Boolean) : [];
-    if (freqs.length) {
-      const jsons = await Promise.all(freqs.map(f => run(f + tail).catch(() => null)));
+    if (freqs.length && pos >= 0) {
+      const jsons = await Promise.all(freqs.map(f => run(keyForFreq(f)).catch(() => null)));
       const byFreq = {};
       const union = {};
       jsons.forEach((json, i) => {
@@ -307,9 +395,12 @@
       }
     }
 
-    // Fallback: nøkkel «B» + tomme segmenter (FREQ er alltid dim 0); så /all.
+    // Fallback: nøkkel «B» på FREQ-posisjonen; flows uten FREQ (pos -1) går
+    // rett på /all. Siste utvei er alltid /all.
     let json = null;
-    try { json = await run('B' + tail); } catch (e) { json = null; }
+    if (pos >= 0) {
+      try { json = await run(keyForFreq('B')); } catch (e) { json = null; }
+    }
     if (!hasObservations(json)) {
       try { json = await run('all'); } catch (e) { json = null; }
     }
@@ -399,8 +490,12 @@
       if (cached) return cached;
     }
 
-    const url = BASE + '/data/' + encodeURIComponent(flow.flow) +
-      '/?format=sdmx-json&firstNObservations=1&lastNObservations=1';
+    // Tunge flows probes med den smale config-nøkkelen (se probeKeyFor) —
+    // first/lastPeriod blir da utsnittets vindu, som i praksis dekker flowens
+    // (utsnittene er valgt for å spenne hele historikken).
+    const periodKey = probeKeyFor(flow, 'period') || '';
+    const url = BASE + '/data/' + encodeURIComponent(flow.flow) + '/' + periodKey +
+      '?format=sdmx-json&firstNObservations=1&lastNObservations=1';
     let json = null;
     try {
       const res = await fetchSdmx(url);
@@ -464,7 +559,11 @@
     //    B → '2025-07-15', M → '2025-07', A → '2025').
     const seriesKeys = await fetchSeriesKeys(flow);
     const freqCodes = (seriesKeys && seriesKeys.seriesValues && seriesKeys.seriesValues.FREQ) || null;
-    const probe = await probeTime(flow, nSeriesDims, locale, freqCodes);
+    // FREQ-posisjonen i serienøkkelen (IKKE alltid 0 — se filhodet); -1 = flow
+    // uten FREQ (FAUCTION); undefined = serieskeysonly feilet (legacy-antakelse 0).
+    const freqPos = (seriesKeys && Array.isArray(seriesKeys.dims))
+      ? seriesKeys.dims.indexOf('FREQ') : undefined;
+    const probe = await probeTime(flow, nSeriesDims, locale, freqCodes, freqPos);
 
     const meta = window.SdmxToJsonStat.structureToMetadata(dsdRes.json, flow, {
       lang: locale,
@@ -482,6 +581,21 @@
     if (seriesKeys && Array.isArray(seriesKeys.keys) && seriesKeys.keys.length) {
       meta.extension = meta.extension || {};
       meta.extension.validKeys = { dims: seriesKeys.dims, keys: seriesKeys.keys };
+    }
+
+    // Dimensjoner der faktiske koder inneholder punktum eller skråstrek kan
+    // ikke filtreres via nøkkelstien: punktum kolliderer med segmentskilletegnet
+    // (GOVT_PRIMARY_MARKET COUPON «0.00000000»), og Tomcat avviser kodet
+    // skråstrek med 400 (INSTR «NTB 03/2004») — begge verifisert live. Slike
+    // dimensjoner får alltid tomt nøkkelsegment og filtreres i stedet
+    // klientside etter henting (se buildKeyAndParams/getTableData).
+    if (seriesKeys && seriesKeys.seriesValues) {
+      const unfilterable = seriesKeys.dims.filter(dimId =>
+        (seriesKeys.seriesValues[dimId] || []).some(c => /[./]/.test(String(c))));
+      if (unfilterable.length) {
+        meta.extension = meta.extension || {};
+        meta.extension.unfilterableDims = unfilterable;
+      }
     }
 
     // Frekvens → tilgjengelige tidsperioder, for frekvensbevisst tidsliste i
@@ -547,20 +661,27 @@
    * 'range(from,to)' → startPeriod/endPeriod (tom side utelates — åpen ende);
    * eksplisitt liste → startPeriod/endPeriod (min/max); '*' → ingen
    * periodeparametre (full historikk).
+   *
+   * Koder percent-encodes (GOVT_IRS har motpartskoder med mellomrom).
+   * Dimensjoner i meta.extension.unfilterableDims (koder med punktum/skråstrek
+   * som ikke KAN stå i nøkkelstien — se getTableMetadata) får alltid tomt
+   * segment; utvalget håndheves i stedet klientside i getTableData.
    */
   function buildKeyAndParams(meta, valueCodes) {
     const sel = valueCodes || {};
     const timeId = (meta.role && meta.role.time && meta.role.time[0]) || 'TIME_PERIOD';
     const seriesIds = meta.id.filter(d => d !== timeId); // DSD-rekkefølge (ekskl. tid)
+    const unfilterable = (meta.extension && meta.extension.unfilterableDims) || [];
 
     const segments = seriesIds.map(dimId => {
+      if (unfilterable.indexOf(dimId) !== -1) return ''; // filtreres klientside
       const v = sel[dimId];
       if (v === '*' || v === undefined || v === null) return '';
-      if (Array.isArray(v)) return v.join('+');
+      if (Array.isArray(v)) return v.map(encodeURIComponent).join('+');
       if (typeof v === 'string') {
         // Enkeltkode eller top(N) (top(N) gir ikke mening for ikke-tidsdim → tom)
         if (/^top\(\d+\)$/i.test(v)) return '';
-        return v;
+        return encodeURIComponent(v);
       }
       return '';
     });
@@ -605,12 +726,15 @@
     const bo = builderOpts || {};
     const format = API_FORMATS.includes(bo.format) ? bo.format : 'sdmx-json';
     const { key, params } = buildKeyAndParams(meta, valueCodes);
+    // En nøkkel med KUN tomme segmenter («..») avvises av API-et med 400 —
+    // «alle serier» må uttrykkes som 'all' (verifisert mot SEC).
+    const keyPath = /^\.*$/.test(key) ? 'all' : key;
     const qs = ['format=' + format, 'locale=' + locale];
     Object.keys(params).forEach(k => qs.push(k + '=' + encodeURIComponent(params[k])));
     if (API_DETAIL_VALUES.includes(bo.detail)) qs.push('detail=' + bo.detail);
     if (bo.includeHistory === true) qs.push('includeHistory=true');
     if (bo.bom === true) qs.push('bom=true');
-    return BASE + '/data/' + encodeURIComponent(flow.flow) + '/' + key + '?' + qs.join('&');
+    return BASE + '/data/' + encodeURIComponent(flow.flow) + '/' + keyPath + '?' + qs.join('&');
   }
 
   /**
@@ -622,7 +746,7 @@
    *
    * NB: Fler-verdi tidsutvalg vises som start-/endPeriod-intervall — nøyaktig
    * det appen selv sender (ikke-sammenhengende perioder filtreres først
-   * klientside etter henting, se getTableData/filterDatasetToTimeCodes).
+   * klientside etter henting, se getTableData/filterDatasetToDimCodes).
    */
   function buildApiQuery(tableId, valueCodes, options) {
     const flow = flowForId(tableId);
@@ -655,16 +779,18 @@
   }
 
   /**
-   * Filtrer et JSON-Stat2-datasett ned til NØYAKTIG de valgte tidskodene.
+   * Filtrer et JSON-Stat2-datasett ned til NØYAKTIG de valgte kodene i ÉN
+   * dimensjon (generisk — brukes for Tid og for nøkkel-ufiltrerbare dimensjoner).
    *
-   * SDMX REST støtter kun sammenhengende tidsintervaller (startPeriod/endPeriod),
+   * Tid: SDMX REST støtter kun sammenhengende intervaller (startPeriod/endPeriod),
    * så et ikke-sammenhengende tidsutvalg henter hele intervallet fra API-et.
-   * Her fjernes periodene brukeren ikke valgte etter konvertering. Bygger om
-   * Tid-dimensjonens category.index/label, size-arrayen OG den radmajor-flate
+   * Nøkkel-ufiltrerbare dimensjoner (meta.extension.unfilterableDims) hentes
+   * alltid ufiltrert. Begge tilfeller kuttes her etter konvertering. Bygger om
+   * dimensjonens category.index/label, size-arrayen OG den radmajor-flate
    * value-/status-arrayen konsistent. Returnerer datasettet uendret hvis alle
    * tilstedeværende koder beholdes (utvalget = «alle» eller komplett intervall).
    */
-  function filterDatasetToTimeCodes(dataset, timeId, wantedCodes) {
+  function filterDatasetToDimCodes(dataset, timeId, wantedCodes) {
     const dim = dataset.dimension && dataset.dimension[timeId];
     const dimPos = dataset.id.indexOf(timeId);
     if (!dim || !dim.category || !dim.category.index || dimPos < 0) return dataset;
@@ -771,10 +897,24 @@
     const dsTimeId = (dataset.role && dataset.role.time && dataset.role.time[0]) ||
       (meta.role && meta.role.time && meta.role.time[0]) || 'TIME_PERIOD';
     const timeSel = (valueCodes || {})[dsTimeId];
+    let result = dataset;
     if (Array.isArray(timeSel) && timeSel.length) {
-      return filterDatasetToTimeCodes(dataset, dsTimeId, timeSel);
+      result = filterDatasetToDimCodes(result, dsTimeId, timeSel);
     }
-    return dataset;
+
+    // Dimensjoner som ikke kan filtreres via nøkkelstien (punktum-/skråstrek-
+    // koder, se getTableMetadata) hentes ufiltrert — håndhev brukerens utvalg
+    // klientside her.
+    const unfilterable = (meta.extension && meta.extension.unfilterableDims) || [];
+    unfilterable.forEach(dimId => {
+      const v = (valueCodes || {})[dimId];
+      const wanted = Array.isArray(v) ? v
+        : (typeof v === 'string' && v !== '*' && !/^top\(\d+\)$/i.test(v) ? [v] : null);
+      if (wanted && wanted.length) {
+        result = filterDatasetToDimCodes(result, dimId, wanted);
+      }
+    });
+    return result;
   }
 
   /**

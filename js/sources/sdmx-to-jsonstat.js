@@ -119,6 +119,20 @@
     // id/size: seriedimensjoner (i keyPosition-rekkefølge) + TIME_PERIOD sist.
     const id = seriesDims.map(d => d.id).concat([timeDim.id]);
     const size = seriesDims.map(d => (d.values || []).length).concat([(timeDim.values || []).length]);
+
+    // JSON-Stat2 er et TETT kryssprodukt — for svært sparsomme flows (f.eks.
+    // GOVT_PRIMARY_MARKET, ISIN-nøklede serier) kan et åpent uttak gi et
+    // produkt langt over det en JS-array kan romme («Invalid array length»).
+    // UI-et blokkerer slike uttak via celletaket (AppConfig.limits.maxCells,
+    // variable-select-status.validateSelection) — dette er en defensiv skranke
+    // for kall utenom UI-et, med en lesbar feil i stedet for RangeError.
+    const MAX_DENSE_CELLS = 20000000;
+    const totalCells = size.reduce((a, b) => a * b, 1);
+    if (totalCells > MAX_DENSE_CELLS) {
+      throw new Error('[SdmxToJsonStat] Resultatet gir ' + totalCells +
+        ' celler i tett JSON-Stat2-form (maks ' + MAX_DENSE_CELLS +
+        ') — begrens utvalget per dimensjon.');
+    }
     const strides = computeStrides(size);
     const timeStride = strides[strides.length - 1]; // = 1
 

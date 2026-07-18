@@ -231,6 +231,11 @@ const AppConfig = {
         nameFull: 'Norges Bank',
         url: 'https://www.norges-bank.no/'
       },
+      // `discontinued: true` merker en avsluttet serie i katalogen (GOVT_IRS).
+      // `probeKey` begrenser adapterens katalogperiode-/tidsprober til et smalt
+      // SDMX-nøkkelutsnitt for flows der et åpent probekall er for tungt
+      // (MONEY_MARKET: 3,5/15,6 MB åpent → 60/465 kB med nøkkel). Streng =
+      // samme nøkkel for begge prober; {period, time} = separate nøkler.
       dataflows: [
         { flow: 'EXR', version: '1.0', tableId: 'nb-EXR',
           paths: [['bf', 'nb-valutakurser'], ['ut', 'nb-valutakurser']],
@@ -243,7 +248,52 @@ const AppConfig = {
           label: { nb: 'Kortsiktige renter (NOWA)', en: 'Short-term interest rates (NOWA)' } },
         { flow: 'GOVT_GENERIC_RATES', version: '1.0', tableId: 'nb-GOVT_GENERIC_RATES',
           path: ['bf', 'nb-renter'],
-          label: { nb: 'Statsobligasjonsrenter', en: 'Government bond yields' } }
+          label: { nb: 'Statsobligasjonsrenter', en: 'Government bond yields' } },
+        { flow: 'GOVT_ZEROCOUPON', version: '1.0', tableId: 'nb-GOVT_ZEROCOUPON',
+          paths: [['bf', 'nb-renter'], ['bf', 'nb-statsgjeld']],
+          label: { nb: 'Nullkupongrenter statspapirer', en: 'Zero coupon yields, government securities' } },
+        { flow: 'SEC', version: '1.0', tableId: 'nb-SEC',
+          path: ['bf', 'nb-statsgjeld'],
+          label: { nb: 'Statspapirer – kurser og renter', en: 'Government securities – prices and yields' } },
+        { flow: 'GOVT_KEYFIGURES', version: '1.0', tableId: 'nb-GOVT_KEYFIGURES',
+          path: ['bf', 'nb-statsgjeld'],
+          label: { nb: 'Nøkkeltall for statsgjelden', en: 'Key government debt indicators' } },
+        { flow: 'GOVT_PRIMARY_MARKET', version: '1.0', tableId: 'nb-GOVT_PRIMARY_MARKET',
+          path: ['bf', 'nb-statsgjeld'],
+          label: { nb: 'Statspapirer – førstehåndsmarkedet', en: 'Government securities – primary market' } },
+        { flow: 'GOVT_SECONDARY_MARKET', version: '1.0', tableId: 'nb-GOVT_SECONDARY_MARKET',
+          path: ['bf', 'nb-statsgjeld'],
+          label: { nb: 'Statspapirer – annenhåndsmarkedet', en: 'Government securities – secondary market' } },
+        { flow: 'GOVT_IRS', version: '1.0', tableId: 'nb-GOVT_IRS', discontinued: true,
+          path: ['bf', 'nb-statsgjeld'],
+          label: { nb: 'Rentebytteavtaler (historisk, t.o.m. 2014)', en: 'Interest rate swaps (historical, until 2014)' } },
+        { flow: 'LIQUIDITY_STATISTICS', version: '1.0', tableId: 'nb-LIQUIDITY_STATISTICS',
+          path: ['bf', 'nb-likviditet'],
+          label: { nb: 'Likviditetsstatistikk', en: 'Liquidity statistics' } },
+        { flow: 'LIQUIDITY_FORECAST', version: '1.0', tableId: 'nb-LIQUIDITY_FORECAST',
+          path: ['bf', 'nb-likviditet'],
+          probeKey: { period: 'D.STAT_S..', time: 'D.FCAST_CBC..' },
+          label: { nb: 'Strukturell og total likviditet', en: 'Structural and total liquidity' } },
+        { flow: 'MONEY_MARKET', version: '1.0', tableId: 'nb-MONEY_MARKET',
+          path: ['bf', 'nb-likviditet'],
+          probeKey: 'B.U..........',
+          label: { nb: 'Pengemarkedsdata (RPD)', en: 'Money market data' } },
+        { flow: 'FAUCTION', version: '1.0', tableId: 'nb-FAUCTION',
+          path: ['bf', 'nb-likviditet'],
+          probeKey: 'FDFLIR.ANN.',
+          label: { nb: 'F-auksjoner', en: 'F-auctions' } },
+        { flow: 'CBC_TRANSACTIONS', version: '1.0', tableId: 'nb-CBC_TRANSACTIONS',
+          path: ['bf', 'nb-likviditet'],
+          label: { nb: 'Sentralbanksertifikater – transaksjoner', en: 'Central bank certificates – transactions' } },
+        { flow: 'SETTLEMENT_STATISTICS', version: '1.0', tableId: 'nb-SETTLEMENT_STATISTICS',
+          path: ['bf', 'nb-likviditet'],
+          label: { nb: 'Oppgjørsstatistikk', en: 'Settlement statistics' } },
+        { flow: 'FINANCIAL_INDICATORS', version: '1.0', tableId: 'nb-FINANCIAL_INDICATORS',
+          path: ['bf', 'nb-indikatorer'],
+          label: { nb: 'Finansielle indikatorer (FCI)', en: 'Financial indicators (FCI)' } },
+        { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET',
+          path: ['bf', 'nb-indikatorer'],
+          label: { nb: 'Regionalt nettverk', en: 'Regional network' } }
       ]
     },
 
@@ -286,6 +336,9 @@ const AppConfig = {
   sourceNodes: {
     'nb-renter':       { sortCode: '900', label: { nb: 'Renter og avkastning – Norges Bank', en: 'Interest rates – Norges Bank' } },
     'nb-valutakurser': { sortCode: '901', label: { nb: 'Valutakurser – Norges Bank',        en: 'Exchange rates – Norges Bank' } },
+    'nb-statsgjeld':   { sortCode: '902', label: { nb: 'Statsgjeld og statspapirer – Norges Bank', en: 'Government debt and securities – Norges Bank' } },
+    'nb-likviditet':   { sortCode: '903', label: { nb: 'Likviditet og pengemarked – Norges Bank', en: 'Liquidity and money market – Norges Bank' } },
+    'nb-indikatorer':  { sortCode: '904', label: { nb: 'Finansielle indikatorer og Regionalt nettverk – Norges Bank', en: 'Financial indicators and Regional network – Norges Bank' } },
     'fhi-nokkel':      { sortCode: '990', label: { nb: 'Folkehelse – nøkkeltall (FHI)' } },
     'fhi-mfr':         { sortCode: '991', label: { nb: 'Medisinsk fødselsregister (FHI)' } },
     'fhi-daar':        { sortCode: '992', label: { nb: 'Dødsårsaksregisteret (FHI)' } }
