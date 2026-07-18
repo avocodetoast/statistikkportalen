@@ -52,7 +52,13 @@ sjekkes ved aktivering av nye kilder.
 - Kryssfiltrering av gyldige kombinasjoner finnes kun for Norges Bank
   (via `extension.validKeys` fra serieskeysonly); FHI har ingen tilsvarende
   serieliste i API-et.
-- SEO-sidene (`scripts/*.mjs`) omfatter kun SSB; fremmede kilder er ekskludert.
+- ~~SEO-sidene (`scripts/*.mjs`) omfatter kun SSB; fremmede kilder er
+  ekskludert.~~ **Gjort:** `generate-seo-pages.mjs` enumererer nå alle
+  aktiverte kilder via providere i `scripts/lib/seo-sources.mjs` (NB fra
+  config + periodeprobe, FHI fra `fhi-catalog.json`), med per-kilde
+  attribusjon fra `AppConfig.sources.<kilde>.branding`. Gjenstår:
+  `update-table-metadata.mjs`-berikelse er fortsatt SSB-only (NB-/FHI-sidene
+  bygges fra katalogoppføringene alene).
 - Permalenke-emulering for NB/FHI (saved query-ekvivalent via URL-state).
 - Søkesynonymer for nye domener (renter, valuta, dødsårsaker, fødsler) i
   `synonyms.js`.

@@ -42,6 +42,18 @@
  * js/config.js og js/subjects.js (via node:vm) — én kilde til sannhet, og
  * scriptet fungerer uendret for andre PxWebApi-instanser.
  *
+ * FLERKILDE (Statistikkportalen 2.0): i tillegg til SSB enumereres alle
+ * aktiverte kilder i AppConfig.sources via providere i
+ * scripts/lib/seo-sources.mjs — Norges Bank nettverksfritt fra config
+ * (tidsperioder probes best-effort, skru av med --no-probe-nb-periods) og
+ * FHI fra den innsjekkede data/sources/fhi-catalog.json. Tabeller med
+ * nb-/fhi-prefiks får dermed egne /table/{id}/-sider og inngår i emnesider,
+ * sitemap og
+ * seo-map.json. Kildeattribusjon (JSON-LD creator/license, «Kilde:»-linjer)
+ * slås opp per tabell-id via AppConfig.sources.<kilde>.branding med det
+ * globale AppConfig.source som fallback. En feilende fremmed kilde logges og
+ * hoppes over; SSB-feil avbryter fortsatt hele kjøringen.
+ *
  * Kjøres periodisk på serveren (cron), f.eks. ukentlig:
  *   15 4 * * 0 cd /sti/til/repo && node scripts/generate-seo-pages.mjs \
  *     --webroot /sti/til/webroot --site https://statistikkportalen.no >> seo-gen.log 2>&1
@@ -61,8 +73,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
+import {
+  isoPeriod, sourceBrandingFor, buildNbCatalogue, buildFhiCatalogue,
+  enabledSourceNames, joinNamesNo,
+} from './lib/seo-sources.mjs';
 
-const MIN_TABLE_COUNT = 5000; // sanity-terskel: færre tabeller = trolig API-feil (overstyres med --min-tables)
+const MIN_TABLE_COUNT = 5000; // sanity-terskel for SSB-katalogen: færre tabeller = trolig API-feil (overstyres med --min-tables)
+const NB_PROBE_DELAY_MS = 1000; // pause mellom periodeprobe-kall mot Norges Bank (skånsomt om dataflow-listen vokser)
 
 // Navn som aldri kan brukes som mappe på toppnivå i webroot
 const RESERVED_TOP_LEVEL = new Set([
@@ -83,6 +100,7 @@ function parseArgs(argv) {
   const args = {
     webroot: null, site: null, dryRun: false, minTables: MIN_TABLE_COUNT,
     metadataDir: path.join(REPO_ROOT, 'data', 'table-metadata'),
+    probeNbPeriods: true,
   };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
@@ -91,13 +109,14 @@ function parseArgs(argv) {
     else if (a === '--min-tables') args.minTables = parseInt(argv[++i], 10);
     else if (a === '--metadata-dir') args.metadataDir = argv[++i];
     else if (a === '--dry-run') args.dryRun = true;
+    else if (a === '--no-probe-nb-periods') args.probeNbPeriods = false;
     else {
       console.error(`Ukjent argument: ${a}`);
       process.exit(2);
     }
   }
   if (!args.webroot || !args.site || !Number.isFinite(args.minTables) || !args.metadataDir) {
-    console.error('Bruk: node scripts/generate-seo-pages.mjs --webroot <sti> --site <https://...> [--metadata-dir <sti>] [--min-tables <antall>] [--dry-run]');
+    console.error('Bruk: node scripts/generate-seo-pages.mjs --webroot <sti> --site <https://...> [--metadata-dir <sti>] [--min-tables <antall>] [--no-probe-nb-periods] [--dry-run]');
     process.exit(2);
   }
   args.webroot = path.resolve(args.webroot);
@@ -135,6 +154,83 @@ async function fetchAllTables(appConfig, minTables) {
   }
   if (tables.length < minTables) {
     throw new Error(`Bare ${tables.length} tabeller fra API-et (forventet minst ${minTables}) — avbryter uten å røre webroot.`);
+  }
+  return tables;
+}
+
+/**
+ * Best-effort tidsperiode/oppdatert-dato for Norges Bank-katalogen: samme
+ * lette endepunkt som fetchCataloguePeriod i js/sources/norges-bank-adapter.js
+ * (firstNObservations=1&lastNObservations=1 → første og siste obs per serie).
+ * Kallene går sekvensielt med NB_PROBE_DELAY_MS pause, så proben skalerer
+ * skånsomt om dataflow-listen vokser. Feil per flow logges og gir tomme
+ * periodefelter (temporalCoverage utelates) — aldri abort.
+ */
+async function fetchNbPeriods(appConfig, entries) {
+  const nbCfg = appConfig.sources?.nb || {};
+  const base = String(nbCfg.baseUrl || 'https://data.norges-bank.no/api').replace(/\/+$/, '');
+  const flowById = new Map((nbCfg.dataflows || []).map(f => [f.tableId, f]));
+  let first = true;
+  for (const entry of entries) {
+    const flow = flowById.get(entry.id);
+    if (!flow) continue;
+    if (!first) await new Promise(resolve => setTimeout(resolve, NB_PROBE_DELAY_MS));
+    first = false;
+    const url = `${base}/data/${encodeURIComponent(flow.flow)}/?format=sdmx-json&firstNObservations=1&lastNObservations=1`;
+    try {
+      const res = await fetch(url, { headers: { Accept: 'application/json, */*' } });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      // SDMX-JSON kan ha data.structure (objekt) eller data.structures[0] (array)
+      const struct = json?.data?.structure ||
+        (Array.isArray(json?.data?.structures) ? json.data.structures[0] : null);
+      const obsDim = struct?.dimensions?.observation?.[0];
+      const years = (obsDim?.values || [])
+        .map(v => String(v.id || '').match(/\d{4}/)?.[0])
+        .filter(Boolean)
+        .map(Number);
+      if (years.length === 0) throw new Error('ingen tidsverdier i svaret');
+      entry.firstPeriod = String(Math.min(...years));
+      entry.lastPeriod = String(Math.max(...years));
+      entry.updated = json.meta?.prepared || '';
+    } catch (err) {
+      console.warn(`[SEO] Periodeprobe mot Norges Bank feilet for ${entry.id} (${err.message}) — siden bygges uten tidsperiode.`);
+    }
+  }
+}
+
+/**
+ * Alle tabeller fra alle aktiverte kilder i AppConfig.sources, dispatchet på
+ * adapter-feltet (utvidelsespunktet for nye kilder — providere i
+ * scripts/lib/seo-sources.mjs). SSB hentes først og beholder de harde
+ * feilgarantiene (API-feil eller < --min-tables avbryter uten å røre webroot);
+ * fremmede kilder er feilisolerte som i source-registry.js — en kilde som
+ * feiler logges og hoppes over, resten av kjøringen fortsetter.
+ */
+async function enumerateAllTables(appConfig, subjectConfig, args) {
+  const tables = await fetchAllTables(appConfig, args.minTables);
+  const lang = uiLang(appConfig);
+
+  for (const [key, src] of Object.entries(appConfig.sources || {})) {
+    if (src?.enabled === false || !src?.adapter || src.adapter === 'ssb') continue;
+    try {
+      let sourceTables = [];
+      if (src.adapter === 'norges-bank') {
+        sourceTables = buildNbCatalogue(appConfig, subjectConfig.subjectNames, lang);
+        if (args.probeNbPeriods) await fetchNbPeriods(appConfig, sourceTables);
+      } else if (src.adapter === 'fhi') {
+        const catalogPath = path.join(REPO_ROOT, 'data', 'sources', 'fhi-catalog.json');
+        const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+        sourceTables = buildFhiCatalogue(catalog, appConfig, subjectConfig.subjectNames, lang);
+      } else {
+        console.warn(`[SEO] Kilden «${key}» har ukjent adapter «${src.adapter}» — hopper over (legg til en provider i scripts/lib/seo-sources.mjs).`);
+        continue;
+      }
+      console.log(`[SEO] Kilde «${key}»: ${sourceTables.length} tabeller.`);
+      tables.push(...sourceTables);
+    } catch (err) {
+      console.warn(`[SEO] Kilden «${key}» feilet (${err.message}) — hopper over.`);
+    }
   }
   return tables;
 }
@@ -538,7 +634,14 @@ function fitList(items, budget) {
 
 function buildDescription(page, appConfig) {
   const n = page.activeCount;
-  const sourceName = appConfig.source.nameFull || appConfig.source.name;
+  // Kildenavn fra sidens faktiske tabeller — en emneside kan blande kilder
+  // (SSB + Norges Bank/FHI). Rene kort-sider uten tabellister får det globale
+  // kildenavnet som før.
+  const names = [...new Set(collectPageTables(page).map(t => {
+    const src = sourceBrandingFor(t.id, appConfig);
+    return src.nameFull || src.name;
+  }))];
+  const sourceName = names.length ? joinNamesNo(names) : (appConfig.source.nameFull || appConfig.source.name);
   let desc = `Statistikk om ${page.label.toLowerCase()}: ${n} ${n === 1 ? 'tabell' : 'tabeller'} fra ${sourceName}.`;
   const childLabels = page.children.length > 0
     ? page.children.map(c => c.label)
@@ -550,7 +653,8 @@ function buildDescription(page, appConfig) {
 }
 
 function buildTableDescription(t, appConfig, meta = null) {
-  const sourceName = appConfig.source.nameFull || appConfig.source.name;
+  const src = sourceBrandingFor(t.id, appConfig);
+  const sourceName = src.nameFull || src.name;
   const periodPart = t.firstPeriod && t.lastPeriod
     ? ` med tall for perioden ${t.firstPeriod}–${t.lastPeriod}` : '';
   let desc = `${t.discontinued ? 'Avsluttet statistikktabell' : 'Statistikktabell'} ${t.id} fra ${sourceName}${periodPart}.`;
@@ -662,20 +766,15 @@ function collectPageTables(page) {
   return [...out.values()];
 }
 
-/** SSB-periode → ISO 8601 for temporalCoverage: "2006" → "2006", "2006M01" → "2006-01",
- *  kvartal/uke/halvår ("2006K1" osv.) → året. */
-function isoPeriod(period) {
-  const m = String(period || '').match(/^(\d{4})(?:M(\d{2}))?/);
-  if (!m) return null;
-  return m[2] ? `${m[1]}-${m[2]}` : m[1];
-}
+// isoPeriod (periode → ISO 8601 for temporalCoverage) importeres fra
+// scripts/lib/seo-sources.mjs, der den har enhetstester.
 
 /**
  * Ett Dataset-objekt (schema.org) for en tabell. url peker alltid på tabellens
  * egen statiske side /table/{id}/ — Dataset-ets kanoniske landingsside.
  */
 function datasetJsonLd(t, site, appConfig) {
-  const source = appConfig.source;
+  const source = sourceBrandingFor(t.id, appConfig);
   const creator = {
     '@type': 'Organization',
     name: source.nameFull || source.name,
@@ -707,7 +806,6 @@ function datasetJsonLd(t, site, appConfig) {
  */
 function buildJsonLd(page, site, appConfig) {
   const url = `${site}/${page.dir}/`;
-  const source = appConfig.source;
   const graph = [];
 
   graph.push({
@@ -737,11 +835,12 @@ function buildJsonLd(page, site, appConfig) {
 
   const allTables = collectPageTables(page);
   if (allTables.length > 0) {
+    // Ingen license på katalognivå — en emneside kan blande kilder med ulike
+    // lisenser; hvert Dataset bærer sin egen kildes license fra datasetJsonLd.
     graph.push({
       '@type': 'DataCatalog',
       name: `${page.label} – ${appConfig.app.name}`,
       url,
-      ...(source.licenseUrl ? { license: source.licenseUrl } : {}),
       dataset: allTables.map(t => datasetJsonLd(t, site, appConfig)),
     });
   }
@@ -931,7 +1030,7 @@ function buildTableEntries(tables, pages) {
 function buildTableContentHtml(entry, appConfig, meta = null) {
   const t = entry.table;
   const label = cleanLabel(t.label);
-  const src = appConfig.source;
+  const src = sourceBrandingFor(t.id, appConfig);
   const parts = [];
 
   const crumbs = [`<a class="breadcrumb-link" href="/">${escapeHtml(appConfig.app.name)}</a>`];
@@ -1235,7 +1334,7 @@ function loadSearchPlaceholder(appConfig) {
  * en egen seksjon under gridet, der appens «Nylig oppdaterte» senere vises.
  */
 function buildRootContentHtml(pages, totalTables, appConfig) {
-  const sourceName = appConfig.source.nameFull || appConfig.source.name;
+  const sourceName = joinNamesNo(enabledSourceNames(appConfig));
   const groups = pages.filter(p => p.isGroup);
   const parts = [];
   parts.push('<div class="front-page">');
@@ -1275,9 +1374,9 @@ function renderRootPage(template, site, appConfig, pages, totalTables) {
   const inner = `<!-- seo-root:start orig="${orig}" -->\n      ${buildRootContentHtml(pages, totalTables, appConfig)}\n      <!-- seo-root:end -->`;
   let html = template.replace(CONTENT_DIV_RE, () => `${match[1]}\n      ${inner}\n    ${match[3]}`);
 
-  const sourceName = appConfig.source.nameFull || appConfig.source.name;
-  const title = `${appConfig.app.name} – utforsk statistikk fra ${appConfig.source.name}`;
-  const description = `Søk i ${formatCount(totalTables)} statistikktabeller fra ${sourceName}. Statistikkportalen gir deg bedre tilgang til dataene i SSBs statistikkbank. Utforsk, filtrer og last ned tall.`;
+  const sourceName = joinNamesNo(enabledSourceNames(appConfig));
+  const title = `${appConfig.app.name} – utforsk statistikk fra ${joinNamesNo(enabledSourceNames(appConfig, 'name'))}`;
+  const description = `Søk i ${formatCount(totalTables)} statistikktabeller fra ${sourceName}. ${appConfig.app.name} samler åpne statistikkdata på ett sted. Utforsk, filtrer og last ned tall.`;
 
   html = mustReplace(html, /<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(title)}</title>`, '<title> (forside)');
   html = mustReplace(
@@ -1441,6 +1540,15 @@ function main_write(webroot, site, appConfig, pages, tableEntries, totalTables, 
       console.log(`\n[SEO] Eksempel-tabellside (/${tableSample.dir}/):\n`);
       console.log(renderTablePage(template, tableSample, site, appConfig));
     }
+    // Én eksempelside per fremmed kilde, så per-kilde-attribusjonen (Kilde:/
+    // license i JSON-LD) kan inspiseres uten full kjøring
+    for (const prefix of ['nb-', 'fhi-']) {
+      const foreignSample = tableEntries.find(e => e.id.startsWith(prefix));
+      if (foreignSample) {
+        console.log(`\n[SEO] Eksempel-tabellside for fremmed kilde (/${foreignSample.dir}/):\n`);
+        console.log(renderTablePage(template, foreignSample, site, appConfig));
+      }
+    }
     // I tillegg: første tabell med gyldig lokal metadatafil, som beriket eksempel
     let enrichedSample = null;
     for (const entry of tableEntries) {
@@ -1512,7 +1620,7 @@ async function main() {
     console.warn(`[SEO] Metadatakatalogen ${args.metadataDir} finnes ikke — alle tabellsider bygges fra /tables-listen alene.`);
   }
 
-  const tables = await fetchAllTables(appConfig, args.minTables);
+  const tables = await enumerateAllTables(appConfig, subjectConfig, args);
   const hierarchy = buildHierarchy(tables);
   const cardDepth = appConfig.ui?.topicCardDepth ?? 2; // samme terskel som topic-view.js
   const pages = assignCanonicals(buildPages(subjectConfig, hierarchy, cardDepth));

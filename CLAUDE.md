@@ -114,6 +114,8 @@ Scripts must load in this order in `index.html`:
 - Sources are enabled/configured in `AppConfig.sources` (`ssb`/`nb`/`fhi`, each with `enabled: true/false`); foreign tables are placed in the topic tree via synthetic `paths[]` built from `AppConfig.sourceNodes`. Foreign tables can be placed under MULTIPLE topic paths (like SSB multi-folder tables): NB dataflows via `paths: [[subject, node], ...]` (legacy single `path` still works), FHI via `AppConfig.sources.fhi.paths[sourceId]`.
 - **Per-source status & resilience:** the facade tracks catalogue status per source (`api.getSourceStatus()`, `api.onSourceStatusChange(cb)`, `api.reloadSource(id, {force})`) for full `getAllTables` aggregations. Adapters attach `sourceMeta { fromCache, stale, fetchedAt, partial? }` (never cached, never leaked to callers) and must throw when a source has NO data at all (FHI throws only when every sub-source fails). Stale-if-error: when a source's network fetch fails, an expired cached catalogue is served instead (marked stale); expired `tables_*` cache keys are retained for `AppConfig.cache.staleRetentionMs` (7 days) as fallback copies. The header badge + status panel (`js/source-status.js`) surface this and offer per-source retry/refresh via `BrowserState.reloadSource()` (merges one source's tables, invalidates the search index, rebuilds the hierarchy).
 - See [ROADMAP.md](ROADMAP.md) for what's currently enabled vs. queued (additional Norges Bank dataflows, additional FHI sources, per-source update schedules, etc.).
+- **SEO builder is multi-source too:** `scripts/generate-seo-pages.mjs` enumerates every enabled source in `AppConfig.sources` via per-source catalogue providers in `scripts/lib/seo-sources.mjs` (NB network-free from config + a best-effort period probe, FHI from the checked-in `data/sources/fhi-catalog.json`), so `nb-*`/`fhi-*` tables get static `/table/{id}/` pages and appear in topic pages/sitemap/`seo-map.json`. Attribution (JSON-LD creator/license, «Kilde:» lines) resolves per table id via `AppConfig.sources.<key>.branding` with the global `AppConfig.source` as fallback — both in the generator and in `js/seo-head.js`. The `--min-tables` abort guard applies to SSB only; failing foreign sources are logged and skipped. See the "SEO pre-rendering pipeline" section in [ARCHITECTURE.md](ARCHITECTURE.md).
+- **Keep the SEO builder in sync:** the generator re-derives catalogue, hierarchy and page content from `config.js`/`subjects.js` and mirrors `topic-view.js`/`front-page.js`. When you change `AppConfig.sources`/`sourceNodes`/branding, subject groupings, `ui.topicCardDepth`, an adapter's catalogue entry shape, or the front page's layout/texts, review `scripts/generate-seo-pages.mjs` + `scripts/lib/seo-sources.mjs` — they may need the same change.
 
 ### API Integration
 
@@ -147,14 +149,14 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 - `subjects.js` — subject grouping + names, per-language. `subjects-sv.js` is the SCB counterpart (also registers its labels into `translations.js` at load).
 - `synonyms.js` — search synonym groups (instance/language-specific).
 
-`scripts/generate-seo-pages.mjs` reads `config.js`/`subjects.js` via `node:vm`, so keep their structure compatible with the sandboxed (no-`translations`) execution path when editing them.
+`scripts/generate-seo-pages.mjs` reads `config.js`/`subjects.js` via `node:vm` — including `AppConfig.sources` (with per-source `branding`) and `sourceNodes` — so keep their structure compatible with the sandboxed (no-`translations`) execution path when editing them.
 
 ## File Guide
 
 | File | Responsibility | Key exports | Depends on | Modify when… |
 |------|---------------|-------------|------------|--------------|
 | `version.js` | App version constant | `VERSION` | — | Bumping the version (update all `?v=` in `index.html` too) |
-| `config.js` | All tunable constants for the default (SSB) instance | `AppConfig`, `logger` | — | Changing API URL, cache TTLs, cell limits, debounce delays, export defaults, enabled sources |
+| `config.js` | All tunable constants for the default (SSB) instance | `AppConfig`, `logger` | — | Changing API URL, cache TTLs, cell limits, debounce delays, export defaults, enabled sources, per-source SEO `branding` |
 | `config-sv.js` | Drop-in `config.js` replacement for the SCB (Sweden) instance | `AppConfig`, `logger` | — | Adjusting the SCB instance's settings |
 | `translations.js` | i18n dictionary + language switching | `t()`, `tpl()`, `setLanguage()`, `getCurrentApiLang()`, `translations` | — | Adding/changing UI strings or languages |
 | `cache.js` | Hybrid localStorage/IndexedDB cache with TTL | `CacheManager` | — | Changing cache storage strategy, size threshold (1 MB), or cleanup logic |
@@ -166,7 +168,8 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 | `sources/sdmx-to-jsonstat.js` | Converts Norges Bank SDMX-JSON responses to JSON-Stat2 | `window.SdmxToJsonStat` | — | Fixing SDMX↔JSON-Stat2 conversion edge cases |
 | `utils.js` | Global state + shared helpers | `AppState`, `renderCurrentView()`, `escapeHtml()`, `debounce()`, `formatNumber()`, `showError()`, `addEscapeHandler()` | AppConfig, api, URLRouter | Changing AppState shape, adding global helpers, changing error display |
 | `router.js` | Hash-based routing; encode/decode URL state | `URLRouter`, `SSBURLMapper` | AppState, BrowserState | Adding a new route, changing URL param encoding, handling legacy redirects |
-| `seo-head.js` | Route-driven `<head>` sync: canonical, og:-tags, meta description, removal of stale generator JSON-LD; lazy-loads `/seo-map.json` (fail-silent) | `SEOHead` | URLRouter, AppConfig, BrowserState | Changing canonical/meta behaviour on navigation, seo-map.json format |
+| `seo-head.js` | Route-driven `<head>` sync: canonical, og:-tags, meta description (per-source attribution via `sources.*.branding`), removal of stale generator JSON-LD; lazy-loads `/seo-map.json` (fail-silent) | `SEOHead` | URLRouter, AppConfig, BrowserState | Changing canonical/meta behaviour on navigation, seo-map.json format, source attribution |
+| `scripts/lib/seo-sources.mjs` | Per-source catalogue providers + attribution for the SEO builder (NB from config, FHI from `fhi-catalog.json`, `sourceBrandingFor`, `isoPeriod`) — the extension point for new sources | `buildNbCatalogue()`, `buildFhiCatalogue()`, `sourceBrandingFor()`, `isoPeriod()` | AppConfig (`sources`/`sourceNodes`), subjects.js | Adding a source to the SEO builder, adapter catalogue-shape changes |
 | `subjects.js` | Subject group/name config for the default (SSB) instance; registers labels into `translations.js` | `SubjectConfig` | translations.js (optional) | Renaming/regrouping subjects |
 | `subjects-sv.js` | Drop-in `subjects.js` replacement for the SCB (Sweden) instance | `SubjectConfig` | translations.js (optional) | Adjusting the SCB instance's subject grouping |
 | `menu-hierarchy.js` | Builds subject→subtopic→table tree from the flat, cross-source table list | `MenuHierarchy` | SubjectConfig | Changing breadcrumb logic, changing table grouping (e.g. by base year) |
@@ -218,7 +221,8 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 | Change URL encoding for state | `router.js` (`encode`/`decode`), `utils.js` (`AppState._updateHash`) |
 | Adjust caching behaviour | `config.js` (TTLs), `cache.js` (storage logic) |
 | Change how numbers render in table | `table-display.js`, `utils.js` (`formatNumber`) |
-| Change static SEO table pages (/table/{id}/) | `scripts/generate-seo-pages.mjs` (`buildTableContentHtml`, `buildEnrichedSections`, `enrichDatasetJsonLd`); local metadata files in `data/table-metadata/{id}.json` (contract in `data/table-metadata/README.md`, dir overridable with `--metadata-dir`) |
+| Change static SEO table pages (/table/{id}/) | `scripts/generate-seo-pages.mjs` (`buildTableContentHtml`, `buildEnrichedSections`, `enrichDatasetJsonLd`); local metadata files in `data/table-metadata/{id}.json` (contract in `data/table-metadata/README.md`, dir overridable with `--metadata-dir`; SSB-only — NB/FHI pages build from catalogue entries alone) |
+| Add a new source to the SEO builder | `config.js` (`sources.<key>` with `branding`), provider in `scripts/lib/seo-sources.mjs`, dispatch in `enumerateAllTables()` (`generate-seo-pages.mjs`), tests in `tests/unit/seo-sources.test.js` |
 | Downloading/updating local table metadata | `scripts/update-table-metadata.mjs` |
 | Rebuilding the FHI catalogue (titles/periods) | `scripts/update-fhi-catalog.mjs` → writes `data/sources/fhi-catalog.json` |
 

@@ -5,7 +5,9 @@
  * Modify these values to change the API endpoint or other settings.
  *
  * NB: scripts/generate-seo-pages.mjs leser også denne filen (via node:vm)
- * for API-endepunkt, appnavn og kildeinfo — hold strukturen kompatibel.
+ * for API-endepunkt, appnavn og kildeinfo — inkludert `sources` (med
+ * per-kilde `branding` for SEO-attribusjon) og `sourceNodes` — hold
+ * strukturen kompatibel.
  */
 
 const AppConfig = {
@@ -34,8 +36,8 @@ const AppConfig = {
   app: {
     name: 'Statistikkportalen',
     tagline: {
-      nb: 'Et uoffisielt verktøy som gir deg bedre tilgang til SSBs åpne data.',
-      en: 'An unofficial tool giving you better access to Statistics Norway\'s open data.'
+      nb: 'Et uoffisielt verktøy som gir deg bedre tilgang til åpne data fra SSB, Norges Bank og FHI.',
+      en: 'An unofficial tool giving you better access to open data from Statistics Norway, Norges Bank and FHI.'
     }
   },
 
@@ -219,6 +221,16 @@ const AppConfig = {
       enabled: true,
       baseUrl: 'https://data.norges-bank.no/api',
       displayName: { nb: 'Norges Bank', en: 'Norges Bank' },
+      // SEO-/attribusjonsinfo (samme form som det globale `source`-objektet
+      // over) — brukes av scripts/generate-seo-pages.mjs og js/seo-head.js for
+      // «Kilde:»-linjer og JSON-LD creator/license på nb-*-tabeller. Norges
+      // Banks åpne data er gratis å bruke med kildehenvisning, men er ikke
+      // CC-merket — licenseUrl utelates derfor bevisst (ingen lisenslenke).
+      branding: {
+        name: 'Norges Bank',
+        nameFull: 'Norges Bank',
+        url: 'https://www.norges-bank.no/'
+      },
       dataflows: [
         { flow: 'EXR', version: '1.0', tableId: 'nb-EXR',
           paths: [['bf', 'nb-valutakurser'], ['ut', 'nb-valutakurser']],
@@ -247,6 +259,15 @@ const AppConfig = {
       enabled: true,
       baseUrl: 'https://statistikk-data.fhi.no/api/open/v1',
       displayName: { nb: 'Folkehelseinstituttet (FHI)', en: 'Norwegian Institute of Public Health (FHI)' },
+      // SEO-/attribusjonsinfo for fhi-*-tabeller (jf. nb.branding over).
+      // FHIs åpne statistikkdata er CC BY 4.0.
+      branding: {
+        name: 'FHI',
+        nameFull: 'Folkehelseinstituttet',
+        url: 'https://www.fhi.no/',
+        licenseUrl: 'https://creativecommons.org/licenses/by/4.0/deed.no',
+        licenseName: 'CC BY 4.0'
+      },
       sourceIds: ['nokkel', 'mfr', 'daar']
     }
   },
