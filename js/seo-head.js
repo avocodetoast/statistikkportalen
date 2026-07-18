@@ -98,12 +98,23 @@ const SEOHead = {
       const id = route.split('/')[1];
       const table = (BrowserState.isLoaded && BrowserState.allTables.find(t => t.id === id)) || null;
       if (table) {
-        const src = AppConfig.source || {};
+        const src = this._brandingFor(id);
         return '«' + extractTableTitle(table.label) + '»: statistikktabell ' + id +
           ' fra ' + (src.nameFull || src.name || '') + '.';
       }
     }
     return tagline;
+  },
+
+  /** Kildeattribusjon per tabell-id: AppConfig.sources.<kilde>.branding for
+   *  nb-/fhi-tabeller (samme prefiksregel som kildefasaden), ellers det
+   *  globale AppConfig.source — speiler sourceBrandingFor i
+   *  scripts/lib/seo-sources.mjs. */
+  _brandingFor(id) {
+    const s = String(id || '');
+    const key = s.indexOf('nb-') === 0 ? 'nb' : (s.indexOf('fhi-') === 0 ? 'fhi' : 'ssb');
+    const srcCfg = AppConfig.sources && AppConfig.sources[key];
+    return (srcCfg && srcCfg.branding) || AppConfig.source || {};
   },
 
   _topicLabel(pathIds) {
