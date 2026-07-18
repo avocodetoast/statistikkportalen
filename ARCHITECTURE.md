@@ -137,6 +137,27 @@ window.api (facade, built by sources/source-registry.js)
 
 Enabling more of either source (additional Norges Bank dataflows, additional FHI `sourceIds`) is pure configuration in `AppConfig.sources` plus a `sourceNodes` entry — see [ROADMAP.md](ROADMAP.md) for the current status and the list of what's queued but not yet turned on.
 
+## SEO pre-rendering pipeline
+
+The app is hash-routed (`#topic/...`), which is invisible to crawlers, so `scripts/generate-seo-pages.mjs` (run periodically via cron, see README) pre-renders static pages directly into the webroot:
+
+```
+enumerate  →  hierarchy   →  pages                    →  outputs
+per source    buildHierarchy  topic pages (pretty URLs)   {webroot}/{slug}/index.html
+              (duplicate of   + one page per table        {webroot}/table/{id}/index.html
+              MenuHierarchy)  (/table/{id}/)              sitemap.xml, robots.txt,
+                                                          seo-map.json, root index.html
+```
+
+- **Enumeration is multi-source**: `enumerateAllTables()` walks every enabled entry in `AppConfig.sources` and dispatches on its `adapter` field to a per-source catalogue provider in `scripts/lib/seo-sources.mjs` — the extension point for future sources. SSB is fetched from the live `/tables` API (with the `--min-tables` sanity guard; failure aborts the whole run without touching the webroot). Norges Bank is built network-free from `AppConfig.sources.nb.dataflows` + `sourceNodes` (time periods filled by a best-effort probe with a delay between calls; `--no-probe-nb-periods` disables it), and FHI from the checked-in `data/sources/fhi-catalog.json`. A failing foreign source is logged and skipped, mirroring the runtime facade's `Promise.allSettled` isolation.
+- **The providers re-derive, not import, adapter logic**: the adapters are browser-global scripts with fetch/cache dependencies, so `seo-sources.mjs` deliberately re-implements their config-/catalogue-derived entry building (same convention as the generator's `buildHierarchy` duplicate of `MenuHierarchy`). If an adapter's catalogue shape changes, the matching provider must be updated too. The providers are unit-tested in `tests/unit/seo-sources.test.js`.
+- **Per-source attribution**: JSON-LD `creator`/`license`, «Kilde:» lines and meta descriptions resolve branding per table id via `sourceBrandingFor()` — `AppConfig.sources.<key>.branding` for `nb-*`/`fhi-*` ids, falling back to the global `AppConfig.source` (SSB). Norges Bank's branding intentionally has no `licenseUrl` (their open data is free to use with attribution but not CC-labelled), so license links/fields are simply omitted for NB datasets. Topic pages mixing sources list every distinct source name in their description and carry no catalog-level license (each `Dataset` carries its own).
+- **SSB-only enrichment**: the local-metadata pipeline (`scripts/update-table-metadata.mjs` → `data/table-metadata/{id}.json`) only covers SSB; foreign table pages are built from the catalogue entry alone (title, periods, variable names, description).
+- **Runtime counterpart**: `js/seo-head.js` keeps `<head>` metadata in sync during client-side navigation, using the generated `seo-map.json` (topic hash-path → pretty URL, plus the set of table ids that actually have `/table/{id}/` pages — now including `nb-*`/`fhi-*`). Its table descriptions use the same per-id branding lookup (`SEOHead._brandingFor`).
+- **Safety model**: the generator only ever deletes files it wrote itself (tracked in `{webroot}/.seo-manifest.json`), writes atomically, and aborts without touching the webroot on SSB API failure or a suspiciously small catalogue.
+
+Because the generator re-derives the catalogue, hierarchy and view content from `config.js`/`subjects.js` and mirrors `topic-view.js`/`front-page.js`, changes to `AppConfig.sources`/`sourceNodes`, subject groupings, `ui.topicCardDepth`, adapter catalogue shapes or the front-page layout should prompt a review of the SEO builder.
+
 ## What happens when...
 
 ### The user opens the app

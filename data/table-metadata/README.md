@@ -21,3 +21,10 @@ Regler for scriptet som skriver hit:
 
 JSON-filene er gitignored (`data/table-metadata/*.json`); katalogen
 overstyres i generatoren med `--metadata-dir`.
+
+Denne berikelsen gjelder kun SSB-tabeller: `update-table-metadata.mjs` henter
+bare fra SSBs `/tables/{id}/metadata`. Fremmede kilder har egne datakilder i
+generatoren — Norges Bank-katalogen bygges fra `AppConfig.sources.nb` i
+`js/config.js`, FHI-katalogen fra `data/sources/fhi-catalog.json`
+(`scripts/update-fhi-catalog.mjs`) — og `nb-*`-/`fhi-*`-sidene bygges fra
+katalogoppføringene alene, uten berikede seksjoner.

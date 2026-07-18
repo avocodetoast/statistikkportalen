@@ -81,6 +81,15 @@ Sidene er fulle app-skall: brukere som lander der overføres umiddelbart til den
 `#topic/...`- eller `#variables/{id}`-URL-en uten omlasting (via `window.__SEO_TOPIC_PATH__`-/
 `window.__SEO_TABLE_ID__`-bootstrapen i `index.html`).
 
+Generatoren dekker alle aktiverte kilder i `AppConfig.sources` — også Norges Bank- og
+FHI-tabeller (`nb-*`/`fhi-*`) får egne `/table/{id}/`-sider og inngår i emnesider, sitemap og
+`seo-map.json`. Katalogene bygges av per-kilde-providere i `scripts/lib/seo-sources.mjs`:
+Norges Bank nettverksfritt fra config (tidsperioder probes best-effort mot NB-API-et, skru av
+med `--no-probe-nb-periods`), FHI fra den innsjekkede `data/sources/fhi-catalog.json`.
+Kildeattribusjon (JSON-LD `creator`/`license`, «Kilde:»-linjer) hentes per tabell fra
+`AppConfig.sources.<kilde>.branding`. En feilende fremmed kilde logges og hoppes over; feil
+mot SSB avbryter fortsatt hele kjøringen uten å røre webroot.
+
 Kjøres periodisk på serveren med cron (krever Node 18+):
 ```
 15 4 * * 0 cd /sti/til/repo && node scripts/generate-seo-pages.mjs --webroot /sti/til/webroot --site https://statistikkportalen.no >> seo-gen.log 2>&1
@@ -94,7 +103,8 @@ Tabellsidene berikes med innhold fra lokale metadatafiler i `data/table-metadata
 se `data/table-metadata/README.md` for kontrakten; katalogen overstyres med `--metadata-dir`).
 Tabeller uten gyldig fil får samme innhold som før fra `/tables`-listen alene. Siden
 metadatafilene kan være gamle, hentes tidsperiode og oppdatert-dato alltid fra den ferske
-`/tables`-listen.
+`/tables`-listen. Berikelsen gjelder kun SSB-tabeller; NB-/FHI-sidene bygges fra
+katalogoppføringene alene.
 
 ## Systemkrav
 - Moderne nettleser (Chrome, Firefox, Safari, Edge, Vivaldi)
