@@ -103,7 +103,7 @@ describe('FHIAdapter — multi-path katalogbygging', () => {
 
 describe('FHIAdapter — feilkontrakt for katalogen', () => {
   it('alle delkilder nede (uten cache) → getTables kaster', async () => {
-    failing.add('nokkel'); failing.add('mfr'); failing.add('daar');
+    app.AppConfig.sources.fhi.sourceIds.forEach(s => failing.add(s));
     await assert.rejects(() => adapter.getTables({}));
   });
 
@@ -131,7 +131,7 @@ describe('FHIAdapter — feilkontrakt for katalogen', () => {
 
   it('useCache:false tvinger nettverk forbi fersk cache', async () => {
     await adapter.getTables({}); // primer cachen
-    failing.add('nokkel'); failing.add('mfr'); failing.add('daar');
+    app.AppConfig.sources.fhi.sourceIds.forEach(s => failing.add(s));
 
     // Med fersk cache og useCache:false skal nettverket prøves — og feilen
     // fanges av stale-fallbacken (cachen finnes fortsatt).

@@ -231,6 +231,11 @@ const AppConfig = {
         nameFull: 'Norges Bank',
         url: 'https://www.norges-bank.no/'
       },
+      // `discontinued: true` merker en avsluttet serie i katalogen (GOVT_IRS).
+      // `probeKey` begrenser adapterens katalogperiode-/tidsprober til et smalt
+      // SDMX-nøkkelutsnitt for flows der et åpent probekall er for tungt
+      // (MONEY_MARKET: 3,5/15,6 MB åpent → 60/465 kB med nøkkel). Streng =
+      // samme nøkkel for begge prober; {period, time} = separate nøkler.
       dataflows: [
         { flow: 'EXR', version: '1.0', tableId: 'nb-EXR',
           paths: [['bf', 'nb-valutakurser'], ['ut', 'nb-valutakurser']],
@@ -243,7 +248,52 @@ const AppConfig = {
           label: { nb: 'Kortsiktige renter (NOWA)', en: 'Short-term interest rates (NOWA)' } },
         { flow: 'GOVT_GENERIC_RATES', version: '1.0', tableId: 'nb-GOVT_GENERIC_RATES',
           path: ['bf', 'nb-renter'],
-          label: { nb: 'Statsobligasjonsrenter', en: 'Government bond yields' } }
+          label: { nb: 'Statsobligasjonsrenter', en: 'Government bond yields' } },
+        { flow: 'GOVT_ZEROCOUPON', version: '1.0', tableId: 'nb-GOVT_ZEROCOUPON',
+          paths: [['bf', 'nb-renter'], ['bf', 'nb-statsgjeld']],
+          label: { nb: 'Nullkupongrenter statspapirer', en: 'Zero coupon yields, government securities' } },
+        { flow: 'SEC', version: '1.0', tableId: 'nb-SEC',
+          path: ['bf', 'nb-statsgjeld'],
+          label: { nb: 'Statspapirer – kurser og renter', en: 'Government securities – prices and yields' } },
+        { flow: 'GOVT_KEYFIGURES', version: '1.0', tableId: 'nb-GOVT_KEYFIGURES',
+          path: ['bf', 'nb-statsgjeld'],
+          label: { nb: 'Nøkkeltall for statsgjelden', en: 'Key government debt indicators' } },
+        { flow: 'GOVT_PRIMARY_MARKET', version: '1.0', tableId: 'nb-GOVT_PRIMARY_MARKET',
+          path: ['bf', 'nb-statsgjeld'],
+          label: { nb: 'Statspapirer – førstehåndsmarkedet', en: 'Government securities – primary market' } },
+        { flow: 'GOVT_SECONDARY_MARKET', version: '1.0', tableId: 'nb-GOVT_SECONDARY_MARKET',
+          path: ['bf', 'nb-statsgjeld'],
+          label: { nb: 'Statspapirer – annenhåndsmarkedet', en: 'Government securities – secondary market' } },
+        { flow: 'GOVT_IRS', version: '1.0', tableId: 'nb-GOVT_IRS', discontinued: true,
+          path: ['bf', 'nb-statsgjeld'],
+          label: { nb: 'Rentebytteavtaler (historisk, t.o.m. 2014)', en: 'Interest rate swaps (historical, until 2014)' } },
+        { flow: 'LIQUIDITY_STATISTICS', version: '1.0', tableId: 'nb-LIQUIDITY_STATISTICS',
+          path: ['bf', 'nb-likviditet'],
+          label: { nb: 'Likviditetsstatistikk', en: 'Liquidity statistics' } },
+        { flow: 'LIQUIDITY_FORECAST', version: '1.0', tableId: 'nb-LIQUIDITY_FORECAST',
+          path: ['bf', 'nb-likviditet'],
+          probeKey: { period: 'D.STAT_S..', time: 'D.FCAST_CBC..' },
+          label: { nb: 'Strukturell og total likviditet', en: 'Structural and total liquidity' } },
+        { flow: 'MONEY_MARKET', version: '1.0', tableId: 'nb-MONEY_MARKET',
+          path: ['bf', 'nb-likviditet'],
+          probeKey: 'B.U..........',
+          label: { nb: 'Pengemarkedsdata (RPD)', en: 'Money market data' } },
+        { flow: 'FAUCTION', version: '1.0', tableId: 'nb-FAUCTION',
+          path: ['bf', 'nb-likviditet'],
+          probeKey: 'FDFLIR.ANN.',
+          label: { nb: 'F-auksjoner', en: 'F-auctions' } },
+        { flow: 'CBC_TRANSACTIONS', version: '1.0', tableId: 'nb-CBC_TRANSACTIONS',
+          path: ['bf', 'nb-likviditet'],
+          label: { nb: 'Sentralbanksertifikater – transaksjoner', en: 'Central bank certificates – transactions' } },
+        { flow: 'SETTLEMENT_STATISTICS', version: '1.0', tableId: 'nb-SETTLEMENT_STATISTICS',
+          path: ['bf', 'nb-likviditet'],
+          label: { nb: 'Oppgjørsstatistikk', en: 'Settlement statistics' } },
+        { flow: 'FINANCIAL_INDICATORS', version: '1.0', tableId: 'nb-FINANCIAL_INDICATORS',
+          path: ['bf', 'nb-indikatorer'],
+          label: { nb: 'Finansielle indikatorer (FCI)', en: 'Financial indicators (FCI)' } },
+        { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET',
+          path: ['bf', 'nb-indikatorer'],
+          label: { nb: 'Regionalt nettverk', en: 'Regional network' } }
       ]
     },
 
@@ -268,7 +318,11 @@ const AppConfig = {
         licenseUrl: 'https://creativecommons.org/licenses/by/4.0/deed.no',
         licenseName: 'CC BY 4.0'
       },
-      sourceIds: ['nokkel', 'mfr', 'daar']
+      sourceIds: [
+        'nokkel', 'mfr', 'daar',
+        'msis', 'sysvak', 'npr', 'kpr', 'lmr',
+        'gs', 'hkr', 'abr', 'ngs', 'skast'
+      ]
     }
   },
 
@@ -286,9 +340,24 @@ const AppConfig = {
   sourceNodes: {
     'nb-renter':       { sortCode: '900', label: { nb: 'Renter og avkastning – Norges Bank', en: 'Interest rates – Norges Bank' } },
     'nb-valutakurser': { sortCode: '901', label: { nb: 'Valutakurser – Norges Bank',        en: 'Exchange rates – Norges Bank' } },
-    'fhi-nokkel':      { sortCode: '990', label: { nb: 'Folkehelse – nøkkeltall (FHI)' } },
-    'fhi-mfr':         { sortCode: '991', label: { nb: 'Medisinsk fødselsregister (FHI)' } },
-    'fhi-daar':        { sortCode: '992', label: { nb: 'Dødsårsaksregisteret (FHI)' } }
+    'nb-statsgjeld':   { sortCode: '902', label: { nb: 'Statsgjeld og statspapirer – Norges Bank', en: 'Government debt and securities – Norges Bank' } },
+    'nb-likviditet':   { sortCode: '903', label: { nb: 'Likviditet og pengemarked – Norges Bank', en: 'Liquidity and money market – Norges Bank' } },
+    'nb-indikatorer':  { sortCode: '904', label: { nb: 'Finansielle indikatorer og Regionalt nettverk – Norges Bank', en: 'Financial indicators and Regional network – Norges Bank' } },
+    // FHI-registrene: 4-sifrede '99xx'-koder (leksikografisk etter alle
+    // SSB-undertemaer og NB-nodene) med luft mellom for senere innskudd.
+    'fhi-nokkel':      { sortCode: '9900', label: { nb: 'Folkehelse – nøkkeltall (FHI)' } },
+    'fhi-mfr':         { sortCode: '9905', label: { nb: 'Medisinsk fødselsregister (FHI)' } },
+    'fhi-daar':        { sortCode: '9910', label: { nb: 'Dødsårsaksregisteret (FHI)' } },
+    'fhi-msis':        { sortCode: '9915', label: { nb: 'Smittsomme sykdommer – MSIS (FHI)' } },
+    'fhi-sysvak':      { sortCode: '9920', label: { nb: 'Vaksinasjonsregisteret SYSVAK (FHI)' } },
+    'fhi-npr':         { sortCode: '9925', label: { nb: 'Norsk pasientregister (FHI)' } },
+    'fhi-kpr':         { sortCode: '9930', label: { nb: 'Kommunalt pasient- og brukerregister (FHI)' } },
+    'fhi-lmr':         { sortCode: '9935', label: { nb: 'Legemiddelregisteret (FHI)' } },
+    'fhi-gs':          { sortCode: '9940', label: { nb: 'Grossistbasert legemiddelstatistikk (FHI)' } },
+    'fhi-hkr':         { sortCode: '9945', label: { nb: 'Hjerte- og karregisteret (FHI)' } },
+    'fhi-abr':         { sortCode: '9950', label: { nb: 'Abortregisteret (FHI)' } },
+    'fhi-ngs':         { sortCode: '9955', label: { nb: 'Mikrobiologisk genomovervåkning (FHI)' } },
+    'fhi-skast':       { sortCode: '9960', label: { nb: 'Skadedyrstatistikken (FHI)' } }
   },
 
   /**

@@ -78,3 +78,40 @@ Verifisert mot det levende API-et (`POST /api/open/v1/{source}/Table/{id}/data`)
 
 API-byggeren eksponerer format og maxRowCount via `buildApiQuery`-options;
 appen selv henter alltid `json-stat2` med `maxRowCount: 50000`.
+
+## Norges Bank (SDMX): nøkkelsyntaks-fallgruver (verifisert 2026-07)
+
+Funnet under aktiveringen av de 14 nye dataflowene:
+
+- **FREQ er ikke alltid første dimensjon.** GOVT_IRS har FREQ sist (posisjon
+  9 av 9), GOVT_KEYFIGURES/GOVT_PRIMARY_MARKET har den midt i, og FAUCTION
+  har ingen FREQ-dimensjon i det hele tatt. Nøkler må bygges mot
+  DSD-/serieskeysonly-posisjonene, ikke antas å starte med frekvensen.
+- **En helt tom nøkkel («..») gir 400** — «alle serier» må uttrykkes som
+  `all` (eller ved å utelate nøkkelsegmentet i URL-en helt).
+- **Koder med skråstrek kan ikke stå i nøkkelstien**: Tomcat avviser kodet
+  skråstrek (`%2F`) med 400 «The encoded slash character is not allowed»
+  (GOVT_PRIMARY_MARKET/CBC_TRANSACTIONS `INSTR`-koder som «NTB 03/2004»).
+  Koder med punktum (GOVT_PRIMARY_MARKET `COUPON`, «0.00000000») kolliderer
+  med segmentskilletegnet og kan heller ikke uttrykkes. Slike dimensjoner må
+  hentes ufiltrert og filtreres klientside.
+- **Koder med mellomrom fungerer** percent-enkodet (`%20`): GOVT_IRS
+  `COUNTERPARTY` («Danske Bank») gir 200.
+- **Åpne prober er dyre for store flows**: MONEY_MARKET (34 025 serier) gir
+  3,5 MB for `?firstNObservations=1&lastNObservations=1` og 15,6 MB for en
+  åpen `lastNObservations=60`-probe. Adapteren bruker derfor smale
+  `probeKey`-utsnitt fra config for slike flows.
+- Alle 22 dataflows i `/dataflow/NB` er versjon 1.0 unntatt IR (1.1) og
+  SHORT_RATES (1.2).
+
+## FHI: dimensjonsnavn for tid varierer sterkt mellom kilder (verifisert 2026-07)
+
+Tidsdimensjonen heter bl.a. `AAR` (nokkel), `DAAR` (daar),
+`FODSELSTIDSPUNKT_*` (mfr), `AARGANG` (abr), `Argang`/«Årgang» (hkr —
+matcher IKKE et fritt «år»-token pga. etterfølgende bokstav), `year`/«Årstall»
+(sysvak årstabeller), `season`/«Sesong» + `week`/«Uke» (msis/ngs
+sesong-/ukestabeller) og `my`/«Måned» (ngs månedstabeller). Rolledeteksjonen
+bruker derfor både et fritt «år»-token (TIME_PATTERN) og en eksakt navneliste
+(TIME_EXACT) — begge duplisert mellom `fhi-adapter.js` og
+`update-fhi-catalog.mjs`. Byggescriptet logger tabeller uten gjenkjent
+tidsdimensjon; per 2026-07 har alle 370 tabeller en gjenkjent tidsdimensjon.

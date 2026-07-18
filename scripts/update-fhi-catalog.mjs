@@ -40,10 +40,18 @@
  * API-tittelfeltet beholdes ALLTID som `internalName` (søk/debug), uansett
  * hvilken gren som traff.
  *
+ * MANUELL KURATERING (data/sources/fhi-curation.json)
+ * ----------------------------------------------------
+ * Håndskrevne visningstitler og kategoritilordninger (register → kategori i
+ * emnetreet) ligger i en egen innsjekket fil og flettes inn ETTER byggingen
+ * (scripts/lib/fhi-curation.mjs) — regenerering overskriver dem aldri.
+ * Avvik (foreldreløse tabell-id-er, udefinerte kategorier, ukategoriserte
+ * tabeller) logges som advarsler.
+ *
  * Kjøres manuelt/periodisk (dataene endrer seg sjelden — nye FHI-tabeller er
  * uvanlig, oppdaterte tallserier endrer ikke tittel/periode-strukturen):
  *   node scripts/update-fhi-catalog.mjs [--rate <kall/min>] [--out <sti>]
- *     [--limit <antall per kilde>]
+ *     [--limit <antall per kilde>] [--curation <sti>]
  *
  * Krever Node 18+ (global fetch). Ingen npm-avhengigheter.
  */
@@ -52,6 +60,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
+import { applyCuration } from './lib/fhi-curation.mjs';
 
 const DEFAULT_RATE = 240; // kall/minutt — FHI-API-et dokumenterer ingen grense; holdt beskjedent av høflighet
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -64,12 +73,14 @@ const REPO_ROOT = path.resolve(SCRIPT_DIR, '..');
 function parseArgs(argv) {
   const args = {
     out: path.join(REPO_ROOT, 'data', 'sources', 'fhi-catalog.json'),
+    curation: path.join(REPO_ROOT, 'data', 'sources', 'fhi-curation.json'),
     rate: DEFAULT_RATE,
     limit: null, // maks antall tabeller PER KILDE (for rask testing)
   };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--out') args.out = argv[++i];
+    else if (a === '--curation') args.curation = argv[++i];
     else if (a === '--rate') args.rate = parseInt(argv[++i], 10);
     else if (a === '--limit') args.limit = parseInt(argv[++i], 10);
     else {
@@ -86,7 +97,21 @@ function parseArgs(argv) {
     process.exit(2);
   }
   args.out = path.resolve(args.out);
+  args.curation = path.resolve(args.curation);
   return args;
+}
+
+/** Les kurateringsfila; mangler den (første kjøring) → tomt objekt. */
+function loadCuration(file) {
+  if (!fs.existsSync(file)) {
+    console.log(`[fhi-catalog] Ingen kurateringsfil på ${file} — bygger uten manuell kuratering.`);
+    return { sources: {} };
+  }
+  const parsed = JSON.parse(fs.readFileSync(file, 'utf8'));
+  if (!parsed || typeof parsed !== 'object' || !parsed.sources) {
+    throw new Error(`Kurateringsfila ${file} mangler toppnivået «sources»`);
+  }
+  return parsed;
 }
 
 // ---------------------------------------------------------------------------
@@ -155,9 +180,15 @@ async function fetchJson(url, throttle) {
 // ---------------------------------------------------------------------------
 
 const TIME_PATTERN = /(år|aar)(?![a-zæøåA-ZÆØÅ])/i;
+// Eksakte dimensjonsnavn uten fritt «år»-token (Årgang/Sesong/year/Måned/Uke
+// m.fl.) — se kommentaren ved TIME_EXACT i fhi-adapter.js.
+const TIME_EXACT = /^(årgang|aargang|argang|sesong|season|year|årstall|måned|maaned|month|uke|week)$/i;
 
 function isTimeDim(code, label) {
-  return TIME_PATTERN.test(String(code || '')) || TIME_PATTERN.test(String(label || ''));
+  const c = String(code || '').trim();
+  const l = String(label || '').trim();
+  return TIME_PATTERN.test(c) || TIME_PATTERN.test(l) ||
+    TIME_EXACT.test(c) || TIME_EXACT.test(l);
 }
 
 /**
@@ -345,6 +376,14 @@ async function buildSource(appConfig, source, throttle, limit) {
       firstPeriod = timeInfo.firstPeriod;
       lastPeriod = timeInfo.lastPeriod;
       timeUnit = timeInfo.timeUnit;
+      // Rolledeteksjonen (TIME_PATTERN) er heuristisk og kildene bruker ulike
+      // dimensjonskoder — logg tabeller uten funnet tidsdimensjon slik at nye
+      // kilder kan sjekkes ved aktivering (jf. ROADMAP «rolledeteksjonen bør
+      // sjekkes»). Enkelte tabeller HAR reelt ingen tidsdimensjon (f.eks.
+      // øyeblikksbilder i ngs) — meldingen er informativ, ikke en feil.
+      if (!dims.some(d => isTimeDim(d.code, d.label))) {
+        console.warn(`[fhi-catalog] ${source}/${tableId}: ingen tidsdimensjon gjenkjent (dims: ${dims.map(d => d.code).join(', ')})`);
+      }
     } catch (err) {
       console.warn(`[fhi-catalog] ${source}/${tableId}: klarte ikke hente /dimension (${err.message}) — periode/variabler utelates.`);
     }
@@ -413,10 +452,14 @@ async function main() {
     console.warn(`[fhi-catalog] Klarte ikke hente /Common/source (${err.message}) — bruker kilde-id som tittel.`);
   }
 
+  const curation = loadCuration(args.curation);
+
   const sources = {};
   for (const source of sourceIds) {
     const tables = await buildSource(appConfig, source, throttle, args.limit);
-    sources[source] = { title: titleMap[source] || source, tables };
+    const built = { title: titleMap[source] || source, tables };
+    sources[source] = applyCuration(built, curation.sources[source],
+      msg => console.warn(`[fhi-catalog] kuratering ${source}: ${msg}`));
   }
 
   const output = {
