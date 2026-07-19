@@ -213,7 +213,7 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 | Change export options/formats | `export.js`, `config.js` (`export` defaults) |
 | Change save/share query behaviour | `table-save-query.js` |
 | Change SSB API request details | `api.js` |
-| Enable more Norges Bank dataflows / FHI sources | `config.js` (`AppConfig.sources.nb.dataflows` / `.fhi.sourceIds`, plus `sourceNodes`), see [ROADMAP.md](ROADMAP.md); for FHI also curate titles/categories in `data/sources/fhi-curation.json` and rerun `scripts/update-fhi-catalog.mjs` |
+| Enable more Norges Bank dataflows / FHI sources | `config.js` (`AppConfig.sources.nb.dataflows` / `.fhi.sourceIds`, plus `sourceNodes`), see [ROADMAP.md](ROADMAP.md); NB rows support `collapseDims: {anchor, dims}` for characteristic dims functionally dependent on an anchor (ISIN); for FHI also curate titles/categories in `data/sources/fhi-curation.json` and rerun `scripts/update-fhi-catalog.mjs` |
 | Change FHI table titles or categories | `data/sources/fhi-curation.json` (per-source `categories` + per-table `title`/`category`), then `node scripts/update-fhi-catalog.mjs`; merge logic in `scripts/lib/fhi-curation.mjs` |
 | Add or change a source adapter | `js/sources/{source}-adapter.js`, contract documented in `js/sources/source-registry.js` |
 | Change the API status badge / status panel | `source-status.js` (UI), `source-registry.js` (status tracking), `translations.js` (`apiStatus.*` keys) |

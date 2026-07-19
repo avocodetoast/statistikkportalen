@@ -104,6 +104,33 @@ Funnet under aktiveringen av de 14 nye dataflowene:
 - Alle 22 dataflows i `/dataflow/NB` er versjon 1.0 unntatt IR (1.1) og
   SHORT_RATES (1.2).
 
+## Norges Bank (SDMX): kjennetegns-dimensjoner er funksjonelt avhengige av ISIN (verifisert 2026-07)
+
+Verifisert mot serieskeysonly for verdipapir-flowene:
+
+- **GOVT_PRIMARY_MARKET**: ISIN → (MATURITY, COUPON, INSTR) er en streng
+  funksjonell avhengighet — 125 ISIN-er ↔ 125 forfallsdatoer ↔ 125
+  INSTR-navn. MATURITY/COUPON/INSTR er altså *kjennetegn ved verdipapiret*
+  (slik Norges Banks eget datatorg viser dem som kolonner), ikke
+  selvstendige filtre.
+- **CBC_TRANSACTIONS**: ISIN → (MATURITY, INSTR, ISSUE_TYPE,
+  INSTRUMENT_TYPE, FREQ). INSTR er mange-til-én (flere sertifikater deler
+  navn).
+- **GOVT_SECONDARY_MARKET**: ISIN → INSTRUMENT_TYPE, men har ingen
+  MATURITY/COUPON/INSTR-dimensjoner.
+- Appen kollapser slike dimensjoner inn i ankerdimensjonen via
+  `collapseDims` i config-raden (se `applyCollapseDims` i
+  norges-bank-adapter.js).
+- **Punktum-koder gjør '.'-joinede serienøkler tvetydige**: serieskeysonly-
+  nøkler som joines med `.` (GOVT_PRIMARY_MARKET COUPON «0.00000000») kan
+  ikke splittes trygt igjen — kryssfilteret i UI-en feiltolket segmentene
+  for denne flowen før adapteren gikk over til å bære kodearrayer
+  (`keyTuples`) i tillegg.
+- **DSD-ens navn er ofte kun engelsk** (`names: {en}`), mens dataflow-
+  ressursen har både `no` og `en`. Metadata-tittelen bygges derfor fra den
+  kuraterte configetiketten (`flow.label`), med DSD-navnet kun som fallback
+  — ellers bytter tabelltittelen til engelsk når metadata lastes.
+
 ## FHI: dimensjonsnavn for tid varierer sterkt mellom kilder (verifisert 2026-07)
 
 Tidsdimensjonen heter bl.a. `AAR` (nokkel), `DAAR` (daar),

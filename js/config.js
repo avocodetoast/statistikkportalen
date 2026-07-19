@@ -236,6 +236,12 @@ const AppConfig = {
       // SDMX-nøkkelutsnitt for flows der et åpent probekall er for tungt
       // (MONEY_MARKET: 3,5/15,6 MB åpent → 60/465 kB med nøkkel). Streng =
       // samme nøkkel for begge prober; {period, time} = separate nøkler.
+      // `collapseDims: {anchor, dims}` kollapser kjennetegns-dimensjoner som er
+      // funksjonelt avhengige av ankeret (verifisert mot serieskeysonly:
+      // GOVT_PRIMARY_MARKET har ISIN → MATURITY/COUPON/INSTR) inn i ankerets
+      // verdiliste — de vises ikke som egne kort, og ankeretikettene berikes
+      // («NGB 03/2033 – 3,625 % – forfall 13.03.2033»). Se applyCollapseDims i
+      // norges-bank-adapter.js.
       dataflows: [
         { flow: 'EXR', version: '1.0', tableId: 'nb-EXR',
           paths: [['bf', 'nb-valutakurser'], ['ut', 'nb-valutakurser']],
@@ -260,6 +266,7 @@ const AppConfig = {
           label: { nb: 'Nøkkeltall for statsgjelden', en: 'Key government debt indicators' } },
         { flow: 'GOVT_PRIMARY_MARKET', version: '1.0', tableId: 'nb-GOVT_PRIMARY_MARKET',
           path: ['bf', 'nb-statsgjeld'],
+          collapseDims: { anchor: 'ISIN', dims: ['MATURITY', 'COUPON', 'INSTR'] },
           label: { nb: 'Statspapirer – førstehåndsmarkedet', en: 'Government securities – primary market' } },
         { flow: 'GOVT_SECONDARY_MARKET', version: '1.0', tableId: 'nb-GOVT_SECONDARY_MARKET',
           path: ['bf', 'nb-statsgjeld'],
@@ -284,6 +291,7 @@ const AppConfig = {
           label: { nb: 'F-auksjoner', en: 'F-auctions' } },
         { flow: 'CBC_TRANSACTIONS', version: '1.0', tableId: 'nb-CBC_TRANSACTIONS',
           path: ['bf', 'nb-likviditet'],
+          collapseDims: { anchor: 'ISIN', dims: ['MATURITY', 'INSTR'] },
           label: { nb: 'Sentralbanksertifikater – transaksjoner', en: 'Central bank certificates – transactions' } },
         { flow: 'SETTLEMENT_STATISTICS', version: '1.0', tableId: 'nb-SETTLEMENT_STATISTICS',
           path: ['bf', 'nb-likviditet'],

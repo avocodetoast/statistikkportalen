@@ -86,6 +86,10 @@
    * @param {string} [opts.label]       — tabelltittel
    * @param {string} [opts.updated]     — ISO-dato
    * @param {string[]} [opts.metricDims]— dim-id-er som skal få role.metric
+   * @param {string[]} [opts.collapseDims] — kjennetegns-dimensjoner som skal
+   *   fjernes fra datasettet (funksjonelt avhengige av en ankerdimensjon, f.eks.
+   *   MATURITY/COUPON/INSTR av ISIN). Serienøkkel-posisjonene deres ignoreres
+   *   ved indeksberegning; kryssproduktet regnes kun over beholdte dims.
    * @returns {object} JSON-Stat2 dataset. Tomt (value:[]) hvis meldingen ikke har serier.
    */
   function dataToJsonStat(sdmx, opts) {
@@ -111,14 +115,21 @@
     const seriesObj = (dataSet && dataSet.series) || {};
     const seriesKeys = Object.keys(seriesObj);
 
+    // Kjennetegns-dimensjoner kollapses bort: de beholdes ikke i id/size, og
+    // posisjonene deres i serienøkkelen hopper vi over ved indeksberegning.
+    const collapseSet = (Array.isArray(opts.collapseDims) && opts.collapseDims.length)
+      ? new Set(opts.collapseDims) : null;
+    const keptDims = collapseSet
+      ? seriesDims.filter(d => !collapseSet.has(d.id)) : seriesDims;
+
     // Ingen serier → tomt, men gyldig JSON-Stat2 (UI viser «ingen data»).
     if (!timeDim || seriesKeys.length === 0) {
-      return buildEmptyDataset(seriesDims, timeDim, lang, opts);
+      return buildEmptyDataset(keptDims, timeDim, lang, opts);
     }
 
-    // id/size: seriedimensjoner (i keyPosition-rekkefølge) + TIME_PERIOD sist.
-    const id = seriesDims.map(d => d.id).concat([timeDim.id]);
-    const size = seriesDims.map(d => (d.values || []).length).concat([(timeDim.values || []).length]);
+    // id/size: beholdte seriedimensjoner (i keyPosition-rekkefølge) + TIME_PERIOD sist.
+    const id = keptDims.map(d => d.id).concat([timeDim.id]);
+    const size = keptDims.map(d => (d.values || []).length).concat([(timeDim.values || []).length]);
 
     // JSON-Stat2 er et TETT kryssprodukt — for svært sparsomme flows (f.eks.
     // GOVT_PRIMARY_MARKET, ISIN-nøklede serier) kan et åpent uttak gi et
@@ -136,9 +147,14 @@
     const strides = computeStrides(size);
     const timeStride = strides[strides.length - 1]; // = 1
 
+    // Stride per posisjon i serienøkkelen: kollapsede posisjoner → 0 (ignoreres).
+    let k = 0;
+    const strideByKeyPos = seriesDims.map(d =>
+      (collapseSet && collapseSet.has(d.id)) ? 0 : strides[k++]);
+
     // dimension-objektet.
     const dimension = {};
-    seriesDims.forEach(d => { dimension[d.id] = buildDimObject(d, lang); });
+    keptDims.forEach(d => { dimension[d.id] = buildDimObject(d, lang); });
     dimension[timeDim.id] = buildDimObject(timeDim, lang);
 
     const total = size.reduce((a, b) => a * b, 1);
@@ -152,11 +168,26 @@
     const obsStatusPos = obsAttrs.findIndex(a => a.id === 'OBS_STATUS');
     const obsStatusValues = obsStatusPos >= 0 ? (obsAttrs[obsStatusPos].values || []) : [];
 
+    // Kollisjonsvakt: etter kollaps skal hver serie fortsatt ha unik posisjon
+    // (kjennetegnene er funksjonelt avhengige av ankeret). Kollisjon = feil
+    // collapseDims-config; siste skriver vinner, med én advarsel.
+    const seenBases = collapseSet ? new Set() : null;
+    let warnedCollision = false;
+
     seriesKeys.forEach(key => {
       const idxParts = key.split(':').map(Number);
       let base = 0;
       for (let d = 0; d < idxParts.length; d++) {
-        base += (idxParts[d] || 0) * strides[d];
+        base += (idxParts[d] || 0) * strideByKeyPos[d];
+      }
+      if (seenBases) {
+        if (seenBases.has(base) && !warnedCollision) {
+          warnedCollision = true;
+          if (typeof logger !== 'undefined' && logger.warn) {
+            logger.warn('[SdmxToJsonStat] collapseDims: flere serier kollapser til samme celle-rad — sjekk config (siste skriver vinner)');
+          }
+        }
+        seenBases.add(base);
       }
       const observations = seriesObj[key].observations || {};
       Object.keys(observations).forEach(obsIdx => {
@@ -350,9 +381,13 @@
     const role = { time: [timeId] };
     if (metric.length) role.metric = metric;
 
-    const label = pickName(dsd, lang) ||
-      (flowConfig && flowConfig.label && (flowConfig.label[lang === 'no' ? 'nb' : lang] || flowConfig.label.nb)) ||
-      (flowConfig && flowConfig.tableId) || '';
+    // Kuratert configetikett foretrekkes over DSD-navnet: NB-DSD-ene har ofte
+    // kun engelsk navn, som ellers ville byttet ut den norske katalogtittelen
+    // når metadata lastes (tittelen i UI-en overskrives med meta.label).
+    const cfgLabel = flowConfig && flowConfig.label &&
+      (flowConfig.label[lang === 'no' ? 'nb' : lang] || flowConfig.label.nb || flowConfig.label.en);
+    const dsdName = (dsd.names || typeof dsd.name === 'string') ? pickName(dsd, lang) : '';
+    const label = cfgLabel || dsdName || (flowConfig && flowConfig.tableId) || '';
 
     return {
       id: id,
@@ -366,6 +401,42 @@
         px: { heading: heading, stub: [timeId] }
       }
     };
+  }
+
+  /**
+   * Beriket verdipapiretikett for kollapsede kjennetegn, f.eks.
+   * «NGB 03/2033 – 3,625 % – forfall 13.03.2033». Data-etikett (caches i
+   * metadata per locale), derfor intern ordliste og ikke t() — t() evalueres
+   * ved kalltid og ville gitt feil språk for cachede metadata.
+   *
+   * @param {object} parts — { name?, maturity? (ISO-dato), coupon? (desimalstreng), fallback? }
+   * @param {string} lang  — 'no'|'en'
+   */
+  function formatSecurityLabel(parts, lang) {
+    parts = parts || {};
+    const l = normLang(lang);
+    const out = [];
+    const name = parts.name || parts.fallback || '';
+    if (name) out.push(String(name));
+
+    if (parts.coupon !== undefined && parts.coupon !== null && parts.coupon !== '') {
+      const n = Number(parts.coupon);
+      if (isFinite(n)) {
+        const num = n.toLocaleString(l === 'no' ? 'nb-NO' : 'en-GB', { maximumFractionDigits: 4 });
+        out.push(l === 'no' ? num + ' %' : num + '%');
+      } else {
+        out.push(String(parts.coupon)); // uparserbar kupong → rå verdi
+      }
+    }
+
+    if (parts.maturity) {
+      const m = String(parts.maturity);
+      const d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(m);
+      const dateStr = d ? d[3] + '.' + d[2] + '.' + d[1] : m; // uparserbar dato → rå kode
+      out.push((l === 'no' ? 'forfall ' : 'maturity ') + dateStr);
+    }
+
+    return out.join(' – ');
   }
 
   // ============================================================
@@ -504,6 +575,7 @@
   window.SdmxToJsonStat = {
     dataToJsonStat: dataToJsonStat,
     structureToMetadata: structureToMetadata,
+    formatSecurityLabel: formatSecurityLabel,
     // Periodehjelpere for intervallvelgeren (delt mellom UI og NB-adapteren).
     periodGranularity: periodGranularity,
     periodCodeGranularity: periodCodeGranularity,

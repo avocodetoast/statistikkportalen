@@ -159,6 +159,7 @@ async function displayVariables() {
           <div class="value-counter">
             ${t('variable.selected')} <span class="selected-count">0</span> ${t('variable.ofTotal')} <span class="total-count">${valueCount}</span>
           </div>
+          ${crossFilterHintHtml()}
 
           <div class="value-list-container" data-mode="specific" tabindex="0">
             ${renderValueList(dimCode, dimension, isTimeDim)}
@@ -266,11 +267,23 @@ function renderPillGroupCard(dimCode, dimension, roleBadgeHtml, elimination, val
         <div class="api-pill-group dim-pill-group" role="radiogroup" aria-label="${name}">
           ${pills}
         </div>
+        ${crossFilterHintHtml()}
       </div>
 
       <div class="variable-selection-summary"></div>
     </div>
   `;
+}
+
+/**
+ * Tomt hint-element for kryssfiltrering — fylles og vises av applyCrossFilter
+ * (variable-select-status.js) når verdier i kortet nedtones fordi de mangler
+ * data for utvalget i andre dimensjoner. Kun for kilder med validKeys
+ * (Norges Bank); SSB/FHI-kort berøres ikke.
+ */
+function crossFilterHintHtml() {
+  const hasValidKeys = tableMetadata && tableMetadata.extension && tableMetadata.extension.validKeys;
+  return hasValidKeys ? '<div class="cross-filter-hint" hidden></div>' : '';
 }
 
 /**
