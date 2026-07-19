@@ -12,11 +12,15 @@
  *   .baseUrl    // 'https://data.norges-bank.no/api'
  *   .enabled    // hopp over registrering hvis false
  *   .dataflows  // [{ flow, version, tableId, path, label:{nb,en},
- *               //    discontinued?, probeKey? }]
+ *               //    discontinued?, probeKey?, collapseDims? }]
  *               // path: ['bf','nb-renter'] = én emnetre-plassering; alternativt
  *               // paths: [['bf','nb-renter'], …] for flere plasseringer.
  *               // discontinued: true = avsluttet serie (GOVT_IRS).
  *               // probeKey: smal probenøkkel for tunge flows (se probeKeyFor).
+ *               // collapseDims: {anchor, dims} = kjennetegns-dimensjoner som
+ *               //   er funksjonelt avhengige av ankeret (GOVT_PRIMARY_MARKET:
+ *               //   ISIN → MATURITY/COUPON/INSTR) kollapses inn i ankerets
+ *               //   verdiliste (se applyCollapseDims).
  *
  *   Datastruktur : GET /datastructure/NB/DSD_{FLOW}?references=codelist&format=sdmx-json
  *   Data         : GET /data/{FLOW}/{key}?format=sdmx-json&locale=no|en[&lastNObservations=|startPeriod=|endPeriod=]
@@ -435,7 +439,10 @@
    * direkte mot dimensjonskoder. Cachet 24 t (språkuavhengig — kun koder).
    */
   async function fetchSeriesKeys(flow) {
-    const cacheKey = 'nb-serieskeys-' + flow.flow;
+    // 'serieskeys2': resultatet fikk keyTuples (kodearrayer) — de '.'-joinede
+    // nøklene alene er tvetydige når koder selv inneholder punktum
+    // (GOVT_PRIMARY_MARKET COUPON «0.00000000»).
+    const cacheKey = 'nb-serieskeys2-' + flow.flow;
     const cached = await cacheGet(cacheKey);
     if (cached) return cached;
 
@@ -460,12 +467,13 @@
     const seriesValues = {};
     dims.forEach((id, i) => { seriesValues[id] = valueCodes[i]; });
 
-    const keys = Object.keys(dataSet.series).map(k => {
+    const keyTuples = Object.keys(dataSet.series).map(k => {
       const idx = k.split(':').map(Number);
-      return idx.map((n, i) => (valueCodes[i] ? valueCodes[i][n] : undefined)).join('.');
+      return idx.map((n, i) => (valueCodes[i] ? valueCodes[i][n] : undefined));
     });
+    const keys = keyTuples.map(t => t.join('.'));
 
-    const result = { dims, seriesValues, keys };
+    const result = { dims, seriesValues, keys, keyTuples };
     await cacheSet(cacheKey, result);
     return result;
   }
@@ -527,14 +535,126 @@
     return result;
   }
 
+  /**
+   * Kollaps kjennetegns-dimensjoner (flow.collapseDims = {anchor, dims}) ut av
+   * metadataobjektet: dimensjoner som er funksjonelt avhengige av ankeret
+   * (GOVT_PRIMARY_MARKET: ISIN → MATURITY/COUPON/INSTR) er kjennetegn ved
+   * verdipapiret, ikke selvstendige filtre — som egne kort tvinger de brukeren
+   * til å velge samme papir flere ganger mens kryssfilteret gråer ut resten.
+   *
+   * Fjerner dimene fra meta.id/size/dimension/px.heading, beriker og sorterer
+   * ankeretikettene (navn – kupong – forfall, synkende på forfall), rebygger
+   * validKeys fra tuplene uten de kollapsede dimene, og registrerer
+   * meta.extension.collapsedDims = {anchor, dims, fullId, byAnchor} som
+   * buildKeyAndParams/getTableData trenger for å wildcarde og kollapse dem i
+   * dataveien. Degraderer stille (ingen kollaps) uten serieskeys-tupler.
+   */
+  function applyCollapseDims(meta, flow, seriesKeys, locale) {
+    const cfg = flow.collapseDims;
+    if (!cfg || !cfg.anchor || !Array.isArray(cfg.dims) || !cfg.dims.length) return;
+    if (!seriesKeys || !Array.isArray(seriesKeys.keyTuples) || !seriesKeys.keyTuples.length) return;
+    const dims = seriesKeys.dims || [];
+    const anchorPos = dims.indexOf(cfg.anchor);
+    if (anchorPos < 0 || !meta.dimension[cfg.anchor]) return;
+    const collapsePos = cfg.dims.map(d => dims.indexOf(d));
+    if (collapsePos.some(p => p < 0)) return; // ukjent dim i config → ikke kollaps
+
+    // Kjennetegn per ankerkode fra serietuplene (funksjonelt avhengige, så
+    // første forekomst er representativ).
+    const byAnchor = {};
+    seriesKeys.keyTuples.forEach(tuple => {
+      const a = tuple[anchorPos];
+      if (a === undefined || byAnchor[a]) return;
+      const info = {};
+      cfg.dims.forEach((d, i) => { info[d] = tuple[collapsePos[i]]; });
+      byAnchor[a] = info;
+    });
+
+    // Sortér ankeret på forfall synkende (lengst løpetid først); koder uten
+    // forfall sist, alfabetisk. ISO-datoer sorterer leksikografisk.
+    const anchorCat = meta.dimension[cfg.anchor].category;
+    let codes = Object.keys(anchorCat.index)
+      .sort((a, b) => anchorCat.index[a] - anchorCat.index[b]);
+    if (cfg.dims.indexOf('MATURITY') !== -1) {
+      codes = codes.slice().sort((a, b) => {
+        const ma = (byAnchor[a] && byAnchor[a].MATURITY) || '';
+        const mb = (byAnchor[b] && byAnchor[b].MATURITY) || '';
+        if (ma !== mb) return mb < ma ? -1 : 1; // synkende; tom sist
+        return a < b ? -1 : (a > b ? 1 : 0);
+      });
+    }
+
+    // Berik ankeretikettene (kodelistenavn → INSTR → koden selv, pluss
+    // kupong/forfall når de er blant de kollapsede dimene) og bygg index OG
+    // label på nytt i sortert rekkefølge — verdilista i UI-en
+    // (renderValueList) følger labels INNSETTINGSREKKEFØLGE, ikke index.
+    const newIndex = {};
+    const newLabel = {};
+    codes.forEach((code, i) => {
+      const info = byAnchor[code] || {};
+      const clName = anchorCat.label[code];
+      newIndex[code] = i;
+      newLabel[code] = window.SdmxToJsonStat.formatSecurityLabel({
+        name: (clName && clName !== code) ? clName : (info.INSTR || ''),
+        maturity: info.MATURITY,
+        coupon: info.COUPON,
+        fallback: code
+      }, locale);
+    });
+    anchorCat.index = newIndex;
+    anchorCat.label = newLabel;
+
+    // Splice de kollapsede dimene ut av metadataobjektet.
+    const fullId = meta.id.slice(); // alle dims (inkl. tid) i DSD-rekkefølge
+    const collapseSet = {};
+    cfg.dims.forEach(d => { collapseSet[d] = true; });
+    const keepIdx = [];
+    meta.id.forEach((d, i) => { if (!collapseSet[d]) keepIdx.push(i); });
+    meta.id = keepIdx.map(i => fullId[i]);
+    meta.size = keepIdx.map(i => meta.size[i]);
+    cfg.dims.forEach(d => { delete meta.dimension[d]; });
+    if (meta.extension && meta.extension.px && Array.isArray(meta.extension.px.heading)) {
+      meta.extension.px.heading = meta.extension.px.heading.filter(d => !collapseSet[d]);
+    }
+
+    // Rebygg validKeys fra tuplene: kun gjenværende dims, dedupet. ('.'-join er
+    // trygg igjen — de punktum-/skråstrek-holdige kjennetegnskodene er borte.)
+    const remainingDims = dims.filter(d => !collapseSet[d]);
+    const remainingPos = remainingDims.map(d => dims.indexOf(d));
+    const seen = new Set();
+    const keys = [];
+    seriesKeys.keyTuples.forEach(tuple => {
+      const k = remainingPos.map(p => tuple[p]).join('.');
+      if (!seen.has(k)) { seen.add(k); keys.push(k); }
+    });
+    meta.extension = meta.extension || {};
+    meta.extension.validKeys = { dims: remainingDims, keys: keys };
+
+    // Kollapsede dims trenger ikke (og kan ikke) stå i unfilterableDims —
+    // buildKeyAndParams wildcader dem via collapsedDims i stedet.
+    if (Array.isArray(meta.extension.unfilterableDims)) {
+      const rest = meta.extension.unfilterableDims.filter(d => !collapseSet[d]);
+      if (rest.length) meta.extension.unfilterableDims = rest;
+      else delete meta.extension.unfilterableDims;
+    }
+
+    meta.extension.collapsedDims = {
+      anchor: cfg.anchor,
+      dims: cfg.dims.slice(),
+      fullId: fullId,
+      byAnchor: byAnchor
+    };
+  }
+
   async function getTableMetadata(tableId, useCache, lang) {
     const flow = flowForId(tableId);
     if (!flow) throw new Error('[NBAdapter] Ukjent tabell: ' + tableId);
     const locale = apiLang(lang || currentLang());
-    // 'v3' = metadata-skjema med intervalPicker/timeBounds på tidsdimensjonen
-    // (v2: timePeriodsByFreq + FREQ.singleSelect) — ny nøkkel så gamle
-    // cacheoppføringer (uten utvidelsene) ikke serveres i 24 t.
-    const cacheKey = 'table_' + tableId + '_meta_v3_' + locale;
+    // 'v4' = kjennetegns-kollaps (collapsedDims) + configetikett-tittel
+    // (v3: intervalPicker/timeBounds; v2: timePeriodsByFreq + singleSelect)
+    // — ny nøkkel så gamle cacheoppføringer (med engelsk tittel og
+    // ukollapsede dims) ikke serveres i 24 t.
+    const cacheKey = 'table_' + tableId + '_meta_v4_' + locale;
 
     if (useCache !== false) {
       const cached = await cacheGet(cacheKey);
@@ -597,6 +717,11 @@
         meta.extension.unfilterableDims = unfilterable;
       }
     }
+
+    // Kjennetegns-kollaps (flow.collapseDims) — etter validKeys/unfilterable
+    // (begge rebygges/renskes her), før timePeriodsByFreq (uavhengig av
+    // kollapsede dims).
+    applyCollapseDims(meta, flow, seriesKeys, locale);
 
     // Frekvens → tilgjengelige tidsperioder, for frekvensbevisst tidsliste i
     // UI-en (variable-select applyTimeFreqFilter): daglige datoer gir aldri
@@ -670,10 +795,16 @@
   function buildKeyAndParams(meta, valueCodes) {
     const sel = valueCodes || {};
     const timeId = (meta.role && meta.role.time && meta.role.time[0]) || 'TIME_PERIOD';
-    const seriesIds = meta.id.filter(d => d !== timeId); // DSD-rekkefølge (ekskl. tid)
+    // Kollapsede kjennetegns-dims står ikke i meta.id, men API-nøkkelen krever
+    // fortsatt ett segment per DSD-dimensjon — bruk fullId når den finnes.
+    const collapsed = (meta.extension && meta.extension.collapsedDims) || null;
+    const allIds = (collapsed && Array.isArray(collapsed.fullId)) ? collapsed.fullId : meta.id;
+    const seriesIds = allIds.filter(d => d !== timeId); // DSD-rekkefølge (ekskl. tid)
     const unfilterable = (meta.extension && meta.extension.unfilterableDims) || [];
+    const collapsedDims = (collapsed && collapsed.dims) || [];
 
     const segments = seriesIds.map(dimId => {
+      if (collapsedDims.indexOf(dimId) !== -1) return ''; // følger ankeret
       if (unfilterable.indexOf(dimId) !== -1) return ''; // filtreres klientside
       const v = sel[dimId];
       if (v === '*' || v === undefined || v === null) return '';
@@ -882,13 +1013,27 @@
       return emptyDataFromSelection(meta, valueCodes);
     }
 
+    const collapsed = (meta.extension && meta.extension.collapsedDims) || null;
     const dataset = window.SdmxToJsonStat.dataToJsonStat(json, {
       lang: locale,
       source: 'Norges Bank',
       label: meta.label,
       updated: (json.meta && json.meta.prepared) || meta.updated || null,
-      metricDims: metricDims
+      metricDims: metricDims,
+      // Kjennetegns-dims (funksjonelt avhengige av ankeret) kollapses ut av
+      // datasettet — de er alt fjernet fra metadata/UI (applyCollapseDims).
+      collapseDims: collapsed ? collapsed.dims : undefined
     });
+
+    // Datasvarets ankeretiketter er rå koder/API-navn — kopier de berikede
+    // etikettene (navn – kupong – forfall) fra metadata.
+    if (collapsed && dataset.dimension[collapsed.anchor] && meta.dimension[collapsed.anchor]) {
+      const metaLabels = meta.dimension[collapsed.anchor].category.label || {};
+      const dsLabels = dataset.dimension[collapsed.anchor].category.label || {};
+      Object.keys(dsLabels).forEach(code => {
+        if (metaLabels[code]) dsLabels[code] = metaLabels[code];
+      });
+    }
 
     // Fler-verdi tidsutvalg hentes som intervall (SDMX støtter kun intervaller);
     // filtrer bort perioder brukeren ikke valgte. Hopp over for '*' og top(N)

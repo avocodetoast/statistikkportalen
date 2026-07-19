@@ -854,6 +854,14 @@
   cursor: not-allowed;
 }
 
+/* Cross-filter explanation: shown by applyCrossFilter when values in the card
+   are dimmed («N av M tilgjengelig. Verdier uten data ... er nedtonet.»). */
+.cross-filter-hint {
+  font-size: 0.8rem;
+  color: var(--color-text-light, #666);
+  margin: 0.25rem 0 0.35rem;
+}
+
 /* Frequency-aware time filter: periods that don't exist for the selected
    frequency are hidden entirely (see variable-select-status.js
    applyTimeFreqFilter) — a daily date can never match annual/monthly data. */

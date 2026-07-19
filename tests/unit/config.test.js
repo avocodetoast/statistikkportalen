@@ -63,3 +63,28 @@ describe('AppConfig — multi-source hub (Statistikkportalen 2.0)', () => {
     }
   });
 });
+
+describe('AppConfig — nb collapseDims', () => {
+  it('rows declaring collapseDims are well-formed', () => {
+    for (const flow of AppConfig.sources.nb.dataflows) {
+      if (!flow.collapseDims) continue;
+      assert.equal(typeof flow.collapseDims.anchor, 'string',
+        flow.flow + ': collapseDims.anchor må være en streng');
+      assert.ok(Array.isArray(flow.collapseDims.dims) && flow.collapseDims.dims.length > 0,
+        flow.flow + ': collapseDims.dims må være en ikke-tom array');
+      assert.ok(flow.collapseDims.dims.every(d => typeof d === 'string'),
+        flow.flow + ': collapseDims.dims må inneholde strenger');
+      assert.ok(!flow.collapseDims.dims.includes(flow.collapseDims.anchor),
+        flow.flow + ': ankeret kan ikke kollapse seg selv');
+    }
+  });
+
+  it('GOVT_PRIMARY_MARKET and CBC_TRANSACTIONS collapse into ISIN', () => {
+    const prim = AppConfig.sources.nb.dataflows.find(f => f.flow === 'GOVT_PRIMARY_MARKET');
+    const cbc = AppConfig.sources.nb.dataflows.find(f => f.flow === 'CBC_TRANSACTIONS');
+    assert.equal(prim.collapseDims.anchor, 'ISIN');
+    assert.deepEqual(prim.collapseDims.dims, ['MATURITY', 'COUPON', 'INSTR']);
+    assert.equal(cbc.collapseDims.anchor, 'ISIN');
+    assert.deepEqual(cbc.collapseDims.dims, ['MATURITY', 'INSTR']);
+  });
+});

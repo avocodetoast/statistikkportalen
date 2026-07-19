@@ -296,6 +296,23 @@ function hasPendingMandatorySelection(vk) {
   });
 }
 
+/**
+ * Vis/skjul kortets kryssfilter-hint: når verdier er nedtonet, forklar hvorfor
+ * («N av M tilgjengelig. Verdier uten data for gjeldende utvalg er nedtonet.»)
+ * — uten forklaring framstår nedtoningen som vilkårlig for brukeren.
+ */
+function updateCrossFilterHint(card, enabledCount, totalCount) {
+  const hint = card.querySelector('.cross-filter-hint');
+  if (!hint) return;
+  if (enabledCount < totalCount) {
+    hint.textContent = tpl('variable.crossFilterCount', enabledCount, totalCount) +
+      ' ' + t('variable.crossFilterHint');
+    hint.hidden = false;
+  } else {
+    hint.hidden = true;
+  }
+}
+
 /** Count valid keys matching every dimension's current constraint. */
 function countCrossFilterMatches(vk, constraints) {
   const dims = vk.dims;
@@ -330,27 +347,37 @@ function applyCrossFilter() {
 
     // Radio pill cards: disable incompatible pills, unchecking if needed.
     if (card.dataset.pillGroup === 'true') {
+      let pillTotal = 0;
+      let pillEnabled = 0;
       card.querySelectorAll('.dim-pill-group input[type="radio"]').forEach(radio => {
         const ok = en.has(radio.value);
         radio.disabled = !ok;
         radio.closest('.api-pill')?.classList.toggle('value-disabled', !ok);
         if (!ok && radio.checked) radio.checked = false; // auto-deselect incompatible value
+        pillTotal++;
+        if (ok) pillEnabled++;
       });
+      updateCrossFilterHint(card, pillEnabled, pillTotal);
       return;
     }
 
     const container = card.querySelector('.value-list-container');
     if (!container) return;
+    let listTotal = 0;
+    let listEnabled = 0;
     container.querySelectorAll('.value-list-item').forEach(item => {
+      listTotal++;
       if (en.has(item.dataset.code)) {
         item.classList.remove('value-disabled');
         item.removeAttribute('aria-disabled');
+        listEnabled++;
       } else {
         item.classList.add('value-disabled');
         item.setAttribute('aria-disabled', 'true');
         item.classList.remove('selected'); // auto-deselect incompatible value
       }
     });
+    updateCrossFilterHint(card, listEnabled, listTotal);
     updateValueCounter(card);
   });
 
