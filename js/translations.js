@@ -74,7 +74,7 @@ const translations = {
 
     // Search view
     'search.placeholder':   'Søk etter tabell (ID, tittel, variabler...)',
-    'search.heading':       'Søk i statistikkbanken',
+    'search.heading':       'Søk i statistikken',
     'search.instructions':  'Skriv inn søkeord eller bruk filtrene for å finne tabeller',
     'search.results':       'Søkeresultater',
     'search.fuzzyFallback': 'Ingen eksakte treff \u2013 viser omtrentlige treff (fuzzy søk)',
@@ -262,6 +262,7 @@ const translations = {
 
     // Footer
     'footer.dataFrom':    'Data fra',
+    'footer.and':         'og',
 
     // Cache
     'cache.clear':        'T\u00F8m hurtigbuffer',
@@ -352,7 +353,7 @@ const translations = {
     'date.earlier7Days':    'Earlier this week',
 
     'search.placeholder':    'Search for table (ID, title, variables...)',
-    'search.heading':        'Search the statistics database',
+    'search.heading':        'Search the statistics',
     'search.instructions':   'Enter search terms or use the filters to find tables',
     'search.results':        'Search results',
     'search.fuzzyFallback':  'No exact matches \u2013 showing approximate matches (fuzzy search)',
@@ -530,6 +531,7 @@ const translations = {
 
     // Footer
     'footer.dataFrom':    'Data from',
+    'footer.and':         'and',
 
     // Cache
     'cache.clear':        'Clear cache',
@@ -797,6 +799,7 @@ const translations = {
 
     // Footer
     'footer.dataFrom':    'Data fr\u00E5n',
+    'footer.and':         'och',
 
     // Cache
     'cache.clear':        'Rensa cache',

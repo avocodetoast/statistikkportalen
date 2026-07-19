@@ -294,6 +294,54 @@ function extractTableTitle(label) {
 }
 
 /**
+ * Kildenøkkel ('ssb' | 'nb' | 'fhi') for en tabell-id — samme prefiksregel
+ * som kildefasaden (js/sources/source-registry.js) og sourceKeyForId i
+ * scripts/lib/seo-sources.mjs: nb-* → Norges Bank, fhi-* → FHI, ellers SSB.
+ * @param {string} tableId
+ * @returns {string}
+ */
+function sourceKeyForTableId(tableId) {
+  const s = String(tableId || '');
+  if (s.indexOf('nb-') === 0) return 'nb';
+  if (s.indexOf('fhi-') === 0) return 'fhi';
+  return 'ssb';
+}
+
+/**
+ * Kildeattribusjon ({name, nameFull, url, licenseUrl?, licenseName?}) for en
+ * tabell-id: AppConfig.sources.<kilde>.branding når det finnes, ellers det
+ * globale AppConfig.source. Speiler sourceBrandingFor i seo-sources.mjs.
+ * @param {string} tableId
+ * @returns {Object}
+ */
+function sourceBrandingForTable(tableId) {
+  const key = sourceKeyForTableId(tableId);
+  const srcCfg = AppConfig.sources && AppConfig.sources[key];
+  return (srcCfg && srcCfg.branding) || AppConfig.source || {};
+}
+
+/**
+ * Branding-objekter for alle AKTIVERTE kilder, i config-rekkefølge — brukes
+ * av footeren («Data fra … , … og …»). Kilder uten egen branding (SSB)
+ * faller tilbake til det globale AppConfig.source. Instanser uten `sources`
+ * (f.eks. SCB-instansen, config-sv.js) gir [AppConfig.source].
+ * @returns {Object[]}
+ */
+function listSourceBrandings() {
+  const result = [];
+  const sources = AppConfig.sources || {};
+  Object.keys(sources).forEach(key => {
+    const src = sources[key];
+    // Hopp over ikke-kildeoppføringer (fetchTimeoutMs o.l.) og deaktiverte kilder
+    if (!src || typeof src !== 'object' || !src.adapter || !src.enabled) return;
+    const branding = src.branding || AppConfig.source;
+    if (branding) result.push(branding);
+  });
+  if (!result.length && AppConfig.source) result.push(AppConfig.source);
+  return result;
+}
+
+/**
  * Update the browser tab title.
  * @param {string[]} parts - Title parts prepended before "Statistikkportalen"
  */

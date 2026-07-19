@@ -1,5 +1,6 @@
 /**
- * Configuration file for SSB Statistikkbank Alternative
+ * Configuration file for Statistikkportalen (multi-source instance:
+ * SSB + Norges Bank + FHI)
  *
  * This file contains all configurable settings for the application.
  * Modify these values to change the API endpoint or other settings.
@@ -19,8 +20,11 @@ const AppConfig = {
   apiBaseUrl: 'https://data.ssb.no/api/pxwebapi/v2',
 
   /**
-   * Instance-specific source information.
-   * These values are used in the UI where the data source is named explicitly.
+   * Instance-specific DEFAULT source information (the PxWebApi instance at
+   * apiBaseUrl). Used in the UI where the data source is named explicitly,
+   * as the fallback branding for sources without their own
+   * `sources.<key>.branding`, and as the sole footer entry on single-source
+   * instances (see listSourceBrandings in js/utils.js).
    */
   source: {
     name: 'SSB',

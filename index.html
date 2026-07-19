@@ -62,8 +62,10 @@
 
   <!-- Footer -->
   <footer>
-    <p id="footer-source-line"><span id="footer-data-from">Data fra</span> <a id="footer-source-link" href="https://www.ssb.no/" target="_blank" rel="noopener noreferrer">Statistisk sentralbyrå</a>
-    <a id="footer-license-link" href="https://www.ssb.no/diverse/lisens" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a>
+    <!-- Statisk kildeliste for crawlere/noscript; bygges om fra
+         AppConfig.sources ved oppstart og språkbytte (applyTranslatableUI). -->
+    <p id="footer-source-line"><span id="footer-data-from">Data fra</span>
+    <span id="footer-sources"><a href="https://www.ssb.no/" target="_blank" rel="noopener noreferrer">Statistisk sentralbyrå</a> <a href="https://www.ssb.no/diverse/lisens" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a>, <a href="https://www.norges-bank.no/" target="_blank" rel="noopener noreferrer">Norges Bank</a> og <a href="https://www.fhi.no/" target="_blank" rel="noopener noreferrer">Folkehelseinstituttet</a> <a href="https://creativecommons.org/licenses/by/4.0/deed.no" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a></span>
     <span class="footer-separator">·</span>
     <a href="https://github.com/avocodetoast/statistikkportalen" target="_blank" rel="noopener noreferrer">GitHub</a>
     <span class="footer-separator js-only">·</span>
@@ -150,6 +152,28 @@
       const dataFromEl = document.getElementById('footer-data-from');
       if (dataFromEl) dataFromEl.textContent = t('footer.dataFrom');
 
+      // Kildeliste i footeren: én lenke (+ evt. lisenslenke) per aktivert
+      // kilde, fra AppConfig.sources/AppConfig.source (listSourceBrandings i
+      // utils.js). Bindeordet («og»/«and») følger språket.
+      const sourcesEl = document.getElementById('footer-sources');
+      if (sourcesEl) {
+        const items = listSourceBrandings().map(src => {
+          const name = escapeHtml(src.nameFull || src.name || src.url || '');
+          let html = src.url
+            ? `<a href="${escapeHtml(src.url)}" target="_blank" rel="noopener noreferrer">${name}</a>`
+            : name;
+          if (src.licenseUrl) {
+            html += ` <a href="${escapeHtml(src.licenseUrl)}" target="_blank" rel="noopener noreferrer">(${escapeHtml(src.licenseName || 'License')})</a>`;
+          } else if (src.licenseName) {
+            html += ` (${escapeHtml(src.licenseName)})`;
+          }
+          return html;
+        });
+        sourcesEl.innerHTML = items.length > 1
+          ? items.slice(0, -1).join(', ') + ' ' + escapeHtml(t('footer.and')) + ' ' + items[items.length - 1]
+          : items.join('');
+      }
+
       const clearLink = document.getElementById('clear-cache-link');
       if (clearLink) {
         clearLink.textContent = t('cache.clear');
@@ -164,7 +188,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       // Apply instance-specific branding from AppConfig
       const appName = AppConfig.app?.name || 'Statistikkportalen';
-      const src = AppConfig.source || {};
 
       // Pre-rendrede SEO-sider har en unik tittel som ikke skal overskrives
       // med den generiske (updatePageTitle setter emnespesifikk tittel senere).
@@ -173,18 +196,7 @@
       }
       document.getElementById('header-home-link').textContent = appName;
 
-      // Footer source links (language-neutral)
-      const sourceLink = document.getElementById('footer-source-link');
-      if (sourceLink && src.url) {
-        sourceLink.href = src.url;
-        sourceLink.textContent = src.nameFull || src.name || src.url;
-      }
-      const licenseLink = document.getElementById('footer-license-link');
-      if (licenseLink && src.licenseUrl) {
-        licenseLink.href = src.licenseUrl;
-        licenseLink.textContent = `(${src.licenseName || 'License'})`;
-      }
-
+      // Footer-kildelisten bygges i applyTranslatableUI (flerkildestøtte).
       applyTranslatableUI();
 
       // API-statusbadge + statuspanel (abonnerer på fasadens kildestatus)

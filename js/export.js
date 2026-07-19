@@ -1,9 +1,11 @@
 /**
- * Export - Export table data using SSB API's native export functionality
+ * Export - Export table data using the owning source API's native export
  *
  * This module provides an export options dialog that lets users configure
  * the export format, display options, and layout before downloading data
- * directly from the SSB API.
+ * directly from the source's API. Only shown for sources with server-side
+ * export support (capabilities.supportsServerExport — SSB today); NB/FHI
+ * use the client-side CSV export in table-display.js instead.
  */
 
 /**
@@ -122,7 +124,7 @@ function showExportDialog() {
 
           <!-- Export Info -->
           <div class="export-info">
-            <p>${tpl('export.downloadInfo', AppConfig.source?.name || 'API')}</p>
+            <p>${tpl('export.downloadInfo', escapeHtml(sourceBrandingForTable(AppState.selectedTable?.id)?.name || 'API'))}</p>
             <p>${tpl('export.dataPoints', escapeHtml(currentData.value.length.toLocaleString('nb-NO')))}</p>
           </div>
         </div>
