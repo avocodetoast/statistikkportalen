@@ -91,12 +91,19 @@ function dsdJson(flowId) {
   };
 }
 
+// Lokaliserte verdinavn i serieskeysonly-proben (DSD-kodelistene hos NB har
+// ofte kun engelske navn; proben med locale=no gir norske).
+const PROBE_VALUE_NAMES = {
+  PRIM: { UNIT_MEASURE: { Y: 'Effektiv rente', V: 'Volum' } }
+};
+
 function keysJson(flowId) {
   const spec = FLOWS[flowId];
+  const names = PROBE_VALUE_NAMES[flowId] || {};
   const values = spec.dims.map((id, i) => {
     const seen = [];
     spec.keys.forEach(k => { if (!seen.includes(k[i])) seen.push(k[i]); });
-    return seen.map(c => ({ id: c, name: c }));
+    return seen.map(c => ({ id: c, name: (names[id] && names[id][c]) || c }));
   });
   const series = {};
   spec.keys.forEach(k => {
@@ -301,6 +308,22 @@ describe('NBAdapter — collapseDims i metadata', () => {
   it('tittelen kommer fra configetiketten, ikke det engelske DSD-navnet', async () => {
     const meta = await adapter.getTableMetadata('nb-PRIM', false, 'no');
     assert.equal(meta.label, 'Statspapirer – test');
+  });
+
+  it('verdietiketter foretrekker lokaliserte probenavn over DSD-kodelista', async () => {
+    const meta = await adapter.getTableMetadata('nb-PRIM', false, 'no');
+    // Probenavn finnes (≠ koden) → brukes; ellers kodelistenavn (ISIN-testen
+    // over dekker fallbacken).
+    assert.equal(meta.dimension.UNIT_MEASURE.category.label.Y, 'Effektiv rente');
+    assert.equal(meta.dimension.UNIT_MEASURE.category.label.V, 'Volum');
+  });
+
+  it('serieskeysonly-proben sender locale', async () => {
+    await adapter.getTableMetadata('nb-PRIM', false, 'no');
+    assert.ok(requestedUrls.some(u =>
+      u.includes('/data/PRIM/') && u.includes('detail=serieskeysonly') && u.includes('locale=no')),
+      'serieskeysonly-URL skal ha locale=no, fikk: ' +
+      requestedUrls.filter(u => u.includes('serieskeysonly')).join(', '));
   });
 });
 

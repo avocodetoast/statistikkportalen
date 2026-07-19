@@ -277,6 +277,9 @@
    * @param {string}  [opts.source]      — 'Norges Bank'
    * @param {string}  [opts.updated]     — ISO-dato
    * @param {Object.<string,string>} [opts.dimLabels] — {dimId: visningsnavn} fra data-probe (foretrekkes)
+   * @param {Object.<string,Object.<string,string>>} [opts.valueNames] — {dimId: {kode: navn}}
+   *   lokaliserte VERDInavn fra serieskeysonly-proben; foretrekkes over
+   *   DSD-kodelistenes navn (som hos NB ofte kun finnes på engelsk)
    * @param {Array}   [opts.timeValues]  — [{id,name}] eller [id] for TIME_PERIOD-kategorien (fra data-probe)
    * @param {string}  [opts.timeLabel]   — visningsnavn for TIME_PERIOD
    * @returns {object} metadata { id, size, label, source, updated, dimension, role, extension }
@@ -340,9 +343,11 @@
 
       const index = {};
       const label = {};
+      // Verdinavn: lokalisert probenavn → DSD-kodelistenavn → koden selv.
+      const probeNames = (opts.valueNames && opts.valueNames[dimId]) || null;
       codes.forEach((c, i) => {
         index[c] = i;
-        label[c] = clLabels[c] || c;
+        label[c] = (probeNames && probeNames[c]) || clLabels[c] || c;
       });
 
       // Foretrekk friendly dim-navn fra data-probe; ellers kodelistenavn; ellers id.

@@ -33,14 +33,42 @@ function _sampleTimeFormat(dimension) {
   return codes.sort().slice(-1)[0];
 }
 
-function getDimensionDisplayOrder() {
-  const heading = tableMetadata.extension?.px?.heading || [];
-  const stub = tableMetadata.extension?.px?.stub || [];
+function getDimensionDisplayOrder(meta) {
+  const m = meta || tableMetadata;
+  const heading = m.extension?.px?.heading || [];
+  const stub = m.extension?.px?.stub || [];
   const ordered = [...heading, ...stub];
 
   // Fallback: add any dimensions from metadata.id not covered by heading+stub
-  const remaining = tableMetadata.id.filter(d => !ordered.includes(d));
+  const remaining = m.id.filter(d => !ordered.includes(d));
   return [...ordered, ...remaining];
+}
+
+/**
+ * Seksjonert visning for tabeller der metadata skiller filtre fra måltall
+ * (NB-tabeller: extension.validKeys + role.metric). Nøkkeltall er verdier
+ * som hentes UT, ikke filtre — de vises i egen seksjon nederst (med tid),
+ * mens filterdimensjonene («avgrens utvalget») står øverst. Enkeltverdi-
+ * dimensjoner auto-velges uansett og listes for skjuling som kort.
+ *
+ * @returns {null | {filters: string[], measures: string[], autoHidden: string[]}}
+ *   null = gate inaktiv (SSB/FHI/nb-EXR) → dagens usekjonerte visning.
+ */
+function sectionedDimensionLayout(meta) {
+  if (!meta || !meta.extension || !meta.extension.validKeys) return null;
+  const metric = (meta.role && meta.role.metric) || [];
+  if (!metric.length) return null;
+
+  const timeId = (meta.role && meta.role.time && meta.role.time[0]) || 'TIME_PERIOD';
+  const order = getDimensionDisplayOrder(meta);
+  const filters = order.filter(d => d !== timeId && !metric.includes(d));
+  const measures = order.filter(d => d !== timeId && metric.includes(d)).concat(
+    meta.dimension[timeId] ? [timeId] : []);
+  const autoHidden = filters.concat(measures).filter(d =>
+    d !== timeId &&
+    Object.keys((meta.dimension[d] && meta.dimension[d].category &&
+      meta.dimension[d].category.index) || {}).length === 1);
+  return { filters, measures, autoHidden };
 }
 
 /**
@@ -55,7 +83,13 @@ async function displayVariables() {
   if (!container) return;
 
   // Use SSB's heading+stub order instead of the raw metadata.id order
-  const dimensions = getDimensionDisplayOrder();
+  // Seksjonert visning (filtre → nøkkeltall+tid) for NB-tabeller med
+  // måltallsdimensjon; null → dagens usekjonerte rekkefølge (SSB/FHI/nb-EXR).
+  const layout = sectionedDimensionLayout(tableMetadata);
+  const dimensions = layout
+    ? [...layout.filters, ...layout.measures]
+    : getDimensionDisplayOrder();
+  const autoHidden = new Set(layout ? layout.autoHidden : []);
 
   // Pre-load first codelist per dimension for value ordering in "Velg fritt" view
   await preloadCodelistOrdering(dimensions);
@@ -73,6 +107,25 @@ async function displayVariables() {
   dimensions.forEach(dimCode => {
     const dimension = tableMetadata.dimension[dimCode];
     if (!dimension) return;
+
+    // Seksjonsheadere + infolinje for auto-valgte (skjulte) enkeltverdi-kort.
+    if (layout && dimCode === layout.filters[0]) {
+      html += '<div class="variables-section-header">' +
+        escapeHtml(t('variable.section.filters')) + '</div>';
+      if (autoHidden.size) {
+        const parts = [...autoHidden].map(d => {
+          const dm = tableMetadata.dimension[d];
+          const code = Object.keys(dm.category.index)[0];
+          return (dm.label || d) + ' = ' + ((dm.category.label && dm.category.label[code]) || code);
+        });
+        html += '<div class="auto-selected-info">' +
+          escapeHtml(t('variable.autoSelected') + ' ' + parts.join(' · ')) + '</div>';
+      }
+    } else if (layout && dimCode === layout.measures[0]) {
+      html += '<div class="variables-section-header">' +
+        escapeHtml(t('variable.section.measures')) + '</div>';
+    }
+    const cardHiddenClass = autoHidden.has(dimCode) ? ' card-auto-hidden' : '';
 
     const values = dimension.category.label;
     const valueCount = Object.keys(values).length;
@@ -104,7 +157,7 @@ async function displayVariables() {
     // being enforced as list-interaction rules. Large singleSelect dimensions
     // fall back to the value list with radio behaviour.
     if (singleSelect && valueCount <= 12) {
-      html += renderPillGroupCard(dimCode, dimension, roleBadgeHtml, elimination, valueCount);
+      html += renderPillGroupCard(dimCode, dimension, roleBadgeHtml, elimination, valueCount, cardHiddenClass);
       return;
     }
 
@@ -114,7 +167,7 @@ async function displayVariables() {
     const sortedCodelists = hasCodelists ? sortCodelistOptions(codelists) : [];
 
     html += `
-      <div class="variable-card" data-dimension="${escapeHtml(dimCode)}" data-elimination="${elimination}" data-singleselect="${singleSelect}">
+      <div class="variable-card${cardHiddenClass}" data-dimension="${escapeHtml(dimCode)}" data-elimination="${elimination}" data-singleselect="${singleSelect}">
         <div class="variable-header">
           <h3 class="variable-name">${escapeHtml(dimension.label || dimCode)}</h3>
           ${roleBadgeHtml}
@@ -241,7 +294,7 @@ function renderTimePickerCard(dimCode, dimension, roleBadgeHtml) {
  * pill row. Emits the same selection shape as a one-item list selection
  * (array of one code) via the pill branch in getVariableSelection().
  */
-function renderPillGroupCard(dimCode, dimension, roleBadgeHtml, elimination, valueCount) {
+function renderPillGroupCard(dimCode, dimension, roleBadgeHtml, elimination, valueCount, cardHiddenClass) {
   const name = escapeHtml(dimension.label || dimCode);
   const labels = dimension.category.label;
   const index = dimension.category.index || {};
@@ -252,7 +305,7 @@ function renderPillGroupCard(dimCode, dimension, roleBadgeHtml, elimination, val
   ).join('');
 
   return `
-    <div class="variable-card" data-dimension="${escapeHtml(dimCode)}" data-elimination="${elimination}"
+    <div class="variable-card${cardHiddenClass || ''}" data-dimension="${escapeHtml(dimCode)}" data-elimination="${elimination}"
          data-singleselect="true" data-pill-group="true">
       <div class="variable-header">
         <h3 class="variable-name">${name}</h3>
