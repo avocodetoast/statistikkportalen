@@ -255,8 +255,15 @@ function readCrossFilterConstraints(vk) {
 /**
  * Standard cross-filter: for each dimension D, a value v is enabled iff some valid
  * key has v in D AND matches every OTHER dimension's non-empty selection.
+ *
+ * `metricSet` (Set av dim-id-er, valgfri) gjør filtreringen ÉNVEIS for
+ * måltallsdimensjoner: deres begrensninger anvendes aldri på andre
+ * dimensjoner (nøkkeltall er verdier som hentes ut, ikke filtre — at valgt
+ * «Pris» skulle nedtone «Tilbakekjøpsauksjon» oppleves baklengs). Filterdims
+ * kryssfiltrerer fortsatt hverandre og styrer måltall-listene. Utelatt
+ * metricSet = dagens toveis semantikk.
  */
-function computeCrossFilterEnabled(vk, constraints) {
+function computeCrossFilterEnabled(vk, constraints, metricSet) {
   const dims = vk.dims;
   const parsed = getParsedValidKeys(vk);
   const enabled = {};
@@ -266,7 +273,7 @@ function computeCrossFilterEnabled(vk, constraints) {
     for (let di = 0; di < dims.length; di++) {
       let ok = true;
       for (let oi = 0; oi < dims.length; oi++) {
-        if (oi === di) continue;
+        if (oi === di || (metricSet && metricSet.has(dims[oi]))) continue;
         const c = constraints[dims[oi]];
         if (c && !c.has(seg[oi])) { ok = false; break; }
       }
@@ -338,7 +345,12 @@ function applyCrossFilter() {
   if (!vk) return null;
 
   const constraints = readCrossFilterConstraints(vk);
-  const enabled = computeCrossFilterEnabled(vk, constraints);
+  // Énveis for måltallsdimensjoner (se computeCrossFilterEnabled); treff-
+  // telleren under bruker fortsatt FULL begrensning — den skal reflektere det
+  // faktiske uttrekket.
+  const metricDims = (tableMetadata.role && tableMetadata.role.metric) || [];
+  const metricSet = new Set(metricDims.filter(d => vk.dims.includes(d)));
+  const enabled = computeCrossFilterEnabled(vk, constraints, metricSet.size ? metricSet : null);
 
   vk.dims.forEach(dimId => {
     const card = document.querySelector('.variable-card[data-dimension="' + dimId + '"]');

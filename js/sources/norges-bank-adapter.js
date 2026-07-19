@@ -438,16 +438,19 @@
    * eller null. Kodebasert (ikke indeksbasert) slik at UI-krysfilteret kan matche
    * direkte mot dimensjonskoder. Cachet 24 t (språkuavhengig — kun koder).
    */
-  async function fetchSeriesKeys(flow) {
+  async function fetchSeriesKeys(flow, locale) {
     // 'serieskeys2': resultatet fikk keyTuples (kodearrayer) — de '.'-joinede
     // nøklene alene er tvetydige når koder selv inneholder punktum
-    // (GOVT_PRIMARY_MARKET COUPON «0.00000000»).
-    const cacheKey = 'nb-serieskeys2-' + flow.flow;
+    // (GOVT_PRIMARY_MARKET COUPON «0.00000000»). Locale i både kall og
+    // cachenøkkel: proben er også ETIKETTKILDE (valueNames) — DSD-kodelistene
+    // har ofte kun engelske navn, mens dataendepunktet lokaliserer.
+    const loc = locale || 'no';
+    const cacheKey = 'nb-serieskeys2-' + flow.flow + '_' + loc;
     const cached = await cacheGet(cacheKey);
     if (cached) return cached;
 
     const url = BASE + '/data/' + encodeURIComponent(flow.flow) +
-      '/?detail=serieskeysonly&format=sdmx-json';
+      '/?detail=serieskeysonly&format=sdmx-json&locale=' + encodeURIComponent(loc);
     let json = null;
     try {
       const res = await fetchSdmx(url);
@@ -467,13 +470,23 @@
     const seriesValues = {};
     dims.forEach((id, i) => { seriesValues[id] = valueCodes[i]; });
 
+    // Lokaliserte verdinavn per dim (kun der navnet er noe annet enn koden).
+    const valueNames = {};
+    seriesDims.forEach(d => {
+      const map = {};
+      (d.values || []).forEach(v => {
+        if (typeof v.name === 'string' && v.name && v.name !== v.id) map[v.id] = v.name;
+      });
+      if (Object.keys(map).length) valueNames[d.id] = map;
+    });
+
     const keyTuples = Object.keys(dataSet.series).map(k => {
       const idx = k.split(':').map(Number);
       return idx.map((n, i) => (valueCodes[i] ? valueCodes[i][n] : undefined));
     });
     const keys = keyTuples.map(t => t.join('.'));
 
-    const result = { dims, seriesValues, keys, keyTuples };
+    const result = { dims, seriesValues, keys, keyTuples, valueNames };
     await cacheSet(cacheKey, result);
     return result;
   }
@@ -650,11 +663,11 @@
     const flow = flowForId(tableId);
     if (!flow) throw new Error('[NBAdapter] Ukjent tabell: ' + tableId);
     const locale = apiLang(lang || currentLang());
-    // 'v4' = kjennetegns-kollaps (collapsedDims) + configetikett-tittel
-    // (v3: intervalPicker/timeBounds; v2: timePeriodsByFreq + singleSelect)
-    // — ny nøkkel så gamle cacheoppføringer (med engelsk tittel og
-    // ukollapsede dims) ikke serveres i 24 t.
-    const cacheKey = 'table_' + tableId + '_meta_v4_' + locale;
+    // 'v5' = lokaliserte verdinavn fra serieskeys-proben (v4: collapsedDims +
+    // configetikett-tittel; v3: intervalPicker/timeBounds; v2:
+    // timePeriodsByFreq + singleSelect) — ny nøkkel så gamle cacheoppføringer
+    // (med engelske verdinavn) ikke serveres i 24 t.
+    const cacheKey = 'table_' + tableId + '_meta_v5_' + locale;
 
     if (useCache !== false) {
       const cached = await cacheGet(cacheKey);
@@ -677,7 +690,7 @@
     // 2) serieskeysonly-probe FØRST (de faktiske frekvensene styrer tidsprobene),
     //    deretter TIME_PERIOD-probe pr. frekvens (tidskodene er frekvensspesifikke:
     //    B → '2025-07-15', M → '2025-07', A → '2025').
-    const seriesKeys = await fetchSeriesKeys(flow);
+    const seriesKeys = await fetchSeriesKeys(flow, locale);
     const freqCodes = (seriesKeys && seriesKeys.seriesValues && seriesKeys.seriesValues.FREQ) || null;
     // FREQ-posisjonen i serienøkkelen (IKKE alltid 0 — se filhodet); -1 = flow
     // uten FREQ (FAUCTION); undefined = serieskeysonly feilet (legacy-antakelse 0).
@@ -693,7 +706,9 @@
       timeValues: probe.timeValues,
       timeLabel: probe.timeLabel,
       // Begrens kategoriene til verdier som faktisk finnes i ekte serier.
-      seriesValues: seriesKeys ? seriesKeys.seriesValues : null
+      seriesValues: seriesKeys ? seriesKeys.seriesValues : null,
+      // Lokaliserte verdinavn fra proben — DSD-kodelistene er ofte engelsk-only.
+      valueNames: (seriesKeys && seriesKeys.valueNames) || null
     });
 
     // Gyldige dimensjonskombinasjoner for generisk krysfiltrering i UI-en

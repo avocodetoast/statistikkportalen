@@ -862,6 +862,32 @@
   margin: 0.25rem 0 0.35rem;
 }
 
+/* Sectioned variable-select (NB tables with a measure dimension): filters
+   («Avgrens utvalget») on top, measures+time below (see
+   sectionedDimensionLayout in variable-select-render.js). */
+.variables-section-header {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-primary, #274247);
+  margin: 1.25rem 0 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 2px solid var(--color-border, #d0d0d0);
+}
+
+/* Compact line listing auto-selected single-value dimensions whose cards are
+   hidden («Automatisk valgt: Frekvens = Virkedag · ...»). */
+.auto-selected-info {
+  font-size: 0.8rem;
+  color: var(--color-text-light, #666);
+  margin: 0 0 0.75rem;
+}
+
+/* Single-value dimension cards: auto-selected, hidden from view — the card
+   must stay in the DOM (selection/validation/URL read the cards). */
+.variable-card.card-auto-hidden {
+  display: none;
+}
+
 /* Frequency-aware time filter: periods that don't exist for the selected
    frequency are hidden entirely (see variable-select-status.js
    applyTimeFreqFilter) — a daily date can never match annual/monthly data. */

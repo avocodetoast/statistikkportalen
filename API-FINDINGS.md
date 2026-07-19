@@ -130,6 +130,15 @@ Verifisert mot serieskeysonly for verdipapir-flowene:
   ressursen har både `no` og `en`. Metadata-tittelen bygges derfor fra den
   kuraterte configetiketten (`flow.label`), med DSD-navnet kun som fallback
   — ellers bytter tabelltittelen til engelsk når metadata lastes.
+- **Nøkkeltallenes tilgjengelighet styres av filtrene** (ikke omvendt):
+  i GOVT_PRIMARY_MARKET finnes auksjonsmålene (BC, V_B, Y, P) kun for
+  ISSUE_TYPE=AU og de veide snittmålene (Y_WA, BY_L, BPH, P_WA) kun for BB,
+  mens kjernemålene (C_V, DU, O_V, SD, V_A, V_O, YM) finnes for alle
+  emisjonstyper; i GOVT_SECONDARY_MARKET finnes repovolum (V_R) kun for
+  enkelte motparter. UI-ets kryssfilter er derfor gjort énveis for
+  `role.metric`-dimensjoner (nøkkeltallsvalg begrenser aldri filtrene) og
+  visningen seksjonert i filtre/nøkkeltall — se
+  `sectionedDimensionLayout`/`computeCrossFilterEnabled`.
 
 ## FHI: dimensjonsnavn for tid varierer sterkt mellom kilder (verifisert 2026-07)
 
