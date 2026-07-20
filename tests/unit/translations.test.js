@@ -26,7 +26,10 @@ describe('Translations — nb (default) language', () => {
   it('returns Norwegian strings', () => {
     assert.equal(t('loading.app'), 'Laster...');
     assert.equal(t('nav.home'), 'Forsiden');
-    assert.ok(t('search.heading').includes('statistikkbanken'));
+    // Kildenøytral overskrift — søket dekker SSB, Norges Bank og FHI,
+    // så det SSB-spesifikke «statistikkbanken» skal ikke brukes her.
+    assert.equal(t('search.heading'), 'Søk i statistikken');
+    assert.equal(t('footer.and'), 'og');
   });
 
   // NB: the legacy test.html asserted saveQuery.* keys, but no such keys

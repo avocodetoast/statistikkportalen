@@ -111,10 +111,7 @@ const SEOHead = {
    *  globale AppConfig.source — speiler sourceBrandingFor i
    *  scripts/lib/seo-sources.mjs. */
   _brandingFor(id) {
-    const s = String(id || '');
-    const key = s.indexOf('nb-') === 0 ? 'nb' : (s.indexOf('fhi-') === 0 ? 'fhi' : 'ssb');
-    const srcCfg = AppConfig.sources && AppConfig.sources[key];
-    return (srcCfg && srcCfg.branding) || AppConfig.source || {};
+    return sourceBrandingForTable(id);
   },
 
   _topicLabel(pathIds) {

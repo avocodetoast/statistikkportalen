@@ -38,6 +38,10 @@ function _urnToUrl(href) {
  */
 function _getStatisticShortName(tableId) {
   if (!tableId || typeof BrowserState === 'undefined') return null;
+  // Kortnavn-konvensjonen gjelder bare SSB-eide tabeller — fremmede kilder
+  // (nb-*/fhi-*) kan også ha 3-nivås paths (FHI-register → kategori), men de
+  // skal ikke få en ssb.no-«Om statistikken»-lenke.
+  if (sourceKeyForTableId(tableId) !== 'ssb') return null;
   const tables = BrowserState.allTables;
   if (!Array.isArray(tables)) return null;
   const table = tables.find(t => t.id === tableId);
