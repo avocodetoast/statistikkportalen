@@ -66,7 +66,7 @@ Scripts must load in this order in `index.html`:
 3. `js/translations.js` — `t()`, `tpl()`, `setLanguage()`, `getCurrentApiLang()`; translation dictionary for all UI strings
 4. `js/cache.js` — CacheManager (localStorage/IndexedDB wrapper with TTL)
 5. `js/api.js` — SSBApi (depends on CacheManager)
-6. `js/sources/sdmx-to-jsonstat.js`, `norges-bank-adapter.js`, `fhi-adapter.js`, `ssb-adapter.js`, `source-registry.js` — source adapters + facade. Each adapter pushes itself onto `window.SourceAdapters`; `source-registry.js` loads last and replaces `window.api` with the multi-source facade (depends on `SSBApi`/`window.api` from api.js)
+6. `js/sources/sdmx-to-jsonstat.js`, `source-common.js`, `norges-bank-adapter.js`, `fhi-adapter.js`, `ssb-adapter.js`, `source-registry.js` — source adapters + facade. Each adapter pushes itself onto `window.SourceAdapters`; `source-registry.js` loads last and replaces `window.api` with the multi-source facade (depends on `SSBApi`/`window.api` from api.js)
 7. `js/utils.js` — AppState, renderCurrentView(), helpers (depends on `api`, AppConfig)
 8. `js/router.js` — URLRouter, SSBURLMapper (depends on AppState)
 9. `js/seo-head.js` — SEOHead: keeps canonical/og/meta-description/JSON-LD in sync with the route (depends on URLRouter)
@@ -166,6 +166,7 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 | `sources/norges-bank-adapter.js` | Adapter for Norges Bank's SDMX REST API | pushes onto `window.SourceAdapters` | AppConfig.sources.nb, sdmx-to-jsonstat.js | Enabling more dataflows, changing NB-specific query/key building |
 | `sources/fhi-adapter.js` | Adapter for FHI's open statistics API (native JSON-Stat2) | pushes onto `window.SourceAdapters` | AppConfig.sources.fhi, `data/sources/fhi-catalog.json` | Enabling more FHI sources, changing role-detection heuristics |
 | `sources/sdmx-to-jsonstat.js` | Converts Norges Bank SDMX-JSON responses to JSON-Stat2 | `window.SdmxToJsonStat` | — | Fixing SDMX↔JSON-Stat2 conversion edge cases |
+| `sources/source-common.js` | Shared helpers used by multiple adapters (label lookup, fetch-with-timeout) | `window.SourceCommon` (`pickLabel`, `uiLabelLang`, `fetchWithTimeout`) | — | Adding another cross-adapter helper, changing timeout/label-fallback behaviour |
 | `utils.js` | Global state + shared helpers | `AppState`, `renderCurrentView()`, `escapeHtml()`, `debounce()`, `formatNumber()`, `showError()`, `addEscapeHandler()` | AppConfig, api, URLRouter | Changing AppState shape, adding global helpers, changing error display |
 | `router.js` | Hash-based routing; encode/decode URL state | `URLRouter`, `SSBURLMapper` | AppState, BrowserState | Adding a new route, changing URL param encoding, handling legacy redirects |
 | `seo-head.js` | Route-driven `<head>` sync: canonical, og:-tags, meta description (per-source attribution via `sources.*.branding`), removal of stale generator JSON-LD; lazy-loads `/seo-map.json` (fail-silent) | `SEOHead` | URLRouter, AppConfig, BrowserState | Changing canonical/meta behaviour on navigation, seo-map.json format, source attribution |

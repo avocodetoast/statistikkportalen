@@ -314,15 +314,3 @@ async function quickExportXlsx() {
     showError(t('error.downloadFailed2'), error);
   }
 }
-
-/**
- * Legacy export functions for backwards compatibility
- * These now open the export dialog instead
- */
-function exportToCsv() {
-  showExportDialog();
-}
-
-function exportToExcel() {
-  showExportDialog();
-}

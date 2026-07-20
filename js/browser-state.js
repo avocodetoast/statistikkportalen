@@ -336,6 +336,107 @@ const BrowserState = {
     return counts;
   },
 
+  // ========== Shared filter-dropdown rendering ==========
+
+  FREQUENCY_OPTIONS: [
+    ['Monthly', 'filter.monthly'],
+    ['Quarterly', 'filter.quarterly'],
+    ['Annual', 'filter.annual'],
+    ['Other', 'filter.other']
+  ],
+
+  UPDATED_OPTIONS: [
+    ['1', 'filter.lastDay'],
+    ['7', 'filter.lastWeek'],
+    ['30', 'filter.lastMonth'],
+    ['365', 'filter.lastYear'],
+    ['730', 'filter.last2Years']
+  ],
+
+  /**
+   * Render <option> elements for the frequency `<select>` (search-view.js and
+   * topic-view.js both use this, for both the initial render and the
+   * dynamic dropdown-count update — see calcFrequencyCounts).
+   *
+   * @param {Object} counts - {Monthly, Quarterly, Annual, Other} from calcFrequencyCounts
+   * @param {Object} [opts]
+   * @param {string} [opts.selected] - Currently selected value; when given, marks the
+   *   matching <option> with `selected` inline (initial render). Omit for a dynamic
+   *   update where the caller restores the DOM element's `.value` afterward instead.
+   * @param {string} opts.allLabel - Pre-formatted label (incl. translation + count) for
+   *   the "all" option — callers compute this since the count's semantics differ
+   *   (search-view: subject-hit total, shown only when >0; topic-view: filtered
+   *   subtree total, always shown).
+   * @returns {string}
+   */
+  renderFrequencyFilterOptions(counts, opts) {
+    return this._renderFilterOptions(this.FREQUENCY_OPTIONS, counts, opts);
+  },
+
+  /**
+   * Render <option> elements for the "updated" `<select>` (search-view.js and
+   * topic-view.js). See renderFrequencyFilterOptions for the opts contract.
+   * @param {Object} counts - {'1', '7', '30', '365', '730'} from calcUpdatedCounts
+   */
+  renderUpdatedFilterOptions(counts, opts) {
+    return this._renderFilterOptions(this.UPDATED_OPTIONS, counts, opts);
+  },
+
+  _renderFilterOptions(optionDefs, counts, opts) {
+    const o = opts || {};
+    const hasSelected = typeof o.selected === 'string';
+    const selectedAttr = (value) =>
+      hasSelected ? (o.selected === value ? ' selected' : '') : '';
+    const emptySelectedAttr = hasSelected ? (!o.selected ? ' selected' : '') : '';
+
+    const options = optionDefs.map(([value, labelKey]) =>
+      `<option value="${value}"${selectedAttr(value)}>${t(labelKey)} (${counts[value] || 0})</option>`
+    ).join('\n          ');
+
+    return `<option value=""${emptySelectedAttr}>${o.allLabel}</option>\n          ${options}`;
+  },
+
+  /**
+   * Ensure BrowserState.init() has completed before a browse view renders,
+   * showing a spinner meanwhile and an error message on failure. Shared by
+   * front-page.js/search-view.js/topic-view.js, which otherwise repeated the
+   * same isLoaded-check/spinner/try-catch boilerplate.
+   *
+   * @param {HTMLElement} container
+   * @param {Object} [opts]
+   * @param {function(HTMLElement)} [opts.renderSpinner] - Custom spinner rendering
+   *   (e.g. topic-view's SEO-placeholder skip, front-page's SEO-intro swap-in).
+   *   Defaults to `container.innerHTML = <loading.tables spinner>`.
+   * @returns {Promise<boolean>} true if loaded (caller should proceed with rendering);
+   *   false if init failed (an error message has already been rendered into
+   *   `container` — caller should return immediately).
+   */
+  async ensureLoaded(container, opts) {
+    if (this.isLoaded) return true;
+
+    const renderSpinner = (opts && opts.renderSpinner) || ((c) => {
+      c.innerHTML = `
+        <div class="loading-spinner">
+          <p>${t('loading.tables')}</p>
+        </div>
+      `;
+    });
+    renderSpinner(container);
+
+    try {
+      await this.init();
+      return true;
+    } catch (error) {
+      container.innerHTML = `
+        <div class="error-message">
+          <h3>${t('error.loadData')}</h3>
+          <p>${escapeHtml(error.message)}</p>
+        </div>
+      `;
+      return false;
+    }
+  },
+
   // ========== Shared rendering helpers ==========
 
   /**

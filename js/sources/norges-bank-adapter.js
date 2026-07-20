@@ -119,17 +119,8 @@
     const l = String(lang || 'no').toLowerCase();
     return l === 'nb' ? 'no' : (l === 'en' ? 'en' : 'no');
   }
-  function uiLabelLang(lang) {
-    // config-labels bruker {nb,en}. 'no'→'nb'.
-    const l = String(lang || 'nb').toLowerCase();
-    return l === 'no' ? 'nb' : l;
-  }
-  /** Slå opp en {nb,en}-label for gjeldende språk med nb-fallback. */
-  function pickLabel(labelObj, lang) {
-    if (!labelObj) return '';
-    const l = uiLabelLang(lang);
-    return labelObj[l] || labelObj.nb || labelObj.en || '';
-  }
+  // Delt med fhi-adapter.js — se js/sources/source-common.js.
+  const pickLabel = window.SourceCommon.pickLabel;
 
   let _cache = null;
   function cache() {
@@ -163,19 +154,9 @@
     // leses fra AppConfig.sources.fetchTimeoutMs med 15 s fallback.
     const timeoutMs = (window.AppConfig && window.AppConfig.sources &&
       window.AppConfig.sources.fetchTimeoutMs) || 15000;
-    let res;
-    try {
-      res = await fetch(url, {
-        headers: { Accept: 'application/json, */*' },
-        signal: AbortSignal.timeout(timeoutMs)
-      });
-    } catch (e) {
-      // AbortSignal.timeout gir DOMException 'TimeoutError' (noen miljøer 'AbortError').
-      if (e && (e.name === 'TimeoutError' || e.name === 'AbortError')) {
-        throw new Error('[NBAdapter] Tidsavbrudd etter ' + timeoutMs + ' ms mot Norges Bank: ' + url);
-      }
-      throw e; // Ekte nettverksfeil.
-    }
+    const res = await window.SourceCommon.fetchWithTimeout(url,
+      { headers: { Accept: 'application/json, */*' } },
+      { timeoutMs, timeoutErrorPrefix: '[NBAdapter] Tidsavbrudd' });
     if (res.status === 404) return { status: 404, json: null };
     if (!res.ok) {
       // Norges Bank returnerer XML-feil; vi trenger bare statuskoden.

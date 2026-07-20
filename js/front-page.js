@@ -6,35 +6,26 @@
  */
 
 async function renderFrontPage(container) {
-  // Show loading if data not ready
-  if (!BrowserState.isLoaded) {
-    const spinnerHTML = `
-      <div class="loading-spinner">
-        <p>${t('loading.tables')}</p>
-      </div>
-    `;
-    // Pre-rendret SEO-forside: behold søkefeltet og emnegridet (som speiler
-    // denne visningen) som plassholder, og vis spinneren bare der «Nylig
-    // oppdaterte tabeller» kommer — siden blinker ikke ved oppstart
-    // (se scripts/generate-seo-pages.mjs)
-    const seoIntro = seoContentMatchesRoute([]) && container.querySelector('.front-seo-intro');
-    if (seoIntro) {
-      seoIntro.outerHTML = spinnerHTML;
-    } else {
-      container.innerHTML = spinnerHTML;
-    }
-    try {
-      await BrowserState.init();
-    } catch (error) {
-      container.innerHTML = `
-        <div class="error-message">
-          <h3>${t('error.loadData')}</h3>
-          <p>${escapeHtml(error.message)}</p>
+  // Pre-rendret SEO-forside: behold søkefeltet og emnegridet (som speiler
+  // denne visningen) som plassholder, og vis spinneren bare der «Nylig
+  // oppdaterte tabeller» kommer — siden blinker ikke ved oppstart
+  // (se scripts/generate-seo-pages.mjs)
+  const loaded = await BrowserState.ensureLoaded(container, {
+    renderSpinner: (c) => {
+      const spinnerHTML = `
+        <div class="loading-spinner">
+          <p>${t('loading.tables')}</p>
         </div>
       `;
-      return;
+      const seoIntro = seoContentMatchesRoute([]) && c.querySelector('.front-seo-intro');
+      if (seoIntro) {
+        seoIntro.outerHTML = spinnerHTML;
+      } else {
+        c.innerHTML = spinnerHTML;
+      }
     }
-  }
+  });
+  if (!loaded) return;
 
   const mh = BrowserState.menuHierarchy;
   const recentBuckets = _collectRecentUpdateGroups(mh, BrowserState.recentTables);
