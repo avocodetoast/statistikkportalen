@@ -32,10 +32,16 @@ describe('Translations — nb (default) language', () => {
     assert.equal(t('footer.and'), 'og');
   });
 
-  // NB: the legacy test.html asserted saveQuery.* keys, but no such keys
-  // exist in the dictionary — table-save-query.js hard-codes its Norwegian
-  // strings (a known convention gap). Re-add assertions here when that
-  // dialog is migrated to t().
+  it('has save-query dialog labels (table-save-query.js)', () => {
+    for (const key of [
+      'saveQuery.noActiveQuery', 'saveQuery.dialogTitle', 'saveQuery.saving',
+      'saveQuery.saved', 'saveQuery.openInPortal', 'saveQuery.openInSource',
+      'saveQuery.copy', 'saveQuery.copied', 'saveQuery.openInSourceLink',
+      'saveQuery.noIdInResponse', 'saveQuery.saveFailed'
+    ]) {
+      assert.ok(keyExists(key), `missing nb key: ${key}`);
+    }
+  });
 
   it('returns the key itself for unknown keys', () => {
     assert.equal(t('no.such.key'), 'no.such.key');
@@ -60,7 +66,10 @@ describe('Translations — English', () => {
     t_.after(() => setLanguage('nb'));
 
     assert.equal(t('nav.home'), 'Home');
-    for (const key of ['subject.group.arbeid', 'subject.name.al']) {
+    for (const key of [
+      'subject.group.arbeid', 'subject.name.al',
+      'saveQuery.dialogTitle', 'saveQuery.openInSource'
+    ]) {
       assert.ok(keyExists(key), `missing en key: ${key}`);
     }
   });
