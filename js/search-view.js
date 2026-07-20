@@ -13,25 +13,7 @@
 let _searchToken = 0;
 
 async function renderSearchView(container) {
-  // Ensure data is loaded
-  if (!BrowserState.isLoaded) {
-    container.innerHTML = `
-      <div class="loading-spinner">
-        <p>${t('loading.tables')}</p>
-      </div>
-    `;
-    try {
-      await BrowserState.init();
-    } catch (error) {
-      container.innerHTML = `
-        <div class="error-message">
-          <h3>${t('error.loadData')}</h3>
-          <p>${escapeHtml(error.message)}</p>
-        </div>
-      `;
-      return;
-    }
-  }
+  if (!(await BrowserState.ensureLoaded(container))) return;
 
   const mh = BrowserState.menuHierarchy;
   const filters = BrowserState.searchFilters;
@@ -62,35 +44,21 @@ async function renderSearchView(container) {
         </label>
 
         <select id="subject-filter" class="filter-select">
-          <option value="">${t('filter.allSubjects')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
-          ${Object.values(mh.subjectGroups).map(group => `
-            <optgroup label="${escapeHtml(t('subject.group.' + group.id))}">
-              ${group.subjects.map(subjectCode => {
-                const subjectName = t('subject.name.' + subjectCode) || mh.subjectNames[subjectCode];
-                const count = hitCounts[subjectCode] || 0;
-                const disabled = count === 0 ? 'disabled' : '';
-                const selected = filters.subjectFilter === subjectCode ? 'selected' : '';
-                return `<option value="${subjectCode}" ${disabled} ${selected}>${escapeHtml(subjectName)} (${count})</option>`;
-              }).join('')}
-            </optgroup>
-          `).join('')}
+          ${_searchRenderSubjectOptions(mh, hitCounts, totalCount, filters.subjectFilter)}
         </select>
 
         <select id="frequency-filter" class="filter-select">
-          <option value="" ${!filters.frequencyFilter ? 'selected' : ''}>${t('filter.allFrequencies')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
-          <option value="Monthly" ${filters.frequencyFilter === 'Monthly' ? 'selected' : ''}>${t('filter.monthly')} (${frequencyCounts['Monthly'] || 0})</option>
-          <option value="Quarterly" ${filters.frequencyFilter === 'Quarterly' ? 'selected' : ''}>${t('filter.quarterly')} (${frequencyCounts['Quarterly'] || 0})</option>
-          <option value="Annual" ${filters.frequencyFilter === 'Annual' ? 'selected' : ''}>${t('filter.annual')} (${frequencyCounts['Annual'] || 0})</option>
-          <option value="Other" ${filters.frequencyFilter === 'Other' ? 'selected' : ''}>${t('filter.other')} (${frequencyCounts['Other'] || 0})</option>
+          ${BrowserState.renderFrequencyFilterOptions(frequencyCounts, {
+            selected: filters.frequencyFilter,
+            allLabel: `${t('filter.allFrequencies')}${totalCount > 0 ? ` (${totalCount})` : ''}`
+          })}
         </select>
 
         <select id="updated-filter" class="filter-select">
-          <option value="" ${!filters.updatedFilter ? 'selected' : ''}>${t('filter.allPeriods')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
-          <option value="1" ${filters.updatedFilter === '1' ? 'selected' : ''}>${t('filter.lastDay')}${updatedCounts['1'] !== undefined ? ` (${updatedCounts['1']})` : ''}</option>
-          <option value="7" ${filters.updatedFilter === '7' ? 'selected' : ''}>${t('filter.lastWeek')}${updatedCounts['7'] !== undefined ? ` (${updatedCounts['7']})` : ''}</option>
-          <option value="30" ${filters.updatedFilter === '30' ? 'selected' : ''}>${t('filter.lastMonth')}${updatedCounts['30'] !== undefined ? ` (${updatedCounts['30']})` : ''}</option>
-          <option value="365" ${filters.updatedFilter === '365' ? 'selected' : ''}>${t('filter.lastYear')}${updatedCounts['365'] !== undefined ? ` (${updatedCounts['365']})` : ''}</option>
-          <option value="730" ${filters.updatedFilter === '730' ? 'selected' : ''}>${t('filter.last2Years')}${updatedCounts['730'] !== undefined ? ` (${updatedCounts['730']})` : ''}</option>
+          ${BrowserState.renderUpdatedFilterOptions(updatedCounts, {
+            selected: filters.updatedFilter,
+            allLabel: `${t('filter.allPeriods')}${totalCount > 0 ? ` (${totalCount})` : ''}`
+          })}
         </select>
       </div>
 
@@ -344,19 +312,7 @@ function _searchUpdateDropdownCounts() {
   if (subjectFilterEl) {
     const selectedValue = subjectFilterEl.value;
 
-    subjectFilterEl.innerHTML = `
-      <option value="">${t('filter.allSubjects')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
-      ${Object.entries(mh.subjectGroups).map(([id, group]) => `
-        <optgroup label="${escapeHtml(t('subject.group.' + group.id))}">
-          ${group.subjects.map(subjectCode => {
-            const subjectName = t('subject.name.' + subjectCode) || mh.subjectNames[subjectCode];
-            const count = hitCounts[subjectCode] || 0;
-            const disabled = count === 0 ? 'disabled' : '';
-            return `<option value="${subjectCode}" ${disabled}>${escapeHtml(subjectName)} (${count})</option>`;
-          }).join('')}
-        </optgroup>
-      `).join('')}
-    `;
+    subjectFilterEl.innerHTML = _searchRenderSubjectOptions(mh, hitCounts, totalCount);
 
     if (selectedValue && hitCounts[selectedValue] > 0) {
       subjectFilterEl.value = selectedValue;
@@ -371,13 +327,9 @@ function _searchUpdateDropdownCounts() {
     const frequencyCounts = BrowserState.calcFrequencyCounts(mh.allTables, filters);
     const selectedValue = frequencyFilterEl.value;
 
-    frequencyFilterEl.innerHTML = `
-      <option value="">${t('filter.allFrequencies')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
-      <option value="Monthly">${t('filter.monthly')} (${frequencyCounts['Monthly'] || 0})</option>
-      <option value="Quarterly">${t('filter.quarterly')} (${frequencyCounts['Quarterly'] || 0})</option>
-      <option value="Annual">${t('filter.annual')} (${frequencyCounts['Annual'] || 0})</option>
-      <option value="Other">${t('filter.other')} (${frequencyCounts['Other'] || 0})</option>
-    `;
+    frequencyFilterEl.innerHTML = BrowserState.renderFrequencyFilterOptions(frequencyCounts, {
+      allLabel: `${t('filter.allFrequencies')}${totalCount > 0 ? ` (${totalCount})` : ''}`
+    });
 
     if (selectedValue) {
       frequencyFilterEl.value = selectedValue;
@@ -389,19 +341,38 @@ function _searchUpdateDropdownCounts() {
     const updatedCounts = _searchCalcUpdatedFilterCounts(mh, filters);
     const selectedValue = updatedFilterEl.value;
 
-    updatedFilterEl.innerHTML = `
-      <option value="">${t('filter.allPeriods')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
-      <option value="1">${t('filter.lastDay')} (${updatedCounts['1'] || 0})</option>
-      <option value="7">${t('filter.lastWeek')} (${updatedCounts['7'] || 0})</option>
-      <option value="30">${t('filter.lastMonth')} (${updatedCounts['30'] || 0})</option>
-      <option value="365">${t('filter.lastYear')} (${updatedCounts['365'] || 0})</option>
-      <option value="730">${t('filter.last2Years')} (${updatedCounts['730'] || 0})</option>
-    `;
+    updatedFilterEl.innerHTML = BrowserState.renderUpdatedFilterOptions(updatedCounts, {
+      allLabel: `${t('filter.allPeriods')}${totalCount > 0 ? ` (${totalCount})` : ''}`
+    });
 
     if (selectedValue) {
       updatedFilterEl.value = selectedValue;
     }
   }
+}
+
+/**
+ * Render <option>/<optgroup> elements for the subject `<select>`. Used both
+ * by the initial render (with `selected` so the current filter is marked
+ * inline) and _searchUpdateDropdownCounts (without `selected` — the caller
+ * restores the DOM element's `.value` afterward instead).
+ */
+function _searchRenderSubjectOptions(mh, hitCounts, totalCount, selected) {
+  const hasSelected = typeof selected === 'string';
+  return `
+    <option value="">${t('filter.allSubjects')}${totalCount > 0 ? ` (${totalCount})` : ''}</option>
+    ${Object.values(mh.subjectGroups).map(group => `
+      <optgroup label="${escapeHtml(t('subject.group.' + group.id))}">
+        ${group.subjects.map(subjectCode => {
+          const subjectName = t('subject.name.' + subjectCode) || mh.subjectNames[subjectCode];
+          const count = hitCounts[subjectCode] || 0;
+          const disabled = count === 0 ? 'disabled' : '';
+          const selectedAttr = hasSelected && selected === subjectCode ? 'selected' : '';
+          return `<option value="${subjectCode}" ${disabled} ${selectedAttr}>${escapeHtml(subjectName)} (${count})</option>`;
+        }).join('')}
+      </optgroup>
+    `).join('')}
+  `;
 }
 
 /**

@@ -136,16 +136,10 @@
 
   // ---- Språk-/cache-hjelpere ----
 
-  function uiLabelLang(lang) {
-    const l = String(lang || (typeof getCurrentApiLang === 'function' ? getCurrentApiLang() : 'no')).toLowerCase();
-    return l === 'no' ? 'nb' : l;
-  }
-  /** Slå opp en {nb,en}-label for gjeldende språk med nb-fallback (FHI-noder har kun nb). */
-  function pickLabel(labelObj, lang) {
-    if (!labelObj) return '';
-    const l = uiLabelLang(lang);
-    return labelObj[l] || labelObj.nb || labelObj.en || '';
-  }
+  // Delt med norges-bank-adapter.js — se js/sources/source-common.js. FHI-noder
+  // har kun nb-etiketter, så pickLabel-fallbacken (nb→en) dekker det uansett.
+  const pickLabel = window.SourceCommon.pickLabel;
+  const uiLabelLang = window.SourceCommon.uiLabelLang;
 
   // ---- Pregenerert katalog (data/sources/fhi-catalog.json, se
   // scripts/update-fhi-catalog.mjs) — tittel/periode-berikelse bygget ved
@@ -161,10 +155,9 @@
   let _catalogPromise = null;
   function getCatalog() {
     if (_catalogPromise) return _catalogPromise;
-    _catalogPromise = fetch('data/sources/fhi-catalog.json', {
-      headers: JSON_HEADERS,
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS)
-    })
+    _catalogPromise = window.SourceCommon.fetchWithTimeout('data/sources/fhi-catalog.json',
+      { headers: JSON_HEADERS },
+      { timeoutMs: FETCH_TIMEOUT_MS, timeoutErrorPrefix: '[FHIAdapter] Tidsavbrudd' })
       .then(res => {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();
@@ -225,8 +218,8 @@
    * og 422 «One or more validation errors occurred»).
    */
   async function fetchJson(url, options) {
-    const opts = Object.assign({ signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }, options || {});
-    const res = await fetch(url, opts);
+    const res = await window.SourceCommon.fetchWithTimeout(url, options,
+      { timeoutMs: FETCH_TIMEOUT_MS, timeoutErrorPrefix: '[FHIAdapter] Tidsavbrudd' });
     if (!res.ok) {
       let message = '';
       try {

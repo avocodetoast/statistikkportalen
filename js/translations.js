@@ -260,6 +260,19 @@ const translations = {
     'export.cancel':          'Avbryt',
     'export.download':        'Last ned',
 
+    // Save query dialog (table-save-query.js)
+    'saveQuery.noActiveQuery':   'Ingen aktiv spørring å lagre',
+    'saveQuery.dialogTitle':     'Få lenke til spørringen',
+    'saveQuery.saving':          'Lagrer spørring hos {0}...',
+    'saveQuery.saved':           'Spørringen er lagret. Bruk lenkene nedenfor for å dele eller gjenåpne den.',
+    'saveQuery.openInPortal':    'Åpne i {0}:',
+    'saveQuery.openInSource':    'Åpne i {0}s statistikkbank:',
+    'saveQuery.copy':            'Kopier',
+    'saveQuery.copied':          'Kopiert!',
+    'saveQuery.openInSourceLink': 'Åpne i {0}s statistikkbank ↗',
+    'saveQuery.noIdInResponse':  'Ingen ID i svar fra API',
+    'saveQuery.saveFailed':      'Kunne ikke lagre spørringen: {0}',
+
     // Footer
     'footer.dataFrom':    'Data fra',
     'footer.and':         'og',
@@ -529,6 +542,19 @@ const translations = {
     'export.cancel':          'Cancel',
     'export.download':        'Download',
 
+    // Save query dialog (table-save-query.js)
+    'saveQuery.noActiveQuery':   'No active query to save',
+    'saveQuery.dialogTitle':     'Get a link to this query',
+    'saveQuery.saving':          'Saving query with {0}...',
+    'saveQuery.saved':           'The query has been saved. Use the links below to share or reopen it.',
+    'saveQuery.openInPortal':    'Open in {0}:',
+    'saveQuery.openInSource':    'Open in {0}’s StatBank:',
+    'saveQuery.copy':            'Copy',
+    'saveQuery.copied':          'Copied!',
+    'saveQuery.openInSourceLink': 'Open in {0}’s StatBank ↗',
+    'saveQuery.noIdInResponse':  'No ID in API response',
+    'saveQuery.saveFailed':      'Could not save the query: {0}',
+
     // Footer
     'footer.dataFrom':    'Data from',
     'footer.and':         'and',
@@ -796,6 +822,19 @@ const translations = {
     'export.dataPoints':      'Tabellen inneh\u00E5ller {0} datapunkter.',
     'export.cancel':          'Avbryt',
     'export.download':        'Ladda ned',
+
+    // Save query dialog (table-save-query.js)
+    'saveQuery.noActiveQuery':   'Ingen aktiv fråga att spara',
+    'saveQuery.dialogTitle':     'Få en länk till frågan',
+    'saveQuery.saving':          'Sparar frågan hos {0}...',
+    'saveQuery.saved':           'Frågan har sparats. Använd länkarna nedan för att dela eller öppna den igen.',
+    'saveQuery.openInPortal':    'Öppna i {0}:',
+    'saveQuery.openInSource':    'Öppna i {0}s statistikdatabas:',
+    'saveQuery.copy':            'Kopiera',
+    'saveQuery.copied':          'Kopierat!',
+    'saveQuery.openInSourceLink': 'Öppna i {0}s statistikdatabas ↗',
+    'saveQuery.noIdInResponse':  'Inget ID i svaret från API',
+    'saveQuery.saveFailed':      'Kunde inte spara frågan: {0}',
 
     // Footer
     'footer.dataFrom':    'Data fr\u00E5n',

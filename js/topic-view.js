@@ -12,30 +12,21 @@
  */
 
 async function renderTopicView(container) {
-  // Ensure data is loaded
-  if (!BrowserState.isLoaded) {
-    // Pre-rendret SEO-emneside for samme rute: behold det statiske innholdet
-    // som plassholder under lastingen i stedet for spinner, så siden ikke
-    // blinker ved oppstart (se scripts/generate-seo-pages.mjs)
-    if (!seoContentMatchesRoute(AppState.topicPath)) {
-      container.innerHTML = `
-        <div class="loading-spinner">
-          <p>${t('loading.tables')}</p>
-        </div>
-      `;
+  // Pre-rendret SEO-emneside for samme rute: behold det statiske innholdet
+  // som plassholder under lastingen i stedet for spinner, så siden ikke
+  // blinker ved oppstart (se scripts/generate-seo-pages.mjs)
+  const loaded = await BrowserState.ensureLoaded(container, {
+    renderSpinner: (c) => {
+      if (!seoContentMatchesRoute(AppState.topicPath)) {
+        c.innerHTML = `
+          <div class="loading-spinner">
+            <p>${t('loading.tables')}</p>
+          </div>
+        `;
+      }
     }
-    try {
-      await BrowserState.init();
-    } catch (error) {
-      container.innerHTML = `
-        <div class="error-message">
-          <h3>${t('error.loadData')}</h3>
-          <p>${escapeHtml(error.message)}</p>
-        </div>
-      `;
-      return;
-    }
-  }
+  });
+  if (!loaded) return;
 
   const mh = BrowserState.menuHierarchy;
   const path = AppState.topicPath || [];
@@ -102,15 +93,7 @@ function _topicRenderGroupSubjects(container, mh, groupId) {
 
       <h1>${escapeHtml(t('subject.group.' + groupId))}</h1>
 
-      <div class="subtopic-cards">
-        ${subjects.map(subject => `
-          <div class="subtopic-card" data-subject-id="${subject.id}">
-            <h3>${escapeHtml(subject.label)}</h3>
-            <p>${subject.tableCount} ${subject.tableCount === 1 ? t('unit.table.one') : t('unit.table.many')}</p>
-            <span class="card-arrow">&rarr;</span>
-          </div>
-        `).join('')}
-      </div>
+      ${_topicRenderCardGrid('subtopic-cards', 'subtopic-card', subjects, 'subject-id')}
     </div>
   `;
 
@@ -124,6 +107,25 @@ function _topicRenderGroupSubjects(container, mh, groupId) {
       URLRouter.handleRoute();
     });
   });
+}
+
+/**
+ * Render a grid of navigation cards ({id, label, tableCount} items) — shared
+ * by the group-subjects, subtopics, and categories card levels, which only
+ * differ in CSS class names and the data-* attribute used for navigation.
+ */
+function _topicRenderCardGrid(gridClass, cardClass, items, dataAttr) {
+  return `
+    <div class="${gridClass}">
+      ${items.map(item => `
+        <div class="${cardClass}" data-${dataAttr}="${item.id}">
+          <h3>${escapeHtml(item.label)}</h3>
+          <p>${item.tableCount} ${item.tableCount === 1 ? t('unit.table.one') : t('unit.table.many')}</p>
+          <span class="card-arrow">&rarr;</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
 
 /**
@@ -144,15 +146,7 @@ function _topicRenderSubtopics(container, mh, path) {
 
       <h1>${escapeHtml(subjectName)}</h1>
 
-      <div class="subtopic-cards">
-        ${subtopics.map(subtopic => `
-          <div class="subtopic-card" data-subtopic-id="${subtopic.id}">
-            <h3>${escapeHtml(subtopic.label)}</h3>
-            <p>${subtopic.tableCount} ${subtopic.tableCount === 1 ? t('unit.table.one') : t('unit.table.many')}</p>
-            <span class="card-arrow">&rarr;</span>
-          </div>
-        `).join('')}
-      </div>
+      ${_topicRenderCardGrid('subtopic-cards', 'subtopic-card', subtopics, 'subtopic-id')}
     </div>
   `;
 
@@ -191,15 +185,7 @@ function _topicRenderCategories(container, mh, path) {
 
       <h1>${escapeHtml(breadcrumbs[breadcrumbs.length - 1].label)}</h1>
 
-      <div class="category-cards">
-        ${categories.map(cat => `
-          <div class="category-card" data-category-id="${cat.id}">
-            <h3>${escapeHtml(cat.label)}</h3>
-            <p>${cat.tableCount} ${cat.tableCount === 1 ? t('unit.table.one') : t('unit.table.many')}</p>
-            <span class="card-arrow">&rarr;</span>
-          </div>
-        `).join('')}
-      </div>
+      ${_topicRenderCardGrid('category-cards', 'category-card', categories, 'category-id')}
     </div>
   `;
 
@@ -248,20 +234,17 @@ function _topicRenderTables(container, mh, path) {
         </label>
 
         <select id="topic-frequency-filter" class="filter-select">
-          <option value="" ${!filters.frequencyFilter ? 'selected' : ''}>${t('filter.allFrequencies')} (${totalFiltered})</option>
-          <option value="Monthly" ${filters.frequencyFilter === 'Monthly' ? 'selected' : ''}>${t('filter.monthly')} (${frequencyCounts['Monthly'] || 0})</option>
-          <option value="Quarterly" ${filters.frequencyFilter === 'Quarterly' ? 'selected' : ''}>${t('filter.quarterly')} (${frequencyCounts['Quarterly'] || 0})</option>
-          <option value="Annual" ${filters.frequencyFilter === 'Annual' ? 'selected' : ''}>${t('filter.annual')} (${frequencyCounts['Annual'] || 0})</option>
-          <option value="Other" ${filters.frequencyFilter === 'Other' ? 'selected' : ''}>${t('filter.other')} (${frequencyCounts['Other'] || 0})</option>
+          ${BrowserState.renderFrequencyFilterOptions(frequencyCounts, {
+            selected: filters.frequencyFilter,
+            allLabel: `${t('filter.allFrequencies')} (${totalFiltered})`
+          })}
         </select>
 
         <select id="topic-updated-filter" class="filter-select">
-          <option value="" ${!filters.updatedFilter ? 'selected' : ''}>${t('filter.allPeriods')} (${totalFiltered})</option>
-          <option value="1" ${filters.updatedFilter === '1' ? 'selected' : ''}>${t('filter.lastDay')} (${updatedCounts['1'] || 0})</option>
-          <option value="7" ${filters.updatedFilter === '7' ? 'selected' : ''}>${t('filter.lastWeek')} (${updatedCounts['7'] || 0})</option>
-          <option value="30" ${filters.updatedFilter === '30' ? 'selected' : ''}>${t('filter.lastMonth')} (${updatedCounts['30'] || 0})</option>
-          <option value="365" ${filters.updatedFilter === '365' ? 'selected' : ''}>${t('filter.lastYear')} (${updatedCounts['365'] || 0})</option>
-          <option value="730" ${filters.updatedFilter === '730' ? 'selected' : ''}>${t('filter.last2Years')} (${updatedCounts['730'] || 0})</option>
+          ${BrowserState.renderUpdatedFilterOptions(updatedCounts, {
+            selected: filters.updatedFilter,
+            allLabel: `${t('filter.allPeriods')} (${totalFiltered})`
+          })}
         </select>
       </div>
 
@@ -396,27 +379,18 @@ function _topicUpdateDropdownCounts(subtreeTables) {
   const freqEl = document.getElementById('topic-frequency-filter');
   if (freqEl) {
     const selected = freqEl.value;
-    freqEl.innerHTML = `
-      <option value="">${t('filter.allFrequencies')} (${totalFiltered})</option>
-      <option value="Monthly">${t('filter.monthly')} (${frequencyCounts['Monthly'] || 0})</option>
-      <option value="Quarterly">${t('filter.quarterly')} (${frequencyCounts['Quarterly'] || 0})</option>
-      <option value="Annual">${t('filter.annual')} (${frequencyCounts['Annual'] || 0})</option>
-      <option value="Other">${t('filter.other')} (${frequencyCounts['Other'] || 0})</option>
-    `;
+    freqEl.innerHTML = BrowserState.renderFrequencyFilterOptions(frequencyCounts, {
+      allLabel: `${t('filter.allFrequencies')} (${totalFiltered})`
+    });
     if (selected) freqEl.value = selected;
   }
 
   const updEl = document.getElementById('topic-updated-filter');
   if (updEl) {
     const selected = updEl.value;
-    updEl.innerHTML = `
-      <option value="">${t('filter.allPeriods')} (${totalFiltered})</option>
-      <option value="1">${t('filter.lastDay')} (${updatedCounts['1'] || 0})</option>
-      <option value="7">${t('filter.lastWeek')} (${updatedCounts['7'] || 0})</option>
-      <option value="30">${t('filter.lastMonth')} (${updatedCounts['30'] || 0})</option>
-      <option value="365">${t('filter.lastYear')} (${updatedCounts['365'] || 0})</option>
-      <option value="730">${t('filter.last2Years')} (${updatedCounts['730'] || 0})</option>
-    `;
+    updEl.innerHTML = BrowserState.renderUpdatedFilterOptions(updatedCounts, {
+      allLabel: `${t('filter.allPeriods')} (${totalFiltered})`
+    });
     if (selected) updEl.value = selected;
   }
 }

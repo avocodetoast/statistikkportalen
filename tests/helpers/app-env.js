@@ -156,6 +156,7 @@ const SCRIPTS = {
     'js/cache.js',
     'js/api.js',
     'js/sources/sdmx-to-jsonstat.js',
+    'js/sources/source-common.js',
     'js/sources/norges-bank-adapter.js',
     'js/sources/fhi-adapter.js',
     'js/sources/ssb-adapter.js',
