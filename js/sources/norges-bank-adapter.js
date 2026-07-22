@@ -13,8 +13,10 @@
  *   .enabled    // hopp over registrering hvis false
  *   .dataflows  // [{ flow, version, tableId, path, label:{nb,en},
  *               //    discontinued?, probeKey?, collapseDims? }]
- *               // path: ['bf','nb-renter'] = én emnetre-plassering; alternativt
- *               // paths: [['bf','nb-renter'], …] for flere plasseringer.
+ *               // path: [subjekt, ...noder] = én emnetre-plassering med
+ *               //   vilkårlig dybde (f.eks. ['bf','bf03','renter','nb-pengepolitikk']
+ *               //   der bf03/renter er SSB-passthrough-id-er); alternativt
+ *               // paths: [[subjekt, ...noder], …] for flere plasseringer.
  *               // discontinued: true = avsluttet serie (GOVT_IRS).
  *               // probeKey: smal probenøkkel for tunge flows (se probeKeyFor).
  *               // collapseDims: {anchor, dims} = kjennetegns-dimensjoner som
@@ -109,9 +111,12 @@
     REGNET: 'Regionalt nettverk: indikatorer fra Norges Banks kvartalsvise bedriftsundersøkelse.'
   };
 
-  // Emnesubjektets sortCode (samsvarer med SSBs 'bf'-node; kosmetisk siden
-  // SSB-tabeller oppretter subjektnoden først). '9xx'-nodene sist blant undertemaene.
-  const SUBJECT_SORTCODE = { bf: '0000006' };
+  // Emnesubjektenes sortCode (samsvarer med SSBs egne subjektnoder; kosmetisk
+  // siden SSB-tabeller oppretter subjektnodene først). NB-tabellene plasseres nå
+  // under flere subjekter (bf/nk/os/ei/ut). '9xx'-nodene sist blant undertemaene.
+  const SUBJECT_SORTCODE = {
+    bf: '0000006', nk: '0000066', os: '0000076', ei: '0000030', ut: '0000115'
+  };
 
   // ---- Språk-/cache-hjelpere ----
 
@@ -193,8 +198,11 @@
 
     return dataflows.map((flow, i) => {
       // En flow kan plasseres flere steder i emnetreet via `paths` (array av
-      // [subjektkode, node-id]-par); legacy-formen `path` gir én plassering.
-      // Emnesubjekt/node-id-ene må finnes i subjects.js/AppConfig.sourceNodes.
+      // plasseringer). Hver plassering er [subjektkode, ...node-id-er] med
+      // vilkårlig dybde: subjektet + én eller flere noder (SSB-passthrough-id-er
+      // som f.eks. 'bf03'/'renter' + en NB-leaf-node). Legacy-formen `path` gir
+      // én plassering. Subjektkoden må finnes i subjects.js og hver node-id i
+      // AppConfig.sourceNodes.
       const placements = (Array.isArray(flow.paths) && flow.paths.length)
         ? flow.paths
         : [flow.path];
@@ -220,7 +228,7 @@
         discontinued: flow.discontinued === true,
         variableNames: (VARIABLE_NAMES[flow.flow] || []).slice(),
         subjectCode: subjectId,
-        paths: placements.map(p => [makeSubjectSeg(p[0]), makeNodeSeg(p[1])]),
+        paths: placements.map(p => [makeSubjectSeg(p[0]), ...p.slice(1).map(makeNodeSeg)]),
         source: 'Norges Bank'
       };
     });

@@ -99,6 +99,27 @@ describe('FHIAdapter — multi-path katalogbygging', () => {
     assert.equal(mfr.paths.length, 1);
     assert.equal(mfr.paths[0][1].id, 'fhi-mfr');
   });
+
+  it('cfg.paths[source] med vilkårlig dybde emitterer alle segmenter', async () => {
+    // Dyp kryssplassering: subjekt + SSB-passthrough-noder + FHI-leaf.
+    app.AppConfig.sources.fhi.paths = {
+      daar: [['be', 'be06', 'dode', 'fhi-daar']]
+    };
+    const { tables } = await adapter.getTables({});
+    const daar = tables.find(t => t.id === 'fhi-daar-301');
+    assert.ok(daar);
+    assert.equal(daar.paths.length, 1);
+    const path = daar.paths[0];
+    assert.equal(path.length, 4);
+    assert.deepEqual(path.map(s => s.id), ['be', 'be06', 'dode', 'fhi-daar']);
+    // Passthrough-segmentene henter label/sortCode fra sourceNodes (SSB-verdier)
+    assert.equal(path[1].label, app.AppConfig.sourceNodes['be06'].label.nb);
+    assert.equal(path[2].label, app.AppConfig.sourceNodes['dode'].label.nb);
+    path.forEach(seg => {
+      assert.ok(typeof seg.label === 'string' && seg.label.length > 0);
+      assert.ok(typeof seg.sortCode === 'string' && seg.sortCode.length > 0);
+    });
+  });
 });
 
 describe('FHIAdapter — feilkontrakt for katalogen', () => {

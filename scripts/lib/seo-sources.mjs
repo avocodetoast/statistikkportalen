@@ -65,24 +65,31 @@ export function sourceBrandingFor(id, appConfig) {
 
 // Emnesubjektenes sortCode (kosmetisk — SSB-tabellene oppretter subjektnodene
 // først i praksis). Union av adapternes SUBJECT_SORTCODE-konstanter.
-const SUBJECT_SORTCODE = { bf: '0000006', he: '0000004' };
+const SUBJECT_SORTCODE = {
+  bf: '0000006', nk: '0000066', os: '0000076', ei: '0000030', ut: '0000115',
+  he: '0000034', be: '0000016', in: '0000042',
+};
 
-/** Path-segmenter [{id,label,sortCode}, …] for en [subjektkode, node-id]-
- *  plassering, med labels fra subjects.js og AppConfig.sourceNodes. */
+/** Path-segmenter [{id,label,sortCode}, …] for en plassering
+ *  [subjektkode, ...node-id-er] med vilkårlig dybde (subjekt + én eller flere
+ *  noder), med labels fra subjects.js og AppConfig.sourceNodes. Speiler
+ *  buildCatalogue i norges-bank-adapter.js. */
 function buildPathSegments(placement, subjectNames, sourceNodes, lang) {
-  const [subjectId, nodeId] = placement;
-  const node = sourceNodes[nodeId] || {};
+  const [subjectId, ...nodeIds] = placement;
   return [
     {
       id: subjectId,
       label: pickLabel(subjectNames[subjectId], lang) || subjectId,
       sortCode: SUBJECT_SORTCODE[subjectId] || '0009999',
     },
-    {
-      id: nodeId,
-      label: pickLabel(node.label, lang) || nodeId,
-      sortCode: node.sortCode || '999',
-    },
+    ...nodeIds.map((nodeId) => {
+      const node = sourceNodes[nodeId] || {};
+      return {
+        id: nodeId,
+        label: pickLabel(node.label, lang) || nodeId,
+        sortCode: node.sortCode || '999',
+      };
+    }),
   ];
 }
 

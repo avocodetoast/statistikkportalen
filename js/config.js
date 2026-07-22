@@ -214,12 +214,14 @@ const AppConfig = {
     // Norges Bank (SDMX REST). Kjerneutvalg av dataflows; flere aktiveres ved
     // å legge til rader her (se «Senere» i planen). `flow`/`version` er SDMX-
     // dataflow-id og -versjon; `tableId` er den namnerommede portal-id-en;
-    // `path` er de to emnetre-segmentene (subjektkode + node i sourceNodes).
-    // Alternativt kan en rad angi `paths: [[subjekt, node], ...]` for å
-    // plassere tabellen under FLERE emnestier (som SSBs multi-mappe-tabeller).
-    // Hver node-id må finnes i sourceNodes under, og hver subjektkode i
-    // subjects.js (subjectNames + en subjectGroups-gruppe) — ellers rendres
-    // ikke plasseringen.
+    // `path` er emnetre-segmentene: [subjektkode, ...node-id-er] med vilkårlig
+    // dybde (subjekt + én eller flere noder i sourceNodes). Alternativt kan en
+    // rad angi `paths: [[subjekt, ...noder], ...]` for å plassere tabellen under
+    // FLERE emnestier (som SSBs multi-mappe-tabeller). Node-id-er kan være NB-
+    // egne leaf-noder ELLER SSB-passthrough-id-er (bf03/renter/nk02/…) som gjør
+    // at tabellen merges inn i SSBs egne mapper. Hver node-id må finnes i
+    // sourceNodes under, og hver subjektkode i subjects.js (subjectNames + en
+    // subjectGroups-gruppe) — ellers rendres ikke plasseringen.
     nb: {
       adapter: 'norges-bank',
       enabled: true,
@@ -246,65 +248,131 @@ const AppConfig = {
       // verdiliste — de vises ikke som egne kort, og ankeretikettene berikes
       // («NGB 03/2033 – 3,625 % – forfall 13.03.2033»). Se applyCollapseDims i
       // norges-bank-adapter.js.
+      // Plasseringene kryssplasserer hver tabell under flere tematiske leaf-noder
+      // som ligger dypt inne i SSBs egne emnemapper (SSB-passthrough-id-ene merger
+      // NB-tabellen inn i SSBs mappe — se sourceNodes-blokken). Rentetabeller →
+      // Pengepolitikk og pengemarked; statspapirer → Statsgjeld og statspapirer;
+      // valuta → Valuta (under Finansmarkeder). Se ROADMAP/planen for kartet.
       dataflows: [
         { flow: 'EXR', version: '1.0', tableId: 'nb-EXR',
-          paths: [['bf', 'nb-valutakurser'], ['ut', 'nb-valutakurser']],
+          paths: [
+            ['bf', 'nb-finansmarkeder', 'nb-valuta'],
+            ['ut', 'nb-valuta'],
+            ['bf', 'bf04', 'nb-valuta']
+          ],
           label: { nb: 'Valutakurser', en: 'Exchange rates' } },
         { flow: 'IR', version: '1.1', tableId: 'nb-IR',
-          path: ['bf', 'nb-renter'],
+          paths: [
+            ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
+            ['nk', 'nk02', 'nb-pengepolitikk'],
+            ['bf', 'bf03', 'renter', 'nb-pengepolitikk']
+          ],
           label: { nb: 'Styringsrenten', en: 'Key policy rate' } },
         { flow: 'SHORT_RATES', version: '1.2', tableId: 'nb-SHORT_RATES',
-          path: ['bf', 'nb-renter'],
+          paths: [
+            ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
+            ['nk', 'nk02', 'nb-pengepolitikk'],
+            ['bf', 'bf03', 'renter', 'nb-pengepolitikk']
+          ],
           label: { nb: 'Kortsiktige renter (NOWA)', en: 'Short-term interest rates (NOWA)' } },
         { flow: 'GOVT_GENERIC_RATES', version: '1.0', tableId: 'nb-GOVT_GENERIC_RATES',
-          path: ['bf', 'nb-renter'],
+          paths: [
+            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
+            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
+            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
+          ],
           label: { nb: 'Statsobligasjonsrenter', en: 'Government bond yields' } },
         { flow: 'GOVT_ZEROCOUPON', version: '1.0', tableId: 'nb-GOVT_ZEROCOUPON',
-          paths: [['bf', 'nb-renter'], ['bf', 'nb-statsgjeld']],
+          paths: [
+            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
+            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
+            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
+          ],
           label: { nb: 'Nullkupongrenter statspapirer', en: 'Zero coupon yields, government securities' } },
         { flow: 'SEC', version: '1.0', tableId: 'nb-SEC',
-          path: ['bf', 'nb-statsgjeld'],
+          paths: [
+            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
+            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
+            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
+          ],
           label: { nb: 'Statspapirer – kurser og renter', en: 'Government securities – prices and yields' } },
         { flow: 'GOVT_KEYFIGURES', version: '1.0', tableId: 'nb-GOVT_KEYFIGURES',
-          path: ['bf', 'nb-statsgjeld'],
+          paths: [
+            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
+            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
+            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
+          ],
           label: { nb: 'Nøkkeltall for statsgjelden', en: 'Key government debt indicators' } },
         { flow: 'GOVT_PRIMARY_MARKET', version: '1.0', tableId: 'nb-GOVT_PRIMARY_MARKET',
-          path: ['bf', 'nb-statsgjeld'],
+          paths: [
+            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
+            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
+            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
+          ],
           collapseDims: { anchor: 'ISIN', dims: ['MATURITY', 'COUPON', 'INSTR'] },
           label: { nb: 'Statspapirer – førstehåndsmarkedet', en: 'Government securities – primary market' } },
         { flow: 'GOVT_SECONDARY_MARKET', version: '1.0', tableId: 'nb-GOVT_SECONDARY_MARKET',
-          path: ['bf', 'nb-statsgjeld'],
+          paths: [
+            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
+            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
+            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
+          ],
           label: { nb: 'Statspapirer – annenhåndsmarkedet', en: 'Government securities – secondary market' } },
         { flow: 'GOVT_IRS', version: '1.0', tableId: 'nb-GOVT_IRS', discontinued: true,
-          path: ['bf', 'nb-statsgjeld'],
+          paths: [
+            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
+            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
+            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
+          ],
           label: { nb: 'Rentebytteavtaler (historisk, t.o.m. 2014)', en: 'Interest rate swaps (historical, until 2014)' } },
         { flow: 'LIQUIDITY_STATISTICS', version: '1.0', tableId: 'nb-LIQUIDITY_STATISTICS',
-          path: ['bf', 'nb-likviditet'],
+          paths: [
+            ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
+            ['nk', 'nk02', 'nb-pengepolitikk']
+          ],
           label: { nb: 'Likviditetsstatistikk', en: 'Liquidity statistics' } },
         { flow: 'LIQUIDITY_FORECAST', version: '1.0', tableId: 'nb-LIQUIDITY_FORECAST',
-          path: ['bf', 'nb-likviditet'],
+          paths: [
+            ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
+            ['nk', 'nk02', 'nb-pengepolitikk']
+          ],
           probeKey: { period: 'D.STAT_S..', time: 'D.FCAST_CBC..' },
           label: { nb: 'Strukturell og total likviditet', en: 'Structural and total liquidity' } },
         { flow: 'MONEY_MARKET', version: '1.0', tableId: 'nb-MONEY_MARKET',
-          path: ['bf', 'nb-likviditet'],
+          paths: [
+            ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
+            ['nk', 'nk02', 'nb-pengepolitikk']
+          ],
           probeKey: 'B.U..........',
           label: { nb: 'Pengemarkedsdata (RPD)', en: 'Money market data' } },
         { flow: 'FAUCTION', version: '1.0', tableId: 'nb-FAUCTION',
-          path: ['bf', 'nb-likviditet'],
+          paths: [
+            ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
+            ['nk', 'nk02', 'nb-pengepolitikk']
+          ],
           probeKey: 'FDFLIR.ANN.',
           label: { nb: 'F-auksjoner', en: 'F-auctions' } },
         { flow: 'CBC_TRANSACTIONS', version: '1.0', tableId: 'nb-CBC_TRANSACTIONS',
-          path: ['bf', 'nb-likviditet'],
+          paths: [
+            ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
+            ['nk', 'nk02', 'nb-pengepolitikk']
+          ],
           collapseDims: { anchor: 'ISIN', dims: ['MATURITY', 'INSTR'] },
           label: { nb: 'Sentralbanksertifikater – transaksjoner', en: 'Central bank certificates – transactions' } },
         { flow: 'SETTLEMENT_STATISTICS', version: '1.0', tableId: 'nb-SETTLEMENT_STATISTICS',
-          path: ['bf', 'nb-likviditet'],
+          paths: [
+            ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
+            ['nk', 'nk02', 'nb-pengepolitikk']
+          ],
           label: { nb: 'Oppgjørsstatistikk', en: 'Settlement statistics' } },
         { flow: 'FINANCIAL_INDICATORS', version: '1.0', tableId: 'nb-FINANCIAL_INDICATORS',
-          path: ['bf', 'nb-indikatorer'],
+          path: ['bf', 'bf02', 'nb-fin-indikatorer'],
           label: { nb: 'Finansielle indikatorer (FCI)', en: 'Financial indicators (FCI)' } },
         { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET',
-          path: ['bf', 'nb-indikatorer'],
+          paths: [
+            ['nk', 'nk02', 'nb-regionalt-nettverk'],
+            ['ei', 'ei02', 'nb-regionalt-nettverk']
+          ],
           label: { nb: 'Regionalt nettverk', en: 'Regional network' } }
       ]
     },
@@ -312,10 +380,12 @@ const AppConfig = {
     // Folkehelseinstituttet (åpent statistikk-API, JSON-Stat2 native).
     // Adapteren er generisk over `sourceIds` — flere kilder aktiveres ved å
     // legge til en id her (se «Senere» i planen).
-    // Valgfri `paths: { <sourceId>: [[subjekt, node], ...] }` overstyrer
+    // Valgfri `paths: { <sourceId>: [[subjekt, ...noder], ...] }` overstyrer
     // standardplasseringen (['he', 'fhi-<sourceId>']) med én eller flere
-    // emnetre-plasseringer — samme krav til sourceNodes/subjects.js som for
-    // Norges Bank-dataflows over.
+    // emnetre-plasseringer av vilkårlig dybde (subjekt + én eller flere noder,
+    // inkl. SSB-passthrough-id-er som he03/be06/fodte). Kategori-segmentet
+    // (register → kategori, fra fhi-catalog.json) legges automatisk på ENDEN av
+    // hver plassering. Samme krav til sourceNodes/subjects.js som for NB over.
     fhi: {
       adapter: 'fhi',
       enabled: true,
@@ -334,42 +404,103 @@ const AppConfig = {
         'nokkel', 'mfr', 'daar',
         'msis', 'sysvak', 'npr', 'kpr', 'lmr',
         'gs', 'hkr', 'abr', 'ngs', 'skast'
-      ]
+      ],
+      // Kryssplassering dypt inn i SSBs helse-/befolkningsmapper. Hver leaf-node
+      // er registerets fhi-<sourceId>-node; grupperingsnodene (fhi-sykdommer/
+      // fhi-pasientregister/fhi-legemidler) samler beslektede registre.
+      paths: {
+        nokkel: [['he', 'he03', 'fhi-nokkel']],
+        mfr:    [['be', 'be01', 'fodte', 'fhi-mfr'], ['be', 'be06', 'fodte', 'fhi-mfr'], ['in', 'in03', 'fodte', 'fhi-mfr']],
+        daar:   [['be', 'be06', 'dode', 'fhi-daar'], ['he', 'he03', 'fhi-daar']],
+        msis:   [['he', 'he03', 'fhi-sykdommer', 'fhi-msis']],
+        sysvak: [['he', 'he04', 'fhi-sysvak']],
+        npr:    [['he', 'he04', 'fhi-pasientregister', 'fhi-npr']],
+        kpr:    [['he', 'he04', 'fhi-pasientregister', 'fhi-kpr'], ['he', 'he04', 'helsetjko', 'fhi-kpr']],
+        lmr:    [['he', 'he04', 'fhi-legemidler', 'fhi-lmr']],
+        gs:     [['he', 'he04', 'fhi-legemidler', 'fhi-gs']],
+        hkr:    [['he', 'he03', 'fhi-sykdommer', 'fhi-hkr']],
+        abr:    [['he', 'he03', 'fhi-abr']],
+        ngs:    [['he', 'he03', 'fhi-sykdommer', 'fhi-ngs']],
+        skast:  [['he', 'he03', 'fhi-skast']]
+      }
     }
   },
 
   /**
-   * Emnetre-noder for fremmede kilder (nivå 2 under en SSB-subjektkode).
+   * Emnetre-noder for fremmede kilder (nivå ≥ 2 under en SSB-subjektkode).
    *
    * Fremmede tabeller får syntetiske `paths[]` på formen
-   * `[{ id: <subjektkode>, ... }, { id: <node-id>, label, sortCode }]`, slik at
-   * de glir inn i det eksisterende emnehierarkiet (menu-hierarchy.js) uten
-   * viewendringer. sortCode `9xx` plasserer dem sist blant SSB-undertemaene.
+   * `[{ id: <subjektkode>, ... }, { id: <node-id>, label, sortCode }, ...]`, slik
+   * at de glir inn i det eksisterende emnehierarkiet (menu-hierarchy.js) uten
+   * viewendringer. En path kan ha vilkårlig dybde (subjekt + én eller flere
+   * noder). `9xx`-noder plasserer NB-leaf-nodene sist blant SSB-undertemaene.
    *
-   * NB: FHI-labelene er kun norske (`nb`). Adaptere/UI som slår opp en label
-   * for et annet språk MÅ falle tilbake til `nb` når `en` mangler.
+   * SSB-PASSTHROUGH-NODER (bf02/bf03/renter/bf04/verdipapirer/nk02/os04/os07/
+   * offogjeld/ei02): disse speiler SSBs egne mappe-id-er slik at NB-tabeller
+   * MERGES inn i SSBs mapper (menu-hierarchy.js keyer tre-noder på `id`) i
+   * stedet for å lage dublett-mapper. Label/sortCode her er kun fallback —
+   * SSBs egne tabeller oppretter nodene først («først-sett vinner» i
+   * _addPathToHierarchy), så SSBs faktiske (og språk-lokaliserte) verdier
+   * brukes i praksis. Id-ene er verifisert mot data.ssb.no/api/pxwebapi/v2.
+   *
+   * NB: Passthrough-/FHI-labelene er kun norske (`nb`). Adaptere/UI som slår
+   * opp en label for et annet språk MÅ falle tilbake til `nb` når `en` mangler
+   * (for passthrough-nodene leverer SSBs egne data uansett `en`-labelen).
    */
   sourceNodes: {
-    'nb-renter':       { sortCode: '900', label: { nb: 'Renter og avkastning – Norges Bank', en: 'Interest rates – Norges Bank' } },
-    'nb-valutakurser': { sortCode: '901', label: { nb: 'Valutakurser – Norges Bank',        en: 'Exchange rates – Norges Bank' } },
-    'nb-statsgjeld':   { sortCode: '902', label: { nb: 'Statsgjeld og statspapirer – Norges Bank', en: 'Government debt and securities – Norges Bank' } },
-    'nb-likviditet':   { sortCode: '903', label: { nb: 'Likviditet og pengemarked – Norges Bank', en: 'Liquidity and money market – Norges Bank' } },
-    'nb-indikatorer':  { sortCode: '904', label: { nb: 'Finansielle indikatorer og Regionalt nettverk – Norges Bank', en: 'Financial indicators and Regional network – Norges Bank' } },
-    // FHI-registrene: 4-sifrede '99xx'-koder (leksikografisk etter alle
-    // SSB-undertemaer og NB-nodene) med luft mellom for senere innskudd.
-    'fhi-nokkel':      { sortCode: '9900', label: { nb: 'Folkehelse – nøkkeltall (FHI)' } },
-    'fhi-mfr':         { sortCode: '9905', label: { nb: 'Medisinsk fødselsregister (FHI)' } },
-    'fhi-daar':        { sortCode: '9910', label: { nb: 'Dødsårsaksregisteret (FHI)' } },
-    'fhi-msis':        { sortCode: '9915', label: { nb: 'Smittsomme sykdommer – MSIS (FHI)' } },
-    'fhi-sysvak':      { sortCode: '9920', label: { nb: 'Vaksinasjonsregisteret SYSVAK (FHI)' } },
-    'fhi-npr':         { sortCode: '9925', label: { nb: 'Norsk pasientregister (FHI)' } },
-    'fhi-kpr':         { sortCode: '9930', label: { nb: 'Kommunalt pasient- og brukerregister (FHI)' } },
-    'fhi-lmr':         { sortCode: '9935', label: { nb: 'Legemiddelregisteret (FHI)' } },
-    'fhi-gs':          { sortCode: '9940', label: { nb: 'Grossistbasert legemiddelstatistikk (FHI)' } },
-    'fhi-hkr':         { sortCode: '9945', label: { nb: 'Hjerte- og karregisteret (FHI)' } },
-    'fhi-abr':         { sortCode: '9950', label: { nb: 'Abortregisteret (FHI)' } },
-    'fhi-ngs':         { sortCode: '9955', label: { nb: 'Mikrobiologisk genomovervåkning (FHI)' } },
-    'fhi-skast':       { sortCode: '9960', label: { nb: 'Skadedyrstatistikken (FHI)' } }
+    // Norges Bank – tematiske leaf-noder (kryssplasseres under flere SSB-mapper).
+    'nb-finansmarkeder':    { sortCode: '905', label: { nb: 'Finansmarkeder', en: 'Financial markets' } },
+    'nb-pengepolitikk':     { sortCode: '910', label: { nb: 'Pengepolitikk og pengemarked', en: 'Monetary policy and money market' } },
+    'nb-valuta':            { sortCode: '911', label: { nb: 'Valuta', en: 'Currency' } },
+    'nb-statsgjeld':        { sortCode: '912', label: { nb: 'Statsgjeld og statspapirer', en: 'Government debt and securities' } },
+    'nb-fin-indikatorer':   { sortCode: '913', label: { nb: 'Norges Banks finansielle indikatorer', en: "Norges Bank's financial indicators" } },
+    'nb-regionalt-nettverk':{ sortCode: '914', label: { nb: 'Regionalt nettverk', en: 'Regional network' } },
+    // SSB-passthrough for NB (speiler SSBs egne folder-id-er — se blokk-
+    // kommentaren over). nb+en; en-labelene er SSBs egne engelske mappenavn.
+    'bf02':        { sortCode: '0000007', label: { nb: 'Finansielle indikatorer', en: 'Financial indicators' } },
+    'bf03':        { sortCode: '0000008', label: { nb: 'Finansinstitusjoner og andre finansielle foretak', en: 'Financial institutions and other financial corporations' } },
+    'renter':      { sortCode: '0000009', label: { nb: 'Renter i banker og kredittforetak', en: 'Interest rates in banks and mortgage companies' } },
+    'bf04':        { sortCode: '0000009', label: { nb: 'Verdipapirmarkeder', en: 'Securities markets' } },
+    'verdipapirer':{ sortCode: '0000010', label: { nb: 'Verdipapirer', en: 'Securities' } },
+    'nk02':        { sortCode: '0000068', label: { nb: 'Konjunkturer', en: 'Business cycles' } },
+    'os04':        { sortCode: '0000079', label: { nb: 'Offentlig forvaltning', en: 'General government' } },
+    'os07':        { sortCode: '0000081', label: { nb: 'Statlige finanser', en: 'Central government finances' } },
+    // 'offogjeld' finnes hos SSB under både os04 (0000080) og os07 (0000082) med
+    // samme id; distinkte tre-noder (ulik forelder) + SSB-tabeller begge steder →
+    // vår ene sortCode-verdi brukes ikke i praksis.
+    'offogjeld':   { sortCode: '0000080', label: { nb: 'Offentlig forvaltnings fordringer og gjeld', en: 'General government, financial assets and liabilities' } },
+    'ei02':        { sortCode: '0000032', label: { nb: 'Industri og bergverksdrift', en: 'Manufacturing, mining and quarrying' } },
+    // SSB-passthrough for FHI: helse-/befolkningsmapper (samme merge-mønster).
+    'he03':        { sortCode: '0000036', label: { nb: 'Helseforhold og levevaner', en: 'Health conditions and living habits' } },
+    'he04':        { sortCode: '0000037', label: { nb: 'Helsetjenester', en: 'Health services' } },
+    'helsetjko':   { sortCode: '0000038', label: { nb: 'Kommunehelsetenesta', en: 'Municipal health care service' } },
+    'be01':        { sortCode: '0000017', label: { nb: 'Barn, familier og husholdninger', en: 'Children, families and households' } },
+    'be06':        { sortCode: '0000021', label: { nb: 'Fødte og døde', en: 'Births and deaths' } },
+    // 'fodte' finnes hos SSB under be01 (0000018), be06 (0000022) og in03 (0000046)
+    // med samme id; distinkte tre-noder (ulik forelder) → vår ene sortCode brukes
+    // ikke i praksis (SSB-tabeller finnes alle tre steder).
+    'fodte':       { sortCode: '0000018', label: { nb: 'Fødte', en: 'Births' } },
+    'dode':        { sortCode: '0000022', label: { nb: 'Døde', en: 'Deaths' } },
+    'in03':        { sortCode: '0000045', label: { nb: 'Befolkning', en: 'Population' } },
+    // FHI-grupperingsnoder (FHI-eide mellomnivåer under SSB-mappene).
+    'fhi-sykdommer':       { sortCode: '9970', label: { nb: 'Sykdommer', en: 'Diseases' } },
+    'fhi-pasientregister': { sortCode: '9971', label: { nb: 'Pasientregister', en: 'Patient registries' } },
+    'fhi-legemidler':      { sortCode: '9972', label: { nb: 'Legemidler', en: 'Pharmaceuticals' } },
+    // FHI-registrene (leaf-noder): rene navn (kilde vises per tabell), nb+en.
+    // '99xx'-koder ordner søsken innen samme forelder (jf. grupperingsnodene).
+    'fhi-nokkel':      { sortCode: '9900', label: { nb: 'Folkehelse – nøkkeltall', en: 'Public health – key figures' } },
+    'fhi-mfr':         { sortCode: '9905', label: { nb: 'Medisinsk fødselsregister', en: 'Medical Birth Registry' } },
+    'fhi-daar':        { sortCode: '9910', label: { nb: 'Dødsårsaksregisteret', en: 'Cause of Death Registry' } },
+    'fhi-msis':        { sortCode: '9915', label: { nb: 'Smittsomme sykdommer', en: 'Communicable diseases' } },
+    'fhi-hkr':         { sortCode: '9916', label: { nb: 'Hjerte- og karregisteret', en: 'Cardiovascular Disease Registry' } },
+    'fhi-ngs':         { sortCode: '9917', label: { nb: 'Mikrobiologisk genomovervåkning', en: 'Microbial genomic surveillance' } },
+    'fhi-sysvak':      { sortCode: '9920', label: { nb: 'Vaksinasjonsregisteret', en: 'Vaccination Registry' } },
+    'fhi-npr':         { sortCode: '9925', label: { nb: 'Norsk pasientregister', en: 'Norwegian Patient Registry' } },
+    'fhi-kpr':         { sortCode: '9930', label: { nb: 'Kommunalt pasient- og brukerregister', en: 'Municipal Patient and User Registry' } },
+    'fhi-lmr':         { sortCode: '9935', label: { nb: 'Legemiddelregisteret', en: 'Norwegian Prescription Registry' } },
+    'fhi-gs':          { sortCode: '9940', label: { nb: 'Grossistbasert legemiddelstatistikk', en: 'Wholesale-based drug statistics' } },
+    'fhi-abr':         { sortCode: '9950', label: { nb: 'Abortregisteret', en: 'Abortion Registry' } },
+    'fhi-skast':       { sortCode: '9960', label: { nb: 'Skadedyrstatistikken', en: 'Pest control statistics' } }
   },
 
   /**

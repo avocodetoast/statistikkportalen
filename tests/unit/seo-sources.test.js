@@ -35,6 +35,10 @@ const appConfig = {
         { flow: 'IR', version: '1.1', tableId: 'nb-IR',
           path: ['bf', 'nb-renter'],
           label: { nb: 'Styringsrenten', en: 'Key policy rate' } },
+        // Dyp kryssplassering: subjekt + SSB-passthrough-noder + NB-leaf.
+        { flow: 'SHORT_RATES', version: '1.2', tableId: 'nb-SHORT_RATES',
+          paths: [['bf', 'bf03', 'renter', 'nb-pengepolitikk']],
+          label: { nb: 'Kortsiktige renter', en: 'Short-term rates' } },
       ],
     },
     fhi: {
@@ -50,6 +54,10 @@ const appConfig = {
   sourceNodes: {
     'nb-valutakurser': { label: { nb: 'Valutakurser (Norges Bank)', en: 'Exchange rates (Norges Bank)' }, sortCode: '910' },
     'nb-renter': { label: { nb: 'Renter (Norges Bank)', en: 'Interest rates (Norges Bank)' }, sortCode: '911' },
+    // SSB-passthrough + NB-leaf for dyp-path-testen
+    'bf03': { label: { nb: 'Finansinstitusjoner og andre finansielle foretak' }, sortCode: '0000008' },
+    'renter': { label: { nb: 'Renter i banker og kredittforetak' }, sortCode: '0000009' },
+    'nb-pengepolitikk': { label: { nb: 'Pengepolitikk og pengemarked', en: 'Monetary policy and money market' }, sortCode: '910' },
     'fhi-nokkel': { label: { nb: 'Folkehelse: nøkkeltall (FHI)', en: 'Public health: key figures (FHI)' }, sortCode: '920' },
   },
 };
@@ -129,8 +137,8 @@ describe('buildNbCatalogue', () => {
   it('bygger én oppføring per dataflow, nettverksfritt', async () => {
     const { buildNbCatalogue } = await mod;
     const tables = buildNbCatalogue(appConfig, subjectNames, 'nb');
-    assert.equal(tables.length, 2);
-    assert.deepEqual(tables.map(t => t.id), ['nb-EXR', 'nb-IR']);
+    assert.equal(tables.length, 3);
+    assert.deepEqual(tables.map(t => t.id), ['nb-EXR', 'nb-IR', 'nb-SHORT_RATES']);
   });
 
   it('setter katalogfeltene som norges-bank-adapter.buildCatalogue', async () => {
@@ -169,6 +177,24 @@ describe('buildNbCatalogue', () => {
     const [exr] = buildNbCatalogue(appConfig, subjectNames, 'en');
     assert.equal(exr.label, 'Exchange rates');
     assert.equal(exr.paths[0][1].label, 'Exchange rates (Norges Bank)');
+  });
+
+  it('bygger vilkårlig dype paths (subjekt + passthrough + leaf)', async () => {
+    const { buildNbCatalogue } = await mod;
+    const cat = buildNbCatalogue(appConfig, subjectNames, 'nb');
+    const t = cat.find(x => x.id === 'nb-SHORT_RATES');
+    assert.ok(t);
+    assert.equal(t.paths.length, 1);
+    const path = t.paths[0];
+    assert.equal(path.length, 4);
+    assert.deepEqual(path.map(s => s.id), ['bf', 'bf03', 'renter', 'nb-pengepolitikk']);
+    assert.equal(path[1].label, 'Finansinstitusjoner og andre finansielle foretak');
+    assert.equal(path[2].label, 'Renter i banker og kredittforetak');
+    assert.equal(path[3].label, 'Pengepolitikk og pengemarked');
+    path.forEach(seg => {
+      assert.ok(typeof seg.label === 'string' && seg.label.length > 0);
+      assert.ok(typeof seg.sortCode === 'string' && seg.sortCode.length > 0);
+    });
   });
 });
 
@@ -214,6 +240,23 @@ describe('buildFhiCatalogue', () => {
     const [t] = buildFhiCatalogue(fhiCatalog, cfg, subjectNames, 'nb');
     assert.equal(t.paths.length, 2);
     assert.equal(t.paths[1][0].id, 'bf');
+  });
+
+  it('bygger vilkårlig dyp FHI-path (subjekt + passthrough + leaf)', async () => {
+    const { buildFhiCatalogue } = await mod;
+    const cfg = {
+      ...appConfig,
+      sources: {
+        ...appConfig.sources,
+        fhi: { ...appConfig.sources.fhi, paths: { nokkel: [['bf', 'bf03', 'renter', 'fhi-nokkel']] } },
+      },
+    };
+    const [t] = buildFhiCatalogue(fhiCatalog, cfg, subjectNames, 'nb');
+    assert.equal(t.paths.length, 1);
+    assert.equal(t.paths[0].length, 4);
+    assert.deepEqual(t.paths[0].map(s => s.id), ['bf', 'bf03', 'renter', 'fhi-nokkel']);
+    assert.equal(t.paths[0][1].label, 'Finansinstitusjoner og andre finansielle foretak');
+    assert.equal(t.paths[0][2].label, 'Renter i banker og kredittforetak');
   });
 
   it('hopper over sourceIds som mangler i katalogfila', async () => {

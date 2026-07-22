@@ -128,7 +128,9 @@
   // norges-bank-adapter.js). Satt likevel defensivt for å unngå
   // undefined.localeCompare() dersom FHI mot formodning skulle bli
   // registrert/aggregert før noen SSB-tabell under 'he'.
-  const SUBJECT_SORTCODE = { he: '0000004' };
+  // Samsvarer med SSBs egne subjektnoder (verifisert mot data.ssb.no). FHI-
+  // tabeller kryssplasseres nå også under be/in (Befolkning/Innvandring).
+  const SUBJECT_SORTCODE = { he: '0000034', be: '0000016', in: '0000042' };
 
   const EN_LANGUAGE_NOTE =
     'FHI data is only available in Norwegian. Dimension and category names ' +
@@ -387,21 +389,25 @@
       : [[SUBJECT_ID, 'fhi-' + source]];
     const subjectCode = placements[0][0];
 
+    // En plassering er [subjektkode, ...node-id-er] med vilkårlig dybde: subjekt
+    // + én eller flere noder (SSB-passthrough-id-er som f.eks. 'he03'/'be06' +
+    // en FHI-leaf-node). Node-id-ene må finnes i AppConfig.sourceNodes.
     const basePaths = placements.map(p => {
-      const subjId = p[0];
-      const nodeId = p[1];
-      const node = nodes[nodeId] || {};
+      const [subjId, ...nodeIds] = p;
       return [
         {
           id: subjId,
           label: pickLabel(subjectNames[subjId], lang) || subjId,
           sortCode: SUBJECT_SORTCODE[subjId] || '0009999'
         },
-        {
-          id: nodeId,
-          label: pickLabel(node.label, lang) || nodeId,
-          sortCode: node.sortCode || '999'
-        }
+        ...nodeIds.map(nodeId => {
+          const node = nodes[nodeId] || {};
+          return {
+            id: nodeId,
+            label: pickLabel(node.label, lang) || nodeId,
+            sortCode: node.sortCode || '999'
+          };
+        })
       ];
     });
     /** Paths for én tabell: basePaths + ev. kategorisegment (nb-only labels). */

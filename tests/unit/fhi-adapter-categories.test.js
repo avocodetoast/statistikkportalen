@@ -66,6 +66,9 @@ const app = loadApp(SCRIPTS.sources, {
 
 // Kun mfr i denne testen — de andre kildene har tomme tabellister uansett.
 app.AppConfig.sources.fhi.sourceIds = ['mfr'];
+// Nullstill reell dyp-plassering fra config.js så default-testene under tester
+// fallback-grenen [he, fhi-mfr]; testene som trenger paths setter dem selv.
+delete app.AppConfig.sources.fhi.paths;
 
 const adapter = app.SourceAdapters.find(a => a.sourceId === 'fhi');
 
@@ -99,6 +102,20 @@ describe('FHIAdapter — kategorinivå fra katalogen', () => {
         assert.equal(p.length, 3);
         assert.equal(p[2].id, 'fhi-mfr-fodsler');
       });
+    } finally {
+      delete app.AppConfig.sources.fhi.paths;
+    }
+  });
+
+  it('kategorisegmentet henges på ENDEN av en dyp base-path (4 base → 5 totalt)', async () => {
+    app.AppConfig.sources.fhi.paths = { mfr: [['be', 'be06', 'fodte', 'fhi-mfr']] };
+    try {
+      const { tables } = await adapter.getTables({});
+      const t = tables.find(x => x.id === 'fhi-mfr-411');
+      assert.equal(t.paths.length, 1);
+      assert.equal(t.paths[0].length, 5);
+      assert.deepEqual(t.paths[0].map(s => s.id),
+        ['be', 'be06', 'fodte', 'fhi-mfr', 'fhi-mfr-fodsler']);
     } finally {
       delete app.AppConfig.sources.fhi.paths;
     }

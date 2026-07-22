@@ -37,6 +37,29 @@ const TABLES = [
     ]]
   },
   { id: '99999', label: 'Table without paths' },
+  // SSB-tabell dypt i bf-treet — deler 'renter'-noden med NB-tabellen under.
+  {
+    id: '10701',
+    label: 'NIBOR og Norges Banks foliorente',
+    paths: [[
+      { id: 'bf', label: 'Bank og finansmarked' },
+      { id: 'bf03', label: 'Finansinstitusjoner og andre finansielle foretak' },
+      { id: 'renter', label: 'Renter i banker og kredittforetak' }
+    ]]
+  },
+  // NB-tabell med SSB-passthrough-id-er ('bf03'/'renter') + NB-leaf: skal MERGE
+  // inn i samme 'renter'-node som SSB-tabellen over, ikke lage en dublett.
+  {
+    id: 'nb-ir-deep',
+    label: 'Styringsrenten (dyp)',
+    updated: '',
+    paths: [[
+      { id: 'bf', label: 'Bank og finansmarked' },
+      { id: 'bf03', label: 'Finansinstitusjoner og andre finansielle foretak' },
+      { id: 'renter', label: 'Renter i banker og kredittforetak' },
+      { id: 'nb-pengepolitikk', label: 'Pengepolitikk og pengemarked' }
+    ]]
+  },
   {
     id: 'nb-exr',
     label: 'Valutakurser',
@@ -59,8 +82,21 @@ describe('MenuHierarchy.buildHierarchy', () => {
   const hierarchy = mh.buildHierarchy(TABLES);
 
   it('creates one top-level node per subject code', () => {
-    assert.deepEqual(Object.keys(hierarchy).sort(), ['be', 'nk']);
+    assert.deepEqual(Object.keys(hierarchy).sort(), ['be', 'bf', 'nk']);
     assert.equal(hierarchy.be.label, 'Befolkning');
+  });
+
+  it('merges NB path with SSB node ids into the existing SSB node (no duplicate)', () => {
+    const renter = hierarchy.bf.children.bf03.children.renter;
+    assert.ok(renter, 'renter-noden finnes');
+    // Én 'renter'-node, ikke to søsken med samme id
+    assert.equal(Object.keys(hierarchy.bf.children.bf03.children).length, 1);
+    // SSB-tabellen ligger i 'renter'; NB-tabellen i leaf-barnet under
+    assert.deepEqual(renter.tables.map(t => t.id), ['10701']);
+    assert.deepEqual(
+      renter.children['nb-pengepolitikk'].tables.map(t => t.id),
+      ['nb-ir-deep']
+    );
   });
 
   it('nests subtopics under the subject', () => {
