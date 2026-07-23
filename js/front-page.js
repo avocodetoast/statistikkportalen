@@ -154,6 +154,18 @@ async function renderFrontPage(container) {
 }
 
 /**
+ * True når tabellen skal utelates fra «Nylig oppdatert» fordi den oppdateres
+ * tilnærmet daglig (se AppConfig.ui.recentUpdates). Defensiv mot config uten
+ * nøkkelen (eldre config-filer / SEO-sandkassen).
+ */
+function _isHighFrequencyTable(table) {
+  const cfg = (AppConfig.ui && AppConfig.ui.recentUpdates) || {};
+  if (cfg.showHighFrequency) return false;
+  const units = cfg.highFrequencyTimeUnits || [];
+  return units.indexOf(table.timeUnit) !== -1;
+}
+
+/**
  * Collect recently updated tables grouped by hierarchy node and time bucket.
  * - "I dag" and previous business day always shown (with empty state if needed).
  * - Monday uses "fredag" as previous business day instead of "i går".
@@ -237,6 +249,7 @@ function _collectRecentUpdateGroups(mh, recentTables) {
     const groups = nodeEntries.map(({ label, path, tables }) => {
       const matching = tables.filter(t => {
         if (t.discontinued) return false;
+        if (_isHighFrequencyTable(t)) return false;
         if (!t.updated) return false;
         const d = new Date(t.updated);
         return d >= bucket.from && (!bucket.to || d < bucket.to);
@@ -251,3 +264,4 @@ function _collectRecentUpdateGroups(mh, recentTables) {
 }
 
 window.renderFrontPage = renderFrontPage;
+window._isHighFrequencyTable = _isHighFrequencyTable;

@@ -206,6 +206,7 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 | Add a new route / view | `router.js` (new `_handle*Route`), `utils.js` (`renderCurrentView` switch), new view file |
 | Change the subject groupings | `subjects.js` (`subjectGroups`, `subjectNames`) |
 | Change search result display | `search-view.js` (`_searchPerformSearch`, `_searchGroupBySubject`) |
+| Show/hide near-daily tables under «Nylig oppdatert» | `config.js` (`ui.recentUpdates`), `front-page.js` (`_isHighFrequencyTable`) |
 | Change enhanced search scoring/synonyms | `search-enhanced.js` (scoring), `synonyms.js` (synonym groups) |
 | Change topic table listing | `topic-view.js` (`_topicRenderTables`, `_topicRenderSubtree`) |
 | Change how table list rows look | `browser-state.js` (`renderTableListHTML`) |

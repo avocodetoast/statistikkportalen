@@ -160,6 +160,18 @@ const AppConfig = {
     // Show discontinued tables by default in search and topic views
     showDiscontinuedByDefault: false,
 
+    // «Nylig oppdaterte tabeller» på forsiden: tabeller som oppdateres
+    // tilnærmet hver virkedag (Norges Banks kurs-/renteserier, FREQ=B) fyller
+    // listen hver dag og har lav signalverdi. Sett showHighFrequency: true for
+    // å ta dem med igjen. highFrequencyTimeUnits er timeUnit-verdiene som
+    // regnes som «daglige» (SSB bruker i praksis ikke 'Daily' i dag, men
+    // verdien tas med for framtidig sikkerhet). Gjelder KUN forsidens
+    // nylig-oppdatert-seksjon — søk/emnefiltre påvirkes ikke.
+    recentUpdates: {
+      showHighFrequency: false,
+      highFrequencyTimeUnits: ['Business', 'Daily']
+    },
+
     // Skjul tidsperioden som ofte står på slutten av SSB-tabelltitler i
     // listevisningen (søk, emner, forsiden), f.eks. "Konsumprisindeks 2010-2025"
     // → "Konsumprisindeks". Perioden vises uansett i egen "Tidsperiode"-kolonne.

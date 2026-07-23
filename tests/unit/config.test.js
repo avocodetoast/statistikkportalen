@@ -37,6 +37,11 @@ describe('AppConfig — SSB instance', () => {
     assert.equal(AppConfig.limits.cellWarningThreshold, 600000);
   });
 
+  it('hides high-frequency tables from the front page by default', () => {
+    assert.equal(AppConfig.ui.recentUpdates.showHighFrequency, false);
+    assert.ok(AppConfig.ui.recentUpdates.highFrequencyTimeUnits.includes('Business'));
+  });
+
   it('has 3 source update times', () => {
     assert.equal(AppConfig.sourceUpdateTimes.length, 3);
   });

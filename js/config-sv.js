@@ -150,6 +150,14 @@ const AppConfig = {
     // Show discontinued tables by default in search and topic views
     showDiscontinuedByDefault: false,
 
+    // «Nylig oppdaterte tabeller» på forsiden: skjul tabeller som oppdateres
+    // tilnærmet hver virkedag (se js/config.js for full forklaring). Gjelder
+    // KUN forsidens nylig-oppdatert-seksjon — søk/emnefiltre påvirkes ikke.
+    recentUpdates: {
+      showHighFrequency: false,
+      highFrequencyTimeUnits: ['Business', 'Daily']
+    },
+
     // Skjul tidsperioden som ofte står på slutten av SSB-tabelltitler i
     // listevisningen (søk, emner, forsiden), f.eks. "Konsumprisindeks 2010-2025"
     // → "Konsumprisindeks". Perioden vises uansett i egen "Tidsperiode"-kolonne.
