@@ -35,6 +35,14 @@
  *               // timeUnit/keywords/description/dimLabels: per-tabell
  *               //   overstyringer for flows som er delt av flere rader
  *               //   (frekvensbøtte, søkeord, Tabellinfo-note, dim-etiketter).
+ *               // dimOrder: [dimId, …] = kuratert kortrekkefølge når DSD-en
+ *               //   er ulogisk (GOVT_SECONDARY_MARKET har ISIN før
+ *               //   INSTRUMENT_TYPE). KUN presentasjon: den opprinnelige
+ *               //   DSD-rekkefølgen festes i extension.fullDimId, som
+ *               //   buildKeyAndParams bygger API-nøkkelen fra. Se orderDims i
+ *               //   sdmx-to-jsonstat.js; må sendes til BÅDE
+ *               //   structureToMetadata og dataToJsonStat, ellers kommer
+ *               //   resultattabellen i en annen rekkefølge enn velgeren.
  *
  *   Datastruktur : GET /datastructure/NB/DSD_{FLOW}?references=codelist&format=sdmx-json
  *   Data         : GET /data/{FLOW}/{key}?format=sdmx-json&locale=no|en[&lastNObservations=|startPeriod=|endPeriod=]
@@ -869,12 +877,13 @@
     const flow = flowForId(tableId);
     if (!flow) throw new Error('[NBAdapter] Ukjent tabell: ' + tableId);
     const locale = apiLang(lang || currentLang());
-    // 'v8' = collapseDims.labelStyle:'suffix' (v7: sliceDims; v6:
+    // 'v9' = dimOrder (permutert meta.id + fullDimId satt uten splice) (v8:
+    // collapseDims.labelStyle:'suffix'; v7: sliceDims; v6:
     // slice/pinnedDims + fullDimId; v5: lokaliserte
     // verdinavn fra serieskeys-proben; v4: collapsedDims + configetikett-
     // tittel; v3: intervalPicker/timeBounds; v2: timePeriodsByFreq +
     // singleSelect) — ny nøkkel så gamle cacheoppføringer ikke serveres i 24 t.
-    const cacheKey = 'table_' + tableId + '_meta_v8_' + locale;
+    const cacheKey = 'table_' + tableId + '_meta_v9_' + locale;
 
     if (useCache !== false) {
       const cached = await cacheGet(cacheKey);
@@ -928,7 +937,10 @@
       // Begrens kategoriene til verdier som faktisk finnes i ekte serier.
       seriesValues: seriesKeys ? seriesKeys.seriesValues : null,
       // Lokaliserte verdinavn fra proben — DSD-kodelistene er ofte engelsk-only.
-      valueNames: (seriesKeys && seriesKeys.valueNames) || null
+      valueNames: (seriesKeys && seriesKeys.valueNames) || null,
+      // Kuratert kortrekkefølge; DSD-rekkefølgen bevares i extension.fullDimId
+      // så API-nøkkelen er uendret (se orderDims i sdmx-to-jsonstat.js).
+      dimOrder: flow.dimOrder || null
     });
 
     // Gyldige dimensjonskombinasjoner for generisk krysfiltrering i UI-en
@@ -1293,7 +1305,10 @@
       label: meta.label,
       updated: (json.meta && json.meta.prepared) || meta.updated || null,
       metricDims: metricDims,
-      collapseDims: dropDims.length ? dropDims : undefined
+      collapseDims: dropDims.length ? dropDims : undefined,
+      // Samme kortrekkefølge som metadata, ellers ville tabellen kommet ut med
+      // dimensjonene i DSD-rekkefølge mens velgeren viste en annen.
+      dimOrder: flow.dimOrder || null
     });
 
     // Datasvarets ankeretiketter er rå koder/API-navn — kopier de berikede

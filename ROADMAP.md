@@ -6,8 +6,9 @@ uendret. Adapterkontrakten er dokumentert i `js/sources/source-registry.js`.
 
 ## Aktivert i prototypen
 
-- **Norges Bank** (under Økonomi → Bank og finansmarked): 18 dataflows fordelt
-  på fem emnenoder — renter (IR, SHORT_RATES, GOVT_GENERIC_RATES,
+- **Norges Bank** (under Økonomi → Bank og finansmarked): 18 dataflows —
+  31 tabellrader, siden 13 av dem er kuraterte snitt (se de to punktene under)
+  — fordelt på fem emnenoder — renter (IR, SHORT_RATES, GOVT_GENERIC_RATES,
   GOVT_ZEROCOUPON), valutakurser (EXR), statsgjeld/statspapirer (SEC,
   GOVT_ZEROCOUPON, GOVT_KEYFIGURES, GOVT_PRIMARY_MARKET,
   GOVT_SECONDARY_MARKET, GOVT_IRS — historisk, merket avsluttet),
@@ -28,8 +29,24 @@ uendret. Adapterkontrakten er dokumentert i `js/sources/source-registry.js`.
   produksjonsvekst, investeringsplaner, sysselsettingsvekst og -planer,
   regionalindikator, kapasitetsutnytting/lønnsomhet/knapphet på arbeidskraft,
   og årslønnsvekst. Alle seks er verifisert som fulle rektangler, så
-  kryssfilteret gråer ikke ut noe inne i dem. **Neste kandidater:**
-  MONEY_MARKET og GOVT_SECONDARY_MARKET, som har samme sparsomhetsproblem.
+  kryssfilteret gråer ikke ut noe inne i dem.
+- **Kuraterte statspapirtabeller (`slice`)**: samme mekanisme brukt på de to
+  sparsomme GOVT-samletabellene, alle med felles tittelprefiks («Statslån,
+  førstehåndsmarkedet» / «… annenhåndsmarkedet») så familien sorterer samlet.
+  Førstehåndsmarkedet er delt på `ISSUE_TYPE`
+  (utstedelsesauksjoner, syndikeringer, RFQ-salg, tilbakekjøpsauksjoner,
+  statens egenbeholdning) — måleenhetene følger emisjonsformen, så bare
+  tilbakekjøpsauksjonene har vektet snittkurs/-rente. Annenhåndsmarkedet er
+  delt på `UNIT_MEASURE` (omsetning / gjenkjøpsavtaler). Begge de fulle
+  samletabellene står igjen ved siden av snittene. Merk at disse IKKE er fulle
+  rektangler: `INSTRUMENT_TYPE` er funksjonelt bestemt av ISIN, men beholdt som
+  filter (utgråingen er meningsbærende), og annenhåndsmarkedets sparsomhet er
+  ekte — ikke alle lån handles med alle motpartstyper i alle regioner.
+  Tabellene har `dimOrder` slik at papirtypen står foran lista over enkeltlån,
+  og bevisst INGEN `timeUnit`: alle NB-tabellene i noden må ligge i samme
+  frekvensbøtte, ellers deler `MenuHierarchy.groupTables` emnenoden i
+  «Månedstall» + «Andre tabeller».
+  **Neste kandidat:** MONEY_MARKET, som har samme sparsomhetsproblem.
 - **FHI** (under Helse og samfunn → Helse): alle 13 kilder i det åpne API-et
   (`nokkel`, `mfr`, `daar`, `msis`, `sysvak`, `npr`, `kpr`, `lmr`, `gs`,
   `hkr`, `abr`, `ngs`, `skast`). Konfigureres i

@@ -65,6 +65,35 @@
     return m ? m[1] : null;
   }
 
+  /**
+   * Kuratert visningsrekkefølge for dimensjoner (config-radens `dimOrder`).
+   *
+   * DSD-rekkefølgen er ikke alltid den mest lesbare: GOVT_SECONDARY_MARKET har
+   * ISIN (79 enkeltlån) FØR INSTRUMENT_TYPE (statsobligasjoner/statskasse-
+   * veksler), altså den lange lista før det grove filteret som avgrenser den.
+   *
+   * De id-ene som er nevnt kommer først, i oppgitt rekkefølge; resten følger i
+   * uendret (DSD-)rekkefølge bak dem. Ukjente id-er ignoreres, så en configfeil
+   * gir den opprinnelige rekkefølgen — ikke en manglende dimensjon.
+   *
+   * MERK at dette KUN er presentasjon. SDMX-nøkkelen krever ett segment per
+   * DSD-dimensjon i DSD-rekkefølge, så den som permuterer metadata må samtidig
+   * feste den opprinnelige rekkefølgen i extension.fullDimId (se
+   * structureToMetadata) — buildKeyAndParams i norges-bank-adapter.js bygger
+   * nøkkelen fra den.
+   *
+   * @returns {string[]} permutert kopi av `ids`
+   */
+  function orderDims(ids, dimOrder) {
+    if (!Array.isArray(dimOrder) || !dimOrder.length) return ids.slice();
+    const known = {};
+    ids.forEach(id => { known[id] = true; });
+    const first = dimOrder.filter((id, i) => known[id] && dimOrder.indexOf(id) === i);
+    const taken = {};
+    first.forEach(id => { taken[id] = true; });
+    return first.concat(ids.filter(id => !taken[id]));
+  }
+
   /** Radmajor-strides for en size-array: strides[i] = produkt(size[i+1..]). */
   function computeStrides(size) {
     const strides = new Array(size.length);
@@ -119,8 +148,13 @@
     // posisjonene deres i serienøkkelen hopper vi over ved indeksberegning.
     const collapseSet = (Array.isArray(opts.collapseDims) && opts.collapseDims.length)
       ? new Set(opts.collapseDims) : null;
-    const keptDims = collapseSet
+    const kept = collapseSet
       ? seriesDims.filter(d => !collapseSet.has(d.id)) : seriesDims;
+    // Kuratert visningsrekkefølge (opts.dimOrder). Bare presentasjon: serie-
+    // nøkkelens posisjoner er uendret, det er strides-oppslaget under som
+    // knytter hver nøkkelposisjon til dimensjonens NYE plass i value-arrayen.
+    const keptOrder = orderDims(kept.map(d => d.id), opts.dimOrder);
+    const keptDims = keptOrder.map(id => kept.find(d => d.id === id));
 
     // Ingen serier → tomt, men gyldig JSON-Stat2 (UI viser «ingen data»).
     if (!timeDim || seriesKeys.length === 0) {
@@ -148,9 +182,12 @@
     const timeStride = strides[strides.length - 1]; // = 1
 
     // Stride per posisjon i serienøkkelen: kollapsede posisjoner → 0 (ignoreres).
-    let k = 0;
+    // Oppslaget går via dimensjonens plass i keptDims (ikke en løpende teller),
+    // slik at en permutert visningsrekkefølge treffer riktig celle.
+    const keptPos = {};
+    keptDims.forEach((d, i) => { keptPos[d.id] = i; });
     const strideByKeyPos = seriesDims.map(d =>
-      (collapseSet && collapseSet.has(d.id)) ? 0 : strides[k++]);
+      (collapseSet && collapseSet.has(d.id)) ? 0 : strides[keptPos[d.id]]);
 
     // dimension-objektet.
     const dimension = {};
@@ -394,17 +431,34 @@
     const dsdName = (dsd.names || typeof dsd.name === 'string') ? pickName(dsd, lang) : '';
     const label = cfgLabel || dsdName || (flowConfig && flowConfig.tableId) || '';
 
+    const extension = { px: { heading: heading, stub: [timeId] } };
+    let finalId = id;
+
+    // Kuratert visningsrekkefølge (flowConfig.dimOrder → opts.dimOrder).
+    // Tidsdimensjonen står alltid sist og flyttes ikke. Den opprinnelige
+    // DSD-rekkefølgen festes i fullDimId FØR permutasjonen: API-nøkkelen har ett
+    // segment per DSD-dimensjon i DSD-rekkefølge, og buildKeyAndParams
+    // (norges-bank-adapter.js) faller ellers tilbake på meta.id — som nå er
+    // permutert, og ville gitt segmentene i feil rekkefølge.
+    const ordered = orderDims(heading, opts.dimOrder);
+    if (ordered.join('.') !== heading.join('.')) {
+      extension.fullDimId = id.slice();
+      extension.px.heading = ordered;
+      finalId = ordered.concat([timeId]);
+    }
+
+    const sizeById = {};
+    id.forEach((d, i) => { sizeById[d] = size[i]; });
+
     return {
-      id: id,
-      size: size,
+      id: finalId,
+      size: finalId.map(d => sizeById[d]),
       label: label,
       source: opts.source || 'Norges Bank',
       updated: opts.updated || null,
       dimension: dimension,
       role: role,
-      extension: {
-        px: { heading: heading, stub: [timeId] }
-      }
+      extension: extension
     };
   }
 

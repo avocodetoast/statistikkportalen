@@ -34,8 +34,36 @@ const REG_KEYS = [];
 });
 ['R1', 'R2'].forEach(r => REG_KEYS.push(['Q', 'REGIND', '_Z', r, '_X']));
 
+// GOVT_PRIMARY_MARKET-lignende flow: snitt PÅ ISSUE_TYPE, samtidig som
+// MATURITY/COUPON/INSTR kollapses inn i ISIN. Kodene her inneholder med vilje
+// punktum og skråstrek («3.62500000», «NGB 03/2033») — nøyaktig de kodene som
+// ikke kan stå i nøkkelstien, og som tvinger validKeys-rebyggingen til å gå via
+// kodetupler i stedet for de '.'-joinede nøklene.
+const GOVT_DIMS = ['INSTRUMENT_TYPE', 'UNIT_MEASURE', 'FREQ', 'ISIN', 'ISSUE_TYPE',
+  'MATURITY', 'COUPON', 'INSTR'];
+// Papir 1 er en obligasjon, papir 2 en veksel — INSTRUMENT_TYPE er dermed
+// funksjonelt bestemt av ISIN, men beholdes bevisst som filter.
+const GOVT_SEC = {
+  NO1: ['GBON', '2033-03-13', '3.62500000', 'NGB 03/2033'],
+  NO2: ['TBIL', '2025-06-18', '0.00000000', 'NTB 06/2025']
+};
+const GOVT_KEYS = [];
+// Utstedelsesauksjon: begge papirene, to måleenheter.
+['NO1', 'NO2'].forEach(isin => {
+  const [type, mat, cpn, instr] = GOVT_SEC[isin];
+  ['V_A', 'Y'].forEach(m => GOVT_KEYS.push([type, m, 'B', isin, 'AU', mat, cpn, instr]));
+});
+// Tilbakekjøpsauksjon: bare obligasjonen, og med en egen måleenhet (vektet
+// snittkurs) som ikke finnes under utstedelsesauksjonene — grunnen til at
+// ISSUE_TYPE er riktig delelinje.
+['V_A', 'P_WA'].forEach(m => {
+  const [type, mat, cpn, instr] = GOVT_SEC.NO1;
+  GOVT_KEYS.push([type, m, 'B', 'NO1', 'BB', mat, cpn, instr]);
+});
+
 const FLOWS = {
   REG: { dims: REG_DIMS, keys: REG_KEYS },
+  GOVT: { dims: GOVT_DIMS, keys: GOVT_KEYS },
   // Uten slice — regresjon: alt skal se ut som før.
   PLAIN: { dims: ['FREQ', 'TOPIC'], keys: [['B', 'A1'], ['B', 'A2']] }
 };
@@ -53,6 +81,12 @@ const PROBE_VALUE_NAMES = {
       CURRQ: 'Inneværende kvartal', N1Q: 'Neste kvartal',
       CURRY: 'Inneværende år', N1Y: 'Neste år'
     }
+  },
+  GOVT: {
+    INSTRUMENT_TYPE: { GBON: 'Statsobligasjoner', TBIL: 'Statskasseveksler' },
+    UNIT_MEASURE: { V_A: 'Tildelt volum', Y: 'Effektiv rente', P_WA: 'Vektet snittkurs' },
+    ISSUE_TYPE: { AU: 'Utstedelsesauksjon', BB: 'Tilbakekjøpsauksjon' },
+    FREQ: { B: 'Virkedag' }
   }
 };
 
@@ -218,6 +252,52 @@ function syssDataJson() {
   };
 }
 
+/**
+ * Datasvar for nb-GOVT-AU-uttrekket (måleenhet «tildelt volum»): ett papir av
+ * hver type, ISSUE_TYPE pinnet til AU, kjennetegnene med i svaret slik det ekte
+ * API-et returnerer dem. To perioder.
+ */
+function govtDataJson() {
+  const timeVals = ['2026-01-05', '2026-01-06'];
+  const dimValues = {
+    INSTRUMENT_TYPE: ['GBON', 'TBIL'],
+    UNIT_MEASURE: ['V_A'],
+    FREQ: ['B'],
+    ISIN: ['NO1', 'NO2'],
+    ISSUE_TYPE: ['AU'],
+    MATURITY: ['2033-03-13', '2025-06-18'],
+    COUPON: ['3.62500000', '0.00000000'],
+    INSTR: ['NGB 03/2033', 'NTB 06/2025']
+  };
+  return {
+    data: {
+      structure: {
+        dimensions: {
+          series: GOVT_DIMS.map((id, i) => ({
+            id, keyPosition: i, name: 'Navn ' + id,
+            values: dimValues[id].map(c => ({
+              id: c, name: (PROBE_VALUE_NAMES.GOVT[id] && PROBE_VALUE_NAMES.GOVT[id][c]) || c
+            }))
+          })),
+          observation: [{
+            id: 'TIME_PERIOD', name: 'Tidsperiode',
+            values: timeVals.map(t => ({ id: t, name: t }))
+          }]
+        }
+      },
+      dataSets: [{
+        series: {
+          // GBON/V_A/B/NO1/AU + obligasjonens kjennetegn (indeks 0 hele veien).
+          '0:0:0:0:0:0:0:0': { observations: { 0: [100], 1: [101] } },
+          // TBIL/V_A/B/NO2/AU + vekselens kjennetegn (indeks 1).
+          '1:0:0:1:0:1:1:1': { observations: { 0: [200], 1: [201] } }
+        }
+      }]
+    },
+    meta: { prepared: '2026-01-10T00:00:00Z' }
+  };
+}
+
 function jsonResponse(data) {
   return { ok: true, status: 200, json: async () => data };
 }
@@ -241,6 +321,7 @@ const app = loadApp(SCRIPTS.sources, {
     if (u.includes('lastNObservations=60')) {
       return jsonResponse(probeJson(flowId, ['2025-Q1', '2025-Q2']));
     }
+    if (flowId === 'GOVT') return jsonResponse(govtDataJson());
     return jsonResponse(u.includes('SYSS') ? syssDataJson() : prodDataJson());
   }
 });
@@ -284,7 +365,32 @@ app.AppConfig.sources.nb.dataflows = [
     label: { nb: 'Regionalt nettverk, årslønnsvekst, etter næring' } },
 
   { flow: 'PLAIN', version: '1.0', tableId: 'nb-PLAIN',
-    path: ['bf', 'nb-renter'], label: { nb: 'Uten snitt' } }
+    path: ['bf', 'nb-renter'], label: { nb: 'Uten snitt' } },
+
+  // Statspapirer: snitt på emisjonsform + kjennetegnskollaps i samme rad.
+  { flow: 'GOVT', version: '1.0', tableId: 'nb-GOVT-AU',
+    path: ['bf', 'nb-statsgjeld'],
+    slice: { ISSUE_TYPE: 'AU' },
+    probeKey: '..B..AU...',
+    collapseDims: { anchor: 'ISIN', dims: ['MATURITY', 'COUPON', 'INSTR'] },
+    dimLabels: { ISIN: { nb: 'Statspapir' } },
+    label: { nb: 'Statspapirer – utstedelsesauksjoner' } },
+
+  { flow: 'GOVT', version: '1.0', tableId: 'nb-GOVT-BB',
+    path: ['bf', 'nb-statsgjeld'],
+    slice: { ISSUE_TYPE: 'BB' },
+    probeKey: '..B..BB...',
+    collapseDims: { anchor: 'ISIN', dims: ['MATURITY', 'COUPON', 'INSTR'] },
+    label: { nb: 'Statsobligasjoner – tilbakekjøpsauksjoner' } },
+
+  // Snitt på måleenhet i stedet for emisjonsform (annenhåndsmarkedets mønster):
+  // den pinnede dimensjonen er en annen, og ISSUE_TYPE blir stående som filter.
+  { flow: 'GOVT', version: '1.0', tableId: 'nb-GOVT-VOL',
+    path: ['bf', 'nb-statsgjeld'],
+    slice: { UNIT_MEASURE: 'V_A' },
+    probeKey: '.V_A.B.....',
+    collapseDims: { anchor: 'ISIN', dims: ['MATURITY', 'COUPON', 'INSTR'] },
+    label: { nb: 'Statspapirer – tildelt volum' } }
 ];
 
 describe('NBAdapter — slice: pinnede dimensjoner i metadata', () => {
@@ -441,6 +547,99 @@ describe('NBAdapter — slice: nøkkelbygging og datasti', () => {
     // Serie S1/CURRQ starter på 10, S1/N1Q på 20, S2/CURRQ på 30, S2/N1Q på 40.
     assert.deepEqual(ds.value,
       [10, 11, 12, 20, 21, 22, 30, 31, 32, 40, 41, 42]);
+  });
+});
+
+// Statspapir-flowene (GOVT_PRIMARY_MARKET / GOVT_SECONDARY_MARKET) kombinerer
+// snitt og kjennetegnskollaps i samme tabell — den kombinasjonen har ingen av
+// REGNET-radene, og kjennetegnskodene inneholder punktum og skråstrek.
+describe('NBAdapter — slice + kjennetegnskollaps (statspapirer)', () => {
+  it('pinner emisjonsformen bort og kollapser kjennetegnene inn i ISIN', async () => {
+    const meta = await adapter.getTableMetadata('nb-GOVT-AU', false, 'no');
+    assert.deepEqual(meta.id,
+      ['INSTRUMENT_TYPE', 'UNIT_MEASURE', 'FREQ', 'ISIN', 'TIME_PERIOD']);
+    assert.equal(meta.dimension.ISSUE_TYPE, undefined);
+    assert.equal(meta.dimension.MATURITY, undefined);
+    assert.equal(meta.dimension.COUPON, undefined);
+    assert.equal(meta.dimension.INSTR, undefined);
+    assert.deepEqual(meta.extension.pinnedDims.byDim, { ISSUE_TYPE: 'AU' });
+    assert.deepEqual(meta.extension.collapsedDims.dims, ['MATURITY', 'COUPON', 'INSTR']);
+  });
+
+  it('snittet fjerner måleenheten som bare finnes under en annen emisjonsform', async () => {
+    const au = await adapter.getTableMetadata('nb-GOVT-AU', false, 'no');
+    assert.deepEqual(Object.keys(au.dimension.UNIT_MEASURE.category.index), ['V_A', 'Y']);
+    // Vektet snittkurs hører til tilbakekjøpsauksjonene og skal ikke lekke inn.
+    assert.equal(au.dimension.UNIT_MEASURE.category.index.P_WA, undefined);
+
+    const bb = await adapter.getTableMetadata('nb-GOVT-BB', false, 'no');
+    assert.deepEqual(Object.keys(bb.dimension.UNIT_MEASURE.category.index).sort(),
+      ['P_WA', 'V_A']);
+    // Bare obligasjonen kjøpes tilbake → ISIN og papirtype har én verdi hver, og
+    // UI-en velger dem automatisk i stedet for å vise tomme kort.
+    assert.deepEqual(bb.extension.autoHiddenDims.slice().sort(),
+      ['FREQ', 'INSTRUMENT_TYPE', 'ISIN']);
+  });
+
+  it('beriker ISIN-etiketten med kupong og forfall', async () => {
+    const meta = await adapter.getTableMetadata('nb-GOVT-AU', false, 'no');
+    assert.equal(meta.dimension.ISIN.category.label.NO1,
+      'NGB 03/2033 – 3,625 % – forfall 13.03.2033');
+    assert.equal(meta.dimension.ISIN.category.label.NO2,
+      'NTB 06/2025 – 0 % – forfall 18.06.2025');
+  });
+
+  it('bygger validKeys fra kodetupler, ikke fra punktum-joinede nøkler', async () => {
+    const meta = await adapter.getTableMetadata('nb-GOVT-AU', false, 'no');
+    const vk = meta.extension.validKeys;
+    assert.deepEqual(vk.dims, ['INSTRUMENT_TYPE', 'UNIT_MEASURE', 'FREQ', 'ISIN']);
+    // Papirtypen er funksjonelt bestemt av ISIN og beholdes som filter — derfor
+    // er dette IKKE et fullt rektangel (2×2×1×2 = 8), og utgråingen er tilsiktet.
+    assert.deepEqual(vk.keys.slice().sort(),
+      ['GBON.V_A.B.NO1', 'GBON.Y.B.NO1', 'TBIL.V_A.B.NO2', 'TBIL.Y.B.NO2']);
+  });
+
+  it('legger den pinnede emisjonsformen i sitt eget nøkkelsegment', async () => {
+    const meta = await adapter.getTableMetadata('nb-GOVT-AU', false, 'no');
+    const q = adapter.buildApiQuery('nb-GOVT-AU', {
+      INSTRUMENT_TYPE: '*', UNIT_MEASURE: ['V_A'], FREQ: ['B'], ISIN: ['NO1'],
+      TIME_PERIOD: '*'
+    }, { meta, lang: 'no' });
+    // Åtte segmenter: papirtype tom, måleenhet, frekvens, ISIN, AU, og de tre
+    // kollapsede kjennetegnene tomme (de kan ikke stå i nøkkelstien).
+    assert.ok(q.url.includes('/data/GOVT/.V_A.B.NO1.AU...?'),
+      'forventet .V_A.B.NO1.AU... i nøkkelen, fikk: ' + q.url);
+  });
+
+  it('snitt på måleenhet pinner den, og lar emisjonsformen stå som filter', async () => {
+    const meta = await adapter.getTableMetadata('nb-GOVT-VOL', false, 'no');
+    assert.equal(meta.dimension.UNIT_MEASURE, undefined);
+    assert.deepEqual(meta.extension.pinnedDims.byDim, { UNIT_MEASURE: 'V_A' });
+    assert.deepEqual(Object.keys(meta.dimension.ISSUE_TYPE.category.index).sort(),
+      ['AU', 'BB']);
+    const q = adapter.buildApiQuery('nb-GOVT-VOL', {
+      INSTRUMENT_TYPE: '*', FREQ: ['B'], ISIN: '*', ISSUE_TYPE: ['BB'], TIME_PERIOD: '*'
+    }, { meta, lang: 'no' });
+    assert.ok(q.url.includes('/data/GOVT/.V_A.B..BB...?'),
+      'forventet måleenheten pinnet inn i nøkkelen, fikk: ' + q.url);
+  });
+
+  it('leverer datasett uten pinnede og kollapsede dimensjoner', async () => {
+    await adapter.getTableMetadata('nb-GOVT-AU', false, 'no'); // legg i cache
+    const ds = await adapter.getTableData('nb-GOVT-AU', {
+      INSTRUMENT_TYPE: '*', UNIT_MEASURE: ['V_A'], FREQ: ['B'], ISIN: ['NO1', 'NO2'],
+      TIME_PERIOD: '*'
+    }, 'no');
+    assert.deepEqual(ds.id,
+      ['INSTRUMENT_TYPE', 'UNIT_MEASURE', 'FREQ', 'ISIN', 'TIME_PERIOD']);
+    assert.equal(ds.dimension.ISSUE_TYPE, undefined);
+    assert.equal(ds.dimension.COUPON, undefined);
+    assert.deepEqual(ds.size, [2, 1, 1, 2, 2]);
+    // Obligasjonen ligger på GBON/NO1, vekselen på TBIL/NO2 — kombinasjonene
+    // som ikke finnes er null, ikke utelatt.
+    assert.deepEqual(ds.value, [100, 101, null, null, null, null, 200, 201]);
+    assert.equal(ds.dimension.ISIN.category.label.NO1,
+      'NGB 03/2033 – 3,625 % – forfall 13.03.2033');
   });
 });
 

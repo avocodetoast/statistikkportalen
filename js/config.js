@@ -32,6 +32,35 @@ const REGNET_DIM_LABELS = {
   REGION: { nb: 'Region', en: 'Region' }
 };
 
+// Statsgjeld/statspapirer: ni rader (to fulle samletabeller + sju kuraterte
+// snitt) deler samme kryssplassering, samme dim-etiketter og — for
+// førstehåndsmarkedet — samme kjennetegnskollaps.
+const GOVT_PATHS = [
+  ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
+  ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
+  ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
+];
+// API-navnet på ISIN er «Lån», som er tvetydig i en statspapirtabell (og INSTR,
+// som kollapses inn i ISIN, heter det samme).
+const GOVT_DIM_LABELS = {
+  ISIN: { nb: 'Statspapir', en: 'Security' }
+};
+// Papirtypen (statsobligasjoner/statskasseveksler) skal ALLTID stå foran lista
+// over enkeltlån: den er det grove filteret som avgrenser en liste på 79–125
+// ISIN-er, og er ubrukelig bak den. DSD-ene gjør ikke dette av seg selv —
+// annenhåndsmarkedet har ISIN før INSTRUMENT_TYPE, og førstehåndsmarkedet
+// skyver måleenhet og frekvens inn mellom dem. Rent presentasjon:
+// API-nøkkelen bygges fortsatt i DSD-rekkefølge fra extension.fullDimId (se
+// orderDims i sdmx-to-jsonstat.js).
+const GOVT_PM_DIM_ORDER = ['FREQ', 'INSTRUMENT_TYPE', 'ISIN', 'ISSUE_TYPE', 'UNIT_MEASURE'];
+const GOVT_SM_DIM_ORDER = ['FREQ', 'INSTRUMENT_TYPE', 'ISIN',
+  'COUNTERPARTY_AREA', 'COUNTERPARTY_TYPE', 'UNIT_MEASURE'];
+// ISIN bestemmer forfallsdato, kupong og lånenavn — verifisert funksjonelt mot
+// serieskeysonly. Som egne kort ville de tvunget brukeren til å velge samme
+// papir tre ganger til; kollapset havner de i ankeretiketten i stedet
+// («NGB 03/2033 – 3,625 % – forfall 13.03.2033»).
+const GOVT_PM_COLLAPSE = { anchor: 'ISIN', dims: ['MATURITY', 'COUPON', 'INSTR'] };
+
 const AppConfig = {
   /**
    * PxWebApi v2 base URL for the data source.
@@ -293,6 +322,10 @@ const AppConfig = {
       // `timeUnit`/`keywords`/`description`/`dimLabels` overstyrer per tabell
       // (frekvensbøtte i filteret, søkeord, Tabellinfo-note, dim-etiketter) —
       // nødvendig når flere rader deler flow og dermed flow-ordlistene.
+      // `dimOrder: [dimId, …]` setter rekkefølgen dimensjonskortene vises i når
+      // DSD-rekkefølgen er ulogisk (GOVT_SECONDARY_MARKET lister 79 enkeltlån
+      // FØR papirtypen som avgrenser dem). Kun presentasjon — API-nøkkelen
+      // bygges fra extension.fullDimId, som holder DSD-rekkefølgen.
       // `collapseDims: {anchor, dims}` kollapser kjennetegns-dimensjoner som er
       // funksjonelt avhengige av ankeret (verifisert mot serieskeysonly:
       // GOVT_PRIMARY_MARKET har ISIN → MATURITY/COUPON/INSTR) inn i ankerets
@@ -327,54 +360,157 @@ const AppConfig = {
           ],
           label: { nb: 'Kortsiktige renter (NOWA)', en: 'Short-term interest rates (NOWA)' } },
         { flow: 'GOVT_GENERIC_RATES', version: '1.0', tableId: 'nb-GOVT_GENERIC_RATES',
-          paths: [
-            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
-            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
-            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
-          ],
+          paths: GOVT_PATHS,
           label: { nb: 'Statsobligasjonsrenter', en: 'Government bond yields' } },
         { flow: 'GOVT_ZEROCOUPON', version: '1.0', tableId: 'nb-GOVT_ZEROCOUPON',
-          paths: [
-            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
-            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
-            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
-          ],
+          paths: GOVT_PATHS,
           label: { nb: 'Nullkupongrenter statspapirer', en: 'Zero coupon yields, government securities' } },
         { flow: 'SEC', version: '1.0', tableId: 'nb-SEC',
-          paths: [
-            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
-            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
-            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
-          ],
+          paths: GOVT_PATHS,
           label: { nb: 'Statspapirer – kurser og renter', en: 'Government securities – prices and yields' } },
         { flow: 'GOVT_KEYFIGURES', version: '1.0', tableId: 'nb-GOVT_KEYFIGURES',
-          paths: [
-            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
-            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
-            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
-          ],
+          paths: GOVT_PATHS,
           label: { nb: 'Nøkkeltall for statsgjelden', en: 'Key government debt indicators' } },
+
+        // Førstehåndsmarkedet: den fulle samletabellen + fem kuraterte snitt.
+        // Nøkkelen er INSTRUMENT_TYPE.UNIT_MEASURE.FREQ.ISIN.ISSUE_TYPE.MATURITY.
+        // COUPON.INSTR (åtte segmenter — de tre siste er kollapset inn i ISIN og
+        // står derfor alltid tomme). ISSUE_TYPE er delelinja: måleenhetene følger
+        // emisjonsformen, så bare tilbakekjøpsauksjonene har vektet snittkurs,
+        // vektet snittrente, laveste aksepterte rente og høyeste aksepterte pris.
+        // Tetthet ISIN × UNIT_MEASURE per snitt (probet 2026-07-23): AU 99,3 %,
+        // OWN 98,9 %, BB 88,4 %, SYN 100 %, RFQ 100 % — mot 67 % samlet.
+        // INSTRUMENT_TYPE er funksjonelt bestemt av ISIN, men beholdes bevisst
+        // som filter: «vis bare statsobligasjoner» er nyttig, og utgråingen den
+        // utløser er meningsbærende (ikke en artefakt av sparsomhet).
+        //
+        // Titlene deler prefiks («Statslån, førstehåndsmarkedet») slik at den
+        // fulle tabellen og snittene sorterer og leses som én familie. Radenes
+        // rekkefølge ER sorteringen i emnetreet (sortCode = 900 + radindeks) og
+        // følger livsløpet: utstedelse → syndikering → RFQ → tilbakekjøp →
+        // egenbeholdning. Ingen `timeUnit` på GOVT-radene: alle NB-tabellene i
+        // denne noden må havne i SAMME frekvensbøtte, ellers deler
+        // MenuHierarchy.groupTables noden i «Månedstall» + «Andre tabeller».
         { flow: 'GOVT_PRIMARY_MARKET', version: '1.0', tableId: 'nb-GOVT_PRIMARY_MARKET',
-          paths: [
-            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
-            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
-            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
-          ],
-          collapseDims: { anchor: 'ISIN', dims: ['MATURITY', 'COUPON', 'INSTR'] },
-          label: { nb: 'Statspapirer – førstehåndsmarkedet', en: 'Government securities – primary market' } },
+          paths: GOVT_PATHS,
+          dimOrder: GOVT_PM_DIM_ORDER,
+          collapseDims: GOVT_PM_COLLAPSE,
+          dimLabels: GOVT_DIM_LABELS,
+          label: { nb: 'Statslån, førstehåndsmarkedet',
+            en: 'Government debt securities, primary market' } },
+
+        { flow: 'GOVT_PRIMARY_MARKET', version: '1.0', tableId: 'nb-GOVT_PRIMARY_MARKET-AU',
+          paths: GOVT_PATHS,
+          dimOrder: GOVT_PM_DIM_ORDER,
+          slice: { ISSUE_TYPE: 'AU' },
+          probeKey: '..B..AU...',
+          collapseDims: GOVT_PM_COLLAPSE,
+          dimLabels: GOVT_DIM_LABELS,
+          keywords: ['Statslån', 'Statspapirer', 'Utstedelsesauksjon', 'Auksjon', 'Emisjon',
+            'Statsobligasjoner', 'Statskasseveksler', 'Tildelt volum', 'Budvolum', 'Dekningsgrad',
+            'Government securities', 'Issuing auction', 'Allotment', 'Bid to cover'],
+          description: 'Resultater fra Statens utstedelsesauksjoner av statsobligasjoner og statskasseveksler: tildelt volum, budvolum, dekningsgrad, effektiv rente og utestående volum per lån.',
+          label: { nb: 'Statslån, førstehåndsmarkedet. Utstedelsesauksjoner',
+            en: 'Government debt securities, primary market. Issuing auctions' } },
+
+        { flow: 'GOVT_PRIMARY_MARKET', version: '1.0', tableId: 'nb-GOVT_PRIMARY_MARKET-SYN',
+          paths: GOVT_PATHS,
+          dimOrder: GOVT_PM_DIM_ORDER,
+          slice: { ISSUE_TYPE: 'SYN' },
+          probeKey: '..B..SYN...',
+          collapseDims: GOVT_PM_COLLAPSE,
+          dimLabels: GOVT_DIM_LABELS,
+          keywords: ['Statslån', 'Statsobligasjoner', 'Syndikering', 'Emisjon', 'Nytt lån',
+            'Statspapirer', 'Government bonds', 'Syndication', 'New issue'],
+          description: 'Statsobligasjoner lagt ut ved syndikering: tildelt volum, kurs, effektiv rente, durasjon og år til forfall per lån.',
+          label: { nb: 'Statslån, førstehåndsmarkedet. Syndikeringer',
+            en: 'Government debt securities, primary market. Syndications' } },
+
+        { flow: 'GOVT_PRIMARY_MARKET', version: '1.0', tableId: 'nb-GOVT_PRIMARY_MARKET-RFQ',
+          paths: GOVT_PATHS,
+          dimOrder: GOVT_PM_DIM_ORDER,
+          slice: { ISSUE_TYPE: 'RFQ' },
+          probeKey: '..B..RFQ...',
+          collapseDims: GOVT_PM_COLLAPSE,
+          dimLabels: GOVT_DIM_LABELS,
+          keywords: ['Statslån', 'Statsobligasjoner', 'RFQ', 'Request for quote', 'Pristilbud',
+            'Emisjon', 'Statspapirer', 'Government bonds'],
+          description: 'Statsobligasjoner lagt ut ved forespørsel om pristilbud (request for quote). Salgsformen er så langt brukt én gang, for ett enkelt lån i 2019.',
+          label: { nb: 'Statslån, førstehåndsmarkedet. Salg ved pristilbud (RFQ)',
+            en: 'Government debt securities, primary market. Request for quote sales' } },
+
+        { flow: 'GOVT_PRIMARY_MARKET', version: '1.0', tableId: 'nb-GOVT_PRIMARY_MARKET-BB',
+          paths: GOVT_PATHS,
+          dimOrder: GOVT_PM_DIM_ORDER,
+          slice: { ISSUE_TYPE: 'BB' },
+          probeKey: '..B..BB...',
+          collapseDims: GOVT_PM_COLLAPSE,
+          dimLabels: GOVT_DIM_LABELS,
+          keywords: ['Statslån', 'Statsobligasjoner', 'Tilbakekjøp', 'Tilbakekjøpsauksjon',
+            'Auksjon', 'Vektet snittkurs', 'Vektet snittrente', 'Statspapirer',
+            'Government bonds', 'Buyback auction', 'Weighted average price'],
+          description: 'Resultater fra Statens tilbakekjøpsauksjoner av statsobligasjoner: tilbakekjøpt volum, vektet snittkurs og -rente, laveste aksepterte rente og høyeste aksepterte pris.',
+          label: { nb: 'Statslån, førstehåndsmarkedet. Tilbakekjøpsauksjoner',
+            en: 'Government debt securities, primary market. Buyback auctions' } },
+
+        { flow: 'GOVT_PRIMARY_MARKET', version: '1.0', tableId: 'nb-GOVT_PRIMARY_MARKET-OWN',
+          paths: GOVT_PATHS,
+          dimOrder: GOVT_PM_DIM_ORDER,
+          slice: { ISSUE_TYPE: 'OWN' },
+          probeKey: '..B..OWN...',
+          collapseDims: GOVT_PM_COLLAPSE,
+          dimLabels: GOVT_DIM_LABELS,
+          keywords: ['Statslån', 'Statspapirer', 'Egenbeholdning', 'Statens egenbeholdning',
+            'Utestående volum', 'Statsobligasjoner', 'Statskasseveksler',
+            'Government securities', 'Own holdings', 'Outstanding volume'],
+          description: 'Endringer i statens egenbeholdning av statsobligasjoner og statskasseveksler, med utestående volum, durasjon og år til forfall per lån.',
+          label: { nb: 'Statslån, førstehåndsmarkedet. Statens egenbeholdning',
+            en: 'Government debt securities, primary market. Government\'s own holdings' } },
+
+        // Annenhåndsmarkedet: den fulle samletabellen + to snitt på måleenhet.
+        // Nøkkelen er FREQ.ISIN.INSTRUMENT_TYPE.COUNTERPARTY_AREA.
+        // COUNTERPARTY_TYPE.UNIT_MEASURE. Snittet løfter tettheten fra 10,1 % til
+        // 31,8 % (omsetning) og 21,9 % (repo), og snevrer samtidig motpartslistene
+        // (repo bruker 4 av 6 regioner og 9 av 11 motpartstyper). Resten av
+        // sparsomheten er ekte: ikke alle lån handles med alle motpartstyper i
+        // alle regioner, så kryssfilteret vil fortsatt gråe ut mye — korrekt.
+        // Ingen collapseDims her: flowen har ikke MATURITY/COUPON/INSTR, og
+        // ISIN-kodelista gir allerede lesbare etiketter («NGB 09/2029»).
         { flow: 'GOVT_SECONDARY_MARKET', version: '1.0', tableId: 'nb-GOVT_SECONDARY_MARKET',
-          paths: [
-            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
-            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
-            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
-          ],
-          label: { nb: 'Statspapirer – annenhåndsmarkedet', en: 'Government securities – secondary market' } },
+          paths: GOVT_PATHS,
+          dimOrder: GOVT_SM_DIM_ORDER,
+          dimLabels: GOVT_DIM_LABELS,
+          label: { nb: 'Statslån, annenhåndsmarkedet',
+            en: 'Government debt securities, secondary market' } },
+
+        { flow: 'GOVT_SECONDARY_MARKET', version: '1.0', tableId: 'nb-GOVT_SECONDARY_MARKET-VOL',
+          paths: GOVT_PATHS,
+          dimOrder: GOVT_SM_DIM_ORDER,
+          slice: { UNIT_MEASURE: 'V' },
+          probeKey: 'M.....V',
+          dimLabels: GOVT_DIM_LABELS,
+          keywords: ['Statslån', 'Statspapirer', 'Annenhåndsmarkedet', 'Omsetning', 'Motpart',
+            'Motpartstype', 'Statsobligasjoner', 'Statskasseveksler',
+            'Government securities', 'Secondary market', 'Turnover', 'Counterparty'],
+          description: 'Omsetning av statsobligasjoner og statskasseveksler i annenhåndsmarkedet, fordelt på motpartstype og motpartens region.',
+          label: { nb: 'Statslån, annenhåndsmarkedet. Omsetning etter motpart',
+            en: 'Government debt securities, secondary market. Turnover by counterparty' } },
+
+        { flow: 'GOVT_SECONDARY_MARKET', version: '1.0', tableId: 'nb-GOVT_SECONDARY_MARKET-REPO',
+          paths: GOVT_PATHS,
+          dimOrder: GOVT_SM_DIM_ORDER,
+          slice: { UNIT_MEASURE: 'V_R' },
+          probeKey: 'M.....V_R',
+          dimLabels: GOVT_DIM_LABELS,
+          keywords: ['Statslån', 'Statspapirer', 'Repo', 'Gjenkjøpsavtaler', 'Annenhåndsmarkedet',
+            'Motpart', 'Motpartstype', 'Statsobligasjoner',
+            'Government securities', 'Repo', 'Repurchase agreements', 'Counterparty'],
+          description: 'Omsetning av statspapirer i gjenkjøpsavtaler (repo) i annenhåndsmarkedet, fordelt på motpartstype og motpartens region.',
+          label: { nb: 'Statslån, annenhåndsmarkedet. Gjenkjøpsavtaler (repo) etter motpart',
+            en: 'Government debt securities, secondary market. Repurchase agreements by counterparty' } },
+
         { flow: 'GOVT_IRS', version: '1.0', tableId: 'nb-GOVT_IRS', discontinued: true,
-          paths: [
-            ['bf', 'bf04', 'verdipapirer', 'nb-statsgjeld'],
-            ['os', 'os07', 'offogjeld', 'nb-statsgjeld'],
-            ['os', 'os04', 'offogjeld', 'nb-statsgjeld']
-          ],
+          paths: GOVT_PATHS,
           label: { nb: 'Rentebytteavtaler (historisk, t.o.m. 2014)', en: 'Interest rate swaps (historical, until 2014)' } },
         { flow: 'LIQUIDITY_STATISTICS', version: '1.0', tableId: 'nb-LIQUIDITY_STATISTICS',
           paths: [
