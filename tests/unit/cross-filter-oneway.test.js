@@ -137,3 +137,58 @@ describe('sectionedDimensionLayout — gate og partisjonering', () => {
     assert.ok(!layout.autoHidden.includes('TIME_PERIOD'));
   });
 });
+
+/**
+ * Kuraterte NB-tabeller (config-radens `slice`) har ingen måltallsdimensjon, så
+ * sectionedDimensionLayout gir null for dem. Enkeltverdi-dims (FREQ etter
+ * snittet) flagges i stedet av adapteren via extension.autoHiddenDims, og
+ * rendres som en «Automatisk valgt»-linje over det første kortet.
+ */
+describe('adapterAutoHiddenDims / autoSelectedInfoHtml', () => {
+  const dim = (codes, label) => ({
+    label,
+    category: {
+      index: Object.fromEntries(codes.map((c, i) => [c, i])),
+      label: Object.fromEntries(codes.map(c => [c, c === 'Q' ? 'Kvartal' : c]))
+    }
+  });
+
+  const slicedMeta = () => ({
+    id: ['FREQ', 'REGNET_SECTOR', 'HORIZON', 'TIME_PERIOD'],
+    role: { time: ['TIME_PERIOD'] },
+    dimension: {
+      FREQ: dim(['Q'], 'Frekvens'),
+      REGNET_SECTOR: dim(['AGG', 'IND_TOT'], 'Næring'),
+      HORIZON: dim(['CURRQ', 'N1Q'], 'Tidshorisont'),
+      TIME_PERIOD: dim(['2025-Q1'], 'Tidsperiode')
+    },
+    extension: { autoHiddenDims: ['FREQ'] }
+  });
+
+  it('leser autoHiddenDims fra metadata', () => {
+    assert.deepEqual(app.adapterAutoHiddenDims(slicedMeta()), ['FREQ']);
+  });
+
+  it('tom liste uten flagget (SSB/FHI/øvrige NB-tabeller uendret)', () => {
+    const m = slicedMeta();
+    delete m.extension.autoHiddenDims;
+    assert.deepEqual(app.adapterAutoHiddenDims(m), []);
+    assert.deepEqual(app.adapterAutoHiddenDims(null), []);
+  });
+
+  it('skjuler aldri tidsdimensjonen, og hopper over ukjente dims', () => {
+    const m = slicedMeta();
+    m.extension.autoHiddenDims = ['FREQ', 'TIME_PERIOD', 'FINNES_IKKE'];
+    assert.deepEqual(app.adapterAutoHiddenDims(m), ['FREQ']);
+  });
+
+  it('bygger infolinjen med dimensjonsetikett = verdietikett', () => {
+    const html = app.autoSelectedInfoHtml(slicedMeta(), ['FREQ']);
+    assert.match(html, /class="auto-selected-info"/);
+    assert.match(html, /Frekvens = Kvartal/);
+  });
+
+  it('gir tom streng uten skjulte dims (ingen tom infoboks)', () => {
+    assert.equal(app.autoSelectedInfoHtml(slicedMeta(), []), '');
+  });
+});

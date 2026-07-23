@@ -39,6 +39,13 @@ const appConfig = {
         { flow: 'SHORT_RATES', version: '1.2', tableId: 'nb-SHORT_RATES',
           paths: [['bf', 'bf03', 'renter', 'nb-pengepolitikk']],
           label: { nb: 'Kortsiktige renter', en: 'Short-term rates' } },
+        // Kuratert snitt: deler flow med raden over, men overstyrer
+        // frekvensbøtte og søkeord per tabell (jf. buildCatalogue i adapteren).
+        { flow: 'SHORT_RATES', version: '1.2', tableId: 'nb-SHORT_RATES-NOWA',
+          paths: [['bf', 'bf03', 'renter', 'nb-pengepolitikk']],
+          slice: { TENOR: 'ON' }, probeKey: 'B.ON.',
+          timeUnit: 'Quarterly', keywords: ['NOWA', 'Overnight'],
+          label: { nb: 'NOWA', en: 'NOWA' } },
       ],
     },
     fhi: {
@@ -170,8 +177,21 @@ describe('buildNbCatalogue', () => {
   it('bygger én oppføring per dataflow, nettverksfritt', async () => {
     const { buildNbCatalogue } = await mod;
     const tables = buildNbCatalogue(appConfig, subjectNames, 'nb');
-    assert.equal(tables.length, 3);
-    assert.deepEqual(tables.map(t => t.id), ['nb-EXR', 'nb-IR', 'nb-SHORT_RATES']);
+    assert.equal(tables.length, 4);
+    assert.deepEqual(tables.map(t => t.id),
+      ['nb-EXR', 'nb-IR', 'nb-SHORT_RATES', 'nb-SHORT_RATES-NOWA']);
+  });
+
+  it('lar en snittet rad overstyre timeUnit og keywords per tabell', async () => {
+    const { buildNbCatalogue } = await mod;
+    const cat = buildNbCatalogue(appConfig, subjectNames, 'nb');
+    const full = cat.find(t => t.id === 'nb-SHORT_RATES');
+    const nowa = cat.find(t => t.id === 'nb-SHORT_RATES-NOWA');
+    assert.equal(full.timeUnit, 'Business');
+    assert.equal(nowa.timeUnit, 'Quarterly');
+    assert.deepEqual(nowa.variableNames, ['NOWA', 'Overnight']);
+    // Rader som deler flow beholder egne, unike sortCodes.
+    assert.notEqual(full.sortCode, nowa.sortCode);
   });
 
   it('setter katalogfeltene som norges-bank-adapter.buildCatalogue', async () => {

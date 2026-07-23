@@ -18,6 +18,18 @@ uendret. Adapterkontrakten er dokumentert i `js/sources/source-registry.js`.
   SDMX-nøkkel) for katalogperiode-/tidsprobene. Dimensjoner med koder som
   ikke kan stå i nøkkelstien (punktum/skråstrek: GOVT_PRIMARY_MARKET
   COUPON/INSTR, CBC_TRANSACTIONS INSTR) filtreres klientside.
+- **Kuraterte NB-tematabeller (`slice`)**: en dataflow der de fleste
+  dimensjonskombinasjonene ikke finnes gir en variabelvelger full av utgråede
+  verdier. `slice: {DIM: 'kode'|[koder]}` på en config-rad snitter flowen ned
+  til ett tema; enkeltkode-snitt fjerner dimensjonen helt fra velgeren og
+  resultattabellen, men pinner koden i API-nøkkelen. Flere rader kan dele samme
+  `flow`. Regionalt nettverk (REGNET) er første kilde ut: den fulle tabellen
+  («alle indikatorer») står ved siden av seks kuraterte tabeller —
+  produksjonsvekst, investeringsplaner, sysselsettingsvekst og -planer,
+  regionalindikator, kapasitetsutnytting/lønnsomhet/knapphet på arbeidskraft,
+  og årslønnsvekst. Alle seks er verifisert som fulle rektangler, så
+  kryssfilteret gråer ikke ut noe inne i dem. **Neste kandidater:**
+  MONEY_MARKET og GOVT_SECONDARY_MARKET, som har samme sparsomhetsproblem.
 - **FHI** (under Helse og samfunn → Helse): alle 13 kilder i det åpne API-et
   (`nokkel`, `mfr`, `daar`, `msis`, `sysvak`, `npr`, `kpr`, `lmr`, `gs`,
   `hkr`, `abr`, `ngs`, `skast`). Konfigureres i

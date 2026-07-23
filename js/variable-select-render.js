@@ -72,6 +72,32 @@ function sectionedDimensionLayout(meta) {
 }
 
 /**
+ * Enkeltverdi-dimensjoner som kilden selv har flagget for skjuling
+ * (`extension.autoHiddenDims`). Norges Banks kuraterte tabeller (config-radens
+ * `slice`) setter denne for f.eks. FREQ, som står igjen med én gyldig verdi
+ * etter snittet. Uavhengig av sectionedDimensionLayout, som krever role.metric
+ * og derfor ikke slår inn for disse tabellene.
+ */
+function adapterAutoHiddenDims(meta) {
+  const dims = meta && meta.extension && meta.extension.autoHiddenDims;
+  if (!Array.isArray(dims)) return [];
+  const timeId = (meta.role && meta.role.time && meta.role.time[0]) || 'TIME_PERIOD';
+  return dims.filter(d => d !== timeId && meta.dimension[d]);
+}
+
+/** «Automatisk valgt: Frekvens = Kvartal» — linjen som erstatter skjulte kort. */
+function autoSelectedInfoHtml(meta, dimCodes) {
+  if (!dimCodes.length) return '';
+  const parts = dimCodes.map(d => {
+    const dm = meta.dimension[d];
+    const code = Object.keys(dm.category.index)[0];
+    return (dm.label || d) + ' = ' + ((dm.category.label && dm.category.label[code]) || code);
+  });
+  return '<div class="auto-selected-info">' +
+    escapeHtml(t('variable.autoSelected') + ' ' + parts.join(' · ')) + '</div>';
+}
+
+/**
  * Display variables/dimensions for selection.
  * Reads metadata to determine elimination status, codelists, and time dimensions.
  * Dimensions are ordered per SSB convention: heading dimensions first, then stub.
@@ -89,7 +115,11 @@ async function displayVariables() {
   const dimensions = layout
     ? [...layout.filters, ...layout.measures]
     : getDimensionDisplayOrder();
-  const autoHidden = new Set(layout ? layout.autoHidden : []);
+  const autoHiddenList = layout ? layout.autoHidden : adapterAutoHiddenDims(tableMetadata);
+  const autoHidden = new Set(autoHiddenList);
+  // Usekjonert visning: infolinjen står over det første kortet i stedet for
+  // under en seksjonsheader (som er der den havner i den seksjonerte grenen).
+  let pendingAutoInfo = layout ? '' : autoSelectedInfoHtml(tableMetadata, autoHiddenList);
 
   // Pre-load first codelist per dimension for value ordering in "Velg fritt" view
   await preloadCodelistOrdering(dimensions);
@@ -108,19 +138,17 @@ async function displayVariables() {
     const dimension = tableMetadata.dimension[dimCode];
     if (!dimension) return;
 
-    // Seksjonsheadere + infolinje for auto-valgte (skjulte) enkeltverdi-kort.
+    // Infolinje for auto-valgte (skjulte) enkeltverdi-kort — over første kort.
+    if (pendingAutoInfo) {
+      html += pendingAutoInfo;
+      pendingAutoInfo = '';
+    }
+
+    // Seksjonsheadere + samme infolinje under filterseksjonens header.
     if (layout && dimCode === layout.filters[0]) {
       html += '<div class="variables-section-header">' +
         escapeHtml(t('variable.section.filters')) + '</div>';
-      if (autoHidden.size) {
-        const parts = [...autoHidden].map(d => {
-          const dm = tableMetadata.dimension[d];
-          const code = Object.keys(dm.category.index)[0];
-          return (dm.label || d) + ' = ' + ((dm.category.label && dm.category.label[code]) || code);
-        });
-        html += '<div class="auto-selected-info">' +
-          escapeHtml(t('variable.autoSelected') + ' ' + parts.join(' · ')) + '</div>';
-      }
+      html += autoSelectedInfoHtml(tableMetadata, [...autoHidden]);
     } else if (layout && dimCode === layout.measures[0]) {
       html += '<div class="variables-section-header">' +
         escapeHtml(t('variable.section.measures')) + '</div>';

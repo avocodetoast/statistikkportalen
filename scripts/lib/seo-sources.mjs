@@ -166,8 +166,11 @@ export function buildNbCatalogue(appConfig, subjectNames, lang) {
       firstPeriod: '',
       lastPeriod: '',
       discontinued: flow.discontinued === true,
-      timeUnit: 'Business',
-      variableNames: (NB_VARIABLE_NAMES[flow.flow] || []).slice(),
+      // Speiler buildCatalogue i js/sources/norges-bank-adapter.js: flere rader
+      // kan dele samme flow (REGNET-snittene), og overstyrer da frekvensbøtte
+      // og søkeord per tabell.
+      timeUnit: flow.timeUnit || 'Business',
+      variableNames: (flow.keywords || NB_VARIABLE_NAMES[flow.flow] || []).slice(),
       subjectCode: placements[0][0],
       paths: placements.map(p => buildPathSegments(p, subjectNames, nodes, lang)),
       source: 'Norges Bank',

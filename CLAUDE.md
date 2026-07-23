@@ -163,7 +163,7 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 | `api.js` | SSB API wrapper; throttled fetch + caching | `SSBApi` | AppConfig, CacheManager | Adding/changing SSB API endpoints, request parameters, download behaviour |
 | `sources/source-registry.js` | Multi-source facade: routes calls to the owning adapter, aggregates catalogues | `window.api`, `window.SourceRegistry` | api.js, all adapters | Changing routing rules, the adapter contract, or catalogue aggregation |
 | `sources/ssb-adapter.js` | Thin adapter wrapping `SSBApi` as the fallback source | pushes onto `window.SourceAdapters` | api.js | Rarely — SSB behaviour lives in api.js |
-| `sources/norges-bank-adapter.js` | Adapter for Norges Bank's SDMX REST API | pushes onto `window.SourceAdapters` | AppConfig.sources.nb, sdmx-to-jsonstat.js | Enabling more dataflows, changing NB-specific query/key building |
+| `sources/norges-bank-adapter.js` | Adapter for Norges Bank's SDMX REST API | pushes onto `window.SourceAdapters` | AppConfig.sources.nb, sdmx-to-jsonstat.js | Enabling more dataflows, changing NB-specific query/key building, curating topic tables via `slice` |
 | `sources/fhi-adapter.js` | Adapter for FHI's open statistics API (native JSON-Stat2) | pushes onto `window.SourceAdapters` | AppConfig.sources.fhi, `data/sources/fhi-catalog.json` | Enabling more FHI sources, changing role-detection heuristics |
 | `sources/sdmx-to-jsonstat.js` | Converts Norges Bank SDMX-JSON responses to JSON-Stat2 | `window.SdmxToJsonStat` | — | Fixing SDMX↔JSON-Stat2 conversion edge cases |
 | `sources/source-common.js` | Shared helpers used by multiple adapters (label lookup, fetch-with-timeout) | `window.SourceCommon` (`pickLabel`, `uiLabelLang`, `fetchWithTimeout`) | — | Adding another cross-adapter helper, changing timeout/label-fallback behaviour |
@@ -215,6 +215,7 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 | Change export options/formats | `export.js`, `config.js` (`export` defaults) |
 | Change save/share query behaviour | `table-save-query.js` |
 | Change SSB API request details | `api.js` |
+| Add/change a curated Norges Bank topic table (`slice`) | `config.js` (`sources.nb.dataflows`: `slice` + `probeKey` + `timeUnit`/`keywords`/`description`/`dimLabels`); several rows may share one `flow`. Logic in `norges-bank-adapter.js` (`applySlice`/`applyPinnedDims`), tests in `tests/unit/nb-slice.test.js` |
 | Enable more Norges Bank dataflows / FHI sources | `config.js` (`AppConfig.sources.nb.dataflows` / `.fhi.sourceIds`, plus `sourceNodes`), see [ROADMAP.md](ROADMAP.md); NB rows support `collapseDims: {anchor, dims}` for characteristic dims functionally dependent on an anchor (ISIN); for FHI also curate titles/categories in `data/sources/fhi-curation.json` and rerun `scripts/update-fhi-catalog.mjs` |
 | Change FHI table titles or categories | `data/sources/fhi-curation.json` (per-source `categories` + per-table `title`/`category`), then `node scripts/update-fhi-catalog.mjs`; merge logic in `scripts/lib/fhi-curation.mjs` |
 | Add or change a source adapter | `js/sources/{source}-adapter.js`, contract documented in `js/sources/source-registry.js` |

@@ -84,6 +84,12 @@ describe('AppConfig — nb collapseDims', () => {
     }
   });
 
+  it('every dataflow row has a unique tableId (flere rader kan dele flow)', () => {
+    const ids = AppConfig.sources.nb.dataflows.map(f => f.tableId);
+    assert.deepEqual([...new Set(ids)].sort(), ids.slice().sort(),
+      'tableId må være unik — flowForId slår opp på den');
+  });
+
   it('GOVT_PRIMARY_MARKET and CBC_TRANSACTIONS collapse into ISIN', () => {
     const prim = AppConfig.sources.nb.dataflows.find(f => f.flow === 'GOVT_PRIMARY_MARKET');
     const cbc = AppConfig.sources.nb.dataflows.find(f => f.flow === 'CBC_TRANSACTIONS');
@@ -91,5 +97,52 @@ describe('AppConfig — nb collapseDims', () => {
     assert.deepEqual(prim.collapseDims.dims, ['MATURITY', 'COUPON', 'INSTR']);
     assert.equal(cbc.collapseDims.anchor, 'ISIN');
     assert.deepEqual(cbc.collapseDims.dims, ['MATURITY', 'INSTR']);
+  });
+});
+
+describe('AppConfig — nb slice (kuraterte tabeller)', () => {
+  const sliced = () => AppConfig.sources.nb.dataflows.filter(f => f.slice);
+
+  it('rows declaring slice are well-formed', () => {
+    for (const flow of sliced()) {
+      for (const [dim, codes] of Object.entries(flow.slice)) {
+        assert.ok(typeof dim === 'string' && dim.length,
+          flow.tableId + ': slice-nøkkel må være et dimensjonsnavn');
+        const list = Array.isArray(codes) ? codes : [codes];
+        assert.ok(list.length > 0 && list.every(c => typeof c === 'string' && c.length),
+          flow.tableId + '.' + dim + ': slice-verdier må være ikke-tomme koder');
+      }
+    }
+  });
+
+  it('snittede rader har probeKey, ellers arver de hele flowens tidsvindu', () => {
+    for (const flow of sliced()) {
+      assert.equal(typeof flow.probeKey, 'string',
+        flow.tableId + ': mangler probeKey');
+    }
+  });
+
+  it('en kollaps i en snittet rad kan ikke ankre på en pinnet dimensjon', () => {
+    for (const flow of sliced()) {
+      if (!flow.collapseDims) continue;
+      const anchorSlice = flow.slice[flow.collapseDims.anchor];
+      assert.ok(!anchorSlice || Array.isArray(anchorSlice) && anchorSlice.length > 1,
+        flow.tableId + ': ankeret ' + flow.collapseDims.anchor +
+        ' er pinnet til én kode og forsvinner før kollapsen');
+    }
+  });
+
+  it('REGNET-tematabellene dekker de kuraterte temaene', () => {
+    const byId = Object.fromEntries(
+      AppConfig.sources.nb.dataflows.filter(f => f.flow === 'REGNET').map(f => [f.tableId, f]));
+    assert.equal(byId['nb-REGNET-PROD'].slice.REGNET_TOPIC, 'PROD');
+    assert.deepEqual(byId['nb-REGNET-SYSS'].slice.REGNET_TOPIC, ['SYSS', 'SYSSPLAN']);
+    assert.equal(byId['nb-REGNET-REGION'].slice.REGNET_SECTOR, '_Z');
+    // Årslønnsvekst har TO horisonter og må derfor stå utenfor samletabellen —
+    // en kollaps der ville ikke vært funksjonell.
+    assert.equal(byId['nb-REGNET-ARSLONN'].collapseDims, undefined);
+    assert.ok(!byId['nb-REGNET-KAPASITET'].slice.REGNET_TOPIC.includes('ARSLONN'));
+    // Alle REGNET-rader er kvartalsvise, ikke 'Business'.
+    for (const f of Object.values(byId)) assert.equal(f.timeUnit, 'Quarterly');
   });
 });

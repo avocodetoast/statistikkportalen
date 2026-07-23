@@ -170,32 +170,51 @@ async function fetchNbPeriods(appConfig, entries) {
   const nbCfg = appConfig.sources?.nb || {};
   const base = String(nbCfg.baseUrl || 'https://data.norges-bank.no/api').replace(/\/+$/, '');
   const flowById = new Map((nbCfg.dataflows || []).map(f => [f.tableId, f]));
+  // Flere config-rader kan dele samme flow (REGNET-snittene). Proben avhenger
+  // bare av flow + probeKey, så resultatet caches på det paret i stedet for å
+  // fyre av ett identisk kall per tabell.
+  const cache = new Map();
   let first = true;
   for (const entry of entries) {
     const flow = flowById.get(entry.id);
     if (!flow) continue;
-    if (!first) await new Promise(resolve => setTimeout(resolve, NB_PROBE_DELAY_MS));
-    first = false;
-    const url = `${base}/data/${encodeURIComponent(flow.flow)}/?format=sdmx-json&firstNObservations=1&lastNObservations=1`;
-    try {
-      const res = await fetch(url, { headers: { Accept: 'application/json, */*' } });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      // SDMX-JSON kan ha data.structure (objekt) eller data.structures[0] (array)
-      const struct = json?.data?.structure ||
-        (Array.isArray(json?.data?.structures) ? json.data.structures[0] : null);
-      const obsDim = struct?.dimensions?.observation?.[0];
-      const years = (obsDim?.values || [])
-        .map(v => String(v.id || '').match(/\d{4}/)?.[0])
-        .filter(Boolean)
-        .map(Number);
-      if (years.length === 0) throw new Error('ingen tidsverdier i svaret');
-      entry.firstPeriod = String(Math.min(...years));
-      entry.lastPeriod = String(Math.max(...years));
-      entry.updated = json.meta?.prepared || '';
-    } catch (err) {
-      console.warn(`[SEO] Periodeprobe mot Norges Bank feilet for ${entry.id} (${err.message}) — siden bygges uten tidsperiode.`);
+    // Samme smale probenøkkel som js/sources/norges-bank-adapter.js bruker
+    // (probeKeyFor(flow, 'period')) — for snittede rader er det snittets
+    // tidsvindu vi vil ha, ikke hele flowens.
+    const pk = flow.probeKey;
+    const probeKey = (typeof pk === 'string' ? pk : (pk && pk.period)) || '';
+    const cacheKey = `${flow.flow}|${probeKey}`;
+
+    if (!cache.has(cacheKey)) {
+      if (!first) await new Promise(resolve => setTimeout(resolve, NB_PROBE_DELAY_MS));
+      first = false;
+      const url = `${base}/data/${encodeURIComponent(flow.flow)}/${probeKey}?format=sdmx-json&firstNObservations=1&lastNObservations=1`;
+      try {
+        const res = await fetch(url, { headers: { Accept: 'application/json, */*' } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        // SDMX-JSON kan ha data.structure (objekt) eller data.structures[0] (array)
+        const struct = json?.data?.structure ||
+          (Array.isArray(json?.data?.structures) ? json.data.structures[0] : null);
+        const obsDim = struct?.dimensions?.observation?.[0];
+        const years = (obsDim?.values || [])
+          .map(v => String(v.id || '').match(/\d{4}/)?.[0])
+          .filter(Boolean)
+          .map(Number);
+        if (years.length === 0) throw new Error('ingen tidsverdier i svaret');
+        cache.set(cacheKey, {
+          firstPeriod: String(Math.min(...years)),
+          lastPeriod: String(Math.max(...years)),
+          updated: json.meta?.prepared || '',
+        });
+      } catch (err) {
+        cache.set(cacheKey, null);
+        console.warn(`[SEO] Periodeprobe mot Norges Bank feilet for ${entry.id} (${err.message}) — siden bygges uten tidsperiode.`);
+      }
     }
+
+    const period = cache.get(cacheKey);
+    if (period) Object.assign(entry, period);
   }
 }
 

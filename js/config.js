@@ -11,6 +11,27 @@
  * strukturen kompatibel.
  */
 
+/**
+ * Delt oppsett for Norges Banks REGNET-tabeller (Regionalt nettverk): den
+ * fulle tabellen og de seks kuraterte tematabellene ligger alle på samme sted
+ * i emnetreet og bruker samme dimensjonsetiketter. Definert her (og ikke
+ * inline per rad) fordi de ellers ville vært repetert sju ganger.
+ * NB: må stå FØR AppConfig — filen leses også sandboxet av
+ * scripts/generate-seo-pages.mjs via node:vm.
+ */
+const REGNET_PATHS = [
+  ['nk', 'nk02', 'nb-regionalt-nettverk'],
+  ['ei', 'ei02', 'nb-regionalt-nettverk']
+];
+// API-navnene («Regionalt nettverk næringer», «Regionalt nettverk tema») er
+// lange og gjentar tabelltittelen; i en kuratert tabell holder det korte navn.
+const REGNET_DIM_LABELS = {
+  REGNET_SECTOR: { nb: 'Næring', en: 'Industry' },
+  REGNET_TOPIC: { nb: 'Indikator', en: 'Indicator' },
+  HORIZON: { nb: 'Tidshorisont', en: 'Horizon' },
+  REGION: { nb: 'Region', en: 'Region' }
+};
+
 const AppConfig = {
   /**
    * PxWebApi v2 base URL for the data source.
@@ -258,6 +279,20 @@ const AppConfig = {
       // SDMX-nøkkelutsnitt for flows der et åpent probekall er for tungt
       // (MONEY_MARKET: 3,5/15,6 MB åpent → 60/465 kB med nøkkel). Streng =
       // samme nøkkel for begge prober; {period, time} = separate nøkler.
+      // `slice: {DIM: 'kode' | ['kode', ...]}` lager en KURATERT tabell over et
+      // utsnitt av flowen — flere rader kan dele samme `flow` med hvert sitt
+      // snitt (REGNET → én tabell per tema, som SSBs egne emnetabeller).
+      // Enkeltkode-snitt PINNER dimensjonen: den forsvinner helt fra
+      // variabelvelgeren og resultattabellen, men koden står i API-nøkkelen, så
+      // API-byggerens URL reproduserer nøyaktig det tabellen viser.
+      // Flerkode-snitt snevrer bare verdilista. Snittet legges på
+      // serieskeysonly-proben, så verdilister/validKeys/kollaps arver det (se
+      // applySlice/applyPinnedDims i norges-bank-adapter.js). Sett også
+      // `probeKey` til samme utsnitt, ellers arver alle radene flowens
+      // samlede tidsvindu.
+      // `timeUnit`/`keywords`/`description`/`dimLabels` overstyrer per tabell
+      // (frekvensbøtte i filteret, søkeord, Tabellinfo-note, dim-etiketter) —
+      // nødvendig når flere rader deler flow og dermed flow-ordlistene.
       // `collapseDims: {anchor, dims}` kollapser kjennetegns-dimensjoner som er
       // funksjonelt avhengige av ankeret (verifisert mot serieskeysonly:
       // GOVT_PRIMARY_MARKET har ISIN → MATURITY/COUPON/INSTR) inn i ankerets
@@ -384,12 +419,96 @@ const AppConfig = {
         { flow: 'FINANCIAL_INDICATORS', version: '1.0', tableId: 'nb-FINANCIAL_INDICATORS',
           path: ['bf', 'bf02', 'nb-fin-indikatorer'],
           label: { nb: 'Finansielle indikatorer (FCI)', en: 'Financial indicators (FCI)' } },
-        { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET',
-          paths: [
-            ['nk', 'nk02', 'nb-regionalt-nettverk'],
-            ['ei', 'ei02', 'nb-regionalt-nettverk']
-          ],
-          label: { nb: 'Regionalt nettverk', en: 'Regional network' } }
+        { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET', timeUnit: 'Quarterly',
+          paths: REGNET_PATHS,
+          label: { nb: 'Regionalt nettverk, alle indikatorer', en: 'Regional network, all indicators' } },
+
+        // Kuraterte tematabeller over REGNET (se `slice`-kommentaren over).
+        // Snittene er verifisert mot serieskeysonly: hver av dem er et FULLT
+        // rektangel, så kryssfilteret gråer ikke ut noe inne i tabellene.
+        // REGNET-nøkkelen er FREQ.REGNET_TOPIC.REGNET_SECTOR.REGION.HORIZON;
+        // `_X`/`_Z` er SDMX-plassholderne Unspecified/Not Applicable, som er
+        // nettopp de pinnede kodene brukeren aldri skal se.
+        { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET-PROD', timeUnit: 'Quarterly',
+          paths: REGNET_PATHS,
+          slice: { REGNET_TOPIC: 'PROD', REGION: '_X' },
+          probeKey: 'Q.PROD.._X.',
+          dimLabels: REGNET_DIM_LABELS,
+          keywords: ['Regionalt nettverk', 'Produksjonsvekst', 'Produksjon', 'Næring', 'Forventninger',
+            'Regional network', 'Production growth', 'Output'],
+          description: 'Produksjonsvekst siste og neste kvartal, slik bedriftene i Norges Banks regionale nettverk rapporterer den. Annualisert vekst i prosent.',
+          label: { nb: 'Regionalt nettverk, produksjonsvekst, etter næring',
+            en: 'Regional network, production growth, by industry' } },
+
+        { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET-INVPLAN', timeUnit: 'Quarterly',
+          paths: REGNET_PATHS,
+          slice: { REGNET_TOPIC: 'INVPLAN', REGION: '_X' },
+          probeKey: 'Q.INVPLAN.._X.',
+          dimLabels: REGNET_DIM_LABELS,
+          keywords: ['Regionalt nettverk', 'Investeringsplaner', 'Investeringer', 'Næring',
+            'Regional network', 'Investment plans', 'Investment'],
+          description: 'Bedriftenes investeringsplaner for inneværende og neste år, fra Norges Banks regionale nettverk.',
+          label: { nb: 'Regionalt nettverk, investeringsplaner, etter næring',
+            en: 'Regional network, investment plans, by industry' } },
+
+        // Sysselsettingsvekst (inneværende kvartal) og -planer (neste kvartal)
+        // er samme størrelse på to horisonter. HORIZON er funksjonelt bestemt
+        // av temaet og kollapses derfor bort — indikatornavnet bærer horisonten.
+        { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET-SYSS', timeUnit: 'Quarterly',
+          paths: REGNET_PATHS,
+          slice: { REGNET_TOPIC: ['SYSS', 'SYSSPLAN'], REGION: '_X' },
+          collapseDims: { anchor: 'REGNET_TOPIC', dims: ['HORIZON'], labelStyle: 'suffix' },
+          probeKey: 'Q.SYSS+SYSSPLAN.._X.',
+          dimLabels: REGNET_DIM_LABELS,
+          keywords: ['Regionalt nettverk', 'Sysselsetting', 'Sysselsettingsvekst', 'Sysselsettingsplaner',
+            'Bemanning', 'Næring', 'Regional network', 'Employment growth', 'Employment plans'],
+          description: 'Sysselsettingsvekst siste kvartal og sysselsettingsplaner for neste kvartal, fra Norges Banks regionale nettverk.',
+          label: { nb: 'Regionalt nettverk, sysselsettingsvekst og -planer, etter næring',
+            en: 'Regional network, employment growth and plans, by industry' } },
+
+        // Tre nåsituasjons-/kvartalsindikatorer med hver sin faste horisont →
+        // HORIZON kollapses bort, indikator blir dimensjonen. Årslønnsvekst er
+        // holdt UTENFOR: den har to horisonter (i år / neste år), og en kollaps
+        // ville da ikke vært funksjonell (adapteren avviser den, se
+        // applyCollapseDims) — derfor egen tabell under.
+        { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET-KAPASITET', timeUnit: 'Quarterly',
+          paths: REGNET_PATHS,
+          slice: { REGNET_TOPIC: ['KAPUTN', 'LONNSOM', 'TILG_ARBKR_BEGR'], REGION: '_X' },
+          collapseDims: { anchor: 'REGNET_TOPIC', dims: ['HORIZON'], labelStyle: 'suffix' },
+          probeKey: 'Q.KAPUTN+LONNSOM+TILG_ARBKR_BEGR.._X.',
+          dimLabels: REGNET_DIM_LABELS,
+          keywords: ['Regionalt nettverk', 'Kapasitetsutnytting', 'Kapasitetsutnyttelse', 'Lønnsomhet',
+            'Knapphet på arbeidskraft', 'Arbeidskraft', 'Næring',
+            'Regional network', 'Capacity utilisation', 'Profitability', 'Labour supply'],
+          description: 'Andel bedrifter med kapasitetsproblemer, vurdering av lønnsomheten og andel bedrifter som melder om knapphet på arbeidskraft — fra Norges Banks regionale nettverk.',
+          label: { nb: 'Regionalt nettverk, kapasitetsutnytting, lønnsomhet og knapphet på arbeidskraft, etter næring',
+            en: 'Regional network, capacity utilisation, profitability and labour supply constraints, by industry' } },
+
+        { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET-ARSLONN', timeUnit: 'Quarterly',
+          paths: REGNET_PATHS,
+          slice: { REGNET_TOPIC: 'ARSLONN', REGION: '_X' },
+          probeKey: 'Q.ARSLONN.._X.',
+          dimLabels: REGNET_DIM_LABELS,
+          keywords: ['Regionalt nettverk', 'Årslønnsvekst', 'Lønnsvekst', 'Lønn', 'Næring',
+            'Regional network', 'Annual wage growth', 'Wages'],
+          description: 'Bedriftenes anslag på årslønnsveksten for inneværende og neste år, fra Norges Banks regionale nettverk.',
+          label: { nb: 'Regionalt nettverk, årslønnsvekst, etter næring',
+            en: 'Regional network, annual wage growth, by industry' } },
+
+        // Regionalindikatoren står sist: den er den eneste av tematabellene som
+        // er fordelt på region i stedet for næring, og passer derfor dårlig
+        // midt i næringstabellene. Rekkefølgen her ER sorteringen i emnetreet
+        // (buildCatalogue setter sortCode = 900 + radindeks).
+        { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET-REGION', timeUnit: 'Quarterly',
+          paths: REGNET_PATHS,
+          slice: { REGNET_TOPIC: 'REGIONALINDIKATOR', REGNET_SECTOR: '_Z', HORIZON: '_X' },
+          probeKey: 'Q.REGIONALINDIKATOR._Z.._X',
+          dimLabels: REGNET_DIM_LABELS,
+          keywords: ['Regionalt nettverk', 'Regionalindikator', 'Region', 'Landsdel', 'Aktivitet',
+            'Regional network', 'Regional indicator'],
+          description: 'Regionalindikatoren for hver av Norges Banks regioner: samlet vurdering av aktiviteten i regionen.',
+          label: { nb: 'Regionalt nettverk, regionalindikator, etter region',
+            en: 'Regional network, regional indicator, by region' } }
       ]
     },
 
