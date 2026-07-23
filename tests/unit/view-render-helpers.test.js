@@ -82,6 +82,41 @@ describe('_topicRenderCardGrid', () => {
   });
 });
 
+describe('_topicRenderSubtree table-group chrome', () => {
+  const mh = new app.MenuHierarchy();
+  const filters = { includeDiscontinued: true, frequencyFilter: '', updatedFilter: '' };
+
+  function node(tables) {
+    return { label: 'Statsgjeld og statspapirer', sortCode: '01', tables, children: {} };
+  }
+
+  // No base year and no SSB-style timeUnit → everything lands in the generic
+  // "Andre tabeller" catch-all (typical for NB/FHI tables).
+  const fallbackTables = [
+    { id: 'nb-GOVT_KEYFIGURES', label: 'Nøkkeltall for statsgjelden', sortCode: 'a', timeUnit: null },
+    { id: 'nb-SEC', label: 'Statspapirer – kurser og renter', sortCode: 'b', timeUnit: null }
+  ];
+
+  it('wraps a fallback-only table list in a headerless .table-group card', () => {
+    const html = app._topicRenderSubtree(node(fallbackTables), 0, mh, filters);
+    assert.match(html, /<div class="table-group table-group--plain">/);
+    assert.match(html, /<table class="table-list">/);
+    assert.doesNotMatch(html, /table-group-header/);
+    assert.doesNotMatch(html, new RegExp(app.MenuHierarchy.FALLBACK_GROUP_LABEL));
+  });
+
+  it('still renders a collapsible group with a summary header for real groups', () => {
+    const tables = [
+      { id: '07511', label: 'Offentlig forvaltnings fordringer og gjeld', sortCode: 'a', timeUnit: 'Annual' }
+    ];
+    const html = app._topicRenderSubtree(node(tables), 0, mh, filters);
+    assert.match(html, /<details class="table-group" open>/);
+    assert.match(html, /<summary class="table-group-header">/);
+    assert.match(html, /Årsstall/);
+    assert.doesNotMatch(html, /table-group--plain/);
+  });
+});
+
 /**
  * The two ensureLoaded() renderSpinner callbacks actually wired up in
  * front-page.js/topic-view.js — the generic BrowserState.ensureLoaded tests

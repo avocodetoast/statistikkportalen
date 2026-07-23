@@ -319,8 +319,14 @@ function _topicRenderSubtree(node, depth, mh, filters) {
         // Every table landed in the generic "Andre tabeller" catch-all (no
         // base year / no SSB-style timeUnit to group by — typical for
         // foreign-source nodes like NB or FHI). A single meaningless group
-        // header is just noise, so render the plain table list instead.
-        html += BrowserState.renderTableListHTML(tableGroups[0].tables);
+        // header is just noise, so drop the header — but keep the same card
+        // chrome as .table-group so the section looks identical to siblings
+        // that do have real groups.
+        html += `
+          <div class="table-group table-group--plain">
+            ${BrowserState.renderTableListHTML(tableGroups[0].tables)}
+          </div>
+        `;
       } else {
         html += tableGroups.map(group => `
           <details class="table-group" open>
