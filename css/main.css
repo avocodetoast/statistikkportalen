@@ -1621,7 +1621,8 @@ button {
   flex-shrink: 0;
 }
 
-.api-status-badge.status-ok::before    { background: #4caf50; }
+/* Ingen prikk når alt er i orden — bare gul/rød prikk signaliserer avvik. */
+.api-status-badge.status-ok::before    { display: none; }
 .api-status-badge.status-warn::before  { background: #f0ad00; }
 .api-status-badge.status-error::before { background: #ff5a45; }
 

@@ -154,12 +154,12 @@
     const actionBtn = pending
       ? `<button class="btn-secondary" disabled>${escapeHtml(t('apiStatus.loading'))}</button>`
       : s.status === 'error'
-        ? `<button class="btn-secondary" data-action="retry" data-source="${escapeHtml(s.sourceId)}">${escapeHtml(t('apiStatus.retry'))}</button>`
-        : `<button class="btn-secondary" data-action="refresh" data-source="${escapeHtml(s.sourceId)}">${escapeHtml(t('apiStatus.refresh'))}</button>`;
+        ? `<button class="btn-secondary" data-action="retry" data-source="${escapeHtml(s.sourceId)}" title="${escapeHtml(t('apiStatus.retryTitle'))}">${escapeHtml(t('apiStatus.retry'))}</button>`
+        : `<button class="btn-secondary" data-action="refresh" data-source="${escapeHtml(s.sourceId)}" title="${escapeHtml(t('apiStatus.refreshTitle'))}">${escapeHtml(t('apiStatus.refresh'))}</button>`;
 
     const clearBtn =
       `<button class="btn-secondary source-status-clear" data-action="clear-cache" ` +
-      `data-source="${escapeHtml(s.sourceId)}" ${pending ? 'disabled' : ''}>` +
+      `data-source="${escapeHtml(s.sourceId)}" title="${escapeHtml(t('apiStatus.clearSourceCacheTitle'))}" ${pending ? 'disabled' : ''}>` +
       escapeHtml(t('apiStatus.clearSourceCache')) + '</button>';
 
     return `
