@@ -321,13 +321,61 @@ function sourceBrandingForTable(tableId) {
 }
 
 /**
- * Branding-objekter for alle AKTIVERTE kilder, i config-rekkefølge — brukes
- * av footeren («Data fra … , … og …»). Kilder uten egen branding (SSB)
- * faller tilbake til det globale AppConfig.source. Instanser uten `sources`
- * (f.eks. SCB-instansen, config-sv.js) gir [AppConfig.source].
- * @returns {Object[]}
+ * Tabell-id slik den VISES i tabellistenes id-kolonne: kildeprefikset
+ * ('nb-'/'fhi-') strippes, siden kilden nå fremgår av badgen bak tittelen —
+ * å gjenta den i id-en er støy og presser lange id-er ut i ellipse.
+ * Den fulle id-en beholdes i rad-datasettet og som hover-tittel, så den
+ * fortsatt kan leses av og kopieres.
+ * @param {string} tableId
+ * @returns {string}
  */
-function listSourceBrandings() {
+function displayTableId(tableId) {
+  const s = String(tableId || '');
+  const key = sourceKeyForTableId(s);
+  return key === 'ssb' ? s : s.slice(key.length + 1);
+}
+
+/**
+ * Kilde-badge for en tabell-id: markerer tabeller som IKKE kommer fra
+ * standardkilden (SSB). SSB-tabeller er normalen og merkes ikke — badgen
+ * ville da stått på ~95 % av radene uten å skille noe.
+ *
+ * Teksten er `branding.shortName` (fallback `branding.name`), hele
+ * institusjonsnavnet `branding.nameFull` — se AppConfig.sources.*.branding
+ * i config.js.
+ *
+ * Navnet ligger i `data-tooltip` og vises via CSS (css/menu-navigator.css),
+ * ikke i `title`: nettleserens innebygde tooltip har ~1 sekunds forsinkelse
+ * som ikke kan overstyres. `aria-label` gir skjermlesere det samme navnet.
+ * Speiles av sourceBadgeHtml() i scripts/lib/seo-sources.mjs (samme klasser
+ * og markup, slik at statiske SEO-sider ser identiske ut).
+ *
+ * @param {string} tableId
+ * @returns {string} HTML, eller '' for SSB / kilder uten egen branding
+ */
+function sourceBadgeHTML(tableId) {
+  const key = sourceKeyForTableId(tableId);
+  if (key === 'ssb') return '';
+  // Egen branding kreves: sourceBrandingForTable faller tilbake til det
+  // globale (SSB-)kildeobjektet, og å merke en NB-tabell «SSB» er verre enn
+  // ingen badge.
+  const srcCfg = AppConfig.sources && AppConfig.sources[key];
+  const branding = srcCfg && srcCfg.branding;
+  if (!branding) return '';
+  const text = branding.shortName || branding.name;
+  if (!text) return '';
+  const title = branding.nameFull || branding.name || text;
+  return `<span class="source-badge source-badge--${escapeHtml(key)}" data-tooltip="${escapeHtml(title)}" aria-label="${escapeHtml(title)}">${escapeHtml(text)}</span>`;
+}
+
+/**
+ * Alle AKTIVERTE kilder som {key, branding}, i config-rekkefølge. Kilder uten
+ * egen branding (SSB) faller tilbake til det globale AppConfig.source.
+ * Instanser uten `sources` (f.eks. SCB-instansen, config-sv.js) gir én
+ * ssb-oppføring med det globale kildeobjektet.
+ * @returns {{key: string, branding: Object}[]}
+ */
+function listEnabledSources() {
   const result = [];
   const sources = AppConfig.sources || {};
   Object.keys(sources).forEach(key => {
@@ -335,10 +383,21 @@ function listSourceBrandings() {
     // Hopp over ikke-kildeoppføringer (fetchTimeoutMs o.l.) og deaktiverte kilder
     if (!src || typeof src !== 'object' || !src.adapter || !src.enabled) return;
     const branding = src.branding || AppConfig.source;
-    if (branding) result.push(branding);
+    if (branding) result.push({ key: key, branding: branding });
   });
-  if (!result.length && AppConfig.source) result.push(AppConfig.source);
+  if (!result.length && AppConfig.source) {
+    result.push({ key: 'ssb', branding: AppConfig.source });
+  }
   return result;
+}
+
+/**
+ * Branding-objekter for alle aktiverte kilder — brukes av footeren
+ * («Data fra … , … og …»). Se listEnabledSources().
+ * @returns {Object[]}
+ */
+function listSourceBrandings() {
+  return listEnabledSources().map(s => s.branding);
 }
 
 /**

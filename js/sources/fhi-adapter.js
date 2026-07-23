@@ -437,7 +437,9 @@
 
       return {
         id: 'fhi-' + source + '-' + row.tableId,
-        label: title + ' (FHI)',
+        // Ren tittel uten kildesuffiks — kilden vises som en badge bak
+        // tittelen i tabellistene (sourceBadgeHTML i js/utils.js).
+        label: title,
         // NB: 'updated' MÅ være en streng (aldri null) — menu-hierarchy.js
         // _collectAllTables() sorterer via table.updated.localeCompare(...)
         // uten null-guard.

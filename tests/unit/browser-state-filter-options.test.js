@@ -21,7 +21,7 @@ const app = loadApp([
   'js/browser-state.js'
 ]);
 
-const { BrowserState } = app;
+const { BrowserState, AppConfig } = app;
 
 describe('BrowserState.renderFrequencyFilterOptions', () => {
   const counts = { Monthly: 3, Quarterly: 0, Annual: 5, Other: 1 };
@@ -78,6 +78,152 @@ describe('BrowserState.renderUpdatedFilterOptions', () => {
     const html = BrowserState.renderUpdatedFilterOptions(counts, { allLabel: 'Alle', selected: '30' });
     assert.match(html, /<option value="30" selected>/);
     assert.doesNotMatch(html, /<option value="7" selected>/);
+  });
+});
+
+describe('BrowserState.renderSourceFilter', () => {
+  const counts = { ssb: 9812, nb: 18, fhi: 742 };
+
+  it('renders a dropdown toggle plus one checkbox per enabled source', () => {
+    const html = BrowserState.renderSourceFilter(counts, []);
+    assert.match(html, /source-filter-toggle/);
+    assert.match(html, /source-filter-panel/);
+    assert.match(html, /value="ssb"/);
+    assert.match(html, /value="nb"/);
+    assert.match(html, /value="fhi"/);
+    assert.match(html, />NB</);
+    assert.match(html, />FHI</);
+    assert.match(html, /source-filter-count[^>]*>\(18\)</);
+  });
+
+  it('summarises "all sources" with the total count when nothing is selected', () => {
+    const html = BrowserState.renderSourceFilter(counts, []);
+    assert.match(html, /Alle kilder \(10572\)/);
+    assert.match(html, /aria-expanded="false"/);
+  });
+
+  it('summarises the picked sources and their combined count', () => {
+    const html = BrowserState.renderSourceFilter(counts, ['nb', 'fhi']);
+    assert.match(html, /NB, FHI \(760\)/);
+  });
+
+  it('checks the sources present in the selection', () => {
+    const html = BrowserState.renderSourceFilter(counts, ['fhi']);
+    assert.match(html, /value="fhi"[^>]*checked/);
+    assert.doesNotMatch(html, /value="ssb"[^>]*checked/);
+    assert.doesNotMatch(html, /value="nb"[^>]*checked/);
+  });
+
+  it('prefixes element ids so search and topic views can coexist', () => {
+    const html = BrowserState.renderSourceFilter(counts, [], 'topic-');
+    assert.match(html, /id="topic-source-filter-fhi"/);
+    assert.doesNotMatch(html, /id="source-filter-fhi"/);
+  });
+
+  it('treats a missing count as zero', () => {
+    const html = BrowserState.renderSourceFilter({}, []);
+    assert.match(html, /source-filter-count[^>]*>\(0\)</);
+  });
+
+  it('renders nothing for a single-source instance (no source filter to offer)', () => {
+    const original = AppConfig.sources;
+    delete AppConfig.sources;
+    try {
+      assert.equal(BrowserState.renderSourceFilter(counts, []), '');
+    } finally {
+      AppConfig.sources = original;
+    }
+  });
+});
+
+describe('BrowserState.sourceFilterSummary', () => {
+  const counts = { ssb: 9812, nb: 18, fhi: 742 };
+
+  it('falls back to the all-sources label for an empty selection', () => {
+    assert.equal(BrowserState.sourceFilterSummary(counts, []), 'Alle kilder (10572)');
+  });
+
+  it('lists the selected sources in config order, not click order', () => {
+    assert.equal(BrowserState.sourceFilterSummary(counts, ['fhi', 'nb']), 'NB, FHI (760)');
+  });
+
+  it('ignores unknown keys in the selection', () => {
+    assert.equal(BrowserState.sourceFilterSummary(counts, ['bogus']), 'Alle kilder (10572)');
+  });
+});
+
+describe('BrowserState source filtering', () => {
+  const tables = [
+    { id: '07459', label: 'SSB-tabell', subjectCode: 'be', timeUnit: 'Annual' },
+    { id: 'nb-EXR', label: 'Valutakurser', subjectCode: 'bf', timeUnit: 'Monthly' },
+    { id: 'fhi-mfr-1', label: 'Fødte', subjectCode: 'be', timeUnit: 'Annual' },
+    { id: 'fhi-daar-2', label: 'Dødsårsaker', subjectCode: 'he', timeUnit: 'Annual' }
+  ];
+  const ids = (list) => list.map(t => t.id);
+
+  it('keeps every table when the source list is empty (default = all sources)', () => {
+    const out = BrowserState._filterNonQuery(tables, { sourceFilter: [] });
+    assert.deepEqual(ids(out), ['07459', 'nb-EXR', 'fhi-mfr-1', 'fhi-daar-2']);
+  });
+
+  it('keeps every table when the filter field is absent altogether', () => {
+    assert.equal(BrowserState._filterNonQuery(tables, {}).length, 4);
+  });
+
+  it('keeps only the selected source', () => {
+    const out = BrowserState._filterNonQuery(tables, { sourceFilter: ['fhi'] });
+    assert.deepEqual(ids(out), ['fhi-mfr-1', 'fhi-daar-2']);
+  });
+
+  it('keeps the union when several sources are selected', () => {
+    const out = BrowserState._filterNonQuery(tables, { sourceFilter: ['nb', 'fhi'] });
+    assert.deepEqual(ids(out), ['nb-EXR', 'fhi-mfr-1', 'fhi-daar-2']);
+  });
+
+  it('ignores the source filter when it is the excluded dimension (hit counts)', () => {
+    const out = BrowserState._filterNonQuery(tables, { sourceFilter: ['fhi'] }, 'source');
+    assert.equal(out.length, 4);
+  });
+
+  it('counts tables per source, ignoring the source filter itself', () => {
+    const counts = BrowserState.calcSourceCounts(tables, { sourceFilter: ['fhi'] });
+    assert.deepEqual(counts, { ssb: 1, nb: 1, fhi: 2 });
+  });
+
+  it('applies the other filters when counting per source', () => {
+    const counts = BrowserState.calcSourceCounts(tables, { sourceFilter: [], subjectFilter: 'be' });
+    assert.deepEqual(counts, { ssb: 1, nb: 0, fhi: 1 });
+  });
+});
+
+describe('BrowserState source filter ↔ URL params', () => {
+  it('round-trips the selected sources through the src param', () => {
+    BrowserState.searchFilters.sourceFilter = ['nb', 'fhi'];
+    const params = BrowserState.searchFiltersToParams();
+    assert.equal(params.src, 'nb,fhi');
+
+    BrowserState.searchFilters.sourceFilter = [];
+    BrowserState.searchFiltersFromParams(params);
+    assert.deepEqual(BrowserState.searchFilters.sourceFilter, ['nb', 'fhi']);
+  });
+
+  it('omits the src param when no source is selected', () => {
+    BrowserState.searchFilters.sourceFilter = [];
+    assert.equal('src' in BrowserState.searchFiltersToParams(), false);
+    BrowserState.topicFilters.sourceFilter = [];
+    assert.equal('src' in BrowserState.topicFiltersToParams(), false);
+  });
+
+  it('drops unknown source keys coming from a hand-edited URL', () => {
+    BrowserState.searchFiltersFromParams({ src: 'fhi,bogus' });
+    assert.deepEqual(BrowserState.searchFilters.sourceFilter, ['fhi']);
+  });
+
+  it('round-trips topic filters too, and resetTopicFilters clears the selection', () => {
+    BrowserState.topicFilters.sourceFilter = ['fhi'];
+    assert.equal(BrowserState.topicFiltersToParams().src, 'fhi');
+    BrowserState.resetTopicFilters();
+    assert.deepEqual(BrowserState.topicFilters.sourceFilter, []);
   });
 });
 

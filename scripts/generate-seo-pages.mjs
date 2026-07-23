@@ -74,7 +74,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import {
-  isoPeriod, sourceBrandingFor, buildNbCatalogue, buildFhiCatalogue,
+  isoPeriod, sourceBrandingFor, sourceBadgeHtml, buildNbCatalogue, buildFhiCatalogue,
   enabledSourceNames, joinNamesNo,
 } from './lib/seo-sources.mjs';
 
@@ -690,23 +690,26 @@ function formatDateNo(iso) {
   return d.toLocaleDateString('nb-NO', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
-function tableListHtml(tables) {
+function tableListHtml(tables, appConfig) {
   const items = tables.map(t => {
     const updated = isoDate(t.updated) ? ` <small>(oppdatert ${escapeHtml(formatDateNo(t.updated))})</small>` : '';
+    // Kilde-badge bak tittelen for ikke-SSB-tabeller — samme markup som appens
+    // egne tabellister (sourceBadgeHTML i js/utils.js)
+    const badge = sourceBadgeHtml(t.id, appConfig);
     // Pen URL (ikke /#variables/) så crawlere oppdager tabellsidene
-    return `<li><a href="/table/${escapeAttr(t.id)}/">${escapeHtml(t.label)}</a>${updated}</li>`;
+    return `<li><a href="/table/${escapeAttr(t.id)}/">${escapeHtml(t.label)}</a>${badge}${updated}</li>`;
   });
   return `<ul>${items.join('\n')}</ul>`;
 }
 
 /** Nestede undertre-seksjoner på oversiktssider: overskrift + tabelliste per nivå. */
-function sectionsHtml(sections, level) {
+function sectionsHtml(sections, level, appConfig) {
   const h = Math.min(level, 4);
   const parts = [];
   for (const s of sections) {
     parts.push(`<h${h}>${escapeHtml(s.label)} <small>(${s.tableCount} ${s.tableCount === 1 ? 'tabell' : 'tabeller'})</small></h${h}>`);
-    if (s.tables.length > 0) parts.push(tableListHtml(s.tables));
-    if (s.children.length > 0) parts.push(sectionsHtml(s.children, level + 1));
+    if (s.tables.length > 0) parts.push(tableListHtml(s.tables, appConfig));
+    if (s.children.length > 0) parts.push(sectionsHtml(s.children, level + 1, appConfig));
   }
   return parts.join('\n      ');
 }
@@ -739,11 +742,11 @@ function buildContentHtml(page, appConfig) {
 
   if (page.tables.length > 0) {
     parts.push('<h2>Tabeller</h2>');
-    parts.push(tableListHtml(page.tables));
+    parts.push(tableListHtml(page.tables, appConfig));
   }
 
   if ((page.sections || []).length > 0) {
-    parts.push(sectionsHtml(page.sections, 2));
+    parts.push(sectionsHtml(page.sections, 2, appConfig));
   }
 
   if (page.discontinuedCount > 0) {

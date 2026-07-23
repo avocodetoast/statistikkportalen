@@ -63,6 +63,34 @@ export function sourceBrandingFor(id, appConfig) {
   return branding || appConfig.source;
 }
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/**
+ * Kilde-badge for en tabell-id i de statiske tabellistene. Speiler
+ * sourceBadgeHTML() i js/utils.js — samme klasser, samme markup og samme
+ * regel: standardkilden (SSB) merkes ikke, og en kilde uten egen branding
+ * får ingen badge (fremfor å arve SSBs). Stylingen kommer fra
+ * css/menu-navigator.css, som index.html-malen allerede laster.
+ *
+ * @param {string} id - Tabell-id
+ * @param {Object} appConfig
+ * @returns {string} HTML, eller '' når tabellen ikke skal merkes
+ */
+export function sourceBadgeHtml(id, appConfig) {
+  const key = sourceKeyForId(id);
+  if (key === 'ssb') return '';
+  const branding = appConfig?.sources?.[key]?.branding;
+  if (!branding) return '';
+  const text = branding.shortName || branding.name;
+  if (!text) return '';
+  const title = branding.nameFull || branding.name || text;
+  return `<span class="source-badge source-badge--${escapeHtml(key)}" data-tooltip="${escapeHtml(title)}" aria-label="${escapeHtml(title)}">${escapeHtml(text)}</span>`;
+}
+
 // Emnesubjektenes sortCode (kosmetisk — SSB-tabellene oppretter subjektnodene
 // først i praksis). Union av adapternes SUBJECT_SORTCODE-konstanter.
 const SUBJECT_SORTCODE = {
@@ -188,7 +216,9 @@ export function buildFhiCatalogue(catalog, appConfig, subjectNames, lang) {
     for (const row of catSource.tables) {
       tables.push({
         id: 'fhi-' + source + '-' + row.tableId,
-        label: (row.title || String(row.tableId)) + ' (FHI)',
+        // Uten kildesuffiks — kilden rendres som badge i tabellistene
+        // (sourceBadgeHtml under), likt appen (js/sources/fhi-adapter.js).
+        label: row.title || String(row.tableId),
         updated: row.updated || '',
         firstPeriod: row.firstPeriod || '',
         lastPeriod: row.lastPeriod || '',

@@ -190,6 +190,80 @@
   cursor: pointer;
 }
 
+/* Kildefilter: flervalg i en nedtrekksmeny, slik at den tar like liten plass
+   i filterraden som de vanlige <select>-ene uansett hvor mange kilder som er
+   aktivert. Ingen avhuket = alle kilder. */
+.source-filter-dropdown {
+  position: relative;
+}
+
+/* Doblet klasse for å slå .filter-select sin background-shorthand, som ellers
+   ville nullstilt pil-gradientene under (den regelen står lenger ned i fila). */
+.filter-select.source-filter-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: left;
+  font-family: inherit;
+  /* Etterlikner <select>-pilen så knappen leses som en nedtrekksmeny */
+  padding-right: 1.75rem;
+  background-image: linear-gradient(45deg, transparent 50%, #666 50%),
+                    linear-gradient(135deg, #666 50%, transparent 50%);
+  background-position: calc(100% - 15px) 55%, calc(100% - 10px) 55%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  background-color: #fff;
+}
+
+.filter-select.source-filter-toggle[aria-expanded="true"] {
+  border-color: #1a9d49;
+}
+
+.source-filter-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  min-width: 100%;
+  padding: 0.35rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.source-filter-panel[hidden] {
+  display: none;
+}
+
+.filter-checkbox.source-filter {
+  gap: 0.4rem;
+  white-space: nowrap;
+  padding: 0.35rem 0.5rem;
+  border-radius: 3px;
+}
+
+.filter-checkbox.source-filter:hover {
+  background: #f5f5f5;
+}
+
+/* Kortnavnet bærer gjenkjenningen fra badgen; det fulle institusjonsnavnet
+   står ved siden av, så nedtrekket ikke trenger egen tooltip. */
+.source-filter-name {
+  font-weight: 600;
+}
+
+.source-filter-full {
+  color: #666;
+}
+
+.source-filter-count {
+  margin-left: auto;
+  padding-left: 0.5rem;
+  color: #888;
+  font-size: 13px;
+}
+
 .filter-select {
   padding: 0.5rem 0.75rem;
   font-size: 14px;
@@ -494,11 +568,13 @@
 
 .table-list th:nth-child(1),
 .table-list td:nth-child(1) {
-  /* Wide enough for SSB's 5-digit ids and most foreign-source ids
-     (e.g. "nb-SHORT_RATES", "fhi-daar-12345"); exceptionally long ids
-     (e.g. "nb-GOVT_GENERIC_RATES") are truncated with an ellipsis rather
-     than wrapping mid-identifier — the full id is still on a title tooltip. */
-  width: 155px;
+  /* Wide enough for SSB's 5-digit ids and most foreign-source ids once the
+     nb-/fhi- prefix is stripped for display (see displayTableId in utils.js —
+     the source is shown as a badge instead): "SHORT_RATES", "daar-12345".
+     Exceptionally long ids ("GOVT_GENERIC_RATES") are truncated with an
+     ellipsis rather than wrapping mid-identifier — the full, prefixed id is
+     still on a title tooltip. */
+  width: 130px;
 }
 
 .table-list td:nth-child(1) {
@@ -576,6 +652,83 @@
   letter-spacing: 0.03em;
 }
 
+/* Kilde-badge i tabellistene (sourceBadgeHTML i js/utils.js): merker tabeller
+   fra andre kilder enn standardkilden (SSB). Bevisst diskré — kilden er
+   kontekst, ikke et varsel, og badgen står på hver eneste NB-/FHI-rad. Derfor
+   ingen fyllfarge, tynn ramme, liten kapitélaktig tekst i dempet gråblått,
+   tydelig svakere enn både tittellenken og den oransje .discontinued-badge. */
+.source-badge {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0 0.25rem;
+  border: 1px solid #dcdcdc;
+  font-size: 9px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #8a8a8a;
+  border-radius: 2px;
+  vertical-align: middle;
+  letter-spacing: 0.04em;
+  cursor: help;
+  position: relative;
+}
+
+/* Kildene skilles med et hint av farge i rammen/teksten, ikke med flatefyll */
+.source-badge--nb {
+  border-color: #ccd8e6;
+  color: #6d829c;
+}
+
+.source-badge--fhi {
+  border-color: #d8d0e4;
+  color: #857a9c;
+}
+
+.table-row:hover .source-badge {
+  border-color: #c6c6c6;
+  color: #6f6f6f;
+}
+
+/* Egen tooltip i stedet for title=: nettleserens innebygde tooltip har ~1 s
+   forsinkelse som ikke kan overstyres, og hele institusjonsnavnet skal komme
+   nesten umiddelbart. Vises på hover OG tastaturfokus. */
+.source-badge::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.25rem 0.5rem;
+  background: #333;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+  white-space: nowrap;
+  border-radius: 3px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.1s ease 0.05s, visibility 0s linear 0.15s;
+  z-index: 30;
+}
+
+.source-badge:hover::after,
+.source-badge:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.1s ease 0.05s, visibility 0s linear 0.05s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .source-badge::after,
+  .source-badge:hover::after,
+  .source-badge:focus-visible::after {
+    transition: none;
+  }
+}
+
 /* Discontinued Badge */
 .discontinued-badge {
   display: inline-block;
@@ -632,6 +785,12 @@
   }
 
   .filter-select {
+    width: 100%;
+  }
+
+  /* Kildefilteret er en <div> rundt knappen — den må strekkes selv, ellers
+     krymper knappen til innholdsbredde i den stablede filterraden. */
+  .source-filter-dropdown {
     width: 100%;
   }
 

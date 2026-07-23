@@ -83,7 +83,8 @@ describe('FHIAdapter — kategorinivå fra katalogen', () => {
     assert.equal(t.paths[0][1].id, 'fhi-mfr');
     assert.deepEqual(t.paths[0][2],
       { id: 'fhi-mfr-fodsler', label: 'Fødsler og fødte', sortCode: '010' });
-    assert.equal(t.label, 'Fødte og fødsler (FHI)', 'kuratert tittel fra katalogen brukes');
+    // Ingen «(FHI)»-suffiks: kilden vises som badge i tabellistene
+    assert.equal(t.label, 'Fødte og fødsler', 'kuratert tittel fra katalogen brukes');
   });
 
   it('tabell uten kategori (eller med udefinert referanse) beholder 2 segmenter', async () => {

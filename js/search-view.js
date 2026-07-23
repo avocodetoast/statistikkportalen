@@ -25,6 +25,7 @@ async function renderSearchView(container) {
   const totalCount = Object.values(hitCounts).reduce((sum, c) => sum + c, 0);
   const updatedCounts = _searchCalcUpdatedFilterCounts(mh, filters);
   const frequencyCounts = BrowserState.calcFrequencyCounts(mh.allTables, filters);
+  const sourceCounts = BrowserState.calcSourceCounts(mh.allTables, filters);
 
   container.innerHTML = `
     <div class="search-view">
@@ -42,6 +43,8 @@ async function renderSearchView(container) {
           <input type="checkbox" id="enhanced-search" ${filters.enhanced ? 'checked' : ''} />
           <span>${t('search.enhanced')}</span>
         </label>
+
+        ${BrowserState.renderSourceFilter(sourceCounts, filters.sourceFilter)}
 
         <select id="subject-filter" class="filter-select">
           ${_searchRenderSubjectOptions(mh, hitCounts, totalCount, filters.subjectFilter)}
@@ -105,8 +108,15 @@ async function renderSearchView(container) {
     }
   });
 
+  // Source filter dropdown (rendered only when the instance has more than
+  // one source — setupSourceFilterDropdown is a no-op otherwise)
+  BrowserState.setupSourceFilterDropdown(container, () => {
+    _searchPerformSearch();
+  });
+
   // Perform initial search if query/filters present
-  if (filters.query || filters.subjectFilter || filters.frequencyFilter || filters.updatedFilter) {
+  if (filters.query || filters.subjectFilter || filters.frequencyFilter ||
+      filters.updatedFilter || filters.sourceFilter.length) {
     _searchPerformSearch();
   } else {
     _searchShowWelcome();
@@ -146,6 +156,7 @@ async function _searchPerformSearch() {
   const subjectFilter = document.getElementById('subject-filter')?.value || '';
   const frequencyFilter = document.getElementById('frequency-filter')?.value || '';
   const updatedFilter = document.getElementById('updated-filter')?.value || '';
+  const sourceFilter = BrowserState.readSourceFilter(document);
 
   // Update BrowserState filters
   BrowserState.searchFilters.query = query;
@@ -154,6 +165,7 @@ async function _searchPerformSearch() {
   BrowserState.searchFilters.subjectFilter = subjectFilter;
   BrowserState.searchFilters.frequencyFilter = frequencyFilter;
   BrowserState.searchFilters.updatedFilter = updatedFilter;
+  BrowserState.searchFilters.sourceFilter = sourceFilter;
 
   // Update URL without triggering re-render
   URLRouter.navigateTo('search', BrowserState.searchFiltersToParams(), false);
@@ -162,7 +174,7 @@ async function _searchPerformSearch() {
   updatePageTitle(query ? [query] : [t('nav.search')]);
 
   // If no query and no filters, show welcome
-  if (!query && !subjectFilter && !frequencyFilter && !updatedFilter) {
+  if (!query && !subjectFilter && !frequencyFilter && !updatedFilter && !sourceFilter.length) {
     _searchShowWelcome();
     // Update dropdown counts
     _searchUpdateDropdownCounts();
@@ -335,6 +347,12 @@ function _searchUpdateDropdownCounts() {
       frequencyFilterEl.value = selectedValue;
     }
   }
+
+  // Update source filter counts (in place — rebuilding the inputs would drop
+  // the check state the user just set)
+  BrowserState.updateSourceFilterCounts(
+    document, BrowserState.calcSourceCounts(mh.allTables, filters)
+  );
 
   // Update updated-filter dropdown
   if (updatedFilterEl) {

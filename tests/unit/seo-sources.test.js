@@ -27,7 +27,7 @@ const appConfig = {
     nb: {
       adapter: 'norges-bank',
       enabled: true,
-      branding: { name: 'Norges Bank', nameFull: 'Norges Bank', url: 'https://www.norges-bank.no/' },
+      branding: { name: 'Norges Bank', nameFull: 'Norges Bank', shortName: 'NB', url: 'https://www.norges-bank.no/' },
       dataflows: [
         { flow: 'EXR', version: '1.0', tableId: 'nb-EXR',
           paths: [['bf', 'nb-valutakurser'], ['ut', 'nb-valutakurser']],
@@ -45,7 +45,7 @@ const appConfig = {
       adapter: 'fhi',
       enabled: true,
       branding: {
-        name: 'FHI', nameFull: 'Folkehelseinstituttet', url: 'https://www.fhi.no/',
+        name: 'FHI', nameFull: 'Folkehelseinstituttet', shortName: 'FHI', url: 'https://www.fhi.no/',
         licenseUrl: 'https://creativecommons.org/licenses/by/4.0/deed.no', licenseName: 'CC BY 4.0',
       },
       sourceIds: ['nokkel'],
@@ -133,6 +133,39 @@ describe('sourceBrandingFor', () => {
   });
 });
 
+describe('sourceBadgeHtml', () => {
+  it('merker ikke SSB-tabeller (standardkilden)', async () => {
+    const { sourceBadgeHtml } = await mod;
+    assert.equal(sourceBadgeHtml('13760', appConfig), '');
+  });
+
+  it('bruker shortName som badgetekst og nameFull som tooltip', async () => {
+    const { sourceBadgeHtml } = await mod;
+    const nb = sourceBadgeHtml('nb-EXR', appConfig);
+    assert.match(nb, /class="source-badge source-badge--nb"/);
+    assert.match(nb, /data-tooltip="Norges Bank"/);
+    assert.match(nb, />NB</);
+
+    const fhi = sourceBadgeHtml('fhi-nokkel-171', appConfig);
+    assert.match(fhi, /source-badge--fhi/);
+    assert.match(fhi, /data-tooltip="Folkehelseinstituttet"/);
+    assert.match(fhi, />FHI</);
+  });
+
+  it('faller tilbake til name uten shortName', async () => {
+    const { sourceBadgeHtml } = await mod;
+    const cfg = { ...appConfig, sources: { ...appConfig.sources,
+      nb: { ...appConfig.sources.nb, branding: { name: 'Norges Bank', nameFull: 'Norges Bank' } } } };
+    assert.match(sourceBadgeHtml('nb-EXR', cfg), />Norges Bank</);
+  });
+
+  it('merker ikke en kilde uten egen branding (arver ikke SSBs)', async () => {
+    const { sourceBadgeHtml } = await mod;
+    const cfg = { ...appConfig, sources: { ...appConfig.sources, nb: { ...appConfig.sources.nb, branding: undefined } } };
+    assert.equal(sourceBadgeHtml('nb-EXR', cfg), '');
+  });
+});
+
 describe('buildNbCatalogue', () => {
   it('bygger én oppføring per dataflow, nettverksfritt', async () => {
     const { buildNbCatalogue } = await mod;
@@ -205,7 +238,8 @@ describe('buildFhiCatalogue', () => {
     assert.equal(tables.length, 1);
     const t = tables[0];
     assert.equal(t.id, 'fhi-nokkel-171');
-    assert.equal(t.label, 'Forventet levealder (FHI)');
+    // Ingen «(FHI)»-suffiks: kilden vises som badge, ikke i tittelen
+    assert.equal(t.label, 'Forventet levealder');
     assert.equal(t.firstPeriod, '1990');
     assert.equal(t.lastPeriod, '2026');
     assert.equal(t.timeUnit, 'Annual');

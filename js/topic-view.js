@@ -218,6 +218,7 @@ function _topicRenderTables(container, mh, path) {
   const subtreeTables = mh._collectAllTables(node, true);
   const frequencyCounts = BrowserState.calcFrequencyCounts(subtreeTables, filters);
   const updatedCounts = BrowserState.calcUpdatedCounts(subtreeTables, filters);
+  const sourceCounts = BrowserState.calcSourceCounts(subtreeTables, filters);
   const totalFiltered = BrowserState.filterTables(subtreeTables, filters).length;
 
   container.innerHTML = `
@@ -232,6 +233,8 @@ function _topicRenderTables(container, mh, path) {
           <input type="checkbox" id="topic-include-discontinued" ${filters.includeDiscontinued ? 'checked' : ''} />
           <span>${t('search.includeStopped')}</span>
         </label>
+
+        ${BrowserState.renderSourceFilter(sourceCounts, filters.sourceFilter, 'topic-')}
 
         <select id="topic-frequency-filter" class="filter-select">
           ${BrowserState.renderFrequencyFilterOptions(frequencyCounts, {
@@ -265,35 +268,42 @@ function _topicRenderTables(container, mh, path) {
   }
 
   // Filter change listeners: re-render only the table area
+  const onFilterChange = () => {
+    // Update BrowserState filters from DOM
+    BrowserState.topicFilters.includeDiscontinued =
+      document.getElementById('topic-include-discontinued')?.checked || false;
+    BrowserState.topicFilters.frequencyFilter =
+      document.getElementById('topic-frequency-filter')?.value || '';
+    BrowserState.topicFilters.updatedFilter =
+      document.getElementById('topic-updated-filter')?.value || '';
+    BrowserState.topicFilters.sourceFilter = BrowserState.readSourceFilter(document);
+
+    // Update URL with new filters (replaceState)
+    const urlParams = BrowserState.topicFiltersToParams();
+    URLRouter.navigateTo('topic/' + path.join('/'), urlParams, false);
+
+    // Re-render table area
+    const area = document.getElementById('topic-table-area');
+    if (area) {
+      area.innerHTML = _topicRenderSubtree(node, 0, mh, BrowserState.topicFilters);
+      BrowserState.attachTableLinkListeners(area);
+    }
+
+    // Update dropdown counts
+    _topicUpdateDropdownCounts(subtreeTables);
+  };
+
   const filterIds = ['topic-include-discontinued', 'topic-frequency-filter', 'topic-updated-filter'];
   filterIds.forEach(filterId => {
     const element = document.getElementById(filterId);
     if (element) {
-      element.addEventListener('change', () => {
-        // Update BrowserState filters from DOM
-        BrowserState.topicFilters.includeDiscontinued =
-          document.getElementById('topic-include-discontinued')?.checked || false;
-        BrowserState.topicFilters.frequencyFilter =
-          document.getElementById('topic-frequency-filter')?.value || '';
-        BrowserState.topicFilters.updatedFilter =
-          document.getElementById('topic-updated-filter')?.value || '';
-
-        // Update URL with new filters (replaceState)
-        const urlParams = BrowserState.topicFiltersToParams();
-        URLRouter.navigateTo('topic/' + path.join('/'), urlParams, false);
-
-        // Re-render table area
-        const area = document.getElementById('topic-table-area');
-        if (area) {
-          area.innerHTML = _topicRenderSubtree(node, 0, mh, BrowserState.topicFilters);
-          BrowserState.attachTableLinkListeners(area);
-        }
-
-        // Update dropdown counts
-        _topicUpdateDropdownCounts(subtreeTables);
-      });
+      element.addEventListener('change', onFilterChange);
     }
   });
+
+  // Source filter dropdown: rendered only when the instance has more than
+  // one source (setupSourceFilterDropdown is a no-op otherwise)
+  BrowserState.setupSourceFilterDropdown(container, onFilterChange);
 }
 
 /**
@@ -381,6 +391,10 @@ function _topicUpdateDropdownCounts(subtreeTables) {
   const frequencyCounts = BrowserState.calcFrequencyCounts(subtreeTables, filters);
   const updatedCounts = BrowserState.calcUpdatedCounts(subtreeTables, filters);
   const totalFiltered = BrowserState.filterTables(subtreeTables, filters).length;
+
+  BrowserState.updateSourceFilterCounts(
+    document, BrowserState.calcSourceCounts(subtreeTables, filters)
+  );
 
   const freqEl = document.getElementById('topic-frequency-filter');
   if (freqEl) {

@@ -232,9 +232,13 @@ const AppConfig = {
       // «Kilde:»-linjer og JSON-LD creator/license på nb-*-tabeller. Norges
       // Banks åpne data er gratis å bruke med kildehenvisning, men er ikke
       // CC-merket — licenseUrl utelates derfor bevisst (ingen lisenslenke).
+      // `shortName` er kilde-badgen i tabellistene (sourceBadgeHTML i utils.js
+      // / sourceBadgeHtml i scripts/lib/seo-sources.mjs) og må være kort nok
+      // til å stå bak en tabelltittel; `nameFull` er hover-teksten på badgen.
       branding: {
         name: 'Norges Bank',
         nameFull: 'Norges Bank',
+        shortName: 'NB',
         url: 'https://www.norges-bank.no/'
       },
       // `discontinued: true` merker en avsluttet serie i katalogen (GOVT_IRS).
@@ -396,6 +400,8 @@ const AppConfig = {
       branding: {
         name: 'FHI',
         nameFull: 'Folkehelseinstituttet',
+        // Badge-tekst i tabellistene (jf. shortName-kommentaren under nb over)
+        shortName: 'FHI',
         url: 'https://www.fhi.no/',
         licenseUrl: 'https://creativecommons.org/licenses/by/4.0/deed.no',
         licenseName: 'CC BY 4.0'

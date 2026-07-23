@@ -218,6 +218,7 @@ Pointing the app at a different PxWebApi v2 instance (or adding a language) touc
 | Change FHI table titles or categories | `data/sources/fhi-curation.json` (per-source `categories` + per-table `title`/`category`), then `node scripts/update-fhi-catalog.mjs`; merge logic in `scripts/lib/fhi-curation.mjs` |
 | Add or change a source adapter | `js/sources/{source}-adapter.js`, contract documented in `js/sources/source-registry.js` |
 | Change the API status badge / status panel | `source-status.js` (UI), `source-registry.js` (status tracking), `translations.js` (`apiStatus.*` keys) |
+| Change the per-table source badge (NB/FHI) or the source filter | `config.js` (`sources.*.branding.shortName`/`nameFull`), `utils.js` (`sourceBadgeHTML`, `listEnabledSources`), `browser-state.js` (`renderTableListHTML`, `renderSourceFilterCheckboxes`, `calcSourceCounts`, `src` URL param), `css/menu-navigator.css` (`.source-badge`), plus the mirror `sourceBadgeHtml()` in `scripts/lib/seo-sources.mjs` |
 | Place a foreign (NB/FHI) table under more topic paths | `config.js` (`sources.nb.dataflows[].paths` / `sources.fhi.paths`, plus `sourceNodes`; subjects must exist in `subjects.js`) |
 | Add/change a UI string or language | `translations.js` (dictionary), `config.js` (`languages`/`defaultLanguage`) |
 | Re-skin for another PxWebApi v2 instance | `config.js`, `subjects.js`, `synonyms.js` (see `config-sv.js`/`subjects-sv.js` for a worked example) |

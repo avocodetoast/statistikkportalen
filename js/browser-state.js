@@ -16,12 +16,14 @@ const BrowserState = {
   _initPromise: null,
 
   // Search view filters (independent from topic filters)
+  // sourceFilter: kildenøkler ('ssb'/'nb'/'fhi') — tom liste = alle kilder
   searchFilters: {
     query: '',
     includeDiscontinued: AppConfig.ui.showDiscontinuedByDefault,
     subjectFilter: '',
     frequencyFilter: '',
     updatedFilter: '',
+    sourceFilter: [],
     enhanced: true
   },
 
@@ -33,7 +35,8 @@ const BrowserState = {
   topicFilters: {
     includeDiscontinued: AppConfig.ui.showDiscontinuedByDefault,
     frequencyFilter: '',
-    updatedFilter: ''
+    updatedFilter: '',
+    sourceFilter: []
   },
 
   /**
@@ -149,6 +152,7 @@ const BrowserState = {
     if (this.searchFilters.subjectFilter) params.subj = this.searchFilters.subjectFilter;
     if (this.searchFilters.frequencyFilter) params.freq = this.searchFilters.frequencyFilter;
     if (this.searchFilters.updatedFilter) params.upd = this.searchFilters.updatedFilter;
+    if (this.searchFilters.sourceFilter.length) params.src = this.searchFilters.sourceFilter.join(',');
     if (!this.searchFilters.enhanced) params.enh = '0';
     return params;
   },
@@ -162,7 +166,21 @@ const BrowserState = {
     this.searchFilters.subjectFilter = params.subj || '';
     this.searchFilters.frequencyFilter = params.freq || '';
     this.searchFilters.updatedFilter = params.upd || '';
+    this.searchFilters.sourceFilter = this.parseSourceParam(params.src);
     this.searchFilters.enhanced = params.enh !== '0';
+  },
+
+  /**
+   * Tolk `src`-parameteren ('nb,fhi') som en liste kildenøkler. Ukjente eller
+   * deaktiverte kilder droppes, så en håndredigert URL ikke kan filtrere bort
+   * alt uten at noen avkrysningsboks viser hvorfor.
+   * @param {string} [value]
+   * @returns {string[]}
+   */
+  parseSourceParam(value) {
+    if (!value) return [];
+    const known = new Set(listEnabledSources().map(s => s.key));
+    return String(value).split(',').map(s => s.trim()).filter(s => known.has(s));
   },
 
   /**
@@ -173,6 +191,7 @@ const BrowserState = {
     if (this.topicFilters.includeDiscontinued) params.disc = '1';
     if (this.topicFilters.frequencyFilter) params.freq = this.topicFilters.frequencyFilter;
     if (this.topicFilters.updatedFilter) params.upd = this.topicFilters.updatedFilter;
+    if (this.topicFilters.sourceFilter.length) params.src = this.topicFilters.sourceFilter.join(',');
     return params;
   },
 
@@ -183,6 +202,7 @@ const BrowserState = {
     this.topicFilters.includeDiscontinued = params.disc === '1';
     this.topicFilters.frequencyFilter = params.freq || '';
     this.topicFilters.updatedFilter = params.upd || '';
+    this.topicFilters.sourceFilter = this.parseSourceParam(params.src);
   },
 
   /**
@@ -192,6 +212,7 @@ const BrowserState = {
     this.topicFilters.includeDiscontinued = AppConfig.ui.showDiscontinuedByDefault;
     this.topicFilters.frequencyFilter = '';
     this.topicFilters.updatedFilter = '';
+    this.topicFilters.sourceFilter = [];
   },
 
   // ========== Shared filter utilities ==========
@@ -201,8 +222,8 @@ const BrowserState = {
    * Used for calculating per-value hit counts in filter dropdowns.
    *
    * @param {Array} tables - Tables to filter
-   * @param {Object} filters - {query, includeDiscontinued, subjectFilter, frequencyFilter, updatedFilter, enhanced}
-   * @param {string} [excludeFilter] - 'subject', 'frequency', or 'updated' to skip
+   * @param {Object} filters - {query, includeDiscontinued, subjectFilter, frequencyFilter, updatedFilter, sourceFilter, enhanced}
+   * @param {string} [excludeFilter] - 'subject', 'frequency', 'updated', or 'source' to skip
    * @returns {Array} Filtered tables (sorted by relevance when enhanced mode is on)
    */
   filterTables(tables, filters, excludeFilter) {
@@ -250,6 +271,7 @@ const BrowserState = {
     const subjectFilter = filters.subjectFilter || '';
     const frequencyFilter = filters.frequencyFilter || '';
     const updatedFilter = filters.updatedFilter || '';
+    const sourceFilter = filters.sourceFilter || [];
 
     let updatedThreshold = null;
     if (updatedFilter && excludeFilter !== 'updated') {
@@ -261,6 +283,10 @@ const BrowserState = {
     return tables.filter(table => {
       if (table.discontinued === true && !includeDiscontinued) return false;
       if (excludeFilter !== 'subject' && subjectFilter && table.subjectCode !== subjectFilter) return false;
+
+      // Tom kildeliste = alle kilder (ingen avkrysningsboks huket av)
+      if (excludeFilter !== 'source' && sourceFilter.length &&
+          sourceFilter.indexOf(sourceKeyForTableId(table.id)) === -1) return false;
 
       if (excludeFilter !== 'frequency' && frequencyFilter) {
         if (frequencyFilter === 'Other') {
@@ -336,6 +362,25 @@ const BrowserState = {
     return counts;
   },
 
+  /**
+   * Count tables per source key. Excludes the source filter itself, so each
+   * checkbox shows how many tables it WOULD add — same semantics as the
+   * subject/frequency/updated counts.
+   * @returns {Object} {ssb: N, nb: N, fhi: N} — one entry per enabled source
+   */
+  calcSourceCounts(tables, filters) {
+    const base = this.filterTables(tables, filters, 'source');
+    const counts = {};
+    listEnabledSources().forEach(s => { counts[s.key] = 0; });
+
+    base.forEach(table => {
+      const key = sourceKeyForTableId(table.id);
+      if (key in counts) counts[key]++;
+    });
+
+    return counts;
+  },
+
   // ========== Shared filter-dropdown rendering ==========
 
   FREQUENCY_OPTIONS: [
@@ -380,6 +425,150 @@ const BrowserState = {
    */
   renderUpdatedFilterOptions(counts, opts) {
     return this._renderFilterOptions(this.UPDATED_OPTIONS, counts, opts);
+  },
+
+  /**
+   * Summary shown on the source filter's dropdown toggle: either the
+   * "all sources" label with the grand total, or the picked sources' short
+   * names (in config order, not click order) with their combined count.
+   *
+   * @param {Object} counts - {ssb, nb, fhi} from calcSourceCounts
+   * @param {string[]} selected - Selected source keys
+   * @returns {string} Plain text (caller escapes)
+   */
+  sourceFilterSummary(counts, selected) {
+    const sources = listEnabledSources();
+    const chosen = sources.filter(s => (selected || []).indexOf(s.key) !== -1);
+    const total = (list) => list.reduce((sum, s) => sum + (counts[s.key] || 0), 0);
+
+    if (!chosen.length) return `${t('filter.allSources')} (${total(sources)})`;
+    const names = chosen.map(s => s.branding.shortName || s.branding.name || s.key);
+    return `${names.join(', ')} (${total(chosen)})`;
+  },
+
+  /**
+   * Render the source filter as a dropdown holding one checkbox per enabled
+   * source — it sits in the same filter row as the frequency/updated
+   * `<select>`s and stays the same width no matter how many sources exist.
+   * Multi-select by design: nothing checked means "all sources", so the
+   * default state needs no explanation.
+   *
+   * The per-source count lives in its own `<span class="source-filter-count">`
+   * so the dynamic count update can rewrite just the number without rebuilding
+   * the inputs (which would drop focus and check state mid-interaction).
+   *
+   * Interaction (open/close, outside click, Escape) is wired by
+   * setupSourceFilterDropdown().
+   *
+   * @param {Object} counts - {ssb, nb, fhi} from calcSourceCounts
+   * @param {string[]} selected - Currently selected source keys
+   * @param {string} [idPrefix] - '' (search view) or 'topic-' (topic view)
+   * @returns {string} HTML, or '' for single-source instances (no filter to offer)
+   */
+  renderSourceFilter(counts, selected, idPrefix) {
+    const sources = listEnabledSources();
+    if (sources.length < 2) return '';
+
+    const prefix = idPrefix || '';
+    const chosen = selected || [];
+
+    const options = sources.map(({ key, branding }) => {
+      const id = prefix + 'source-filter-' + key;
+      const label = branding.shortName || branding.name || key;
+      const checked = chosen.indexOf(key) !== -1 ? ' checked' : '';
+      const full = branding.nameFull || branding.name || label;
+      // Ingen for=: input-en ligger inne i label-en, og et for= som peker på
+      // den samme nestede boksen gir dobbelt-toggle i enkelte nettlesere.
+      return `<label class="filter-checkbox source-filter">
+            <input type="checkbox" id="${escapeHtml(id)}" value="${escapeHtml(key)}"${checked} />
+            <span class="source-filter-name">${escapeHtml(label)}</span>
+            <span class="source-filter-full">${escapeHtml(full)}</span>
+            <span class="source-filter-count">(${counts[key] || 0})</span>
+          </label>`;
+    }).join('\n          ');
+
+    return `<div class="source-filter-dropdown">
+          <button type="button" class="filter-select source-filter-toggle" aria-expanded="false" aria-haspopup="true">
+            <span class="source-filter-summary">${escapeHtml(this.sourceFilterSummary(counts, chosen))}</span>
+          </button>
+          <div class="source-filter-panel" hidden>
+            ${options}
+          </div>
+        </div>`;
+  },
+
+  /**
+   * Read the checked source keys out of a rendered source filter.
+   * @param {ParentNode} root - Container holding the .source-filter labels
+   * @returns {string[]}
+   */
+  readSourceFilter(root) {
+    return Array.from(root.querySelectorAll('.source-filter input:checked'))
+      .map(input => input.value);
+  },
+
+  /**
+   * Refresh the per-source hit counts and the toggle summary in place,
+   * without touching the inputs.
+   * @param {ParentNode} root
+   * @param {Object} counts - from calcSourceCounts
+   */
+  updateSourceFilterCounts(root, counts) {
+    root.querySelectorAll('.source-filter').forEach(label => {
+      const input = label.querySelector('input');
+      const countEl = label.querySelector('.source-filter-count');
+      if (input && countEl) countEl.textContent = `(${counts[input.value] || 0})`;
+    });
+
+    const summaryEl = root.querySelector('.source-filter-summary');
+    if (summaryEl) {
+      summaryEl.textContent = this.sourceFilterSummary(counts, this.readSourceFilter(root));
+    }
+  },
+
+  /**
+   * Wire up the source filter dropdown: toggle on click, close on Escape,
+   * outside click or blur, and call onChange whenever a box is (un)checked.
+   * The panel deliberately stays OPEN while checking boxes — it is a
+   * multi-select, and closing after the first click would make picking two
+   * sources needlessly tedious.
+   *
+   * @param {HTMLElement} container - View container holding the filter row
+   * @param {Function} onChange - Called after any checkbox change
+   */
+  setupSourceFilterDropdown(container, onChange) {
+    const dropdown = container.querySelector('.source-filter-dropdown');
+    if (!dropdown) return; // single-source instance — nothing rendered
+
+    const toggle = dropdown.querySelector('.source-filter-toggle');
+    const panel = dropdown.querySelector('.source-filter-panel');
+    let removeEscape = null;
+
+    const close = () => {
+      panel.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('click', onDocumentClick, true);
+      if (removeEscape) { removeEscape(); removeEscape = null; }
+    };
+
+    function onDocumentClick(e) {
+      if (!dropdown.contains(e.target)) close();
+    }
+
+    const open = () => {
+      panel.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      document.addEventListener('click', onDocumentClick, true);
+      removeEscape = addEscapeHandler(close);
+    };
+
+    toggle.addEventListener('click', () => {
+      if (panel.hidden) open(); else close();
+    });
+
+    panel.querySelectorAll('input[type="checkbox"]').forEach(input => {
+      input.addEventListener('change', onChange);
+    });
   },
 
   _renderFilterOptions(optionDefs, counts, opts) {
@@ -447,7 +636,7 @@ const BrowserState = {
       <table class="table-list">
         <thead>
           <tr>
-            <th>Tabellnr.</th>
+            <th>Tabell</th>
             <th>Tittel</th>
             <th>Tidsperiode</th>
             <th>Sist oppdatert</th>
@@ -458,9 +647,10 @@ const BrowserState = {
             const isDiscontinued = table.discontinued === true;
             return `
               <tr class="table-row ${isDiscontinued ? 'discontinued' : ''}" data-table-id="${table.id}">
-                <td title="${escapeHtml(table.id)}">${escapeHtml(table.id)}</td>
+                <td title="${escapeHtml(table.id)}">${escapeHtml(displayTableId(table.id))}</td>
                 <td>
                   <a href="#variables/${table.id}" class="table-link"${table.description ? ` title="${escapeHtml(table.description)}"` : ''}>${escapeHtml(this.cleanTableLabel(table.label, table.firstPeriod, table.lastPeriod))}</a>
+                  ${sourceBadgeHTML(table.id)}
                   ${isDiscontinued ? '<span class="discontinued-badge">Avsluttet</span>' : ''}
                 </td>
                 <td>${escapeHtml(table.firstPeriod || '')} - ${escapeHtml(table.lastPeriod || '')}</td>
