@@ -511,20 +511,28 @@
 
   const GRAN_BY_FREQ = { A: 'year', Q: 'quarter', M: 'month', B: 'day', D: 'day' };
   // Grovhetsrang: konvertering er kun lov mot grovere (høyere rang).
-  const GRAN_RANK = { day: 0, month: 1, quarter: 2, year: 3 };
+  // 'datetime' (tidsstemplede koder, se periodCodeGranularity) er finere enn
+  // dag og finnes bare som KILDE-granularitet — velgeren viser aldri klokkeslett.
+  const GRAN_RANK = { datetime: -1, day: 0, month: 1, quarter: 2, year: 3 };
 
   /** SDMX-frekvenskode → inputgranularitet. Ukjent/tom → 'day' (fineste). */
   function periodGranularity(freqCode) {
     return GRAN_BY_FREQ[String(freqCode || '').toUpperCase()] || 'day';
   }
 
-  /** Granularitet utledet av en periodekodes form, eller null (f.eks. FHI-skoleår). */
+  /**
+   * Granularitet utledet av en periodekodes form, eller null (f.eks. FHI-skoleår).
+   * 'datetime' er tidsstemplede koder ('2025-01-02T10:16:24' — Norges Banks
+   * F-auksjoner tidfester hver auksjon til budfristen): de opptrer som
+   * KILDE-koder og coarsenes til dag/måned/kvartal/år av convertPeriod.
+   */
   function periodCodeGranularity(code) {
     const c = String(code || '');
     if (/^\d{4}$/.test(c)) return 'year';
     if (/^\d{4}-Q[1-4]$/i.test(c)) return 'quarter';
     if (/^\d{4}-\d{2}$/.test(c)) return 'month';
     if (/^\d{4}-\d{2}-\d{2}$/.test(c)) return 'day';
+    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/.test(c)) return 'datetime';
     return null;
   }
 
@@ -555,12 +563,16 @@
 
     const year = c.slice(0, 4);
     if (toGran === 'year') return year;
+    if (toGran === 'day') {
+      // Kun tidsstempel → dag er mulig (dag og grovere er fanget over).
+      return fromGran === 'datetime' ? c.slice(0, 10) : null;
+    }
     if (toGran === 'month') {
-      // Kun dag → måned er mulig (kvartal/år er grovere og fanget over).
-      return fromGran === 'day' ? c.slice(0, 7) : null;
+      // Dag og tidsstempel har månedsdel i posisjon 5-6.
+      return (fromGran === 'day' || fromGran === 'datetime') ? c.slice(0, 7) : null;
     }
     if (toGran === 'quarter') {
-      // Dag/måned har månedsdel i posisjon 5-6.
+      // Dag/måned/tidsstempel har månedsdel i posisjon 5-6.
       const month = parseInt(c.slice(5, 7), 10);
       if (!month || month < 1 || month > 12) return null;
       return year + '-Q' + Math.ceil(month / 3);

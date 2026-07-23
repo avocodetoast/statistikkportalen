@@ -47,6 +47,29 @@ const FLOWS = {
     keys: [['B', 'P1', '2027-01-01']],
     isinNames: {}
   },
+  // labelStyle 'prefix': hovedkategorien foran ankernavnet
+  // (LIQUIDITY_STATISTICS: detaljene er nestet under hovedkategoriene).
+  LIQ: {
+    dims: ['MAIN', 'DETAILS'],
+    keys: [
+      ['Tab1', 'tab1_linje01'],
+      ['Tab2', 'tab2_linje01']
+    ],
+    isinNames: {}
+  },
+  // Ikke-funksjonell avhengighet: samme anker (FDATE) med to ulike verdier i
+  // den kollapsede dimensjonen (LIQUIDITY_FORECAST: desemberdatoer bærer
+  // prognoser for både inneværende og neste år). Kollapsen MÅ droppes — ellers
+  // ville halve uttaket forsvunnet stilltiende.
+  VINT: {
+    dims: ['FYEAR', 'FDATE'],
+    keys: [
+      ['2025', '2025-12-15'],
+      ['2026', '2025-12-15'],
+      ['2023', '2023-06-18']
+    ],
+    isinNames: {}
+  },
   NOKEYS: { // serieskeysonly feiler → ingen kollaps
     dims: ['FREQ', 'ISIN', 'MATURITY'],
     keys: [['B', 'K1', '2027-01-01']],
@@ -94,7 +117,12 @@ function dsdJson(flowId) {
 // Lokaliserte verdinavn i serieskeysonly-proben (DSD-kodelistene hos NB har
 // ofte kun engelske navn; proben med locale=no gir norske).
 const PROBE_VALUE_NAMES = {
-  PRIM: { UNIT_MEASURE: { Y: 'Effektiv rente', V: 'Volum' } }
+  PRIM: { UNIT_MEASURE: { Y: 'Effektiv rente', V: 'Volum' } },
+  LIQ: {
+    MAIN: { Tab1: 'Banksystemets likviditet', Tab2: 'Likviditetsvirkninger av statspapirer' },
+    DETAILS: { tab1_linje01: 'Statens konti', tab2_linje01: 'Emisjon statsobligasjoner' }
+  },
+  VINT: { FDATE: { '2025-01-16': 'Prognose 16.01.2025', '2023-12-18': 'Prognose 18.12.2023' } }
 };
 
 function keysJson(flowId) {
@@ -227,7 +255,15 @@ app.AppConfig.sources.nb.dataflows = [
   { flow: 'NOKEYS', version: '1.0', tableId: 'nb-NOKEYS',
     path: ['bf', 'nb-renter'],
     collapseDims: { anchor: 'ISIN', dims: ['MATURITY'] },
-    label: { nb: 'Probe-svikt' } }
+    label: { nb: 'Probe-svikt' } },
+  { flow: 'LIQ', version: '1.0', tableId: 'nb-LIQ',
+    path: ['bf', 'nb-likviditet'],
+    collapseDims: { anchor: 'DETAILS', dims: ['MAIN'], labelStyle: 'prefix' },
+    label: { nb: 'Likviditet – test' } },
+  { flow: 'VINT', version: '1.0', tableId: 'nb-VINT',
+    path: ['bf', 'nb-likviditet'],
+    collapseDims: { anchor: 'FDATE', dims: ['FYEAR'], labelStyle: 'plain' },
+    label: { nb: 'Prognoser – test' } }
 ];
 
 describe('NBAdapter — collapseDims i metadata', () => {
@@ -324,6 +360,25 @@ describe('NBAdapter — collapseDims i metadata', () => {
       u.includes('/data/PRIM/') && u.includes('detail=serieskeysonly') && u.includes('locale=no')),
       'serieskeysonly-URL skal ha locale=no, fikk: ' +
       requestedUrls.filter(u => u.includes('serieskeysonly')).join(', '));
+  });
+});
+
+describe('NBAdapter — collapseDims labelStyle', () => {
+  it("'prefix' setter den kollapsede verdien foran ankernavnet", async () => {
+    const meta = await adapter.getTableMetadata('nb-LIQ', false, 'no');
+    assert.deepEqual(meta.id, ['DETAILS', 'TIME_PERIOD']);
+    const label = meta.dimension.DETAILS.category.label;
+    assert.equal(label.tab1_linje01, 'Banksystemets likviditet – Statens konti');
+    assert.equal(label.tab2_linje01,
+      'Likviditetsvirkninger av statspapirer – Emisjon statsobligasjoner');
+  });
+
+  it('dropper kollapsen når avhengigheten ikke er funksjonell', async () => {
+    // Ett anker (2025-12-15) med to ulike prognoseår → kollaps ville slått to
+    // serier sammen i samme celle. Begge dimensjonene skal stå igjen.
+    const meta = await adapter.getTableMetadata('nb-VINT', false, 'no');
+    assert.deepEqual(meta.id, ['FYEAR', 'FDATE', 'TIME_PERIOD']);
+    assert.equal(meta.extension.collapsedDims, undefined);
   });
 });
 

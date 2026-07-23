@@ -125,8 +125,10 @@ function buildPathSegments(placement, subjectNames, sourceNodes, lang) {
 // nettverksfri) — duplikat av VARIABLE_NAMES i js/sources/norges-bank-adapter.js.
 const NB_VARIABLE_NAMES = {
   EXR: ['Valutakurser', 'Valuta', 'Basisvaluta', 'Kvoteringsvaluta', 'Kurs', 'Exchange rates', 'Currency'],
-  IR: ['Styringsrenten', 'Styringsrente', 'Rente', 'Foliorente', 'Policy rate', 'Key policy rate'],
-  SHORT_RATES: ['NOWA', 'Kortsiktige renter', 'Pengemarkedsrente', 'Rente', 'Short-term interest rates'],
+  IR: ['Styringsrenten', 'Styringsrente', 'Rente', 'Foliorente', 'Reserverente',
+    'Døgnlånsrente', 'Policy rate', 'Key policy rate', 'Reserve rate', 'Overnight lending rate'],
+  SHORT_RATES: ['NOWA', 'Interbankrente', 'Kortsiktige renter', 'Pengemarkedsrente', 'Rente',
+    'Short-term interest rates', 'Interbank rate'],
   GOVT_GENERIC_RATES: ['Statsobligasjonsrenter', 'Statsobligasjon', 'Statsrente', 'Rente', 'Government bond yields'],
   GOVT_ZEROCOUPON: ['Nullkupongrenter', 'Statspapirer', 'Rentekurve', 'Statsobligasjon', 'Statskasseveksel', 'Zero coupon yields', 'Yield curve'],
   SEC: ['Statspapirer', 'Statsobligasjoner', 'Statskasseveksler', 'Kurser', 'Effektiv rente', 'ISIN', 'Government securities', 'Treasury bills'],

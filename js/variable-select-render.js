@@ -271,19 +271,23 @@ async function displayVariables() {
  * Render the interval-based time picker card (dimensions flagged with
  * extension.intervalPicker — Norges Bank's TIME_PERIOD). Three pill modes
  * matching the SDMX API's real semantics:
- *   «Siste N»          → top(N)          → lastNObservations=N
  *   «Fra–til»          → range(from,to)  → startPeriod/endPeriod
+ *   «Siste N»          → top(N)          → lastNObservations=N
  *   «Hele historikken» → '*'             → no period params
- * Defaults to Siste 10 so the time dimension never blocks «Hent data».
+ * Defaults to Fra–til, pre-filled with the first and last available observation
+ * (ensureRangeDefaults in variable-select-status.js) — an explicit interval is
+ * what most users want, and an empty one would produce the same request as
+ * «Hele historikken», making the mode switch look like it did nothing.
  * The from/til inputs are rendered lazily by syncTimePicker()
  * (variable-select-status.js) since their granularity follows the selected
- * frequency (B → date, M → month, Q → year+quarter, A → year).
+ * frequency (B → date, M → month, Q → year+quarter, A → year), or the
+ * source-declared granularity for flows without a frequency dimension.
  */
 function renderTimePickerCard(dimCode, dimension, roleBadgeHtml) {
   const name = escapeHtml(dimension.label || dimCode);
   return `
     <div class="variable-card" data-dimension="${escapeHtml(dimCode)}" data-elimination="false"
-         data-singleselect="false" data-time-picker="interval" data-picker-mode="top">
+         data-singleselect="false" data-time-picker="interval" data-picker-mode="range">
       <div class="variable-header">
         <h3 class="variable-name">${name}</h3>
         ${roleBadgeHtml}
@@ -292,18 +296,18 @@ function renderTimePickerCard(dimCode, dimension, roleBadgeHtml) {
 
       <div class="variable-controls">
         <div class="api-pill-group tp-modes" role="radiogroup" aria-label="${name}">
-          <label class="api-pill"><input type="radio" name="tp-mode-${escapeHtml(dimCode)}" value="top" checked><span>${t('variable.btn.last')} N</span></label>
-          <label class="api-pill"><input type="radio" name="tp-mode-${escapeHtml(dimCode)}" value="range"><span>${t('variable.timePicker.range')}</span></label>
+          <label class="api-pill"><input type="radio" name="tp-mode-${escapeHtml(dimCode)}" value="range" checked><span>${t('variable.timePicker.range')}</span></label>
+          <label class="api-pill"><input type="radio" name="tp-mode-${escapeHtml(dimCode)}" value="top"><span>${t('variable.btn.last')} N</span></label>
           <label class="api-pill"><input type="radio" name="tp-mode-${escapeHtml(dimCode)}" value="star"><span>${t('variable.timePicker.all')}</span></label>
         </div>
 
-        <div class="tp-pane tp-pane-top">
+        <div class="tp-pane tp-pane-top" hidden>
           <label class="tp-label">${t('variable.btn.last')}</label>
           <input type="number" class="top-n-input" value="10" min="1">
           <span class="top-n-label">${t('unit.value.many')}</span>
         </div>
 
-        <div class="tp-pane tp-pane-range" hidden>
+        <div class="tp-pane tp-pane-range">
           <div class="tp-range-inputs"></div>
         </div>
 
@@ -407,7 +411,7 @@ function renderPeriodInputsHtml(gran, bounds, fromVal, toVal) {
 
 /** Show the pane matching card.dataset.pickerMode, hide the others. */
 function toggleTimePickerPanes(card) {
-  const mode = card.dataset.pickerMode || 'top';
+  const mode = card.dataset.pickerMode || 'range';
   card.querySelector('.tp-pane-top')?.toggleAttribute('hidden', mode !== 'top');
   card.querySelector('.tp-pane-range')?.toggleAttribute('hidden', mode !== 'range');
   card.querySelector('.tp-pane-star')?.toggleAttribute('hidden', mode !== 'star');
@@ -421,7 +425,7 @@ function toggleTimePickerPanes(card) {
  * arrays anyway; only the client-side subset filter is lost).
  */
 function restoreTimePickerSelection(card, dimSelection) {
-  if (!dimSelection) return; // keep the Siste 10 default
+  if (!dimSelection) return; // keep the pre-filled Fra–til default
 
   const P = window.SdmxToJsonStat;
   let mode = null, topN = null, from = '', to = '';
@@ -457,7 +461,10 @@ function restoreTimePickerSelection(card, dimSelection) {
   if (mode === 'range' && (from || to)) {
     // Render the inputs now at the granularity the saved codes dictate, so the
     // values can be set; syncTimePicker() leaves matching granularity alone.
-    const gran = P?.periodCodeGranularity(from || to) || 'day';
+    // 'datetime' er en kildeform (tidsstemplede F-auksjonskoder), ikke en
+    // inputgranularitet — velgeren viser dager.
+    const codeGran = P?.periodCodeGranularity(from || to);
+    const gran = (!codeGran || codeGran === 'datetime') ? 'day' : codeGran;
     const wrap = card.querySelector('.tp-range-inputs');
     if (wrap) {
       wrap.innerHTML = renderPeriodInputsHtml(gran, timePickerBounds(card, gran, null), from, to);
@@ -681,19 +688,28 @@ async function restoreSelections() {
 }
 
 /**
- * Render list items for dimension values.
- * Parses hierarchy markers (¬) in labels for visual indentation.
- * Time dimensions are displayed in reverse order (newest first) since
- * users typically care most about recent data.
+ * The dimension's value codes in display order — time dimensions newest first,
+ * others in codelist order where one was pre-loaded. Split out of
+ * renderValueList so the text filter can search the FULL list (the rendered
+ * list is capped at AppConfig.ui.maxDisplayValues, and values beyond the cap
+ * would otherwise be unreachable — Norges Bank has dimensions with >1000
+ * values, e.g. LIQUIDITY_FORECAST's prognosedato).
  *
  * @param {string} dimCode - Dimension code
  * @param {object} dimension - Dimension metadata
  * @param {boolean} isTimeDim - Whether this is a time dimension
- * @returns {string} - HTML for list items
+ * @returns {string[]} - Ordered value codes
  */
-function renderValueList(dimCode, dimension, isTimeDim) {
+function orderedValueCodes(dimCode, dimension, isTimeDim) {
   const values = dimension.category.label;
-  let codes = Object.keys(values);
+  // Rekkefølgen leses fra category.index, ikke fra Object.keys(label):
+  // JavaScript sorterer heltallslignende objektnøkler numerisk stigende uansett
+  // innsettingsrekkefølge, så dimensjoner med tallkoder (Norges Banks
+  // «Prognoseår») ville ellers ignorert kildens rekkefølge.
+  const index = dimension.category.index;
+  let codes = index
+    ? Object.keys(index).sort((a, b) => index[a] - index[b])
+    : Object.keys(values);
 
   // Time dimensions: show newest values first (reverse chronological)
   if (isTimeDim) {
@@ -721,7 +737,38 @@ function renderValueList(dimCode, dimension, isTimeDim) {
     codes = orderedCodes;
   }
 
-  const maxDisplay = 500;
+  return codes;
+}
+
+/**
+ * Render list items for dimension values.
+ * Parses hierarchy markers (¬) in labels for visual indentation.
+ *
+ * The list is capped at AppConfig.ui.maxDisplayValues. `query` (the card's text
+ * filter) narrows the FULL value list before the cap is applied, so values past
+ * the cap stay reachable — see refilterTruncatedList in variable-select-events.js.
+ *
+ * @param {string} dimCode - Dimension code
+ * @param {object} dimension - Dimension metadata
+ * @param {boolean} isTimeDim - Whether this is a time dimension
+ * @param {string} [query] - Lowercased filter text ('' = no filter)
+ * @param {Set<string>} [keepCodes] - Codes always kept regardless of the query
+ *   (the card's current selection — filtering must never silently deselect)
+ * @returns {string} - HTML for list items
+ */
+function renderValueList(dimCode, dimension, isTimeDim, query, keepCodes) {
+  const values = dimension.category.label;
+  let codes = orderedValueCodes(dimCode, dimension, isTimeDim);
+
+  const q = (query || '').trim().toLowerCase();
+  if (q) {
+    codes = codes.filter(code =>
+      (keepCodes && keepCodes.has(code)) ||
+      String(code).toLowerCase().includes(q) ||
+      parseHierarchyLabel(values[code]).cleanLabel.toLowerCase().includes(q));
+  }
+
+  const maxDisplay = AppConfig.ui.maxDisplayValues;
   const displayCodes = codes.slice(0, maxDisplay);
   const hasMore = codes.length > maxDisplay;
 

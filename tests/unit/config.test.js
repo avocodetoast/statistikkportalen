@@ -90,6 +90,59 @@ describe('AppConfig — nb collapseDims', () => {
       'tableId må være unik — flowForId slår opp på den');
   });
 
+  it('collapseDims.labelStyle er en kjent stil', () => {
+    for (const flow of AppConfig.sources.nb.dataflows) {
+      if (!flow.collapseDims || !flow.collapseDims.labelStyle) continue;
+      assert.ok(['security', 'suffix', 'prefix'].includes(flow.collapseDims.labelStyle),
+        flow.tableId + ': ukjent labelStyle ' + flow.collapseDims.labelStyle);
+    }
+  });
+
+  it('dropDims er en ikke-tom array av dimensjonsnavn', () => {
+    for (const flow of AppConfig.sources.nb.dataflows) {
+      if (!flow.dropDims) continue;
+      assert.ok(Array.isArray(flow.dropDims) && flow.dropDims.length > 0,
+        flow.tableId + ': dropDims må være en ikke-tom array');
+      assert.ok(flow.dropDims.every(d => typeof d === 'string' && d.length),
+        flow.tableId + ': dropDims må inneholde dimensjonsnavn');
+    }
+  });
+
+  it('dimSort bruker kun asc/desc', () => {
+    for (const flow of AppConfig.sources.nb.dataflows) {
+      if (!flow.dimSort) continue;
+      for (const [dim, dir] of Object.entries(flow.dimSort)) {
+        assert.ok(typeof dim === 'string' && dim.length, flow.tableId + ': dimSort-nøkkel');
+        assert.ok(['asc', 'desc'].includes(dir),
+          flow.tableId + '.' + dim + ': dimSort må være asc/desc, fikk ' + dir);
+      }
+    }
+  });
+
+  it('intervalPicker oppgir en granularitet', () => {
+    for (const flow of AppConfig.sources.nb.dataflows) {
+      if (!flow.intervalPicker) continue;
+      assert.ok(['day', 'month', 'quarter', 'year'].includes(flow.intervalPicker.granularity),
+        flow.tableId + ': intervalPicker.granularity må være day/month/quarter/year');
+    }
+  });
+
+  it('F-auksjoner dropper AUCTION_ID og har dagvelger', () => {
+    const fa = AppConfig.sources.nb.dataflows.find(f => f.tableId === 'nb-FAUCTION');
+    assert.deepEqual(fa.dropDims, ['AUCTION_ID']);
+    assert.equal(fa.intervalPicker.granularity, 'day');
+  });
+
+  it('de fem omdøpte NB-tabellene har de nye titlene', () => {
+    const byId = Object.fromEntries(AppConfig.sources.nb.dataflows.map(f => [f.tableId, f.label.nb]));
+    assert.equal(byId['nb-LIQUIDITY_STATISTICS'], 'Likviditeten i banksystemet');
+    assert.equal(byId['nb-LIQUIDITY_FORECAST'],
+      'Likviditeten i banksystemet, strukturell og total likviditet');
+    assert.equal(byId['nb-FAUCTION'], 'Norges Banks F-auksjoner');
+    assert.equal(byId['nb-IR'], 'Norges Banks styringsrente, reserverente og døgnlånsrente');
+    assert.equal(byId['nb-SHORT_RATES'], 'Interbankrente, NOWA');
+  });
+
   it('GOVT_PRIMARY_MARKET and CBC_TRANSACTIONS collapse into ISIN', () => {
     const prim = AppConfig.sources.nb.dataflows.find(f => f.flow === 'GOVT_PRIMARY_MARKET');
     const cbc = AppConfig.sources.nb.dataflows.find(f => f.flow === 'CBC_TRANSACTIONS');

@@ -88,8 +88,10 @@
   // Statiske søkeord per flow (holder getAllTables nettverksfri). Tospråklig.
   const VARIABLE_NAMES = {
     EXR: ['Valutakurser', 'Valuta', 'Basisvaluta', 'Kvoteringsvaluta', 'Kurs', 'Exchange rates', 'Currency'],
-    IR: ['Styringsrenten', 'Styringsrente', 'Rente', 'Foliorente', 'Policy rate', 'Key policy rate'],
-    SHORT_RATES: ['NOWA', 'Kortsiktige renter', 'Pengemarkedsrente', 'Rente', 'Short-term interest rates'],
+    IR: ['Styringsrenten', 'Styringsrente', 'Rente', 'Foliorente', 'Reserverente',
+      'Døgnlånsrente', 'Policy rate', 'Key policy rate', 'Reserve rate', 'Overnight lending rate'],
+    SHORT_RATES: ['NOWA', 'Interbankrente', 'Kortsiktige renter', 'Pengemarkedsrente', 'Rente',
+      'Short-term interest rates', 'Interbank rate'],
     GOVT_GENERIC_RATES: ['Statsobligasjonsrenter', 'Statsobligasjon', 'Statsrente', 'Rente', 'Government bond yields'],
     GOVT_ZEROCOUPON: ['Nullkupongrenter', 'Statspapirer', 'Rentekurve', 'Statsobligasjon', 'Statskasseveksel', 'Zero coupon yields', 'Yield curve'],
     SEC: ['Statspapirer', 'Statsobligasjoner', 'Statskasseveksler', 'Kurser', 'Effektiv rente', 'ISIN', 'Government securities', 'Treasury bills'],
@@ -521,7 +523,8 @@
     // Probenøkkelen er en del av cachenøkkelen: flere config-rader kan dele
     // samme flow med hvert sitt snitt (REGNET), og de har ulik historikk.
     const periodKey = probeKeyFor(flow, 'period') || '';
-    const cacheKey = 'nb-catperiod-' + flow.flow + (periodKey ? '_' + periodKey : '');
+    // v2 = firstCode/lastCode i tillegg til årstallene.
+    const cacheKey = 'nb-catperiod-v2-' + flow.flow + (periodKey ? '_' + periodKey : '');
     if (!force) {
       const cached = await cacheGet(cacheKey);
       if (cached) return cached;
@@ -555,9 +558,16 @@
     });
     if (!isFinite(minY) || !isFinite(maxY)) return null;
 
+    // firstCode/lastCode: de EKSAKTE ytterperiodene (proben henter nettopp
+    // første og siste observasjon). Tidsvelgeren forhåndsutfyller fra–til med
+    // dem; årstallene alene ville gitt «1. januar» og «31. desember» — en
+    // startdato før første observasjon og en sluttdato ut i framtiden.
+    const sorted = values.slice().sort();
     const result = {
       firstPeriod: String(minY),
       lastPeriod: String(maxY),
+      firstCode: sorted[0],
+      lastCode: sorted[sorted.length - 1],
       updated: (json.meta && json.meta.prepared) || ''
     };
     await cacheSet(cacheKey, result);
@@ -693,6 +703,79 @@
   }
 
   /**
+   * Fjern dimensjoner som er ren duplikat-identitet (flow.dropDims) helt ut av
+   * tabellen. I motsetning til kollaps (applyCollapseDims) er det ingen
+   * informasjon å berge inn i en ankeretikett, og i motsetning til pinning
+   * (applyPinnedDims) er det ingen fast kode å sette i nøkkelen: segmentet står
+   * tomt, altså «alle verdier».
+   *
+   * FAUCTION.AUCTION_ID er tilfellet dette finnes for: budfristen
+   * (TIME_PERIOD, et tidsstempel ned til sekundet) identifiserer auksjonen
+   * alene, mens auksjonsid-en tvang brukeren til å velge blant 1509 ugjennom-
+   * trengelige idnumre. Forutsetningen — at de gjenværende dimensjonene pluss
+   * tid er unike — kan IKKE verifiseres fra serienøklene (den hviler på tiden,
+   * som ikke er en del av dem), så den må verifiseres mot data når en ny rad tar
+   * opsjonen i bruk. Kolliderende serier havner i samme celle, og den siste
+   * vinner.
+   */
+  function applyDropDims(meta, flow, seriesKeys) {
+    const cfg = Array.isArray(flow.dropDims) ? flow.dropDims : null;
+    if (!cfg || !cfg.length) return;
+    const dimIds = cfg.filter(d => meta.dimension[d]);
+    if (!dimIds.length) return;
+
+    spliceDimsOut(meta, dimIds);
+
+    // validKeys rebygges uten de droppede OG de allerede kollapsede/pinnede
+    // dimene — ellers kryssfiltrerer UI-en mot segmenter som ikke finnes lenger.
+    const collapsed = (meta.extension && meta.extension.collapsedDims) || null;
+    const pinnedBy = (meta.extension && meta.extension.pinnedDims &&
+      meta.extension.pinnedDims.byDim) || null;
+    rebuildValidKeys(meta, seriesKeys, dimIds
+      .concat(collapsed ? collapsed.dims : [])
+      .concat(pinnedBy ? Object.keys(pinnedBy) : []));
+
+    if (Array.isArray(meta.extension.unfilterableDims)) {
+      const rest = meta.extension.unfilterableDims.filter(d => dimIds.indexOf(d) === -1);
+      if (rest.length) meta.extension.unfilterableDims = rest;
+      else delete meta.extension.unfilterableDims;
+    }
+
+    meta.extension.droppedDims = dimIds;
+  }
+
+  /**
+   * Sorter verdilista til utvalgte dimensjoner på kode (flow.dimSort).
+   * Norges Banks ukodede dimensjoner (FORECAST_DATE, LIQUIDITY_DETAILS) kommer
+   * i tilfeldig rekkefølge fra API-et, som gir en uleselig verdiliste.
+   *
+   * UI-ets verdiliste (renderValueList) følger `category.label` sin
+   * INNSETTINGSREKKEFØLGE, ikke index — begge bygges derfor om.
+   */
+  function applyDimSort(meta, flow) {
+    const cfg = flow.dimSort;
+    if (!cfg) return;
+    Object.keys(cfg).forEach(dimId => {
+      const dim = meta.dimension[dimId];
+      if (!dim || !dim.category || !dim.category.index) return;
+      const desc = String(cfg[dimId]).toLowerCase() === 'desc';
+      const oldLabel = dim.category.label || {};
+      const codes = Object.keys(dim.category.index).sort((a, b) => {
+        const cmp = a < b ? -1 : (a > b ? 1 : 0);
+        return desc ? -cmp : cmp;
+      });
+      const index = {};
+      const label = {};
+      codes.forEach((code, i) => {
+        index[code] = i;
+        label[code] = oldLabel[code] !== undefined ? oldLabel[code] : code;
+      });
+      dim.category.index = index;
+      dim.category.label = label;
+    });
+  }
+
+  /**
    * Fjern pinnede dimensjoner (fra flow.slice, se applySlice) helt ut av
    * tabellen: de har nøyaktig én gyldig kode, så et eget kort ville bare vært
    * støy — poenget med de kuraterte tabellene er at velgeren kun viser det som
@@ -815,7 +898,7 @@
     // rekkefølge — verdilista i UI-en (renderValueList) følger labels
     // INNSETTINGSREKKEFØLGE, ikke index.
     //
-    // To stiler:
+    // Tre stiler:
     //   'security' (standard) — verdipapiretikett «navn – kupong – forfall».
     //   'suffix' — den kollapsede verdien i parentes bak ankernavnet:
     //     «Sysselsettingsvekst (Inneværende kvartal)». Uten dette forsvinner
@@ -823,19 +906,33 @@
     //     ville sett ut som samme størrelse målt på ulikt vis. SDMX-
     //     plassholdere (_X/_Z = Unspecified/Not Applicable) hoppes over — de
     //     betyr «gjelder ikke» og er ikke en opplysning å vise fram.
-    const suffixStyle = cfg.labelStyle === 'suffix';
+    //   'prefix' — FØRSTE kollapsede dimensjon foran ankernavnet, resten i
+    //     parentes bak: «Banksystemets likviditet – Statens konti (Akkumulert
+    //     likviditetsvirkning fra 1. januar)». For nestede kategorihierarkier
+    //     (LIQUIDITY_MAIN → LIQUIDITY_DETAILS), der gruppen må stå først for at
+    //     en sortert liste skal lese seg som en gruppert tabell, mens
+    //     kjennetegn som måleenhet hører hjemme bak navnet. Rekkefølgen i
+    //     cfg.dims bestemmer hva som blir prefiks.
+    const style = cfg.labelStyle || 'security';
     const newIndex = {};
     const newLabel = {};
     codes.forEach((code, i) => {
       const info = byAnchor[code] || {};
       const clName = anchorCat.label[code];
       newIndex[code] = i;
-      if (suffixStyle) {
+      if (style === 'suffix' || style === 'prefix') {
         const base = (clName && clName !== code) ? clName : code;
-        const parts = cfg.dims
-          .filter(d => info[d] && !/^_[A-Z]$/.test(String(info[d])))
-          .map(d => collapsedValueLabels[d][info[d]] || info[d]);
-        newLabel[code] = parts.length ? base + ' (' + parts.join(', ') + ')' : base;
+        const labelFor = d => collapsedValueLabels[d][info[d]] || info[d];
+        const shown = cfg.dims.filter(d => info[d] && !/^_[A-Z]$/.test(String(info[d])));
+        if (!shown.length) { newLabel[code] = base; return; }
+        if (style === 'suffix') {
+          newLabel[code] = base + ' (' + shown.map(labelFor).join(', ') + ')';
+          return;
+        }
+        // prefix: første dim foran, eventuelle øvrige i parentes bak.
+        const lead = shown[0] === cfg.dims[0] ? labelFor(shown.shift()) + ' – ' : '';
+        newLabel[code] = lead + base +
+          (shown.length ? ' (' + shown.map(labelFor).join(', ') + ')' : '');
         return;
       }
       newLabel[code] = window.SdmxToJsonStat.formatSecurityLabel({
@@ -877,13 +974,14 @@
     const flow = flowForId(tableId);
     if (!flow) throw new Error('[NBAdapter] Ukjent tabell: ' + tableId);
     const locale = apiLang(lang || currentLang());
-    // 'v9' = dimOrder (permutert meta.id + fullDimId satt uten splice) (v8:
-    // collapseDims.labelStyle:'suffix'; v7: sliceDims; v6:
+    // 'v10' = dropDims/dimSort/intervalPicker uten FREQ + eksakte timeBounds
+    // (firstCode/lastCode) (v9: dimOrder — permutert meta.id + fullDimId satt
+    // uten splice; v8: collapseDims.labelStyle:'suffix'; v7: sliceDims; v6:
     // slice/pinnedDims + fullDimId; v5: lokaliserte
     // verdinavn fra serieskeys-proben; v4: collapsedDims + configetikett-
     // tittel; v3: intervalPicker/timeBounds; v2: timePeriodsByFreq +
     // singleSelect) — ny nøkkel så gamle cacheoppføringer ikke serveres i 24 t.
-    const cacheKey = 'table_' + tableId + '_meta_v9_' + locale;
+    const cacheKey = 'table_' + tableId + '_meta_v10_' + locale;
 
     if (useCache !== false) {
       const cached = await cacheGet(cacheKey);
@@ -976,6 +1074,10 @@
     applyPinnedDims(meta, pinned, seriesKeys);
     applySliceBounds(meta, flow.slice, pinned);
 
+    // Duplikat-identitetsdimensjoner (flow.dropDims) fjernes helt — etter
+    // kollaps og pinning, som begge rebygger validKeys.
+    applyDropDims(meta, flow, seriesKeys);
+
     // Dimensjoner som står igjen med nøyaktig én gyldig verdi (typisk FREQ i en
     // snittet tabell) er reelle, men uinteressante valg: UI-en velger dem
     // automatisk og skjuler kortet bak en «Automatisk valgt»-linje. Settes kun
@@ -1000,22 +1102,32 @@
     // SDMX-API-et er intervallbasert (startPeriod/endPeriod/lastNObservations),
     // så tidsdimensjonen får en fra–til/Siste N/alt-velger i stedet for
     // verdilisten (som uansett bare dekker de siste TIME_PROBE_N probede
-    // periodene). Settes kun når timePeriodsByFreq finnes — uten frekvenskart
-    // kan ikke velgeren utlede inputgranularitet, og verdilisten beholdes.
-    // timeBounds (årstall fra katalogproben) gir min/max på fra/til-inputene;
-    // feiltolerant — velgeren virker uten grenser.
-    if (meta.extension && meta.extension.timePeriodsByFreq) {
-      const timeId = meta.extension.timePeriodsByFreq.timeDim;
+    // periodene). Settes når frekvenskartet finnes (granulariteten følger da
+    // valgt FREQ), ELLER når config-raden oppgir granulariteten selv
+    // (`intervalPicker: {granularity}`) — nødvendig for flows uten FREQ-
+    // dimensjon, som FAUCTION.
+    // timeBounds gir min/max og forhåndsutfylling av fra/til-inputene:
+    // firstCode/lastCode er de eksakte ytterperiodene fra katalogproben,
+    // firstPeriod/lastPeriod årstallene deres. Feiltolerant — velgeren virker
+    // uten grenser.
+    const pickerGran = flow.intervalPicker && flow.intervalPicker.granularity;
+    if (meta.extension && (meta.extension.timePeriodsByFreq || pickerGran)) {
+      const timeId = (meta.extension.timePeriodsByFreq &&
+        meta.extension.timePeriodsByFreq.timeDim) ||
+        (meta.role && meta.role.time && meta.role.time[0]) || 'TIME_PERIOD';
       if (meta.dimension[timeId]) {
         const timeExt = meta.dimension[timeId].extension =
           meta.dimension[timeId].extension || {};
         timeExt.intervalPicker = true;
+        if (pickerGran) timeExt.pickerGran = pickerGran;
         try {
           const period = await fetchCataloguePeriod(flow);
           if (period) {
             timeExt.timeBounds = {
               firstPeriod: period.firstPeriod || '',
-              lastPeriod: period.lastPeriod || ''
+              lastPeriod: period.lastPeriod || '',
+              firstCode: period.firstCode || '',
+              lastCode: period.lastCode || ''
             };
           }
         } catch (e) { /* uten grenser — velgeren degraderer pent */ }
@@ -1031,6 +1143,10 @@
       meta.dimension.FREQ.extension = meta.dimension.FREQ.extension || {};
       meta.dimension.FREQ.extension.singleSelect = true;
     }
+
+    // Sortering av verdilister (flow.dimSort) helt til slutt: kollaps og
+    // pinning bygger selv om index/label, og ville ellers overstyrt sorteringen.
+    applyDimSort(meta, flow);
 
     // Datatorg-beskrivelse → Tabellinfo (meta.note er en streng-array).
     // Per-tabell `description` når flere rader deler samme flow.
@@ -1069,7 +1185,8 @@
       : ((collapsed && Array.isArray(collapsed.fullId)) ? collapsed.fullId : meta.id);
     const seriesIds = allIds.filter(d => d !== timeId); // DSD-rekkefølge (ekskl. tid)
     const unfilterable = ext.unfilterableDims || [];
-    const collapsedDims = (collapsed && collapsed.dims) || [];
+    const collapsedDims = ((collapsed && collapsed.dims) || [])
+      .concat(ext.droppedDims || []);
     // Snittets faste koder (flow.slice) — de er ikke synlige i UI-en, men MÅ
     // stå i nøkkelen, ellers ville uttaket sprengt ut over tabellens tema.
     const pinnedBy = (ext.pinnedDims && ext.pinnedDims.byDim) || {};
@@ -1293,12 +1410,14 @@
     const collapsed = (meta.extension && meta.extension.collapsedDims) || null;
     const pinnedBy = (meta.extension && meta.extension.pinnedDims &&
       meta.extension.pinnedDims.byDim) || null;
-    // Kjennetegns-dims (funksjonelt avhengige av ankeret) OG snittets pinnede
-    // dims fjernes fra datasettet — begge er alt borte fra metadata/UI
-    // (applyCollapseDims/applyPinnedDims), og en konstant enkeltverdi-dimensjon
-    // i resultattabellen ville bare vært støy.
+    // Kjennetegns-dims (funksjonelt avhengige av ankeret), snittets pinnede
+    // dims OG droppede duplikat-identitetsdims fjernes fra datasettet — alle er
+    // alt borte fra metadata/UI (applyCollapseDims/applyPinnedDims/
+    // applyDropDims), og en konstant enkeltverdi-dimensjon i resultattabellen
+    // ville bare vært støy.
     const dropDims = (collapsed ? collapsed.dims : [])
-      .concat(pinnedBy ? Object.keys(pinnedBy) : []);
+      .concat(pinnedBy ? Object.keys(pinnedBy) : [])
+      .concat((meta.extension && meta.extension.droppedDims) || []);
     const dataset = window.SdmxToJsonStat.dataToJsonStat(json, {
       lang: locale,
       source: 'Norges Bank',

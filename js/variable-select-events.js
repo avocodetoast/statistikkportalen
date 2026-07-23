@@ -31,6 +31,10 @@ function setupVariableEvents() {
  * inputs refresh the status/preview. The from/til inputs are re-rendered when
  * the frequency changes granularity (syncTimePicker), so their edit handling
  * is delegated to the card element, which survives the re-render.
+ *
+ * Switching to Fra–til fills empty inputs with the full available interval
+ * first (ensureRangeDefaults), so the API preview reflects the new mode
+ * immediately instead of after the first keystroke.
  */
 function setupTimePicker() {
   document.querySelectorAll('.variable-card[data-time-picker="interval"]').forEach(card => {
@@ -38,15 +42,15 @@ function setupTimePicker() {
       radio.addEventListener('change', () => {
         card.dataset.pickerMode = radio.value;
         toggleTimePickerPanes(card);
+        ensureRangeDefaults(card);
         updateSelectionStatus();
       });
     });
 
-    const onEdit = debounce((e) => {
-      if (e.target.closest('.tp-pane-range') || e.target.classList.contains('top-n-input')) {
-        updateSelectionStatus();
-      }
-    }, 200);
+    // Enhver endring i kortet (periodefelt, N, modus) skal oppdatere status og
+    // API-forhåndsvisningen — den delegerte lytteren overlever re-rendringen av
+    // fra/til-feltene.
+    const onEdit = debounce(() => updateSelectionStatus(), 200);
     card.addEventListener('input', onEdit);
     card.addEventListener('change', onEdit);
   });
@@ -266,7 +270,9 @@ function setupListSelectionEvents() {
 /**
  * Set up search/filter inputs for value lists.
  * Since codelists now re-render the DOM (not just hide/show), the text filter
- * only needs to handle text-based filtering of whatever items are in the DOM.
+ * only needs to handle text-based filtering of whatever items are in the DOM —
+ * except for truncated lists, which are re-rendered from metadata so the filter
+ * reaches values past the display cap (see refilterTruncatedList).
  */
 function setupValueFilters() {
   document.querySelectorAll('.value-filter-input').forEach(input => {
@@ -275,6 +281,8 @@ function setupValueFilters() {
 
     input.addEventListener('input', debounce(() => {
       const query = input.value.trim().toLowerCase();
+      if (refilterTruncatedList(card, container, query)) return;
+
       const items = container.querySelectorAll('.value-list-item');
 
       items.forEach(item => {
@@ -287,8 +295,51 @@ function setupValueFilters() {
           item.style.display = 'none';
         }
       });
-    }, 150));
+    }, AppConfig.ui.filterDebounceMs));
   });
+}
+
+/**
+ * Truncated value lists (more values than AppConfig.ui.maxDisplayValues) are
+ * re-rendered from metadata for the current filter text instead of having DOM
+ * nodes hidden: only the first N values are in the DOM, so hiding them would
+ * leave everything past the cap permanently unreachable — Norges Bank's
+ * prognosedato has 1344 values, the F-auction ids had 1509.
+ *
+ * The current selection is carried across the re-render by code (renderValueList's
+ * keepCodes keeps selected values in the list even when they don't match the
+ * query), so filtering never silently deselects anything. Lists with an active
+ * codelist are left alone — the codelist owns their DOM.
+ *
+ * @returns {boolean} true when the list was re-rendered (caller should stop)
+ */
+function refilterTruncatedList(card, container, query) {
+  if (!container || !tableMetadata) return false;
+  const dimCode = card.dataset.dimension;
+  const dimension = tableMetadata.dimension[dimCode];
+  if (!dimension || !dimension.category || !dimension.category.label) return false;
+  if (activeCodelists[dimCode]) return false;
+  if (Object.keys(dimension.category.label).length <= AppConfig.ui.maxDisplayValues) return false;
+
+  const selected = new Set(
+    Array.from(container.querySelectorAll('.value-list-item.selected')).map(i => i.dataset.code));
+
+  const isTimeDim = dimCode === 'Tid' || dimCode.toLowerCase().includes('tid') ||
+    ((tableMetadata.role && tableMetadata.role.time) || []).indexOf(dimCode) !== -1;
+
+  container.innerHTML = renderValueList(dimCode, dimension, isTimeDim, query, selected);
+  container.querySelectorAll('.value-list-item').forEach(item => {
+    if (selected.has(item.dataset.code)) item.classList.add('selected');
+  });
+
+  // Shift-utvalgets «committed»-tilstand er indeksbasert og gjelder ikke den
+  // nye lista.
+  delete _committedSelection[dimCode];
+
+  updateModeVisuals(card);
+  updateValueCounter(card);
+  updateSelectionStatus();
+  return true;
 }
 
 /**

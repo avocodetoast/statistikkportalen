@@ -37,6 +37,12 @@ describe('periodCodeGranularity (period code shape → granularity)', () => {
     assert.equal(P.periodCodeGranularity('2025-07-15'), 'day');
   });
 
+  it('recognizes timestamped period codes (Norges Bank F-auctions)', () => {
+    // FAUCTION tidfester hver auksjon til budfristen, ned til minutt/sekund.
+    assert.equal(P.periodCodeGranularity('2025-01-02T10:16:24'), 'datetime');
+    assert.equal(P.periodCodeGranularity('2025-01-03T15:50'), 'datetime');
+  });
+
   it('returns null for unrecognized codes', () => {
     assert.equal(P.periodCodeGranularity('2022/23'), null);
     assert.equal(P.periodCodeGranularity(''), null);
@@ -79,6 +85,16 @@ describe('convertPeriod (granularity conversion — coarsen OK, refine → null)
     assert.equal(P.convertPeriod('2024-03-15', 'quarter'), '2024-Q1');
     assert.equal(P.convertPeriod('2024-05', 'quarter'), '2024-Q2');
     assert.equal(P.convertPeriod('2024-Q2', 'year'), '2024');
+  });
+
+  it('coarsens timestamps to day/month/year (F-auction bid deadlines)', () => {
+    // Tidsvelgeren viser dager; de eksakte katalogperiodene er tidsstempler, og
+    // uten denne konverteringen ville fra/til falt tilbake på årsgrensene.
+    assert.equal(P.convertPeriod('2025-01-02T10:16:24', 'day'), '2025-01-02');
+    assert.equal(P.convertPeriod('2025-01-03T15:50', 'day'), '2025-01-03');
+    assert.equal(P.convertPeriod('2025-01-02T10:16:24', 'month'), '2025-01');
+    assert.equal(P.convertPeriod('2025-01-02T10:16:24', 'quarter'), '2025-Q1');
+    assert.equal(P.convertPeriod('2025-01-02T10:16:24', 'year'), '2025');
   });
 
   it('is identity for same granularity', () => {

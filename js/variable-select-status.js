@@ -99,7 +99,7 @@ function readPeriodSide(card, side) {
 
 /** Current picker selection as an API token ('top(N)' | 'range(f,t)' | '*'). */
 function readTimePickerToken(card) {
-  const mode = card.dataset.pickerMode || 'top';
+  const mode = card.dataset.pickerMode || 'range';
   if (mode === 'star') return '*';
   if (mode === 'range') {
     return window.SdmxToJsonStat.formatPeriodRange(
@@ -110,10 +110,16 @@ function readTimePickerToken(card) {
 }
 
 /**
- * min/max bounds for the picker inputs at a granularity: min from the
- * catalogue's first year (extension.timeBounds), max preferably the newest
- * probed period code for the frequency (exact), else the catalogue's last
- * year. Either side may be '' (no bound).
+ * min/max bounds for the picker inputs at a granularity. Both sides prefer the
+ * EXACT first/last observation from the catalogue probe (timeBounds.firstCode/
+ * lastCode, converted to the current granularity) and fall back to the
+ * catalogue year's first/last period. The max additionally prefers the newest
+ * probed period code for the selected frequency, which is exact per frequency.
+ * Either side may be '' (no bound).
+ *
+ * These are also the values ensureRangeDefaults() pre-fills fra/til with, so an
+ * inexact bound would send a startPeriod before the first observation or an
+ * endPeriod in the future.
  */
 function timePickerBounds(card, gran, freq) {
   const P = window.SdmxToJsonStat;
@@ -123,10 +129,39 @@ function timePickerBounds(card, gran, freq) {
   const maxB = P.periodBoundsForYear(tb.lastPeriod, gran);
   const spec = getTimeFreqSpec();
   const probed = freq && spec && Array.isArray(spec.byFreq[freq]) ? spec.byFreq[freq] : null;
+  // Eksakte koder er ofte finere enn visningsgranulariteten (FAUCTIONs
+  // tidsstempler mot en dagsvelger) — convertPeriod grovner deterministisk og
+  // gir null motsatt vei, der årsgrensene overtar.
+  const exactMin = tb.firstCode ? P.convertPeriod(tb.firstCode, gran) : null;
+  const exactMax = tb.lastCode ? P.convertPeriod(tb.lastCode, gran) : null;
   return {
-    min: minB ? minB.min : '',
-    max: (probed && probed[probed.length - 1]) || (maxB ? maxB.max : '')
+    min: exactMin || (minB ? minB.min : ''),
+    max: (probed && probed[probed.length - 1]) || exactMax || (maxB ? maxB.max : '')
   };
+}
+
+/**
+ * Pre-fill an empty Fra–til with the first and last available observation.
+ * The picker defaults to range mode, and an empty range means «no period
+ * params» — indistinguishable from «Hele historikken», so switching mode would
+ * appear to do nothing to the API preview. Never overwrites a side the user (or
+ * URL restore) already filled in.
+ *
+ * @returns {boolean} true if a value was filled in
+ */
+function ensureRangeDefaults(card) {
+  if (!card || card.dataset.timePicker !== 'interval') return false;
+  if ((card.dataset.pickerMode || 'range') !== 'range') return false;
+  if (readPeriodSide(card, 'from') || readPeriodSide(card, 'to')) return false;
+
+  const gran = card.dataset.pickerGran || 'day';
+  const bounds = timePickerBounds(card, gran, null);
+  if (!bounds.min && !bounds.max) return false;
+
+  const wrap = card.querySelector('.tp-range-inputs');
+  if (!wrap) return false;
+  wrap.innerHTML = renderPeriodInputsHtml(gran, bounds, bounds.min, bounds.max);
+  return true;
 }
 
 /**
@@ -136,17 +171,26 @@ function timePickerBounds(card, gran, freq) {
  * where deterministic (coarsening) and clamped to the bounds; unconvertible
  * values are cleared. No-op while the granularity is unchanged so typing in
  * the inputs is never clobbered.
+ *
+ * `spec` (extension.timePeriodsByFreq) may be null: flows without a frequency
+ * dimension (Norges Bank's FAUCTION) declare the granularity on the time
+ * dimension itself (extension.pickerGran) instead.
  */
 function syncTimePicker(spec, timeCard) {
   const P = window.SdmxToJsonStat;
 
-  const freqCard = document.querySelector('.variable-card[data-dimension="' + spec.freqDim + '"]');
+  const freqCard = spec
+    ? document.querySelector('.variable-card[data-dimension="' + spec.freqDim + '"]')
+    : null;
   const freqSel = freqCard ? getCardSelectedCodes(freqCard) : [];
   const freq = freqSel.length === 1 ? freqSel[0] : null;
 
+  const declaredGran =
+    tableMetadata?.dimension?.[timeCard.dataset.dimension]?.extension?.pickerGran;
   const gran = freq
     ? P.periodGranularity(freq)
-    : (timeCard.dataset.pickerGran || P.periodGranularity(Object.keys(spec.byFreq)[0]));
+    : (timeCard.dataset.pickerGran || declaredGran ||
+       (spec ? P.periodGranularity(Object.keys(spec.byFreq)[0]) : 'day'));
 
   const wrap = timeCard.querySelector('.tp-range-inputs');
   if (!wrap) return;
@@ -165,6 +209,9 @@ function syncTimePicker(spec, timeCard) {
     newTo ? P.clampPeriod(newTo, bounds.min, bounds.max) : ''
   );
   timeCard.dataset.pickerGran = gran;
+
+  // Nyrendrede (tomme) fra/til fylles med hele det tilgjengelige intervallet.
+  ensureRangeDefaults(timeCard);
 }
 
 /**
@@ -175,7 +222,7 @@ function syncTimePicker(spec, timeCard) {
 function findInvertedRangePicker() {
   let bad = null;
   document.querySelectorAll('.variable-card[data-time-picker="interval"]').forEach(card => {
-    if ((card.dataset.pickerMode || 'top') !== 'range') return;
+    if ((card.dataset.pickerMode || 'range') !== 'range') return;
     const from = readPeriodSide(card, 'from');
     const to = readPeriodSide(card, 'to');
     if (from && to && to < from) bad = card;
@@ -430,7 +477,14 @@ function getTimeFreqSpec() {
  */
 function applyTimeFreqFilter() {
   const spec = getTimeFreqSpec();
-  if (!spec) return;
+
+  // Uten frekvenskart er det ingen verdiliste å filtrere, men et intervallkort
+  // (flows uten FREQ, se syncTimePicker) må fortsatt få rendret fra/til-feltene.
+  if (!spec) {
+    document.querySelectorAll('.variable-card[data-time-picker="interval"]')
+      .forEach(card => syncTimePicker(null, card));
+    return;
+  }
 
   const timeCard = document.querySelector('.variable-card[data-dimension="' + spec.timeDim + '"]');
   if (!timeCard) return;
@@ -700,7 +754,7 @@ function updateSelectionCellCount() {
     // Interval time picker: estimate the period count from the mode.
     if (card.dataset.timePicker === 'interval') {
       const P = window.SdmxToJsonStat;
-      const pickerMode = card.dataset.pickerMode || 'top';
+      const pickerMode = card.dataset.pickerMode || 'range';
       const gran = card.dataset.pickerGran || 'day';
       const bounds = timePickerBounds(card, gran, null);
       hasIncludedDimension = true;

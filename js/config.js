@@ -326,6 +326,15 @@ const AppConfig = {
       // DSD-rekkefølgen er ulogisk (GOVT_SECONDARY_MARKET lister 79 enkeltlån
       // FØR papirtypen som avgrenser dem). Kun presentasjon — API-nøkkelen
       // bygges fra extension.fullDimId, som holder DSD-rekkefølgen.
+      // `dropDims: [dimId, …]` fjerner en dimensjon HELT fra velgeren og
+      // resultattabellen; nøkkelsegmentet står tomt (= alle verdier). For dims
+      // som bare er duplikat-identitet (FAUCTION: AUCTION_ID, når budfristen
+      // allerede identifiserer auksjonen). Bruk kun når kombinasjonen av de
+      // gjenværende dimensjonene er unik — ellers taper celler stilltiende.
+      // `dimSort: {dimId: 'asc'|'desc'}` sorterer verdilista på kode når API-et
+      // leverer den i tilfeldig rekkefølge (uKodede dims som FORECAST_DATE).
+      // `intervalPicker: {granularity}` gir tidsdimensjonen fra–til-velgeren i
+      // flows UTEN FREQ-dimensjon (der frekvenskartet ellers utleder den).
       // `collapseDims: {anchor, dims}` kollapser kjennetegns-dimensjoner som er
       // funksjonelt avhengige av ankeret (verifisert mot serieskeysonly:
       // GOVT_PRIMARY_MARKET har ISIN → MATURITY/COUPON/INSTR) inn i ankerets
@@ -351,14 +360,15 @@ const AppConfig = {
             ['nk', 'nk02', 'nb-pengepolitikk'],
             ['bf', 'bf03', 'renter', 'nb-pengepolitikk']
           ],
-          label: { nb: 'Styringsrenten', en: 'Key policy rate' } },
+          label: { nb: 'Norges Banks styringsrente, reserverente og døgnlånsrente',
+            en: 'Norges Bank\'s key policy rate, reserve rate and overnight lending rate' } },
         { flow: 'SHORT_RATES', version: '1.2', tableId: 'nb-SHORT_RATES',
           paths: [
             ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
             ['nk', 'nk02', 'nb-pengepolitikk'],
             ['bf', 'bf03', 'renter', 'nb-pengepolitikk']
           ],
-          label: { nb: 'Kortsiktige renter (NOWA)', en: 'Short-term interest rates (NOWA)' } },
+          label: { nb: 'Interbankrente, NOWA', en: 'Interbank rate, NOWA' } },
         { flow: 'GOVT_GENERIC_RATES', version: '1.0', tableId: 'nb-GOVT_GENERIC_RATES',
           paths: GOVT_PATHS,
           label: { nb: 'Statsobligasjonsrenter', en: 'Government bond yields' } },
@@ -512,19 +522,51 @@ const AppConfig = {
         { flow: 'GOVT_IRS', version: '1.0', tableId: 'nb-GOVT_IRS', discontinued: true,
           paths: GOVT_PATHS,
           label: { nb: 'Rentebytteavtaler (historisk, t.o.m. 2014)', en: 'Interest rate swaps (historical, until 2014)' } },
+        // Underkategoriene (LIQUIDITY_DETAILS, 39 stk.) ligger fullstendig nestet
+        // under hovedkategoriene (LIQUIDITY_MAIN, 5 stk.) — verifisert mot
+        // serieskeysonly: hver detalj forekommer under nøyaktig én hovedkategori.
+        // To kort ville tvunget brukeren til å velge samme informasjon to ganger,
+        // så hovedkategorien kollapses inn i detaljetiketten som prefiks.
+        // Kodene (tab1_linje01 … tab5_linje03) sorterer nøyaktig som Norges Banks
+        // egen oppstilling på norges-bank.no/tema/statistikk/bankenes-likviditet.
         { flow: 'LIQUIDITY_STATISTICS', version: '1.0', tableId: 'nb-LIQUIDITY_STATISTICS',
           paths: [
             ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
             ['nk', 'nk02', 'nb-pengepolitikk']
           ],
-          label: { nb: 'Likviditetsstatistikk', en: 'Liquidity statistics' } },
+          collapseDims: { anchor: 'LIQUIDITY_DETAILS', dims: ['LIQUIDITY_MAIN'], labelStyle: 'prefix' },
+          // Måleenhet og instrumenttype er begge funksjonelt bestemt av
+          // detaljlinja (verifisert mot serieskeysonly: hver linje har nøyaktig
+          // én kombinasjon), så de er ikke reelle valg — de fjernes, og et tomt
+          // nøkkelsegment henter linjas ene eksisterende kombinasjon. Da blir
+          // tabellen ett kategorifelt × tid, som Norges Banks egen oppstilling.
+          dropDims: ['UNIT_MEASURE', 'INSTRUMENT_TYPE'],
+          dimSort: { LIQUIDITY_DETAILS: 'asc' },
+          dimLabels: { LIQUIDITY_DETAILS: { nb: 'Likviditetsstatistikk', en: 'Liquidity statistics' } },
+          keywords: ['Likviditet', 'Likviditetsstatistikk', 'Banksystemets likviditet',
+            'Sentralbankreserver', 'Folioinnskudd', 'F-lån', 'F-innskudd', 'D-lån',
+            'Statens konti', 'Liquidity in the banking system', 'Liquidity statistics', 'Reserves'],
+          label: { nb: 'Likviditeten i banksystemet', en: 'Liquidity in the banking system' } },
+
+        // Vintage-datasett: hver observasjon er merket med prognosedatoen den ble
+        // publisert på. Prognoseår og prognosedato kommer begge usortert fra
+        // API-et og sorteres synkende, slik at nyeste vintage ligger øverst.
+        // Prognoseåret er året prognosen GJELDER, ikke året datoen ligger i, og
+        // kan derfor ikke kollapses inn i datoen: ni desemberdatoer bærer
+        // prognoser for både inneværende og neste år (f.eks. 2025-12-15 → 2025
+        // og 2026) — verifisert mot serieskeysonly.
         { flow: 'LIQUIDITY_FORECAST', version: '1.0', tableId: 'nb-LIQUIDITY_FORECAST',
           paths: [
             ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
             ['nk', 'nk02', 'nb-pengepolitikk']
           ],
           probeKey: { period: 'D.STAT_S..', time: 'D.FCAST_CBC..' },
-          label: { nb: 'Strukturell og total likviditet', en: 'Structural and total liquidity' } },
+          dimSort: { FORECAST_DATE: 'desc', FORECAST_YEAR: 'desc' },
+          keywords: ['Likviditet', 'Strukturell likviditet', 'Total likviditet',
+            'Likviditetsprognose', 'Prognose', 'Sentralbankreserver', 'Banksystemet',
+            'Structural liquidity', 'Total liquidity', 'Liquidity forecast'],
+          label: { nb: 'Likviditeten i banksystemet, strukturell og total likviditet',
+            en: 'Liquidity in the banking system, structural and total liquidity' } },
         { flow: 'MONEY_MARKET', version: '1.0', tableId: 'nb-MONEY_MARKET',
           paths: [
             ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
@@ -532,13 +574,30 @@ const AppConfig = {
           ],
           probeKey: 'B.U..........',
           label: { nb: 'Pengemarkedsdata (RPD)', en: 'Money market data' } },
+        // Hver observasjon ER én auksjon, tidfestet til budfristen: tidsaksen
+        // (TIME_PERIOD, «Budfrist») er et tidsstempel ned til sekundet og
+        // identifiserer auksjonen alene. AUCTION_ID er dermed ren duplikat-
+        // identitet — 1509 ugjennomtrengelige idnumre som brukeren måtte velge
+        // fra for å få ut noe — og fjernes med `dropDims`. Forutsetningen (én
+        // auksjon per instrumenttype × måleenhet × budfrist) er verifisert mot
+        // hele historikken: 11 812 celler, én kollisjon (to annonseringsrader
+        // 2020-04-16T15:00, begge uten verdi).
+        // Flowen har ingen FREQ-dimensjon, så tidsvelgeren får granulariteten
+        // fra `intervalPicker` i stedet for fra frekvenskartet. API-et filtrerer
+        // datoer mot tidsstempel-aksen og tar med hele sluttdøgnet (verifisert).
         { flow: 'FAUCTION', version: '1.0', tableId: 'nb-FAUCTION',
           paths: [
             ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
             ['nk', 'nk02', 'nb-pengepolitikk']
           ],
           probeKey: 'FDFLIR.ANN.',
-          label: { nb: 'F-auksjoner', en: 'F-auctions' } },
+          dropDims: ['AUCTION_ID'],
+          intervalPicker: { granularity: 'day' },
+          keywords: ['F-auksjoner', 'F-lån', 'F-innskudd', 'Auksjon', 'Budfrist',
+            'Markedsoperasjoner', 'Likviditetspolitikk', 'Tildelingsrente',
+            'F-auctions', 'F-loans', 'F-deposits'],
+          description: 'Resultater fra Norges Banks F-auksjoner (F-lån og F-innskudd): budvolum, tildelt volum og tildelingsrenter. Hver observasjon er én auksjon, tidfestet til auksjonens budfrist.',
+          label: { nb: 'Norges Banks F-auksjoner', en: 'Norges Bank\'s F-auctions' } },
         { flow: 'CBC_TRANSACTIONS', version: '1.0', tableId: 'nb-CBC_TRANSACTIONS',
           paths: [
             ['bf', 'nb-finansmarkeder', 'nb-pengepolitikk'],
