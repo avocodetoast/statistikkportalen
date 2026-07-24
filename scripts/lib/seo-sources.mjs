@@ -121,31 +121,6 @@ function buildPathSegments(placement, subjectNames, sourceNodes, lang) {
   ];
 }
 
-// Statiske søkeord per Norges Bank-dataflow (holder katalogbyggingen
-// nettverksfri) — duplikat av VARIABLE_NAMES i js/sources/norges-bank-adapter.js.
-const NB_VARIABLE_NAMES = {
-  EXR: ['Valutakurser', 'Valuta', 'Basisvaluta', 'Kvoteringsvaluta', 'Kurs', 'Exchange rates', 'Currency'],
-  IR: ['Styringsrenten', 'Styringsrente', 'Rente', 'Foliorente', 'Reserverente',
-    'Døgnlånsrente', 'Policy rate', 'Key policy rate', 'Reserve rate', 'Overnight lending rate'],
-  SHORT_RATES: ['NOWA', 'Interbankrente', 'Kortsiktige renter', 'Pengemarkedsrente', 'Rente',
-    'Short-term interest rates', 'Interbank rate'],
-  GOVT_GENERIC_RATES: ['Statsobligasjonsrenter', 'Statsobligasjon', 'Statsrente', 'Rente', 'Government bond yields'],
-  GOVT_ZEROCOUPON: ['Nullkupongrenter', 'Statspapirer', 'Rentekurve', 'Statsobligasjon', 'Statskasseveksel', 'Zero coupon yields', 'Yield curve'],
-  SEC: ['Statspapirer', 'Statsobligasjoner', 'Statskasseveksler', 'Kurser', 'Effektiv rente', 'ISIN', 'Government securities', 'Treasury bills'],
-  GOVT_KEYFIGURES: ['Statsgjeld', 'Nøkkeltall', 'Utestående volum', 'Opplåning', 'Durasjon', 'Government debt', 'Key figures'],
-  GOVT_PRIMARY_MARKET: ['Statspapirer', 'Auksjon', 'Emisjon', 'Førstehåndsmarkedet', 'Statsobligasjoner', 'Primary market', 'Auction'],
-  GOVT_SECONDARY_MARKET: ['Statspapirer', 'Annenhåndsmarkedet', 'Omsetning', 'Motpart', 'Secondary market', 'Turnover'],
-  GOVT_IRS: ['Rentebytteavtaler', 'Renteswap', 'Statsgjeld', 'Interest rate swaps'],
-  LIQUIDITY_STATISTICS: ['Likviditet', 'Likviditetsstatistikk', 'Sentralbankreserver', 'Banksystemet', 'Liquidity statistics', 'Reserves'],
-  LIQUIDITY_FORECAST: ['Likviditet', 'Likviditetsprognose', 'Strukturell likviditet', 'Prognose', 'Liquidity forecast', 'Structural liquidity'],
-  MONEY_MARKET: ['Pengemarkedet', 'Pengemarkedsdata', 'RPD', 'Usikrede lån', 'Sikrede lån', 'Valutabytteavtaler', 'Money market', 'Repo'],
-  FAUCTION: ['F-auksjoner', 'F-lån', 'F-innskudd', 'Auksjon', 'Markedsoperasjoner', 'F-auctions', 'F-loans', 'F-deposits'],
-  CBC_TRANSACTIONS: ['Sentralbanksertifikater', 'Sertifikater', 'Transaksjoner', 'Central bank certificates', 'Transactions'],
-  SETTLEMENT_STATISTICS: ['Oppgjørsstatistikk', 'Oppgjørssystem', 'NBO', 'Betalingsoppgjør', 'Settlement statistics', 'Payments'],
-  FINANCIAL_INDICATORS: ['Finansielle indikatorer', 'FCI', 'Indeks', 'Finansielle forhold', 'Financial indicators', 'Financial conditions index'],
-  REGNET: ['Regionalt nettverk', 'Forventninger', 'Produksjon', 'Sysselsetting', 'Bedriftsundersøkelse', 'Regional network', 'Expectations'],
-};
-
 /**
  * Norges Bank-katalogen, nettverksfritt fra AppConfig.sources.nb.dataflows +
  * AppConfig.sourceNodes (speiler buildCatalogue i norges-bank-adapter.js).
@@ -155,6 +130,9 @@ const NB_VARIABLE_NAMES = {
 export function buildNbCatalogue(appConfig, subjectNames, lang) {
   const cfg = appConfig?.sources?.nb || {};
   const nodes = appConfig?.sourceNodes || {};
+  // Statiske søkeord per flow: samme kilde som adapteren
+  // (js/sources/nb-catalog.js → AppConfig.sources.nb.variableNames).
+  const variableNames = cfg.variableNames || {};
   return (cfg.dataflows || []).map((flow, i) => {
     // `paths` = flere emnetre-plasseringer; legacy `path` = én.
     const placements = (Array.isArray(flow.paths) && flow.paths.length)
@@ -172,7 +150,7 @@ export function buildNbCatalogue(appConfig, subjectNames, lang) {
       // kan dele samme flow (REGNET-snittene), og overstyrer da frekvensbøtte
       // og søkeord per tabell.
       timeUnit: flow.timeUnit || 'Business',
-      variableNames: (flow.keywords || NB_VARIABLE_NAMES[flow.flow] || []).slice(),
+      variableNames: (flow.keywords || variableNames[flow.flow] || []).slice(),
       subjectCode: placements[0][0],
       paths: placements.map(p => buildPathSegments(p, subjectNames, nodes, lang)),
       source: 'Norges Bank',

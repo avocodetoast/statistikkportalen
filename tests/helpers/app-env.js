@@ -127,6 +127,8 @@ const SCRIPTS = {
   /** version + config + translations + cache + api — the minimum most modules depend on */
   core: [
     'js/version.js',
+    'js/sources/nb-catalog.js',
+    'js/sources/source-topology.js',
     'js/config.js',
     'js/translations.js',
     'js/cache.js',
@@ -136,6 +138,8 @@ const SCRIPTS = {
   /** core + everything needed for search/browse logic tests */
   browse: [
     'js/version.js',
+    'js/sources/nb-catalog.js',
+    'js/sources/source-topology.js',
     'js/config.js',
     'js/translations.js',
     'js/cache.js',
@@ -151,6 +155,8 @@ const SCRIPTS = {
   /** core + the multi-source adapter layer (window.api becomes the facade) */
   sources: [
     'js/version.js',
+    'js/sources/nb-catalog.js',
+    'js/sources/source-topology.js',
     'js/config.js',
     'js/translations.js',
     'js/cache.js',

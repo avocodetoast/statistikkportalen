@@ -47,6 +47,13 @@ const appConfig = {
           timeUnit: 'Quarterly', keywords: ['NOWA', 'Overnight'],
           label: { nb: 'NOWA', en: 'NOWA' } },
       ],
+      // Statiske søkeord per flow (jf. window.NbCatalog.variableNames →
+      // AppConfig.sources.nb.variableNames). Fallback når en rad mangler `keywords`.
+      variableNames: {
+        EXR: ['Valutakurser', 'Valuta', 'Exchange rates', 'Currency'],
+        IR: ['Styringsrenten', 'Rente', 'Key policy rate'],
+        SHORT_RATES: ['Interbankrente', 'Short-term interest rates'],
+      },
     },
     fhi: {
       adapter: 'fhi',

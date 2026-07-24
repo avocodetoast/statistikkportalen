@@ -269,8 +269,18 @@ function loadBrowserGlobal(file, key) {
 }
 
 function loadAppConfig() {
-  const cfg = loadBrowserGlobal('config.js', 'AppConfig');
-  if (!cfg.apiBaseUrl || !cfg.app?.name || !cfg.source) {
+  // config.js refererer window.NbCatalog (js/sources/nb-catalog.js) og
+  // window.SourceTopology (js/sources/source-topology.js) for kildekatalogen og
+  // emnetre-topologien. Kjør dem i SAMME sandkasse før config.js, slik at
+  // referansene resolver (speiler <script>-rekkefølgen i index.html). AppConfig
+  // kommer da ut ferdig utfylt med sources.nb.dataflows/variableNames,
+  // sources.fhi.sourceIds/paths og sourceNodes — som før.
+  const sandbox = { window: {} };
+  for (const file of ['sources/nb-catalog.js', 'sources/source-topology.js', 'config.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(REPO_ROOT, 'js', file), 'utf8'), sandbox);
+  }
+  const cfg = sandbox.window.AppConfig;
+  if (!cfg || !cfg.apiBaseUrl || !cfg.app?.name || !cfg.source) {
     throw new Error('AppConfig fra js/config.js mangler apiBaseUrl, app.name eller source');
   }
   return cfg;

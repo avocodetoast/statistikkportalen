@@ -86,28 +86,10 @@
   const TIME_PROBE_N = 60;
 
   // Statiske søkeord per flow (holder getAllTables nettverksfri). Tospråklig.
-  const VARIABLE_NAMES = {
-    EXR: ['Valutakurser', 'Valuta', 'Basisvaluta', 'Kvoteringsvaluta', 'Kurs', 'Exchange rates', 'Currency'],
-    IR: ['Styringsrenten', 'Styringsrente', 'Rente', 'Foliorente', 'Reserverente',
-      'Døgnlånsrente', 'Policy rate', 'Key policy rate', 'Reserve rate', 'Overnight lending rate'],
-    SHORT_RATES: ['NOWA', 'Interbankrente', 'Kortsiktige renter', 'Pengemarkedsrente', 'Rente',
-      'Short-term interest rates', 'Interbank rate'],
-    GOVT_GENERIC_RATES: ['Statsobligasjonsrenter', 'Statsobligasjon', 'Statsrente', 'Rente', 'Government bond yields'],
-    GOVT_ZEROCOUPON: ['Nullkupongrenter', 'Statspapirer', 'Rentekurve', 'Statsobligasjon', 'Statskasseveksel', 'Zero coupon yields', 'Yield curve'],
-    SEC: ['Statspapirer', 'Statsobligasjoner', 'Statskasseveksler', 'Kurser', 'Effektiv rente', 'ISIN', 'Government securities', 'Treasury bills'],
-    GOVT_KEYFIGURES: ['Statsgjeld', 'Nøkkeltall', 'Utestående volum', 'Opplåning', 'Durasjon', 'Government debt', 'Key figures'],
-    GOVT_PRIMARY_MARKET: ['Statspapirer', 'Auksjon', 'Emisjon', 'Førstehåndsmarkedet', 'Statsobligasjoner', 'Primary market', 'Auction'],
-    GOVT_SECONDARY_MARKET: ['Statspapirer', 'Annenhåndsmarkedet', 'Omsetning', 'Motpart', 'Secondary market', 'Turnover'],
-    GOVT_IRS: ['Rentebytteavtaler', 'Renteswap', 'Statsgjeld', 'Interest rate swaps'],
-    LIQUIDITY_STATISTICS: ['Likviditet', 'Likviditetsstatistikk', 'Sentralbankreserver', 'Banksystemet', 'Liquidity statistics', 'Reserves'],
-    LIQUIDITY_FORECAST: ['Likviditet', 'Likviditetsprognose', 'Strukturell likviditet', 'Prognose', 'Liquidity forecast', 'Structural liquidity'],
-    MONEY_MARKET: ['Pengemarkedet', 'Pengemarkedsdata', 'RPD', 'Usikrede lån', 'Sikrede lån', 'Valutabytteavtaler', 'Money market', 'Repo'],
-    FAUCTION: ['F-auksjoner', 'F-lån', 'F-innskudd', 'Auksjon', 'Markedsoperasjoner', 'F-auctions', 'F-loans', 'F-deposits'],
-    CBC_TRANSACTIONS: ['Sentralbanksertifikater', 'Sertifikater', 'Transaksjoner', 'Central bank certificates', 'Transactions'],
-    SETTLEMENT_STATISTICS: ['Oppgjørsstatistikk', 'Oppgjørssystem', 'NBO', 'Betalingsoppgjør', 'Settlement statistics', 'Payments'],
-    FINANCIAL_INDICATORS: ['Finansielle indikatorer', 'FCI', 'Indeks', 'Finansielle forhold', 'Financial indicators', 'Financial conditions index'],
-    REGNET: ['Regionalt nettverk', 'Forventninger', 'Produksjon', 'Sysselsetting', 'Bedriftsundersøkelse', 'Regional network', 'Expectations']
-  };
+  // Definert i js/sources/nb-catalog.js (window.NbCatalog.variableNames) og
+  // eksponert via AppConfig.sources.nb.variableNames — samme kilde som
+  // SEO-byggeren (scripts/lib/seo-sources.mjs) bruker.
+  const VARIABLE_NAMES = cfg.variableNames || {};
 
   // Datatorg-beskrivelser per flow (norsk). Emitteres som `note` i metadata slik
   // at Tabellinfo viser dem (jf. table-metadata.js meta.note). Hentet fra Norges
