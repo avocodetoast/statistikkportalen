@@ -161,7 +161,8 @@ header {
 
 main {
   flex: 1;
-  padding: var(--spacing-xl);
+  /* Nær ingen luft på toppen (mot header-baren); full padding på sidene/bunn */
+  padding: var(--spacing-xs) var(--spacing-xl) var(--spacing-xl) var(--spacing-xl);
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;

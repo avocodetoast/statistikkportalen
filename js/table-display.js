@@ -33,6 +33,8 @@ async function renderTableDisplay(container) {
   }
 
   container.innerHTML = `
+    ${BrowserState.renderSearchInput()}
+    ${MenuBar.render(BrowserState.menuHierarchy)}
     <div class="view-container">
       <div class="view-header">
         <div class="view-header-buttons">
@@ -53,6 +55,10 @@ async function renderTableDisplay(container) {
       </div>
     </div>
   `;
+
+  // Wire up the shared top navigation (search + subject menu)
+  MenuBar.attachListeners(container);
+  BrowserState.attachSearchInputListener();
 
   // Set up back buttons
   document.getElementById('back-to-browser')?.addEventListener('click', () => {

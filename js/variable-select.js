@@ -279,6 +279,8 @@ ${foreignFormatRowHtml}
       </div>` : (caps.supportsApiQuery ? simpleApiBuilderHtml : '');
 
   container.innerHTML = `
+    ${BrowserState.renderSearchInput()}
+    ${MenuBar.render(BrowserState.menuHierarchy)}
     <div class="view-container">
       <div class="view-header">
         <button id="back-to-browser" class="btn-secondary">
@@ -313,6 +315,10 @@ ${foreignFormatRowHtml}
       </div>
     </div>
   `;
+
+  // Wire up the shared top navigation (search + subject menu)
+  MenuBar.attachListeners(container);
+  BrowserState.attachSearchInputListener();
 
   // Set up back button - navigate to stored ref, fallback to home
   document.getElementById('back-to-browser')?.addEventListener('click', () => {

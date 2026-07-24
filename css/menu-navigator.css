@@ -137,7 +137,7 @@
 
 /* Search Container */
 .search-container {
-  padding: 0.75rem 0 0.5rem 0;
+  padding: 0;
   max-width: 100%;
 }
 
@@ -149,7 +149,7 @@
   border: 2px solid #ddd;
   border-radius: 4px;
   transition: border-color 0.2s;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
 }
 
 .search-input:focus {
