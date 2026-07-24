@@ -106,7 +106,14 @@
   position: sticky;
   left: 0;
   z-index: 5;
+  /* Bound the sticky label column so long value labels (e.g. product names)
+     don't grow it unbounded and cover the data cells on horizontal scroll.
+     Overflowing text is clipped with an ellipsis; the full label is on the
+     cell's title attribute (hover) and in the export. */
+  max-width: 22rem;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   border-right: 2px solid var(--color-border);
 }
 

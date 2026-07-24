@@ -379,16 +379,20 @@ function buildCsvContent() {
     lines.push([...rowDimLabels, t('table.csvValueColumn')].map(csvField).join(SEPARATOR));
   }
 
-  rowHeaders.forEach(rowHeader => {
+  const { rowOffsets, colOffsets } = computeFlatIndexOffsets(data, layout, rowHeaders, colHeaders);
+
+  rowHeaders.forEach((rowHeader, rowIndex) => {
     const rowCells = rowDims.map((dimCode, i) => {
       const code = rowHeader.codes[i];
       return data.dimension[dimCode].category.label[code] ?? code;
     });
 
-    const dataCells = colHeaders.map(colHeader => {
-      const status = getDataStatus(rowHeader, colHeader);
+    const rowOffset = rowOffsets[rowIndex];
+    const dataCells = colHeaders.map((_colHeader, colIndex) => {
+      const flatIndex = rowOffset + colOffsets[colIndex];
+      const status = statusAtFlatIndex(flatIndex);
       if (status) return status;
-      return formatNumberForCsv(getDataValue(rowHeader, colHeader));
+      return formatNumberForCsv(valueAtFlatIndex(flatIndex));
     });
 
     lines.push([...rowCells, ...dataCells].map(csvField).join(SEPARATOR));
@@ -507,26 +511,34 @@ function buildHtmlTable() {
     html += '</thead>';
   }
 
+  // Precompute per-row/-column flat-index offsets so each cell's flat index is a
+  // single addition (rowOffset + colOffset) instead of two full data.id scans.
+  const { rowOffsets, colOffsets } = computeFlatIndexOffsets(data, layout, rowHeaders, colHeaders);
+
   // Build data rows
   html += '<tbody>';
 
-  rowHeaders.forEach(rowHeader => {
+  rowHeaders.forEach((rowHeader, rowIndex) => {
     html += '<tr>';
 
-    // Row header cells
+    // Row header cells. title=full label so long, ellipsis-clipped labels
+    // (see .row-header max-width in table.css) stay readable on hover.
     rowDims.forEach((dimCode, dimIndex) => {
       const code = rowHeader.codes[dimIndex];
       const label = data.dimension[dimCode].category.label[code];
-      html += '<th class="row-header">' + escapeHtml(label) + '</th>';
+      html += '<th class="row-header" title="' + escapeHtml(label) + '">' + escapeHtml(label) + '</th>';
     });
 
+    const rowOffset = rowOffsets[rowIndex];
+
     // Data cells
-    colHeaders.forEach(colHeader => {
-      const status = getDataStatus(rowHeader, colHeader);
+    colHeaders.forEach((colHeader, colIndex) => {
+      const flatIndex = rowOffset + colOffsets[colIndex];
+      const status = statusAtFlatIndex(flatIndex);
       if (status) {
         html += '<td class="data-cell suppressed-value" title="' + escapeHtml(suppressedLabel(status)) + '">' + escapeHtml(status) + '</td>';
       } else {
-        const value = getDataValue(rowHeader, colHeader);
+        const value = valueAtFlatIndex(flatIndex);
         const metricCode = metricRowIdx !== -1 ? rowHeader.codes[metricRowIdx]
                          : metricColIdx !== -1 ? colHeader.codes[metricColIdx]
                          : undefined;
@@ -586,67 +598,74 @@ function buildDimensionCombinations(dimCodes, data) {
 }
 
 /**
- * Get data value for specific row/column combination
- * @param {object} rowHeader - Row header combination
- * @param {object} colHeader - Column header combination
- * @returns {number|null} - Data value
+ * Per-dimension stride (flat-index multiplier) in data.id order: the last
+ * dimension changes fastest, so strides[dim] === product of the sizes of the
+ * dimensions after it. The JSON-Stat2 value array is row-major over data.id;
+ * this is its positional weighting, precomputed once per table.
+ *
+ * @param {object} data - JSON-Stat2 data (needs `id` and `size`)
+ * @returns {Object<string, number>} - dimCode → stride
  */
-function getDataValue(rowHeader, colHeader) {
-  if (!currentData) return null;
-
-  const layout = AppState.tableLayout;
-  const data = currentData;
-
-  // Build full dimension indices array
-  const fullIndices = [];
-
-  data.id.forEach(dimCode => {
-    const rowIndex = layout.rows.indexOf(dimCode);
-    const colIndex = layout.columns.indexOf(dimCode);
-
-    if (rowIndex !== -1) {
-      fullIndices.push(rowHeader.indices[rowIndex]);
-    } else if (colIndex !== -1) {
-      fullIndices.push(colHeader.indices[colIndex]);
-    } else {
-      // Shouldn't happen
-      fullIndices.push(0);
-    }
-  });
-
-  // Calculate flat index
-  const flatIndex = calculateFlatIndex(fullIndices, data.size);
-
-  return data.value[flatIndex];
+function computeDimStrides(data) {
+  const strides = {};
+  let multiplier = 1;
+  for (let i = data.size.length - 1; i >= 0; i--) {
+    strides[data.id[i]] = multiplier;
+    multiplier *= data.size[i];
+  }
+  return strides;
 }
 
 /**
- * Get suppressed-value status code for a cell (JSON-stat2 `status` field)
- * @param {object} rowHeader - Row header combination
- * @param {object} colHeader - Column header combination
- * @returns {string|null} - Status symbol (e.g. ".", ":", "..") or null
+ * The flat-index contribution of each header, constant across the perpendicular
+ * axis: offset(header) = Σ header.indices[i] * strides[dims[i]].
+ *
+ * @param {Array} headers - Combinations from buildDimensionCombinations
+ * @param {string[]} dims - The dimension codes those combinations enumerate
+ *   (layout.rows or layout.columns), aligned with header.indices
+ * @param {Object<string, number>} strides - From computeDimStrides
+ * @returns {number[]} - One offset per header
  */
-function getDataStatus(rowHeader, colHeader) {
-  if (!currentData || !currentData.status) return null;
-
-  const layout = AppState.tableLayout;
-  const data = currentData;
-
-  const fullIndices = [];
-  data.id.forEach(dimCode => {
-    const rowIndex = layout.rows.indexOf(dimCode);
-    const colIndex = layout.columns.indexOf(dimCode);
-    if (rowIndex !== -1) {
-      fullIndices.push(rowHeader.indices[rowIndex]);
-    } else if (colIndex !== -1) {
-      fullIndices.push(colHeader.indices[colIndex]);
-    } else {
-      fullIndices.push(0);
+function computeHeaderOffsets(headers, dims, strides) {
+  return headers.map(header => {
+    let offset = 0;
+    for (let i = 0; i < dims.length; i++) {
+      offset += header.indices[i] * strides[dims[i]];
     }
+    return offset;
   });
+}
 
-  const flatIndex = calculateFlatIndex(fullIndices, data.size);
-  return data.status[String(flatIndex)] ?? null;
+/**
+ * Precompute the row- and column-offset arrays so a cell's flat index is a
+ * single addition: flatIndex = rowOffsets[r] + colOffsets[c]. Replaces the
+ * per-cell `data.id.forEach` + two `indexOf` + multiplier work in the render/CSV
+ * loops, which dominates for large tables (up to ~800k cells).
+ *
+ * @param {object} data - JSON-Stat2 data
+ * @param {object} layout - AppState.tableLayout ({rows, columns})
+ * @param {Array} rowHeaders - buildDimensionCombinations(layout.rows, data)
+ * @param {Array} colHeaders - buildDimensionCombinations(layout.columns, data)
+ * @returns {{strides: object, rowOffsets: number[], colOffsets: number[]}}
+ */
+function computeFlatIndexOffsets(data, layout, rowHeaders, colHeaders) {
+  const strides = computeDimStrides(data);
+  return {
+    strides,
+    rowOffsets: computeHeaderOffsets(rowHeaders, layout.rows, strides),
+    colOffsets: computeHeaderOffsets(colHeaders, layout.columns, strides)
+  };
+}
+
+/** Data value at a precomputed flat index (companion to computeFlatIndexOffsets). */
+function valueAtFlatIndex(flatIndex) {
+  return currentData ? currentData.value[flatIndex] : null;
+}
+
+/** Suppressed-value status at a precomputed flat index, or null. */
+function statusAtFlatIndex(flatIndex) {
+  if (!currentData || !currentData.status) return null;
+  return currentData.status[String(flatIndex)] ?? null;
 }
 
 /**
@@ -665,25 +684,6 @@ function suppressedLabel(code) {
     case ':':  return t('table.confidential');
     default:   return code;
   }
-}
-
-/**
- * Calculate flat array index from dimension indices
- * @param {Array} indices - Index for each dimension
- * @param {Array} sizes - Size of each dimension
- * @returns {number} - Flat index
- */
-function calculateFlatIndex(indices, sizes) {
-  let flatIndex = 0;
-  let multiplier = 1;
-
-  // Process dimensions in reverse order (last dimension changes fastest)
-  for (let i = sizes.length - 1; i >= 0; i--) {
-    flatIndex += indices[i] * multiplier;
-    multiplier *= sizes[i];
-  }
-
-  return flatIndex;
 }
 
 /**

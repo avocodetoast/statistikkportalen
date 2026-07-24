@@ -705,10 +705,10 @@ function updateSelectionStatus() {
 }
 
 /**
- * Get the true total number of values for a dimension, regardless of UI truncation.
+ * Get the true total number of values for a dimension, regardless of UI state.
  *
- * The value list in the DOM is capped at maxDisplayValues (500) items,
- * so counting DOM elements gives wrong results for large dimensions.
+ * Counting DOM elements is unreliable: the text filter hides non-matching items
+ * via style.display, and an active codelist changes which values are shown.
  * This function returns the authoritative count from metadata/codelist.
  *
  * @param {string} dimCode - Dimension code
@@ -733,8 +733,8 @@ function getTrueDimensionValueCount(dimCode) {
  * Calculate and display the total number of cells that will be fetched.
  *
  * Cell count = product of selected value counts across all included dimensions.
- * Uses metadata counts (not DOM element counts) for accurate totals,
- * since the value list is truncated at 500 items in the UI.
+ * Uses metadata counts (not DOM element counts) for accurate totals, since the
+ * text filter and codelists change which items are present/visible in the DOM.
  * The API has an 800,000 cell limit per request.
  *
  * @returns {number} - Total selected cell count (0 if invalid)

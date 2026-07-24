@@ -689,11 +689,8 @@ async function restoreSelections() {
 
 /**
  * The dimension's value codes in display order — time dimensions newest first,
- * others in codelist order where one was pre-loaded. Split out of
- * renderValueList so the text filter can search the FULL list (the rendered
- * list is capped at AppConfig.ui.maxDisplayValues, and values beyond the cap
- * would otherwise be unreachable — Norges Bank has dimensions with >1000
- * values, e.g. LIQUIDITY_FORECAST's prognosedato).
+ * others in codelist order where one was pre-loaded. Split out of renderValueList
+ * so the text filter can reuse the exact same ordering when it re-renders.
  *
  * @param {string} dimCode - Dimension code
  * @param {object} dimension - Dimension metadata
@@ -744,9 +741,11 @@ function orderedValueCodes(dimCode, dimension, isTimeDim) {
  * Render list items for dimension values.
  * Parses hierarchy markers (¬) in labels for visual indentation.
  *
- * The list is capped at AppConfig.ui.maxDisplayValues. `query` (the card's text
- * filter) narrows the FULL value list before the cap is applied, so values past
- * the cap stay reachable — see refilterTruncatedList in variable-select-events.js.
+ * The full value list is rendered (no cap); off-screen rows are cheap because
+ * `.value-list-item` uses CSS `content-visibility: auto`, so the browser skips
+ * their layout/paint until scrolled into view. `query` (the card's text filter)
+ * narrows the list when the caller re-renders for a search; `keepCodes` always
+ * survives the filter so the current selection is never dropped.
  *
  * @param {string} dimCode - Dimension code
  * @param {object} dimension - Dimension metadata
@@ -768,12 +767,8 @@ function renderValueList(dimCode, dimension, isTimeDim, query, keepCodes) {
       parseHierarchyLabel(values[code]).cleanLabel.toLowerCase().includes(q));
   }
 
-  const maxDisplay = AppConfig.ui.maxDisplayValues;
-  const displayCodes = codes.slice(0, maxDisplay);
-  const hasMore = codes.length > maxDisplay;
-
   let html = '';
-  displayCodes.forEach((code, index) => {
+  codes.forEach((code, index) => {
     const label = values[code];
     const { cleanLabel, depth } = parseHierarchyLabel(label);
     // Indent hierarchical items: base padding + depth * 1.2rem
@@ -784,10 +779,6 @@ function renderValueList(dimCode, dimension, isTimeDim, query, keepCodes) {
       <span class="value-list-code">${escapeHtml(code)}</span>
     </div>`;
   });
-
-  if (hasMore) {
-    html += `<div class="truncate-notice">${tpl('variable.truncated', maxDisplay, codes.length)}</div>`;
-  }
 
   return html;
 }

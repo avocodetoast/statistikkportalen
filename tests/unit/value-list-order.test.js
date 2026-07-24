@@ -8,9 +8,10 @@
  * innsettingsrekkefølge, så en dimensjon med tallkoder (Norges Banks
  * «Prognoseår») ville ignorert både kildens og dimSort-ens rekkefølge.
  *
- * Filtreringen søker i HELE verdilista (ikke bare de første
- * AppConfig.ui.maxDisplayValues), og beholder alltid kodene i keepCodes —
- * kortets utvalg skal aldri forsvinne fordi brukeren skriver i filterfeltet.
+ * Verdilista rendres i sin helhet uten cap (off-screen-rader gjøres billige via
+ * CSS content-visibility, ikke ved å kappe DOM-en). Filteret søker i HELE lista
+ * og beholder alltid kodene i keepCodes — kortets utvalg skal aldri forsvinne
+ * fordi brukeren skriver i filterfeltet.
  */
 'use strict';
 
@@ -60,15 +61,15 @@ describe('orderedValueCodes', () => {
   });
 });
 
-describe('renderValueList — filtrering over hele lista', () => {
-  it('finner treff langt utenfor visningstaket', () => {
+describe('renderValueList — hele lista rendres, filter finner alt', () => {
+  it('rendrer alle verdier uten cap, og filteret når verdier langt nede', () => {
     const codes = [];
     for (let i = 0; i < 1200; i++) codes.push('kode' + String(i).padStart(4, '0'));
     const d = dim(codes);
 
     const all = renderedCodes(app.renderValueList('D', d, false));
-    assert.equal(all.length, app.AppConfig.ui.maxDisplayValues);
-    assert.ok(!all.includes('kode1100'), 'verdien skal være avkortet bort uten filter');
+    assert.equal(all.length, 1200, 'alle verdier rendres (ingen 500-cap)');
+    assert.ok(all.includes('kode1100'), 'verdier langt nede i lista er nå med');
 
     const hit = renderedCodes(app.renderValueList('D', d, false, 'kode1100'));
     assert.deepEqual(hit, ['kode1100']);

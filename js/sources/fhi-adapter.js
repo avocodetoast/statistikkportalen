@@ -65,11 +65,11 @@
  *     variable-select-render.js forventer).
  *   - category.index i FHIs egen JSON-Stat2 er en ARRAY (posisjonsordnet),
  *     ikke et code→posisjon-objekt slik SSB/JSON-Stat2-spec (og app-koden,
- *     f.eks. table-display.js calculateFlatIndex/buildDimensionCombinations)
+ *     f.eks. table-display.js buildDimensionCombinations/flat-indeks-oppslaget)
  *     forutsetter. Vi konverterer alltid til {code: posisjon}-objekt.
  *   - Undertrykte celler (personvern/manglende data) leveres INLINE i
  *     value[]-arrayen som strenger (".", "..", ":") — ikke via et eget
- *     status-kart slik SSB/JSON-Stat2-konvensjonen (og getDataStatus() i
+ *     status-kart slik SSB/JSON-Stat2-konvensjonen (og statusAtFlatIndex() i
  *     table-display.js) forutsetter. Vi trekker dem ut til et status-objekt
  *     (flatIndex → symbol) og setter value[i]=null, ellers ville
  *     formatNumber() fått en ren tekststreng som tallverdi.
@@ -813,7 +813,7 @@
 
     // Se filhodet: FHI koder undertrykte celler inline i value[] som strenger
     // (".", "..", ":") i stedet for et eget status-kart. Vi flytter dem over
-    // slik getDataStatus()/formatNumber() i table-display.js håndterer dem
+    // slik statusAtFlatIndex()/formatNumber() i table-display.js håndterer dem
     // riktig (suppression-symbol + tooltip, ikke tallformatert tekst).
     const rawValues = Array.isArray(json.value) ? json.value : [];
     const value = new Array(rawValues.length);

@@ -141,8 +141,11 @@ const AppConfig = {
     // Debounce delay for value filter inputs (milliseconds)
     filterDebounceMs: 150,
 
-    // Maximum values to display in value list before truncation
-    maxDisplayValues: 500,
+    // Ctrl+A on an unfiltered value list larger than this switches to the star
+    // (wildcard '*') selection instead of marking every value — marking tens of
+    // thousands of items individually would materialize a huge code list and
+    // freeze the browser. The "Välj alla" button always uses star regardless.
+    selectAllStarThreshold: 500,
 
     // Error message auto-hide delay (milliseconds)
     errorAutoHideMs: 10000,

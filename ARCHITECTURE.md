@@ -289,9 +289,11 @@ handleFetchData()
            → buildHtmlTable()
               → buildDimensionCombinations(rowDims)    // Cartesian product of row values
               → buildDimensionCombinations(colDims)    // Cartesian product of column values
+              → computeFlatIndexOffsets()              // per-row & per-col flat-index offsets, once
               → For each row × column:
-                 → getDataValue() → calculateFlatIndex() → data.value[i]
-                 → getDataStatus() → check data.status for suppressed values (".", ":", "..")
+                 → flatIndex = rowOffsets[r] + colOffsets[c]   // single addition per cell
+                 → valueAtFlatIndex(flatIndex) → data.value[i]
+                 → statusAtFlatIndex(flatIndex) → check data.status for suppressed values (".", ":", "..")
            → Wire: rotate button, export buttons, save query button
 ```
 
@@ -465,7 +467,9 @@ flatIndex = Region_index × (size_Kjonn × size_Tid)
           + Tid_index
 ```
 
-This is implemented in `calculateFlatIndex()` (table-display.js).
+`buildHtmlTable()` (table-display.js) precomputes this per row and per column via
+`computeFlatIndexOffsets()`, so each cell's flat index is a single addition
+(`rowOffsets[r] + colOffsets[c]`) instead of recomputing the full weighting per cell.
 
 The optional `status` field maps flat indices (as strings) to suppression codes (per SSB convention):
 - `"."` — not applicable (ikke mulig å oppgi tall)

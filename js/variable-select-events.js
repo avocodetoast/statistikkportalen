@@ -269,10 +269,10 @@ function setupListSelectionEvents() {
 
 /**
  * Set up search/filter inputs for value lists.
- * Since codelists now re-render the DOM (not just hide/show), the text filter
- * only needs to handle text-based filtering of whatever items are in the DOM —
- * except for truncated lists, which are re-rendered from metadata so the filter
- * reaches values past the display cap (see refilterTruncatedList).
+ * The full value list is always in the DOM (no display cap), so filtering is a
+ * plain show/hide over the existing items — hiding a selected-but-non-matching
+ * item keeps its `.selected` class, so the filter never deselects anything.
+ * Codelist re-renders own their DOM; this hide/show works on those too.
  */
 function setupValueFilters() {
   document.querySelectorAll('.value-filter-input').forEach(input => {
@@ -281,8 +281,6 @@ function setupValueFilters() {
 
     input.addEventListener('input', debounce(() => {
       const query = input.value.trim().toLowerCase();
-      if (refilterTruncatedList(card, container, query)) return;
-
       const items = container.querySelectorAll('.value-list-item');
 
       items.forEach(item => {
@@ -297,49 +295,6 @@ function setupValueFilters() {
       });
     }, AppConfig.ui.filterDebounceMs));
   });
-}
-
-/**
- * Truncated value lists (more values than AppConfig.ui.maxDisplayValues) are
- * re-rendered from metadata for the current filter text instead of having DOM
- * nodes hidden: only the first N values are in the DOM, so hiding them would
- * leave everything past the cap permanently unreachable — Norges Bank's
- * prognosedato has 1344 values, the F-auction ids had 1509.
- *
- * The current selection is carried across the re-render by code (renderValueList's
- * keepCodes keeps selected values in the list even when they don't match the
- * query), so filtering never silently deselects anything. Lists with an active
- * codelist are left alone — the codelist owns their DOM.
- *
- * @returns {boolean} true when the list was re-rendered (caller should stop)
- */
-function refilterTruncatedList(card, container, query) {
-  if (!container || !tableMetadata) return false;
-  const dimCode = card.dataset.dimension;
-  const dimension = tableMetadata.dimension[dimCode];
-  if (!dimension || !dimension.category || !dimension.category.label) return false;
-  if (activeCodelists[dimCode]) return false;
-  if (Object.keys(dimension.category.label).length <= AppConfig.ui.maxDisplayValues) return false;
-
-  const selected = new Set(
-    Array.from(container.querySelectorAll('.value-list-item.selected')).map(i => i.dataset.code));
-
-  const isTimeDim = dimCode === 'Tid' || dimCode.toLowerCase().includes('tid') ||
-    ((tableMetadata.role && tableMetadata.role.time) || []).indexOf(dimCode) !== -1;
-
-  container.innerHTML = renderValueList(dimCode, dimension, isTimeDim, query, selected);
-  container.querySelectorAll('.value-list-item').forEach(item => {
-    if (selected.has(item.dataset.code)) item.classList.add('selected');
-  });
-
-  // Shift-utvalgets «committed»-tilstand er indeksbasert og gjelder ikke den
-  // nye lista.
-  delete _committedSelection[dimCode];
-
-  updateModeVisuals(card);
-  updateValueCounter(card);
-  updateSelectionStatus();
-  return true;
 }
 
 /**
@@ -367,6 +322,26 @@ function setupKeyboardShortcuts() {
       e.preventDefault();
 
       const card = container.closest('.variable-card');
+      const dimCode = card.dataset.dimension;
+
+      // A filter is active when the card's text-filter input holds a query — then
+      // "select all" means the (bounded) visible subset the user narrowed to.
+      const filterInput = card.querySelector('.value-filter-input');
+      const filterActive = !!(filterInput && filterInput.value.trim());
+
+      // Huge unfiltered dimensions (e.g. SSB 08801, ~13000 goods numbers): marking
+      // every value individually materializes a giant code list (DOM + URL + API
+      // preview) and freezes the browser. Fall back to the star wildcard '*' — the
+      // same O(1) selection as the "Velg alle" button — and tell the user why.
+      const total = getTrueDimensionValueCount(dimCode);
+      if (shouldSelectAllAsStar(total, filterActive, AppConfig.ui.selectAllStarThreshold)) {
+        container.dataset.mode = 'star';
+        showSelectAllStarNote(card);
+        updateModeVisuals(card);
+        updateValueCounter(card);
+        updateSelectionStatus();
+        return;
+      }
 
       // Switch to specific mode (individual selections)
       container.dataset.mode = 'specific';
@@ -384,6 +359,46 @@ function setupKeyboardShortcuts() {
       updateSelectionStatus();
     }
   });
+}
+
+/**
+ * Whether Ctrl+A should select the whole dimension via the star wildcard ('*')
+ * instead of marking each value. True only for a large, unfiltered list — a
+ * filtered list is a bounded visible subset the user explicitly narrowed to, so
+ * it stays explicit regardless of the dimension's total size.
+ *
+ * @param {number} totalCount - Authoritative value count for the dimension
+ * @param {boolean} filterActive - Whether the card's text filter holds a query
+ * @param {number} threshold - AppConfig.ui.selectAllStarThreshold
+ * @returns {boolean}
+ */
+function shouldSelectAllAsStar(totalCount, filterActive, threshold) {
+  return !filterActive && totalCount > threshold;
+}
+
+/**
+ * Show a short, contextual note in the card explaining that Ctrl+A switched to
+ * the star ('*') selection because the list was too large to mark individually.
+ * Lazily creates a `.select-all-note` element (so the card template stays
+ * untouched) just above the value list, and auto-hides it after a few seconds.
+ */
+function showSelectAllStarNote(card) {
+  const controls = card.querySelector('.variable-controls');
+  if (!controls) return;
+
+  let note = controls.querySelector('.select-all-note');
+  if (!note) {
+    note = document.createElement('div');
+    note.className = 'select-all-note';
+    const list = controls.querySelector('.value-list-container');
+    controls.insertBefore(note, list || null);
+  }
+
+  note.textContent = t('variable.selectAllStar');
+  note.classList.add('is-visible');
+
+  clearTimeout(note._hideTimer);
+  note._hideTimer = setTimeout(() => note.classList.remove('is-visible'), 6000);
 }
 
 /**
