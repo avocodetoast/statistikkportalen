@@ -1,0 +1,58 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test)",
+      "Bash(npm test *)",
+      "Bash(npm run check)",
+      "Bash(npm run coverage)",
+      "Bash(npm run coverage:report)",
+      "Bash(node scripts/check-coverage.mjs)",
+      "Bash(node scripts/check-coverage.mjs *)",
+      "Bash(npm run test:e2e)",
+      "Bash(npm run verify)",
+      "Bash(E2E_SHOTS=1 npm run test:e2e)",
+      "Bash(E2E_LIVE=1 npm run test:e2e)",
+      "Bash(node --test *)",
+      "Bash(node scripts/check-static.mjs)",
+      "Bash(node scripts/generate-seo-pages.mjs *)",
+      "Bash(node scripts/update-fhi-catalog.mjs *)",
+      "Bash(node scripts/update-nb-periods.mjs *)",
+      "Bash(node scripts/update-table-metadata.mjs *)",
+      "Bash(node tests/e2e/helpers/record-fixtures.mjs)",
+      "Bash(node tests/e2e/helpers/record-fixtures.mjs *)",
+      "WebFetch(domain:data.ssb.no)",
+      "WebFetch(domain:data.norges-bank.no)",
+      "WebFetch(domain:query.norges-bank.no)",
+      "WebFetch(domain:statistikk-data.fhi.no)",
+      "WebFetch(domain:www.fhi.no)",
+      "WebFetch(domain:www.pxtools.net)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PROJECT_DIR}/scripts/hooks/post-edit-check.sh\"",
+            "timeout": 60,
+            "statusMessage": "Kjører statiske sjekker…"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PROJECT_DIR}/scripts/hooks/stop-verify.sh\"",
+            "timeout": 180,
+            "statusMessage": "Kjører npm run verify…"
+          }
+        ]
+      }
+    ]
+  }
+}

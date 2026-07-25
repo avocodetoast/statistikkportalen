@@ -4,6 +4,15 @@
   "description": "Client-side statistics portal for PxWebApi v2 (SSB) + Norges Bank + FHI. No runtime dependencies — package.json exists only for the test/utility scripts.",
   "license": "SEE LICENSE IN LICENCE.md",
   "scripts": {
-    "test": "node --test \"tests/**/*.test.js\""
+    "test": "node --test \"tests/**/*.test.js\"",
+    "check": "node scripts/check-static.mjs",
+    "coverage": "node scripts/check-coverage.mjs",
+    "coverage:report": "node scripts/check-coverage.mjs --report",
+    "coverage:baseline": "node scripts/check-coverage.mjs --update",
+    "test:e2e": "node --test \"tests/e2e/**/*.e2e.mjs\"",
+    "verify": "npm run check && npm test && npm run coverage && npm run test:e2e"
+  },
+  "devDependencies": {
+    "playwright-core": "1.62.0"
   }
 }

@@ -44,10 +44,32 @@ Workflow rules:
 - **New pure-logic behaviour** (search scoring, SDMX conversion, hierarchy building, URL encoding, helpers): write the failing test FIRST, run it, confirm it fails for the right reason, then implement until green.
 - **Changing existing logic**: run that module's tests in `tests/unit/` first — they define the current contract.
 - **NEVER weaken, skip, or delete an existing test assertion to make it pass.** Fix the implementation, or stop and flag the conflict to the user.
+- **`npm run coverage` enforces that new logic gets tested.** It compares per-file function coverage against `tests/coverage-baseline.json` and fails when a file gains uncovered functions. When it fires, write the test — don't run `npm run coverage:baseline`. That command is only for deliberate drops (e.g. new DOM-heavy view code that per `tests/README.md` isn't unit-tested), and using it must be reported to the user.
 - Mock only true I/O boundaries (`fetch`, storage — the harness already disables network). Never mock internal functions or pure collaborators just to isolate a unit.
-- DOM-heavy view modules are exempt from unit-test-first: test extractable pure helpers, don't build elaborate DOM mocks.
-- A change isn't done until `npm test` passes — run it before every commit and show the output as evidence.
-- There is no linter or build system configured.
+- DOM-heavy view modules are exempt from unit-test-first: test extractable pure helpers, don't build elaborate DOM mocks — cover them with the E2E smoke suite instead (below).
+- A change isn't done until `npm run verify` passes — run it before every commit and show the output as evidence.
+- There is no linter or build system configured; `npm run check` covers the cheap part of that gap (syntax, missing assets, `?v=` sync).
+
+## Verifying in a real browser
+
+`npm test` covers pure logic only. To confirm a change works in the actual app there is a browser layer:
+
+```bash
+npm run check        # statiske sjekker, ingen nettleser        (~1 s)
+npm run coverage     # dekningsport: er ny kode testet?         (~2 s)
+npm run test:e2e     # røyktest i ekte Chrome mot fixtures      (~10 s)
+npm run verify       # check + test + coverage + test:e2e       (~15 s)
+```
+
+It drives the **system's Chrome** via `playwright-core` (the repo's only devDependency) — never `npx playwright install`, which downloads a 150 MB Chromium pinned to a build revision that drifts. `npm test` still runs on a checkout without `npm install`; the E2E suites skip with a reason.
+
+The suite covers one table per source (SSB `13760`, Norges Bank `nb-IR`, FHI `fhi-nokkel-185`) because the three take genuinely different paths through the adapter layer — and asserts the per-source capability matrix (NB has no `/defaultselection`; Excel export and saved queries are SSB-only).
+
+**Two hooks in `.claude/settings.json` run this automatically** (`scripts/hooks/*.sh`): `npm run check` after every edit to `js/`/`css/`/`data/sources/`/`index.html`, and `npm run verify` when a response ends with uncommitted code changes. Both feed failures back for fixing. Don't remove them without asking.
+
+**E2E asserts structure, not values.** A deliberate bug in `sdmx-to-jsonstat.js` that produced a correctly-shaped table with wrong numbers passed all 10 E2E tests and failed 8 unit tests. Never cite a green smoke run as evidence that a conversion or calculation is correct.
+
+**Load the `verify` skill** (`.claude/skills/verify/SKILL.md`) before running or extending this layer — it has the selector map, the record/replay fixture workflow, when to take screenshots, and how to drive the app manually. Don't re-derive it, and don't write a one-off browser script.
 
 ## Subagent Model Selection
 

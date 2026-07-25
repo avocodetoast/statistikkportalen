@@ -1,0 +1,761 @@
+{
+  "meta": {
+    "id": "IREF948632",
+    "prepared": "2026-07-25T15:54:22",
+    "test": false,
+    "datasetId": "150473e3-3fa8-4f66-a94c-d9d451341f74",
+    "sender": {
+      "id": "Unknown"
+    },
+    "receiver": {
+      "id": "guest"
+    },
+    "links": [
+      {
+        "rel": "self",
+        "href": "/data/IR/A...?format=sdmx-json&lastNObservations=60&locale=no",
+        "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/data-message/tools/schemas/1.0/sdmx-json-data-schema.json"
+      }
+    ]
+  },
+  "data": {
+    "dataSets": [
+      {
+        "links": [
+          {
+            "rel": "dataflow",
+            "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=NB:IR(1.1)"
+          }
+        ],
+        "reportingBegin": "1982-01-01T00:00:00",
+        "reportingEnd": "2025-01-01T23:59:59",
+        "action": "Information",
+        "series": {
+          "0:0:0:0": {
+            "attributes": [
+              0,
+              0
+            ],
+            "observations": {
+              "0": [
+                "8.34"
+              ],
+              "1": [
+                "9.5"
+              ],
+              "2": [
+                "6.5"
+              ],
+              "3": [
+                "4.78"
+              ],
+              "4": [
+                "4.75"
+              ],
+              "5": [
+                "4.48"
+              ],
+              "6": [
+                "3.38"
+              ],
+              "7": [
+                "5.51"
+              ],
+              "8": [
+                "6.35"
+              ],
+              "9": [
+                "6.22"
+              ],
+              "10": [
+                "6.98"
+              ],
+              "11": [
+                "6.73"
+              ],
+              "12": [
+                "4.21"
+              ],
+              "13": [
+                "1.82"
+              ],
+              "14": [
+                "1.92"
+              ],
+              "15": [
+                "2.74"
+              ],
+              "16": [
+                "4.38"
+              ],
+              "17": [
+                "5.32"
+              ],
+              "18": [
+                "1.75"
+              ],
+              "19": [
+                "1.92"
+              ],
+              "20": [
+                "2.14"
+              ],
+              "21": [
+                "1.55"
+              ],
+              "22": [
+                "1.5"
+              ],
+              "23": [
+                "1.49"
+              ],
+              "24": [
+                "1.05"
+              ],
+              "25": [
+                "0.55"
+              ],
+              "26": [
+                "0.5"
+              ],
+              "27": [
+                "0.57"
+              ],
+              "28": [
+                "1.15"
+              ],
+              "29": [
+                "0.36"
+              ],
+              "30": [
+                "0.08"
+              ],
+              "31": [
+                "1.33"
+              ],
+              "32": [
+                "3.54"
+              ],
+              "33": [
+                "4.5"
+              ],
+              "34": [
+                "4.29"
+              ]
+            }
+          },
+          "0:0:1:0": {
+            "attributes": [
+              0,
+              0
+            ],
+            "observations": {
+              "0": [
+                "9.94"
+              ],
+              "1": [
+                "10.64"
+              ],
+              "2": [
+                "7.95"
+              ],
+              "3": [
+                "6.78"
+              ],
+              "4": [
+                "6.75"
+              ],
+              "5": [
+                "6.48"
+              ],
+              "6": [
+                "5.38"
+              ],
+              "7": [
+                "7.51"
+              ],
+              "8": [
+                "8.35"
+              ],
+              "9": [
+                "8.22"
+              ],
+              "10": [
+                "8.98"
+              ],
+              "11": [
+                "8.73"
+              ],
+              "12": [
+                "6.21"
+              ],
+              "13": [
+                "3.82"
+              ],
+              "14": [
+                "3.92"
+              ],
+              "15": [
+                "4.74"
+              ],
+              "16": [
+                "5.59"
+              ],
+              "17": [
+                "6.32"
+              ],
+              "18": [
+                "2.75"
+              ],
+              "19": [
+                "2.92"
+              ],
+              "20": [
+                "3.14"
+              ],
+              "21": [
+                "2.55"
+              ],
+              "22": [
+                "2.5"
+              ],
+              "23": [
+                "2.49"
+              ],
+              "24": [
+                "2.05"
+              ],
+              "25": [
+                "1.55"
+              ],
+              "26": [
+                "1.5"
+              ],
+              "27": [
+                "1.57"
+              ],
+              "28": [
+                "2.15"
+              ],
+              "29": [
+                "1.36"
+              ],
+              "30": [
+                "1.08"
+              ],
+              "31": [
+                "2.33"
+              ],
+              "32": [
+                "4.54"
+              ],
+              "33": [
+                "5.5"
+              ],
+              "34": [
+                "5.29"
+              ],
+              "35": [
+                "11.03"
+              ],
+              "36": [
+                "10.06"
+              ],
+              "37": [
+                "10.8"
+              ],
+              "38": [
+                "11.36"
+              ],
+              "39": [
+                "14.16"
+              ],
+              "40": [
+                "13.9"
+              ],
+              "41": [
+                "13.08"
+              ],
+              "42": [
+                "10.6"
+              ],
+              "43": [
+                "10.82"
+              ]
+            }
+          },
+          "0:0:2:0": {
+            "attributes": [
+              0,
+              0
+            ],
+            "observations": {
+              "20": [
+                "1.16"
+              ],
+              "21": [
+                "0.55"
+              ],
+              "22": [
+                "0.5"
+              ],
+              "23": [
+                "0.49"
+              ],
+              "24": [
+                "0.05"
+              ],
+              "25": [
+                "-0.45"
+              ],
+              "26": [
+                "-0.5"
+              ],
+              "27": [
+                "-0.43"
+              ],
+              "28": [
+                "0.15"
+              ],
+              "29": [
+                "-0.64"
+              ],
+              "30": [
+                "-0.92"
+              ],
+              "31": [
+                "0.33"
+              ],
+              "32": [
+                "2.54"
+              ],
+              "33": [
+                "3.5"
+              ],
+              "34": [
+                "3.29"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "structure": {
+      "links": [
+        {
+          "rel": "dataflow",
+          "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=NB:IR(1.1)"
+        },
+        {
+          "rel": "datastructure",
+          "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=NB:DSD_IR(1.1)"
+        }
+      ],
+      "name": "Styringsrente",
+      "names": {
+        "no": "Styringsrente"
+      },
+      "description": "Styringsrente",
+      "descriptions": {
+        "no": "Styringsrente"
+      },
+      "dimensions": {
+        "dataset": [],
+        "series": [
+          {
+            "id": "FREQ",
+            "name": "Frekvens",
+            "description": "Tidsintervallet for observasjoner over en gitt tidsperiode.",
+            "keyPosition": 0,
+            "role": null,
+            "values": [
+              {
+                "id": "A",
+                "name": "Årlig",
+                "description": "Årlig"
+              }
+            ]
+          },
+          {
+            "id": "INSTRUMENT_TYPE",
+            "name": "Instrumenttype",
+            "description": "Type finansielt instrument.",
+            "keyPosition": 1,
+            "role": null,
+            "values": [
+              {
+                "id": "KPRA",
+                "name": "Styringsrenten",
+                "description": "Foliorenten. Renten på bankenes innskudd opp til en viss kvote i Norges Bank."
+              }
+            ]
+          },
+          {
+            "id": "TENOR",
+            "name": "Løpetid",
+            "description": "Mengde tid igjen inntil tilbakebetaling av et lån eller en finansiell kontrakt utløper.",
+            "keyPosition": 2,
+            "role": null,
+            "values": [
+              {
+                "id": "SD",
+                "name": "Styringsrenten"
+              },
+              {
+                "id": "OL",
+                "name": "Døgnlånsrente"
+              },
+              {
+                "id": "RR",
+                "name": "Reserverenten"
+              }
+            ]
+          },
+          {
+            "id": "UNIT_MEASURE",
+            "name": "Måleenhet",
+            "description": "Enheten verdier er målt i.",
+            "keyPosition": 3,
+            "role": null,
+            "values": [
+              {
+                "id": "R",
+                "name": "Rente"
+              }
+            ]
+          }
+        ],
+        "observation": [
+          {
+            "id": "TIME_PERIOD",
+            "name": "Tidsperiode",
+            "description": "Tidsperioden eller tidspunktet for den målte observasjonen.",
+            "keyPosition": 4,
+            "role": "time",
+            "values": [
+              {
+                "start": "1991-01-01T00:00:00",
+                "end": "1991-12-31T23:59:59",
+                "id": "1991",
+                "name": "1991"
+              },
+              {
+                "start": "1992-01-01T00:00:00",
+                "end": "1992-12-31T23:59:59",
+                "id": "1992",
+                "name": "1992"
+              },
+              {
+                "start": "1993-01-01T00:00:00",
+                "end": "1993-12-31T23:59:59",
+                "id": "1993",
+                "name": "1993"
+              },
+              {
+                "start": "1994-01-01T00:00:00",
+                "end": "1994-12-31T23:59:59",
+                "id": "1994",
+                "name": "1994"
+              },
+              {
+                "start": "1995-01-01T00:00:00",
+                "end": "1995-12-31T23:59:59",
+                "id": "1995",
+                "name": "1995"
+              },
+              {
+                "start": "1996-01-01T00:00:00",
+                "end": "1996-12-31T23:59:59",
+                "id": "1996",
+                "name": "1996"
+              },
+              {
+                "start": "1997-01-01T00:00:00",
+                "end": "1997-12-31T23:59:59",
+                "id": "1997",
+                "name": "1997"
+              },
+              {
+                "start": "1998-01-01T00:00:00",
+                "end": "1998-12-31T23:59:59",
+                "id": "1998",
+                "name": "1998"
+              },
+              {
+                "start": "1999-01-01T00:00:00",
+                "end": "1999-12-31T23:59:59",
+                "id": "1999",
+                "name": "1999"
+              },
+              {
+                "start": "2000-01-01T00:00:00",
+                "end": "2000-12-31T23:59:59",
+                "id": "2000",
+                "name": "2000"
+              },
+              {
+                "start": "2001-01-01T00:00:00",
+                "end": "2001-12-31T23:59:59",
+                "id": "2001",
+                "name": "2001"
+              },
+              {
+                "start": "2002-01-01T00:00:00",
+                "end": "2002-12-31T23:59:59",
+                "id": "2002",
+                "name": "2002"
+              },
+              {
+                "start": "2003-01-01T00:00:00",
+                "end": "2003-12-31T23:59:59",
+                "id": "2003",
+                "name": "2003"
+              },
+              {
+                "start": "2004-01-01T00:00:00",
+                "end": "2004-12-31T23:59:59",
+                "id": "2004",
+                "name": "2004"
+              },
+              {
+                "start": "2005-01-01T00:00:00",
+                "end": "2005-12-31T23:59:59",
+                "id": "2005",
+                "name": "2005"
+              },
+              {
+                "start": "2006-01-01T00:00:00",
+                "end": "2006-12-31T23:59:59",
+                "id": "2006",
+                "name": "2006"
+              },
+              {
+                "start": "2007-01-01T00:00:00",
+                "end": "2007-12-31T23:59:59",
+                "id": "2007",
+                "name": "2007"
+              },
+              {
+                "start": "2008-01-01T00:00:00",
+                "end": "2008-12-31T23:59:59",
+                "id": "2008",
+                "name": "2008"
+              },
+              {
+                "start": "2009-01-01T00:00:00",
+                "end": "2009-12-31T23:59:59",
+                "id": "2009",
+                "name": "2009"
+              },
+              {
+                "start": "2010-01-01T00:00:00",
+                "end": "2010-12-31T23:59:59",
+                "id": "2010",
+                "name": "2010"
+              },
+              {
+                "start": "2011-01-01T00:00:00",
+                "end": "2011-12-31T23:59:59",
+                "id": "2011",
+                "name": "2011"
+              },
+              {
+                "start": "2012-01-01T00:00:00",
+                "end": "2012-12-31T23:59:59",
+                "id": "2012",
+                "name": "2012"
+              },
+              {
+                "start": "2013-01-01T00:00:00",
+                "end": "2013-12-31T23:59:59",
+                "id": "2013",
+                "name": "2013"
+              },
+              {
+                "start": "2014-01-01T00:00:00",
+                "end": "2014-12-31T23:59:59",
+                "id": "2014",
+                "name": "2014"
+              },
+              {
+                "start": "2015-01-01T00:00:00",
+                "end": "2015-12-31T23:59:59",
+                "id": "2015",
+                "name": "2015"
+              },
+              {
+                "start": "2016-01-01T00:00:00",
+                "end": "2016-12-31T23:59:59",
+                "id": "2016",
+                "name": "2016"
+              },
+              {
+                "start": "2017-01-01T00:00:00",
+                "end": "2017-12-31T23:59:59",
+                "id": "2017",
+                "name": "2017"
+              },
+              {
+                "start": "2018-01-01T00:00:00",
+                "end": "2018-12-31T23:59:59",
+                "id": "2018",
+                "name": "2018"
+              },
+              {
+                "start": "2019-01-01T00:00:00",
+                "end": "2019-12-31T23:59:59",
+                "id": "2019",
+                "name": "2019"
+              },
+              {
+                "start": "2020-01-01T00:00:00",
+                "end": "2020-12-31T23:59:59",
+                "id": "2020",
+                "name": "2020"
+              },
+              {
+                "start": "2021-01-01T00:00:00",
+                "end": "2021-12-31T23:59:59",
+                "id": "2021",
+                "name": "2021"
+              },
+              {
+                "start": "2022-01-01T00:00:00",
+                "end": "2022-12-31T23:59:59",
+                "id": "2022",
+                "name": "2022"
+              },
+              {
+                "start": "2023-01-01T00:00:00",
+                "end": "2023-12-31T23:59:59",
+                "id": "2023",
+                "name": "2023"
+              },
+              {
+                "start": "2024-01-01T00:00:00",
+                "end": "2024-12-31T23:59:59",
+                "id": "2024",
+                "name": "2024"
+              },
+              {
+                "start": "2025-01-01T00:00:00",
+                "end": "2025-12-31T23:59:59",
+                "id": "2025",
+                "name": "2025"
+              },
+              {
+                "start": "1982-01-01T00:00:00",
+                "end": "1982-12-31T23:59:59",
+                "id": "1982",
+                "name": "1982"
+              },
+              {
+                "start": "1983-01-01T00:00:00",
+                "end": "1983-12-31T23:59:59",
+                "id": "1983",
+                "name": "1983"
+              },
+              {
+                "start": "1984-01-01T00:00:00",
+                "end": "1984-12-31T23:59:59",
+                "id": "1984",
+                "name": "1984"
+              },
+              {
+                "start": "1985-01-01T00:00:00",
+                "end": "1985-12-31T23:59:59",
+                "id": "1985",
+                "name": "1985"
+              },
+              {
+                "start": "1986-01-01T00:00:00",
+                "end": "1986-12-31T23:59:59",
+                "id": "1986",
+                "name": "1986"
+              },
+              {
+                "start": "1987-01-01T00:00:00",
+                "end": "1987-12-31T23:59:59",
+                "id": "1987",
+                "name": "1987"
+              },
+              {
+                "start": "1988-01-01T00:00:00",
+                "end": "1988-12-31T23:59:59",
+                "id": "1988",
+                "name": "1988"
+              },
+              {
+                "start": "1989-01-01T00:00:00",
+                "end": "1989-12-31T23:59:59",
+                "id": "1989",
+                "name": "1989"
+              },
+              {
+                "start": "1990-01-01T00:00:00",
+                "end": "1990-12-31T23:59:59",
+                "id": "1990",
+                "name": "1990"
+              }
+            ]
+          }
+        ]
+      },
+      "attributes": {
+        "dataset": [],
+        "series": [
+          {
+            "id": "DECIMALS",
+            "name": "Desimaler",
+            "description": "Antall sifre til høyre for desimalskilletegnet.",
+            "relationship": {
+              "dimensions": [
+                "INSTRUMENT_TYPE",
+                "TENOR",
+                "UNIT_MEASURE"
+              ]
+            },
+            "role": null,
+            "values": [
+              {
+                "id": "2",
+                "name": "2"
+              }
+            ]
+          },
+          {
+            "id": "COLLECTION",
+            "name": "Innsamlingstidspunkt",
+            "description": "Datoer eller perioder for når verdien ble innhentet.",
+            "relationship": {
+              "dimensions": [
+                "INSTRUMENT_TYPE",
+                "TENOR",
+                "UNIT_MEASURE"
+              ]
+            },
+            "role": null,
+            "values": [
+              {
+                "id": "A",
+                "name": "Gjennomsnitt av observasjoner gjennom perioden"
+              }
+            ]
+          }
+        ],
+        "observation": [
+          {
+            "id": "CALC_METHOD",
+            "name": "Calculation Method",
+            "description": "Method used for calculation of values",
+            "relationship": {
+              "primaryMeasure": "OBS_VALUE"
+            },
+            "role": null,
+            "values": []
+          }
+        ]
+      }
+    }
+  }
+}

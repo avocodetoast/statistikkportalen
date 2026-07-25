@@ -1,0 +1,209 @@
+{
+  "version": "2.0",
+  "class": "dataset",
+  "label": "13760: Arbeidsstyrken, sysselsatte, arbeidsledige  og utførte ukeverk for personer 15-74 år, etter alder, type justering og måned",
+  "source": "Statistisk sentralbyrå",
+  "updated": "2026-07-21T06:00:00Z",
+  "note": [
+    "Tallene er bruddjustert grunnet et brudd mellom 2020 og 2021. Tallene før 2021 er justert til nivået etter bruddet. Utførte ukeverk er ikke bruddjustert grunnet problemer med å skille eventuell effekt av koronakrisen fra eventuell effekt av omleggingen av AKU. Tabellen inneholder ikke befolkningstall for årene 2006-2008, og følgelig heller ikke tall for sysselsatte eller arbeidsstyrken i prosent av befolkningen for de årene. Se [Om statistikken](https://www.ssb.no/aku) for mer informasjon.",
+    "Tabellen inneholder fire typer serier: ujusterte (det vil si ikke sesongjusterte) månedstall, sesongjusterte månedstall, tremåneders glidende gjennomsnitt av de sesongjusterte månedstallene og trendtall. De tremåneders glidende gjennomsnittene av de sesongjusterte månedstallene er navngitt etter den midterste måneden i tremånedersperioden, for eksempel er tallet for februar et gjennomsnitt av perioden fra januar til mars. Trendtallene representerer den langsiktige tendensen og er glattere enn den sesongjusterte serien, som har nokså høy volatilitet. Ettersom det er høy volatilitet i både månedstallene som er sesongjustert og ikke, er det trendtallene og de tremåneders glidende gjennomsnittene av sesongjusterte månedstall vi anbefaler å bruke. De to andre seriene offentliggjør vi hovedsakelig av hensyn til ekspertbrukere av statistikken.",
+    ".. = Tallgrunnlag mangler. Tall er ikke kommet inn i våre databaser eller er for usikre til å publiseres."
+  ],
+  "role": {
+    "time": [
+      "Tid"
+    ],
+    "metric": [
+      "ContentsCode"
+    ]
+  },
+  "id": [
+    "Alder",
+    "Justering",
+    "ContentsCode",
+    "Tid"
+  ],
+  "size": [
+    3,
+    4,
+    1,
+    1
+  ],
+  "dimension": {
+    "Alder": {
+      "label": "alder",
+      "category": {
+        "index": {
+          "15-74": 0,
+          "15-24": 1,
+          "25-74": 2
+        },
+        "label": {
+          "15-74": "15-74 år",
+          "15-24": "15-24 år",
+          "25-74": "25-74 år"
+        }
+      },
+      "extension": {
+        "elimination": true,
+        "eliminationValueCode": "15-74",
+        "show": "value"
+      }
+    },
+    "Justering": {
+      "label": "type justering",
+      "category": {
+        "index": {
+          "T": 0,
+          "3MGG": 1,
+          "S": 2,
+          "IS": 3
+        },
+        "label": {
+          "T": "Trend",
+          "3MGG": "Sesongjustert, 3-måneders glidende gjennomsnitt",
+          "S": "Sesongjustert",
+          "IS": "Ikke sesongjustert"
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "show": "value"
+      }
+    },
+    "ContentsCode": {
+      "label": "statistikkvariabel",
+      "category": {
+        "index": {
+          "Arbeidsstyrken": 0
+        },
+        "label": {
+          "Arbeidsstyrken": "Arbeidsstyrken (1000 personer)"
+        },
+        "unit": {
+          "Arbeidsstyrken": {
+            "base": "1000 personer",
+            "decimals": 0
+          }
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "refperiod": {
+          "Arbeidsstyrken": "Måneden"
+        },
+        "show": "value",
+        "measuringType": {
+          "Arbeidsstyrken": "Average"
+        },
+        "priceType": {
+          "Arbeidsstyrken": "NotApplicable"
+        },
+        "adjustment": {
+          "Arbeidsstyrken": "WorkAndSes"
+        },
+        "alternativeText": {
+          "Arbeidsstyrken": "Arbeidsstyrken (1000 personer)"
+        }
+      },
+      "link": {
+        "describedby": [
+          {
+            "extension": {
+              "Arbeidsstyrken": "urn:ssb:conceptvariable:vardok:1124"
+            }
+          }
+        ]
+      }
+    },
+    "Tid": {
+      "label": "måned",
+      "category": {
+        "index": {
+          "2026M06": 0
+        },
+        "label": {
+          "2026M06": "2026M06"
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "show": "code"
+      }
+    }
+  },
+  "extension": {
+    "px": {
+      "infofile": "None",
+      "tableid": "13760",
+      "decimals": 0,
+      "official-statistics": true,
+      "aggregallowed": false,
+      "copyright": false,
+      "language": "no",
+      "contents": "13760: Arbeidsstyrken, sysselsatte, arbeidsledige  og utførte ukeverk for personer 15-74 år,",
+      "descriptiondefault": false,
+      "heading": [
+        "ContentsCode",
+        "Tid"
+      ],
+      "stub": [
+        "Alder",
+        "Justering"
+      ],
+      "matrix": "13760",
+      "subject-code": "al",
+      "subject-area": "Arbeid og lønn"
+    },
+    "discontinued": null,
+    "contact": [
+      {
+        "name": "Arbeidsmarked",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "62 88 50 00",
+        "mail": "arbeidsmarked@ssb.no",
+        "raw": " Arbeidsmarked, Statistisk sentralbyrå# +47 62 88 50 00#arbeidsmarked@ssb.no"
+      },
+      {
+        "name": "Erik Herstad Horgen",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "93 08 68 62",
+        "mail": "heh@ssb.no",
+        "raw": "Erik Herstad Horgen, Statistisk sentralbyrå# +47 93 08 68 62#heh@ssb.no"
+      },
+      {
+        "name": "Ingebjørg Aamodt",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "92 62 38 40",
+        "mail": "iaa@ssb.no",
+        "raw": "Ingebjørg Aamodt, Statistisk sentralbyrå# +47 92 62 38 40#iaa@ssb.no"
+      },
+      {
+        "name": "Håvard Hungnes Lien",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "40 90 26 06",
+        "mail": "ien@ssb.no",
+        "raw": "Håvard Hungnes Lien, Statistisk sentralbyrå# +47 40 90 26 06#ien@ssb.no"
+      }
+    ]
+  },
+  "value": [
+    3074,
+    null,
+    3078,
+    3134,
+    461,
+    null,
+    467,
+    514,
+    2612,
+    null,
+    2611,
+    2620
+  ],
+  "status": {
+    "1": "..",
+    "5": "..",
+    "9": ".."
+  }
+}

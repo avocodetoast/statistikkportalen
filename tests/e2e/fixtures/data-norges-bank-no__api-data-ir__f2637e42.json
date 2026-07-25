@@ -1,0 +1,217 @@
+{
+  "meta": {
+    "id": "IREF948631",
+    "prepared": "2026-07-25T15:54:22",
+    "test": false,
+    "datasetId": "204a905b-eebe-437e-85b9-b86e707c9211",
+    "sender": {
+      "id": "Unknown"
+    },
+    "receiver": {
+      "id": "guest"
+    },
+    "links": [
+      {
+        "rel": "self",
+        "href": "/data/IR?detail=serieskeysonly&format=sdmx-json&locale=no",
+        "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/data-message/tools/schemas/1.0/sdmx-json-data-schema.json"
+      }
+    ]
+  },
+  "data": {
+    "dataSets": [
+      {
+        "links": [
+          {
+            "rel": "dataflow",
+            "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=NB:IR(1.1)"
+          }
+        ],
+        "reportingBegin": "1982-01-01T00:00:00",
+        "reportingEnd": "2026-07-23T00:00:00",
+        "action": "Information",
+        "series": {
+          "0:0:0:0": {
+            "attributes": []
+          },
+          "1:0:1:0": {
+            "attributes": []
+          },
+          "1:0:0:0": {
+            "attributes": []
+          },
+          "1:0:2:0": {
+            "attributes": []
+          },
+          "2:0:1:0": {
+            "attributes": []
+          },
+          "0:0:1:0": {
+            "attributes": []
+          },
+          "2:0:2:0": {
+            "attributes": []
+          },
+          "0:0:2:0": {
+            "attributes": []
+          },
+          "2:0:0:0": {
+            "attributes": []
+          }
+        }
+      }
+    ],
+    "structure": {
+      "links": [
+        {
+          "rel": "dataflow",
+          "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=NB:IR(1.1)"
+        },
+        {
+          "rel": "datastructure",
+          "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=NB:DSD_IR(1.1)"
+        }
+      ],
+      "name": "Styringsrente",
+      "names": {
+        "no": "Styringsrente"
+      },
+      "description": "Styringsrente",
+      "descriptions": {
+        "no": "Styringsrente"
+      },
+      "dimensions": {
+        "dataset": [],
+        "series": [
+          {
+            "id": "FREQ",
+            "name": "Frekvens",
+            "description": "Tidsintervallet for observasjoner over en gitt tidsperiode.",
+            "keyPosition": 0,
+            "role": null,
+            "values": [
+              {
+                "id": "A",
+                "name": "Årlig",
+                "description": "Årlig"
+              },
+              {
+                "id": "B",
+                "name": "Virkedag",
+                "description": "Virkedag"
+              },
+              {
+                "id": "M",
+                "name": "Månedlig",
+                "description": "Månedlig"
+              }
+            ]
+          },
+          {
+            "id": "INSTRUMENT_TYPE",
+            "name": "Instrumenttype",
+            "description": "Type finansielt instrument.",
+            "keyPosition": 1,
+            "role": null,
+            "values": [
+              {
+                "id": "KPRA",
+                "name": "Styringsrenten",
+                "description": "Foliorenten. Renten på bankenes innskudd opp til en viss kvote i Norges Bank."
+              }
+            ]
+          },
+          {
+            "id": "TENOR",
+            "name": "Løpetid",
+            "description": "Mengde tid igjen inntil tilbakebetaling av et lån eller en finansiell kontrakt utløper.",
+            "keyPosition": 2,
+            "role": null,
+            "values": [
+              {
+                "id": "SD",
+                "name": "Styringsrenten"
+              },
+              {
+                "id": "OL",
+                "name": "Døgnlånsrente"
+              },
+              {
+                "id": "RR",
+                "name": "Reserverenten"
+              }
+            ]
+          },
+          {
+            "id": "UNIT_MEASURE",
+            "name": "Måleenhet",
+            "description": "Enheten verdier er målt i.",
+            "keyPosition": 3,
+            "role": null,
+            "values": [
+              {
+                "id": "R",
+                "name": "Rente"
+              }
+            ]
+          }
+        ],
+        "observation": [
+          {
+            "id": "TIME_PERIOD",
+            "name": "Tidsperiode",
+            "description": "Tidsperioden eller tidspunktet for den målte observasjonen.",
+            "keyPosition": 4,
+            "role": "time",
+            "values": []
+          }
+        ]
+      },
+      "attributes": {
+        "dataset": [],
+        "series": [
+          {
+            "id": "DECIMALS",
+            "name": "Desimaler",
+            "description": "Antall sifre til høyre for desimalskilletegnet.",
+            "relationship": {
+              "dimensions": [
+                "INSTRUMENT_TYPE",
+                "TENOR",
+                "UNIT_MEASURE"
+              ]
+            },
+            "role": null,
+            "values": []
+          },
+          {
+            "id": "COLLECTION",
+            "name": "Innsamlingstidspunkt",
+            "description": "Datoer eller perioder for når verdien ble innhentet.",
+            "relationship": {
+              "dimensions": [
+                "INSTRUMENT_TYPE",
+                "TENOR",
+                "UNIT_MEASURE"
+              ]
+            },
+            "role": null,
+            "values": []
+          }
+        ],
+        "observation": [
+          {
+            "id": "CALC_METHOD",
+            "name": "Calculation Method",
+            "description": "Method used for calculation of values",
+            "relationship": {
+              "primaryMeasure": "OBS_VALUE"
+            },
+            "role": null,
+            "values": []
+          }
+        ]
+      }
+    }
+  }
+}

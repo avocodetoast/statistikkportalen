@@ -1,0 +1,1776 @@
+{
+  "meta": {
+    "id": "IREF948630",
+    "test": false,
+    "schema": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+    "prepared": "2026-07-25T15:54:22Z",
+    "contentLanguages": [
+      "en",
+      "no"
+    ],
+    "sender": {
+      "id": "Unknown"
+    }
+  },
+  "data": {
+    "codelists": [
+      {
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist",
+            "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+            "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CALC_METHOD(1.0)"
+          }
+        ],
+        "id": "CALC_METHOD",
+        "name": "Calculation Method",
+        "names": {
+          "en": "Calculation Method"
+        },
+        "version": "1.0",
+        "agencyID": "NB",
+        "isExternalReference": false,
+        "isFinal": false,
+        "isPartial": false,
+        "codes": [
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CALC_METHOD(1.0).N"
+              }
+            ],
+            "id": "N",
+            "name": "Normal",
+            "names": {
+              "en": "Normal",
+              "no": "Normal"
+            },
+            "description": "Normal Method",
+            "descriptions": {
+              "en": "Normal Method",
+              "no": "Normal metode"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CALC_METHOD(1.0).A"
+              }
+            ],
+            "id": "A",
+            "name": "Alternative method",
+            "names": {
+              "en": "Alternative method",
+              "no": "Alternativ metode"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CALC_METHOD(1.0).E"
+              }
+            ],
+            "id": "E",
+            "name": "Estimated",
+            "names": {
+              "en": "Estimated",
+              "no": "Anslag"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CALC_METHOD(1.0).T"
+              }
+            ],
+            "id": "T",
+            "name": "Traded",
+            "names": {
+              "en": "Traded",
+              "no": "Handlet"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CALC_METHOD(1.0).KP"
+              }
+            ],
+            "id": "KP",
+            "name": "Key Policy Rate",
+            "names": {
+              "en": "Key Policy Rate",
+              "no": "Styringsrente"
+            }
+          }
+        ]
+      },
+      {
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist",
+            "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+            "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CL_COLLECTION(1.0)"
+          }
+        ],
+        "id": "CL_COLLECTION",
+        "name": "Collection",
+        "names": {
+          "en": "Collection",
+          "no": "Innsamlingstidspunkt"
+        },
+        "version": "1.0",
+        "agencyID": "NB",
+        "isExternalReference": false,
+        "isFinal": false,
+        "isPartial": false,
+        "codes": [
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_COLLECTION(1.0).A"
+              }
+            ],
+            "id": "A",
+            "name": "Average of observations through period (A)",
+            "names": {
+              "en": "Average of observations through period (A)",
+              "no": "Gjennomsnitt av observasjoner gjennom perioden"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_COLLECTION(1.0).C"
+              }
+            ],
+            "id": "C",
+            "name": "ECB concertation time 14:15 CET",
+            "names": {
+              "en": "ECB concertation time 14:15 CET",
+              "no": "ECB concertation tidspunkt 14:15 CET"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_COLLECTION(1.0).E"
+              }
+            ],
+            "id": "E",
+            "name": "End of day",
+            "names": {
+              "en": "End of day",
+              "no": "Slutten av dagen"
+            }
+          }
+        ]
+      },
+      {
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist",
+            "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+            "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CL_FREQ(1.0)"
+          }
+        ],
+        "id": "CL_FREQ",
+        "name": "Frequency",
+        "names": {
+          "no": "Frekvens",
+          "en": "Frequency"
+        },
+        "description": "Frequency",
+        "descriptions": {
+          "no": "Frekvens",
+          "en": "Frequency"
+        },
+        "version": "1.0",
+        "agencyID": "NB",
+        "isExternalReference": false,
+        "isFinal": false,
+        "isPartial": false,
+        "codes": [
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_FREQ(1.0).A"
+              }
+            ],
+            "id": "A",
+            "name": "Annual",
+            "names": {
+              "no": "Årlig",
+              "en": "Annual"
+            },
+            "description": "Annual",
+            "descriptions": {
+              "no": "Årlig",
+              "en": "Annual"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_FREQ(1.0).M"
+              }
+            ],
+            "id": "M",
+            "name": "Monthly",
+            "names": {
+              "no": "Månedlig",
+              "en": "Monthly"
+            },
+            "description": "Monthly",
+            "descriptions": {
+              "no": "Månedlig",
+              "en": "Monthly"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_FREQ(1.0).B"
+              }
+            ],
+            "id": "B",
+            "name": "Business",
+            "names": {
+              "no": "Virkedag",
+              "en": "Business"
+            },
+            "description": "Business",
+            "descriptions": {
+              "no": "Virkedag",
+              "en": "Business"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_FREQ(1.0).Q"
+              }
+            ],
+            "id": "Q",
+            "name": "Quarterly",
+            "names": {
+              "en": "Quarterly",
+              "no": "Kvartal"
+            },
+            "description": "Quarterly",
+            "descriptions": {
+              "en": "Quarterly",
+              "no": "Kvartal"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_FREQ(1.0).D"
+              }
+            ],
+            "id": "D",
+            "name": "Daily",
+            "names": {
+              "no": "Dag",
+              "en": "Daily"
+            },
+            "description": "Daily",
+            "descriptions": {
+              "en": "Daily",
+              "no": "Daglig"
+            }
+          }
+        ]
+      },
+      {
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist",
+            "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+            "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CL_INSTRUMENT_TYPE(1.0)"
+          }
+        ],
+        "id": "CL_INSTRUMENT_TYPE",
+        "name": "Instrument type",
+        "names": {
+          "en": "Instrument type",
+          "no": "Instrumenttype"
+        },
+        "version": "1.0",
+        "agencyID": "NB",
+        "isExternalReference": false,
+        "isFinal": false,
+        "isPartial": false,
+        "codes": [
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).KPRA"
+              }
+            ],
+            "id": "KPRA",
+            "name": "Key policy rate",
+            "names": {
+              "en": "Key policy rate",
+              "no": "Styringsrenten"
+            },
+            "description": "The sight deposit rate. The interest rate on banks' reserves up to a specified quota in Norges Bank.",
+            "descriptions": {
+              "no": "Foliorenten. Renten på bankenes innskudd opp til en viss kvote i Norges Bank.",
+              "en": "The sight deposit rate. The interest rate on banks' reserves up to a specified quota in Norges Bank."
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).NOWA"
+              }
+            ],
+            "id": "NOWA",
+            "name": "NOWA",
+            "names": {
+              "en": "NOWA",
+              "no": "NOWA"
+            },
+            "description": "Norwegian Overnight Weighted Average. Weighted average of interest rates set in agreements concluded by banks for unsecured loans in NOK, where the loan is paid out on the same day and repayment occurs on the following banking day.",
+            "descriptions": {
+              "en": "Norwegian Overnight Weighted Average. Weighted average of interest rates set in agreements concluded by banks for unsecured loans in NOK, where the loan is paid out on the same day and repayment occurs on the following banking day.",
+              "no": "Norwegian Overnight Weighted Average. Veid gjennomsnitt av rentesatser på inngåtte avtaler om usikrede lån i norske kroner mellom banker med utbetaling samme dag og tilbakebetaling påfølgende bankdag."
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).TBIL"
+              }
+            ],
+            "id": "TBIL",
+            "name": "Treasury bills",
+            "names": {
+              "en": "Treasury bills",
+              "no": "Statskasseveksler"
+            },
+            "description": "Treasury bills have an original maturity of up to one year and are issued as zero-coupon securities.",
+            "descriptions": {
+              "en": "Treasury bills have an original maturity of up to one year and are issued as zero-coupon securities.",
+              "no": "Statskassevekslene har opprinnelig løpetid inntil ett år og utstedes som nullkupongpapirer."
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).GBON"
+              }
+            ],
+            "id": "GBON",
+            "name": "Government bonds",
+            "names": {
+              "en": "Government bonds",
+              "no": "Statsobligasjoner"
+            },
+            "description": "A bond is an interest-bearing security with an original maturity of more than 1 year.",
+            "descriptions": {
+              "en": "A bond is an interest-bearing security with an original maturity of more than 1 year.",
+              "no": "En obligasjon er et rentebærende verdipapir med opprinnelig løpetid over 1 år."
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).FDFXIR"
+              }
+            ],
+            "id": "FDFXIR",
+            "name": "F-deposit with fixed interest rate",
+            "names": {
+              "en": "F-deposit with fixed interest rate",
+              "no": "F-innskudd med fast rente"
+            },
+            "description": "F-deposit with a fixed interest rate over the term of the operation",
+            "descriptions": {
+              "no": "F-innskudd med en fast rente i hele operasjonens løpetid",
+              "en": "F-deposit with a fixed interest rate over the term of the operation"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).FDFLIR"
+              }
+            ],
+            "id": "FDFLIR",
+            "name": "F-deposit with floating interest rate",
+            "names": {
+              "en": "F-deposit with floating interest rate",
+              "no": "F-innskudd med flytende rente"
+            },
+            "description": "F-deposit with a floating interest rate. If the sight deposit rate is changed during the term of the operation, the banks' accepted interest rate will be changed accordingly.",
+            "descriptions": {
+              "en": "F-deposit with a floating interest rate. If the sight deposit rate is changed during the term of the operation, the banks' accepted interest rate will be changed accordingly.",
+              "no": "F-innskudd med flytende rente. Dersom foliorenten endres i løpet av operasjonens løpetid vil bankenes tildelingsrente endres tilsvarende."
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).FLFXIR"
+              }
+            ],
+            "id": "FLFXIR",
+            "name": "F-loan with fixed interest rate",
+            "names": {
+              "en": "F-loan with fixed interest rate",
+              "no": "F-lån med fast rente"
+            },
+            "description": "F-loan with a fixed interest rate over the term of the operation",
+            "descriptions": {
+              "no": "F-lån med en fast rente i hele operasjonens løpetid",
+              "en": "F-loan with a fixed interest rate over the term of the operation"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).FLFLIR"
+              }
+            ],
+            "id": "FLFLIR",
+            "name": "F-loan with floating interest rate",
+            "names": {
+              "en": "F-loan with floating interest rate",
+              "no": "F-lån flytende rente"
+            },
+            "description": "F-loan with a floating interest rate over the term of the operation. If the sight deposit rate is changed during the term of the operation, the banks' accepted interest rate will be changed accordingly.",
+            "descriptions": {
+              "en": "F-loan with a floating interest rate over the term of the operation. If the sight deposit rate is changed during the term of the operation, the banks' accepted interest rate will be changed accordingly.",
+              "no": "F-lån med flytende rente. Dersom foliorenten endres i løpet av operasjonens løpetid vil bankenes tildelingsrente endres tilsvarende."
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).FX_SPU"
+              }
+            ],
+            "id": "FX_SPU",
+            "name": "SPU Transactions",
+            "names": {
+              "en": "SPU Transactions",
+              "no": "Valutatransaksjoner"
+            },
+            "description": "Foreign exchange transactions on behalf of SPU",
+            "descriptions": {
+              "en": "Foreign exchange transactions on behalf of SPU",
+              "no": "Valutatransaksjoner for SPU"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).NOWA_AVERAGE"
+              }
+            ],
+            "id": "NOWA_AVERAGE",
+            "name": "Nowa Averages",
+            "names": {
+              "en": "Nowa Averages",
+              "no": "Nowa gjennomsnitt"
+            },
+            "description": "Compounded average rate for NOWA (Norwegian Overnight Weighted Average)",
+            "descriptions": {
+              "en": "Compounded average rate for NOWA (Norwegian Overnight Weighted Average)",
+              "no": "Compounded average rate for NOWA (Norwegian Overnight Weighted Average)"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).OVERNIGHT_LENDING_RATE"
+              }
+            ],
+            "id": "OVERNIGHT_LENDING_RATE",
+            "name": "Overnight Lending Rate",
+            "names": {
+              "en": "Overnight Lending Rate",
+              "no": "Døgnlånsrente"
+            },
+            "description": "The interest rate banks are charged to cover negative balances overnight on their accounts with Norges Bank. Also called D-loan rate.",
+            "descriptions": {
+              "en": "The interest rate banks are charged to cover negative balances overnight on their accounts with Norges Bank. Also called D-loan rate.",
+              "no": "The interest rate banks are charged to cover negative balances overnight on their accounts with Norges Bank. Also called D-loan rate."
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).RESERVE_RATE"
+              }
+            ],
+            "id": "RESERVE_RATE",
+            "name": "Reserve rate",
+            "names": {
+              "en": "Reserve rate",
+              "no": "Reserverenten"
+            },
+            "description": "The interest rate banks receive on deposits in excess of their individual quotas in Norges Bank",
+            "descriptions": {
+              "en": "The interest rate banks receive on deposits in excess of their individual quotas in Norges Bank",
+              "no": "The interest rate banks receive on deposits in excess of their individual quotas in Norges Bank"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).SIGHT_DEPOSIT_RATE"
+              }
+            ],
+            "id": "SIGHT_DEPOSIT_RATE",
+            "name": "Sight Deposit Rate",
+            "names": {
+              "en": "Sight Deposit Rate",
+              "no": "Foliorenten"
+            },
+            "description": "The interest rate banks receive on deposits up to their individual quotas in Norges Bank. The sight deposit rate has been the key policy rate since June 1993",
+            "descriptions": {
+              "en": "The interest rate banks receive on deposits up to their individual quotas in Norges Bank. The sight deposit rate has been the key policy rate since June 1993",
+              "no": "The interest rate banks receive on deposits up to their individual quotas in Norges Bank. The sight deposit rate has been the key policy rate since June 1993"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0)._X"
+              }
+            ],
+            "id": "_X",
+            "name": "Not specified",
+            "names": {
+              "en": "Not specified",
+              "no": "Ikke spesifisert"
+            },
+            "description": "Not specified",
+            "descriptions": {
+              "en": "Not specified",
+              "no": "Ikke spesifisert"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).IRS"
+              }
+            ],
+            "id": "IRS",
+            "name": "IRS",
+            "names": {
+              "en": "IRS",
+              "no": "Rentebytteavtale"
+            },
+            "description": "Interest rate swap",
+            "descriptions": {
+              "en": "Interest rate swap",
+              "no": "Rentebytteavtale"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_INSTRUMENT_TYPE(1.0).CBC"
+              }
+            ],
+            "id": "CBC",
+            "name": "Central bank certificate",
+            "names": {
+              "en": "Central bank certificate",
+              "no": "Sentralbanksertifikat"
+            },
+            "description": "Central bank certificate",
+            "descriptions": {
+              "en": "Central bank certificate",
+              "no": "Sentralbanksertifikat"
+            }
+          }
+        ]
+      },
+      {
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist",
+            "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+            "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CL_TENOR(1.0)"
+          }
+        ],
+        "id": "CL_TENOR",
+        "name": "Tenor",
+        "names": {
+          "en": "Tenor",
+          "no": "Løpetid"
+        },
+        "version": "1.0",
+        "agencyID": "NB",
+        "isExternalReference": false,
+        "isFinal": false,
+        "isPartial": false,
+        "codes": [
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).ON"
+              }
+            ],
+            "id": "ON",
+            "name": "Overnight",
+            "names": {
+              "en": "Overnight",
+              "no": "Over natten"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).SP"
+              }
+            ],
+            "id": "SP",
+            "name": "Spot",
+            "names": {
+              "en": "Spot",
+              "no": "Spot"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).1M"
+              }
+            ],
+            "id": "1M",
+            "name": "1 months",
+            "names": {
+              "en": "1 months",
+              "no": "1 måned"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).3M"
+              }
+            ],
+            "id": "3M",
+            "name": "3 months",
+            "names": {
+              "en": "3 months",
+              "no": "3 måneder"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).6M"
+              }
+            ],
+            "id": "6M",
+            "name": "6 months",
+            "names": {
+              "en": "6 months",
+              "no": "6 måneder"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).9M"
+              }
+            ],
+            "id": "9M",
+            "name": "9 months",
+            "names": {
+              "en": "9 months",
+              "no": "9 måneder"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).12M"
+              }
+            ],
+            "id": "12M",
+            "name": "12 months",
+            "names": {
+              "en": "12 months",
+              "no": "12 måneder"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).SD"
+              }
+            ],
+            "id": "SD",
+            "name": "Policy rate",
+            "names": {
+              "en": "Policy rate",
+              "no": "Styringsrenten"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).RR"
+              }
+            ],
+            "id": "RR",
+            "name": "Reserve rate",
+            "names": {
+              "en": "Reserve rate",
+              "no": "Reserverenten"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).OL"
+              }
+            ],
+            "id": "OL",
+            "name": "Overnight lending rate",
+            "names": {
+              "en": "Overnight lending rate",
+              "no": "Døgnlånsrente"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).2Y"
+              }
+            ],
+            "id": "2Y",
+            "name": "2 years",
+            "names": {
+              "en": "2 years",
+              "no": "2 år"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).3Y"
+              }
+            ],
+            "id": "3Y",
+            "name": "3 years",
+            "names": {
+              "en": "3 years",
+              "no": "3 år"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).4Y"
+              }
+            ],
+            "id": "4Y",
+            "name": "4 years",
+            "names": {
+              "en": "4 years",
+              "no": "4 år"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).5Y"
+              }
+            ],
+            "id": "5Y",
+            "name": "5 years",
+            "names": {
+              "en": "5 years",
+              "no": "5 år"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).6Y"
+              }
+            ],
+            "id": "6Y",
+            "name": "6 years",
+            "names": {
+              "en": "6 years",
+              "no": "6 år"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).7Y"
+              }
+            ],
+            "id": "7Y",
+            "name": "7 years",
+            "names": {
+              "en": "7 years",
+              "no": "7 år"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).8Y"
+              }
+            ],
+            "id": "8Y",
+            "name": "8 years",
+            "names": {
+              "en": "8 years",
+              "no": "8 år"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).9Y"
+              }
+            ],
+            "id": "9Y",
+            "name": "9 years",
+            "names": {
+              "en": "9 years",
+              "no": "9 år"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_TENOR(1.0).10Y"
+              }
+            ],
+            "id": "10Y",
+            "name": "10 years",
+            "names": {
+              "en": "10 years",
+              "no": "10 år"
+            }
+          }
+        ]
+      },
+      {
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist",
+            "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+            "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CL_UNIT_MEASURE(1.1)"
+          }
+        ],
+        "id": "CL_UNIT_MEASURE",
+        "name": "Unit of measure",
+        "names": {
+          "en": "Unit of measure",
+          "no": "Måleenhet"
+        },
+        "version": "1.1",
+        "agencyID": "NB",
+        "isExternalReference": false,
+        "isFinal": false,
+        "isPartial": false,
+        "codes": [
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).R"
+              }
+            ],
+            "id": "R",
+            "name": "Rate",
+            "names": {
+              "en": "Rate",
+              "no": "Rente"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).V"
+              }
+            ],
+            "id": "V",
+            "name": "Volume",
+            "names": {
+              "en": "Volume",
+              "no": "Volum"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).P"
+              }
+            ],
+            "id": "P",
+            "name": "Price",
+            "names": {
+              "en": "Price",
+              "no": "Pris"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).YM"
+              }
+            ],
+            "id": "YM",
+            "name": "Years to maturity",
+            "names": {
+              "en": "Years to maturity",
+              "no": "År til forfall"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).BY"
+              }
+            ],
+            "id": "BY",
+            "name": "Bid yield",
+            "names": {
+              "en": "Bid yield",
+              "no": "Kjøpsrente"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).BP"
+              }
+            ],
+            "id": "BP",
+            "name": "Bid price",
+            "names": {
+              "en": "Bid price",
+              "no": "Kjøpskurs"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).AP"
+              }
+            ],
+            "id": "AP",
+            "name": "Ask price",
+            "names": {
+              "en": "Ask price",
+              "no": "Salgskurs"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).AY"
+              }
+            ],
+            "id": "AY",
+            "name": "Ask yield",
+            "names": {
+              "en": "Ask yield",
+              "no": "Salgsrente"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).BL"
+              }
+            ],
+            "id": "BL",
+            "name": "Banks lending",
+            "names": {
+              "en": "Banks lending",
+              "no": "Banker med utlån"
+            },
+            "description": "Number of banks lending",
+            "descriptions": {
+              "en": "Number of banks lending",
+              "no": "Antall banker med utlån"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).BB"
+              }
+            ],
+            "id": "BB",
+            "name": "Banks borrowing",
+            "names": {
+              "en": "Banks borrowing",
+              "no": "Banker med innlån"
+            },
+            "description": "Number of banks borrowing",
+            "descriptions": {
+              "en": "Number of banks borrowing",
+              "no": "Antall banker med innlån"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).T"
+              }
+            ],
+            "id": "T",
+            "name": "Transactions",
+            "names": {
+              "en": "Transactions",
+              "no": "Transaksjoner"
+            },
+            "description": "Number of transactions",
+            "descriptions": {
+              "en": "Number of transactions",
+              "no": "Antall transaksjoner"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).D"
+              }
+            ],
+            "id": "D",
+            "name": "Delta",
+            "names": {
+              "en": "Delta",
+              "no": "Endring"
+            },
+            "description": "The change/delta from the previous observation",
+            "descriptions": {
+              "en": "The change/delta from the previous observation",
+              "no": "Endring fra forrige observasjon"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).V_A"
+              }
+            ],
+            "id": "V_A",
+            "name": "Allotment volume",
+            "names": {
+              "en": "Allotment volume",
+              "no": "Tildelt volum"
+            },
+            "description": "Allotted volume in the F-auction",
+            "descriptions": {
+              "en": "Allotted volume in the F-auction",
+              "no": "Tildelt volum i F-auksjonen"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).V_B"
+              }
+            ],
+            "id": "V_B",
+            "name": "Bid volume",
+            "names": {
+              "en": "Bid volume",
+              "no": "Budvolum"
+            },
+            "description": "Total bid volume in the F-auction",
+            "descriptions": {
+              "en": "Total bid volume in the F-auction",
+              "no": "Totalt budvolum i F-auksjonen"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).R_HA"
+              }
+            ],
+            "id": "R_HA",
+            "name": "Highest accepted interest rate",
+            "names": {
+              "en": "Highest accepted interest rate",
+              "no": "Høyeste tildelingsrente"
+            },
+            "description": "The highest accepted interest rate in the F-auction",
+            "descriptions": {
+              "en": "The highest accepted interest rate in the F-auction",
+              "no": "Høyeste aksepterte tildelingsrente i F-auksjonen"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).R_LA"
+              }
+            ],
+            "id": "R_LA",
+            "name": "Lowest accepted interest rate",
+            "names": {
+              "en": "Lowest accepted interest rate",
+              "no": "Laveste tildelingsrente"
+            },
+            "description": "The lowest accepted interest rate in the F-auction",
+            "descriptions": {
+              "en": "The lowest accepted interest rate in the F-auction",
+              "no": "Laveste aksepterte tildelingsrente i F-auksjonen"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).R_WA"
+              }
+            ],
+            "id": "R_WA",
+            "name": "Weighted average interest rate",
+            "names": {
+              "en": "Weighted average interest rate",
+              "no": "Veid gjennomsnittsrente"
+            },
+            "description": "The weighted average interest rate of the allotted volume",
+            "descriptions": {
+              "en": "The weighted average interest rate of the allotted volume",
+              "no": "Veid gjennomsnittsrente på tildelt volum"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).R_AM"
+              }
+            ],
+            "id": "R_AM",
+            "name": "Allotment at the marginal rate",
+            "names": {
+              "en": "Allotment at the marginal rate",
+              "no": "Tildeling på marginal rente"
+            },
+            "description": "Percent allotted for bids at the marginal accepted interest rate",
+            "descriptions": {
+              "en": "Percent allotted for bids at the marginal accepted interest rate",
+              "no": "Prosent som tildeles for bud på den marginale tildelingsrenten"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).ANN"
+              }
+            ],
+            "id": "ANN",
+            "name": "Announcement",
+            "names": {
+              "en": "Announcement",
+              "no": "Annonsering"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).ANN_RES"
+              }
+            ],
+            "id": "ANN_RES",
+            "name": "Announcement of Result",
+            "names": {
+              "en": "Announcement of Result",
+              "no": "Resultatannonsering"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).RPS"
+              }
+            ],
+            "id": "RPS",
+            "name": "Rate Period Start",
+            "names": {
+              "en": "Rate Period Start",
+              "no": "Renteperiode start"
+            },
+            "description": "Rate Period Start",
+            "descriptions": {
+              "en": "Rate Period Start",
+              "no": "Renteperiode start"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).RPE"
+              }
+            ],
+            "id": "RPE",
+            "name": "Rate Period End",
+            "names": {
+              "en": "Rate Period End",
+              "no": "Renteperiode slutt"
+            },
+            "description": "Rate Period End",
+            "descriptions": {
+              "en": "Rate Period End",
+              "no": "Renteperiode slutt"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).PD"
+              }
+            ],
+            "id": "PD",
+            "name": "Publish Date",
+            "names": {
+              "en": "Publish Date",
+              "no": "Publiseringsdato"
+            },
+            "description": "Publish Date",
+            "descriptions": {
+              "en": "Publish Date",
+              "no": "Publiseringsdato"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).I"
+              }
+            ],
+            "id": "I",
+            "name": "Index",
+            "names": {
+              "en": "Index",
+              "no": "Indeks"
+            },
+            "description": "Index",
+            "descriptions": {
+              "en": "Index",
+              "no": "Indeks"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).OPS"
+              }
+            ],
+            "id": "OPS",
+            "name": "Observation Period Start",
+            "names": {
+              "en": "Observation Period Start",
+              "no": "Observasjonsperiode start"
+            },
+            "description": "Observation Period Start",
+            "descriptions": {
+              "en": "Observation Period Start",
+              "no": "Observasjonsperiode start"
+            }
+          },
+          {
+            "links": [
+              {
+                "rel": "self",
+                "type": "code",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=NB:CL_UNIT_MEASURE(1.1).OPE"
+              }
+            ],
+            "id": "OPE",
+            "name": "Observation Period End",
+            "names": {
+              "en": "Observation Period End",
+              "no": "Observasjonsperiode slutt"
+            },
+            "description": "Observation Period End",
+            "descriptions": {
+              "en": "Observation Period End",
+              "no": "Observasjonsperiode slutt"
+            }
+          }
+        ]
+      }
+    ],
+    "dataStructures": [
+      {
+        "links": [
+          {
+            "rel": "self",
+            "type": "datastructure",
+            "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+            "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=NB:DSD_IR(1.1)"
+          }
+        ],
+        "id": "DSD_IR",
+        "name": "Policy rate",
+        "names": {
+          "en": "Policy rate",
+          "no": "Styringsrente"
+        },
+        "description": "Policy rate, overnight lending rate and reserve rate.",
+        "descriptions": {
+          "en": "Policy rate, overnight lending rate and reserve rate.",
+          "no": "Styringsrenten, døgnlånsrenten og reserverenten."
+        },
+        "version": "1.1",
+        "agencyID": "NB",
+        "isExternalReference": false,
+        "isFinal": false,
+        "dataStructureComponents": {
+          "attributeList": {
+            "links": [
+              {
+                "rel": "self",
+                "type": "attributedescriptor",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.AttributeDescriptor=NB:DSD_IR(1.1).AttributeDescriptor"
+              }
+            ],
+            "id": "AttributeDescriptor",
+            "attributes": [
+              {
+                "assignmentStatus": "Mandatory",
+                "attributeRelationship": {
+                  "dimensions": [
+                    "INSTRUMENT_TYPE",
+                    "TENOR",
+                    "UNIT_MEASURE"
+                  ]
+                },
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dataattribute",
+                    "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=NB:DSD_IR(1.1).DECIMALS"
+                  }
+                ],
+                "id": "DECIMALS",
+                "localRepresentation": {
+                  "textFormat": {
+                    "isSequence": false,
+                    "textType": "Integer"
+                  }
+                },
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=NB:CS_NB(1.0).DECIMALS"
+              },
+              {
+                "assignmentStatus": "Mandatory",
+                "attributeRelationship": {
+                  "dimensions": [
+                    "INSTRUMENT_TYPE",
+                    "TENOR",
+                    "UNIT_MEASURE"
+                  ]
+                },
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dataattribute",
+                    "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=NB:DSD_IR(1.1).COLLECTION"
+                  }
+                ],
+                "id": "COLLECTION",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CL_COLLECTION(1.0)"
+                },
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=NB:CS_NB(1.0).COLLECTION"
+              },
+              {
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": {
+                  "primaryMeasure": "OBS_VALUE"
+                },
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dataattribute",
+                    "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.DataAttribute=NB:DSD_IR(1.1).CALC_METHOD"
+                  }
+                ],
+                "id": "CALC_METHOD",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CALC_METHOD(1.0)"
+                },
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=NB:CS_NB(1.0).CALC_METHOD"
+              }
+            ]
+          },
+          "dimensionList": {
+            "links": [
+              {
+                "rel": "self",
+                "type": "dimensiondescriptor",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.DimensionDescriptor=NB:DSD_IR(1.1).DimensionDescriptor"
+              }
+            ],
+            "id": "DimensionDescriptor",
+            "dimensions": [
+              {
+                "position": 1,
+                "type": "Dimension",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dimension",
+                    "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=NB:DSD_IR(1.1).FREQ"
+                  }
+                ],
+                "id": "FREQ",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CL_FREQ(1.0)"
+                },
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=NB:CS_NB(1.0).FREQ"
+              },
+              {
+                "position": 2,
+                "type": "Dimension",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dimension",
+                    "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=NB:DSD_IR(1.1).INSTRUMENT_TYPE"
+                  }
+                ],
+                "id": "INSTRUMENT_TYPE",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CL_INSTRUMENT_TYPE(1.0)"
+                },
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=NB:CS_NB(1.0).INSTRUMENT_TYPE"
+              },
+              {
+                "position": 3,
+                "type": "Dimension",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dimension",
+                    "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=NB:DSD_IR(1.1).TENOR"
+                  }
+                ],
+                "id": "TENOR",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CL_TENOR(1.0)"
+                },
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=NB:CS_NB(1.0).TENOR"
+              },
+              {
+                "position": 4,
+                "type": "Dimension",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dimension",
+                    "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.Dimension=NB:DSD_IR(1.1).UNIT_MEASURE"
+                  }
+                ],
+                "id": "UNIT_MEASURE",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NB:CL_UNIT_MEASURE(1.1)"
+                },
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=NB:CS_NB(1.0).UNIT_MEASURE"
+              }
+            ],
+            "timeDimensions": [
+              {
+                "position": 5,
+                "type": "TimeDimension",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "timedimension",
+                    "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.TimeDimension=NB:DSD_IR(1.1).TIME_PERIOD"
+                  }
+                ],
+                "id": "TIME_PERIOD",
+                "localRepresentation": {
+                  "textFormat": {
+                    "textType": "ObservationalTimePeriod"
+                  }
+                },
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=NB:CS_NB(1.0).TIME_PERIOD"
+              }
+            ]
+          },
+          "measureList": {
+            "links": [
+              {
+                "rel": "self",
+                "type": "measuredescriptor",
+                "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.MeasureDescriptor=NB:DSD_IR(1.1).MeasureDescriptor"
+              }
+            ],
+            "id": "MeasureDescriptor",
+            "primaryMeasure": {
+              "links": [
+                {
+                  "rel": "self",
+                  "type": "primarymeasure",
+                  "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+                  "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.Measure=NB:DSD_IR(1.1).OBS_VALUE"
+                }
+              ],
+              "id": "OBS_VALUE",
+              "localRepresentation": {
+                "textFormat": {
+                  "isSequence": false,
+                  "textType": "Double"
+                }
+              },
+              "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=NB:CS_NB(1.0).OBS_VALUE"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

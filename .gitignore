@@ -21,9 +21,15 @@ $RECYCLE.BIN/
 # leses av scripts/generate-seo-pages.mjs)
 data/table-metadata/*.json
 
+# Kun devDependency (playwright-core, for E2E-laget i tests/e2e/).
+# Appen og enhetstestene kjører uten npm install.
+node_modules/
+
 # Git
 .gitignore.local
-# Lokale Claude Code-innstillinger (settings.local.json m.m.),
-# men delte skills sjekkes inn
+# Lokale Claude Code-innstillinger (settings.local.json m.m.).
+# Delte skills og delte innstillinger (permissions + hooks) sjekkes inn;
+# settings.local.json er maskinspesifikk og blir liggende utenfor.
 .claude/*
 !.claude/skills/
+!.claude/settings.json

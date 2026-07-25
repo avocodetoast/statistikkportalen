@@ -1,0 +1,122 @@
+{
+  "_comment": "Autogenerert av scripts/check-coverage.mjs. Funksjonsdekning per appfil. Porten feiler når en fil får FLERE udekkede funksjoner enn her. Oppdater bevisst med `npm run coverage:baseline` når du senker terskelen med vitende og vilje.",
+  "generatedAt": "2026-07-25T16:25:49.883Z",
+  "files": {
+    "js/api.js": {
+      "covered": 5,
+      "total": 21
+    },
+    "js/browser-state.js": {
+      "covered": 23,
+      "total": 38
+    },
+    "js/cache.js": {
+      "covered": 12,
+      "total": 18
+    },
+    "js/config.js": {
+      "covered": 3,
+      "total": 10
+    },
+    "js/front-page.js": {
+      "covered": 4,
+      "total": 5
+    },
+    "js/menu-hierarchy.js": {
+      "covered": 8,
+      "total": 13
+    },
+    "js/router.js": {
+      "covered": 0,
+      "total": 15
+    },
+    "js/search-enhanced.js": {
+      "covered": 8,
+      "total": 8
+    },
+    "js/search-view.js": {
+      "covered": 1,
+      "total": 9
+    },
+    "js/sources/fhi-adapter.js": {
+      "covered": 33,
+      "total": 46
+    },
+    "js/sources/nb-catalog.js": {
+      "covered": 0,
+      "total": 0
+    },
+    "js/sources/norges-bank-adapter.js": {
+      "covered": 43,
+      "total": 53
+    },
+    "js/sources/sdmx-to-jsonstat.js": {
+      "covered": 19,
+      "total": 19
+    },
+    "js/sources/source-common.js": {
+      "covered": 11,
+      "total": 11
+    },
+    "js/sources/source-registry.js": {
+      "covered": 23,
+      "total": 39
+    },
+    "js/sources/source-topology.js": {
+      "covered": 0,
+      "total": 0
+    },
+    "js/sources/ssb-adapter.js": {
+      "covered": 4,
+      "total": 17
+    },
+    "js/subjects.js": {
+      "covered": 1,
+      "total": 1
+    },
+    "js/synonyms.js": {
+      "covered": 0,
+      "total": 0
+    },
+    "js/table-display.js": {
+      "covered": 4,
+      "total": 17
+    },
+    "js/table-metadata.js": {
+      "covered": 6,
+      "total": 8
+    },
+    "js/topic-view.js": {
+      "covered": 4,
+      "total": 12
+    },
+    "js/translations.js": {
+      "covered": 4,
+      "total": 5
+    },
+    "js/utils.js": {
+      "covered": 8,
+      "total": 28
+    },
+    "js/variable-select-events.js": {
+      "covered": 1,
+      "total": 9
+    },
+    "js/variable-select-render.js": {
+      "covered": 7,
+      "total": 17
+    },
+    "js/variable-select-state.js": {
+      "covered": 0,
+      "total": 1
+    },
+    "js/variable-select-status.js": {
+      "covered": 3,
+      "total": 27
+    },
+    "js/version.js": {
+      "covered": 0,
+      "total": 0
+    }
+  }
+}

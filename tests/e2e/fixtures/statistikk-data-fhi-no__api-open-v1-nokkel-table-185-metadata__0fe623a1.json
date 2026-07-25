@@ -1,0 +1,58 @@
+{
+  "name": "Befolkningsvekst",
+  "isOfficialStatistics": false,
+  "paragraphs": [
+    {
+      "header": "Beskrivelse",
+      "content": "<p>Differansen mellom befolkningsmengden i slutten av året (målt 1. januar året etter) og i begynnelsen av året (1. januar). Statistikken vises for kommune- og fylkesinndeling per 1.1.2024.</p><p></p><p></p><p>To måltall er tilgjengelig:</p><ol><li>Antall</li><li>Prosent vekst = prosentvis vekst i folketallet, i prosent av folketall ved inngangen av året</li></ol>"
+    },
+    {
+      "header": "Begrunnelse for valg av indikatoren",
+      "content": "<p>Mange av indikatorene i statistikkbanken er relatert til befolkningstall og -sammensetning, og befolkningsveksten i en kommune bidrar til informasjon om dette. Omtrent en tredjedel av veksten i Norge skyldes fødselsoverskudd, mens resten skyldes netto innvandring.</p><p></p><p>Kilde: </p><p>FHIs folkehelserapport: <a href=\"https://www.fhi.no/he/folkehelserapporten/samfunn/befolkningen/\" rel=\"noopener noreferrer\" target=\"_blank\">Befolkningen i Norge</a></p>"
+    },
+    {
+      "header": "Kildeinstitusjon",
+      "content": "Statistisk sentralbyrå (SSB)"
+    },
+    {
+      "header": "Innsamling",
+      "content": "Statistikken beregnes fra Statistisk sentralbyrås befolkningsstatistikk som bygger på folkeregisteropplysninger."
+    },
+    {
+      "header": "Tolking og feilkilder",
+      "content": "Det er tatt hensyn til mindre grensejusteringer mellom kommuner i statistikken."
+    },
+    {
+      "header": "Datakvalitet",
+      "content": "En del feil ved innsamling og bearbeiding av dataene er uunngåelig. Det kan være kodefeil, revisjonsfeil, etc. Det er utført et omfattende arbeid for å minimalisere disse feilene, og disse feiltypene anses for å være relativt ubetydelige."
+    },
+    {
+      "header": "Oppdateringsfrekvens",
+      "content": "Årlig"
+    },
+    {
+      "header": "Nøkkelord",
+      "content": "Befolkning,Befolkningsvekst"
+    },
+    {
+      "header": "Relatert materiale",
+      "content": "<p>FHIs folkehelserapport: <a href=\"https://www.fhi.no/he/folkehelserapporten/samfunn/befolkningen/\" rel=\"noopener noreferrer\" target=\"_blank\">Befolkningen i Norge</a> </p>"
+    },
+    {
+      "header": "Geografi",
+      "content": "<p>Hele landet, fylker og kommuner. Bydeler i Oslo, Bergen, Stavanger og Trondheim. </p>"
+    },
+    {
+      "header": "År",
+      "content": "2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 og 2024"
+    },
+    {
+      "header": "Kjønn",
+      "content": "kjønn samlet"
+    },
+    {
+      "header": "Alder",
+      "content": "alle aldre"
+    }
+  ]
+}

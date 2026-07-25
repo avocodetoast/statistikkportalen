@@ -1,0 +1,405 @@
+{
+  "meta": {
+    "id": "IREF948635",
+    "prepared": "2026-07-25T15:54:22",
+    "test": false,
+    "datasetId": "7b4ac853-3693-4117-91cc-9d14aedd5fab",
+    "sender": {
+      "id": "Unknown"
+    },
+    "receiver": {
+      "id": "guest"
+    },
+    "links": [
+      {
+        "rel": "self",
+        "href": "/data/IR?firstNObservations=1&format=sdmx-json&lastNObservations=1",
+        "uri": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/data-message/tools/schemas/1.0/sdmx-json-data-schema.json"
+      }
+    ]
+  },
+  "data": {
+    "dataSets": [
+      {
+        "links": [
+          {
+            "rel": "dataflow",
+            "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=NB:IR(1.1)"
+          }
+        ],
+        "reportingBegin": "1982-01-01T00:00:00",
+        "reportingEnd": "2026-07-23T23:59:59",
+        "action": "Information",
+        "series": {
+          "0:0:0:0": {
+            "attributes": [
+              0,
+              0
+            ],
+            "observations": {
+              "0": [
+                "8.34"
+              ],
+              "1": [
+                "4.29"
+              ]
+            }
+          },
+          "1:0:1:0": {
+            "attributes": [
+              0,
+              1
+            ],
+            "observations": {
+              "2": [
+                "13"
+              ],
+              "3": [
+                "5.25"
+              ]
+            }
+          },
+          "1:0:0:0": {
+            "attributes": [
+              0,
+              1
+            ],
+            "observations": {
+              "3": [
+                "4.25"
+              ],
+              "4": [
+                "8.5"
+              ]
+            }
+          },
+          "1:0:2:0": {
+            "attributes": [
+              0,
+              1
+            ],
+            "observations": {
+              "3": [
+                "3.25"
+              ],
+              "5": [
+                "1.25"
+              ]
+            }
+          },
+          "2:0:1:0": {
+            "attributes": [
+              0,
+              0
+            ],
+            "observations": {
+              "6": [
+                "13"
+              ],
+              "7": [
+                "5.25"
+              ]
+            }
+          },
+          "0:0:1:0": {
+            "attributes": [
+              0,
+              0
+            ],
+            "observations": {
+              "1": [
+                "5.29"
+              ],
+              "8": [
+                "11.03"
+              ]
+            }
+          },
+          "2:0:2:0": {
+            "attributes": [
+              0,
+              0
+            ],
+            "observations": {
+              "7": [
+                "3.25"
+              ],
+              "9": [
+                "1.25"
+              ]
+            }
+          },
+          "0:0:2:0": {
+            "attributes": [
+              0,
+              0
+            ],
+            "observations": {
+              "1": [
+                "3.29"
+              ],
+              "10": [
+                "1.16"
+              ]
+            }
+          },
+          "2:0:0:0": {
+            "attributes": [
+              0,
+              0
+            ],
+            "observations": {
+              "7": [
+                "4.25"
+              ],
+              "11": [
+                "8.5"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "structure": {
+      "links": [
+        {
+          "rel": "dataflow",
+          "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=NB:IR(1.1)"
+        },
+        {
+          "rel": "datastructure",
+          "urn": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=NB:DSD_IR(1.1)"
+        }
+      ],
+      "name": "Policy rate",
+      "names": {
+        "en": "Policy rate",
+        "no": "Styringsrente"
+      },
+      "description": "Policy rate",
+      "descriptions": {
+        "en": "Policy rate",
+        "no": "Styringsrente"
+      },
+      "dimensions": {
+        "dataset": [],
+        "series": [
+          {
+            "id": "FREQ",
+            "name": "Frequency",
+            "description": "The time interval at which observations occur over a given time period.",
+            "keyPosition": 0,
+            "role": null,
+            "values": [
+              {
+                "id": "A",
+                "name": "Annual",
+                "description": "Annual"
+              },
+              {
+                "id": "B",
+                "name": "Business",
+                "description": "Business"
+              },
+              {
+                "id": "M",
+                "name": "Monthly",
+                "description": "Monthly"
+              }
+            ]
+          },
+          {
+            "id": "INSTRUMENT_TYPE",
+            "name": "Instrument Type",
+            "description": "Type of financial instrument.",
+            "keyPosition": 1,
+            "role": null,
+            "values": [
+              {
+                "id": "KPRA",
+                "name": "Key policy rate",
+                "description": "The sight deposit rate. The interest rate on banks' reserves up to a specified quota in Norges Bank."
+              }
+            ]
+          },
+          {
+            "id": "TENOR",
+            "name": "Tenor",
+            "description": "The amount of time left for the repayment of a loan or until a financial contract expires.",
+            "keyPosition": 2,
+            "role": null,
+            "values": [
+              {
+                "id": "SD",
+                "name": "Policy rate"
+              },
+              {
+                "id": "OL",
+                "name": "Overnight lending rate"
+              },
+              {
+                "id": "RR",
+                "name": "Reserve rate"
+              }
+            ]
+          },
+          {
+            "id": "UNIT_MEASURE",
+            "name": "Unit of Measure",
+            "description": "The unit in which the data values are measured.",
+            "keyPosition": 3,
+            "role": null,
+            "values": [
+              {
+                "id": "R",
+                "name": "Rate"
+              }
+            ]
+          }
+        ],
+        "observation": [
+          {
+            "id": "TIME_PERIOD",
+            "name": "Time Period",
+            "description": "The period of time or point in time to which the measured observation refers.",
+            "keyPosition": 4,
+            "role": "time",
+            "values": [
+              {
+                "start": "1991-01-01T00:00:00",
+                "end": "1991-12-31T23:59:59",
+                "id": "1991",
+                "name": "1991"
+              },
+              {
+                "start": "2025-01-01T00:00:00",
+                "end": "2025-12-31T23:59:59",
+                "id": "2025",
+                "name": "2025"
+              },
+              {
+                "start": "1982-04-07T00:00:00",
+                "end": "1982-04-07T23:59:59",
+                "id": "1982-04-07",
+                "name": "1982-04-07"
+              },
+              {
+                "start": "2026-07-23T00:00:00",
+                "end": "2026-07-23T23:59:59",
+                "id": "2026-07-23",
+                "name": "2026-07-23"
+              },
+              {
+                "start": "1991-01-01T00:00:00",
+                "end": "1991-01-01T23:59:59",
+                "id": "1991-01-01",
+                "name": "1991-01-01"
+              },
+              {
+                "start": "2011-10-03T00:00:00",
+                "end": "2011-10-03T23:59:59",
+                "id": "2011-10-03",
+                "name": "2011-10-03"
+              },
+              {
+                "start": "1982-04-01T00:00:00",
+                "end": "1982-04-30T23:59:59",
+                "id": "1982-04",
+                "name": "1982-04"
+              },
+              {
+                "start": "2026-06-01T00:00:00",
+                "end": "2026-06-30T23:59:59",
+                "id": "2026-06",
+                "name": "2026-06"
+              },
+              {
+                "start": "1982-01-01T00:00:00",
+                "end": "1982-12-31T23:59:59",
+                "id": "1982",
+                "name": "1982"
+              },
+              {
+                "start": "2011-10-01T00:00:00",
+                "end": "2011-10-31T23:59:59",
+                "id": "2011-10",
+                "name": "2011-10"
+              },
+              {
+                "start": "2011-01-01T00:00:00",
+                "end": "2011-12-31T23:59:59",
+                "id": "2011",
+                "name": "2011"
+              },
+              {
+                "start": "1991-01-01T00:00:00",
+                "end": "1991-01-31T23:59:59",
+                "id": "1991-01",
+                "name": "1991-01"
+              }
+            ]
+          }
+        ]
+      },
+      "attributes": {
+        "dataset": [],
+        "series": [
+          {
+            "id": "DECIMALS",
+            "name": "Decimals",
+            "description": "The number of digits to the right of a decimal point.",
+            "relationship": {
+              "dimensions": [
+                "INSTRUMENT_TYPE",
+                "TENOR",
+                "UNIT_MEASURE"
+              ]
+            },
+            "role": null,
+            "values": [
+              {
+                "id": "2",
+                "name": "2"
+              }
+            ]
+          },
+          {
+            "id": "COLLECTION",
+            "name": "Collection Indicator",
+            "description": "Dates or periods during which the observations have been collected.",
+            "relationship": {
+              "dimensions": [
+                "INSTRUMENT_TYPE",
+                "TENOR",
+                "UNIT_MEASURE"
+              ]
+            },
+            "role": null,
+            "values": [
+              {
+                "id": "A",
+                "name": "Average of observations through period (A)"
+              },
+              {
+                "id": "E",
+                "name": "End of day"
+              }
+            ]
+          }
+        ],
+        "observation": [
+          {
+            "id": "CALC_METHOD",
+            "name": "Calculation Method",
+            "description": "Method used for calculation of values",
+            "relationship": {
+              "primaryMeasure": "OBS_VALUE"
+            },
+            "role": null,
+            "values": []
+          }
+        ]
+      }
+    }
+  }
+}

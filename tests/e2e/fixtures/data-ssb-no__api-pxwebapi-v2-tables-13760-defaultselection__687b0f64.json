@@ -1,0 +1,54 @@
+{
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "no",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13760/defaultselection?lang=no"
+    }
+  ],
+  "selection": [
+    {
+      "variableCode": "ContentsCode",
+      "valueCodes": [
+        "Arbeidsstyrken"
+      ]
+    },
+    {
+      "variableCode": "Tid",
+      "valueCodes": [
+        "2026M06"
+      ]
+    },
+    {
+      "variableCode": "Justering",
+      "valueCodes": [
+        "T",
+        "3MGG",
+        "S",
+        "IS"
+      ]
+    },
+    {
+      "variableCode": "Alder",
+      "valueCodes": [
+        "15-74",
+        "15-24",
+        "25-74"
+      ]
+    },
+    {
+      "variableCode": "Kjonn",
+      "valueCodes": []
+    }
+  ],
+  "placement": {
+    "heading": [
+      "ContentsCode",
+      "Tid",
+      "Alder"
+    ],
+    "stub": [
+      "Justering"
+    ]
+  }
+}

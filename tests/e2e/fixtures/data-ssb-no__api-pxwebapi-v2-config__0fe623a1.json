@@ -1,0 +1,50 @@
+{
+  "apiVersion": "2.3.2",
+  "appVersion": "2.5.0+build.30",
+  "languages": [
+    {
+      "id": "no",
+      "label": "Norsk"
+    },
+    {
+      "id": "en",
+      "label": "English"
+    }
+  ],
+  "defaultLanguage": "no",
+  "maxDataCells": 800000,
+  "maxCallsPerTimeWindow": 0,
+  "timeWindow": 0,
+  "license": "https://www.ssb.no/en/diverse/lisens",
+  "sourceReferences": [
+    {
+      "language": "en",
+      "text": "Source: Statistics Norway"
+    },
+    {
+      "language": "no",
+      "text": "Kilde: Statistisk sentralbyrå"
+    }
+  ],
+  "defaultDataFormat": "json-stat2",
+  "dataFormats": [
+    "json-stat2",
+    "csv",
+    "px",
+    "xlsx",
+    "html",
+    "json-px",
+    "parquet"
+  ],
+  "features": [
+    {
+      "id": "CORS",
+      "params": [
+        {
+          "key": "enabled",
+          "value": "True"
+        }
+      ]
+    }
+  ]
+}

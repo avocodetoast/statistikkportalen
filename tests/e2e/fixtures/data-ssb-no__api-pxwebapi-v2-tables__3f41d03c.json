@@ -1,0 +1,5495 @@
+{
+  "language": "no",
+  "tables": [
+    {
+      "id": "13760",
+      "label": "13760: Arbeidsstyrken, sysselsatte, arbeidsledige og utførte ukeverk, etter kjønn og alder. Brudd- og sesongjusterte tall 2006M01-2026M06",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2026-07-21T06:00:00Z",
+      "firstPeriod": "2006M01",
+      "lastPeriod": "2026M06",
+      "category": "public",
+      "variableNames": [
+        "kjønn",
+        "alder",
+        "type justering",
+        "statistikkvariabel",
+        "måned"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "al",
+      "timeUnit": "Monthly",
+      "paths": [
+        [
+          {
+            "id": "al",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al03",
+            "label": "Arbeidsledighet",
+            "sortCode": "0000002"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000003"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ],
+        [
+          {
+            "id": "al",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al06",
+            "label": "Sysselsetting",
+            "sortCode": "0000005"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000006"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ],
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in01",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000043"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000044"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13760?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13760?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13760/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13760/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "14483",
+      "label": "14483: Personer, etter arbeidsstyrkestatus, kjønn og alder. Brudd- og sesongjusterte tall 2009K1-2026K1",
+      "description": "",
+      "sortCode": "0000000045",
+      "updated": "2026-05-07T06:00:00Z",
+      "firstPeriod": "2009K1",
+      "lastPeriod": "2026K1",
+      "category": "public",
+      "variableNames": [
+        "kjønn",
+        "alder",
+        "type justering",
+        "statistikkvariabel",
+        "kvartal"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "al",
+      "timeUnit": "Quarterly",
+      "paths": [
+        [
+          {
+            "id": "al",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al03",
+            "label": "Arbeidsledighet",
+            "sortCode": "0000002"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000003"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ],
+        [
+          {
+            "id": "al",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al06",
+            "label": "Sysselsetting",
+            "sortCode": "0000005"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000006"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ],
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in01",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000043"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000044"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14483?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14483?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14483/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14483/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "13618",
+      "label": "13618: Personer, etter arbeidsstyrkestatus, kjønn og alder. Bruddjusterte tall 2009-2025",
+      "description": "",
+      "sortCode": "0000000050",
+      "updated": "2026-02-11T07:00:00Z",
+      "firstPeriod": "2009",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "arbeidsstyrkestatus",
+        "kjønn",
+        "alder",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "al",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "al",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al03",
+            "label": "Arbeidsledighet",
+            "sortCode": "0000002"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000003"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ],
+        [
+          {
+            "id": "al",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al06",
+            "label": "Sysselsetting",
+            "sortCode": "0000005"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000006"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ],
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in01",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000043"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000044"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "13619",
+      "label": "13619: Personer, etter arbeidsstyrkestatus, kjønn og alder. Bruddjusterte tall 2009K1-2026K1",
+      "description": "",
+      "sortCode": "0000000060",
+      "updated": "2026-05-07T06:00:00Z",
+      "firstPeriod": "2009K1",
+      "lastPeriod": "2026K1",
+      "category": "public",
+      "variableNames": [
+        "arbeidsstyrkestatus",
+        "kjønn",
+        "alder",
+        "statistikkvariabel",
+        "kvartal"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "al",
+      "timeUnit": "Quarterly",
+      "paths": [
+        [
+          {
+            "id": "al",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al03",
+            "label": "Arbeidsledighet",
+            "sortCode": "0000002"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000003"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ],
+        [
+          {
+            "id": "al",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al06",
+            "label": "Sysselsetting",
+            "sortCode": "0000005"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000006"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ],
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in01",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000043"
+          },
+          {
+            "id": "aku",
+            "label": "Arbeidskraftundersøkelsen",
+            "sortCode": "0000044"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Sammenlignbare tidsserier",
+            "sortCode": "0000100000"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13619?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13619?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13619/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13619/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "10706",
+      "label": "10706: Finansielle sektorregnskaper, kvartalstall, etter sektor, finanspost og motsektor (mill. kr) 1995K4-2026K1",
+      "description": "",
+      "sortCode": "0000000030",
+      "updated": "2026-06-04T06:00:00Z",
+      "firstPeriod": "1995K4",
+      "lastPeriod": "2026K1",
+      "category": "public",
+      "variableNames": [
+        "sektor",
+        "finanspost",
+        "motsektor",
+        "statistikkvariabel",
+        "kvartal"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "nk",
+      "timeUnit": "Quarterly",
+      "paths": [
+        [
+          {
+            "id": "bf",
+            "label": "Bank og finansmarked",
+            "sortCode": "0000006"
+          },
+          {
+            "id": "bf02",
+            "label": "Finansielle indikatorer",
+            "sortCode": "0000007"
+          },
+          {
+            "id": "finsek",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000008"
+          },
+          {
+            "id": "div_finsek_mappe",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000000030"
+          }
+        ],
+        [
+          {
+            "id": "nk",
+            "label": "Nasjonalregnskap og konjunkturer",
+            "sortCode": "0000066"
+          },
+          {
+            "id": "nk01",
+            "label": "Finansregnskap",
+            "sortCode": "0000067"
+          },
+          {
+            "id": "finsek",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000068"
+          },
+          {
+            "id": "div_finsek_mappe",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000000030"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10706?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10706?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10706/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10706/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "10788",
+      "label": "10788: Finansielle sektorregnskaper, årstall, etter sektor, finanspost og motsektor (mill. kr) 1995-2025",
+      "description": "",
+      "sortCode": "0000000040",
+      "updated": "2026-06-04T06:00:00Z",
+      "firstPeriod": "1995",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "sektor",
+        "finanspost",
+        "motsektor",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "nk",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "bf",
+            "label": "Bank og finansmarked",
+            "sortCode": "0000006"
+          },
+          {
+            "id": "bf02",
+            "label": "Finansielle indikatorer",
+            "sortCode": "0000007"
+          },
+          {
+            "id": "finsek",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000008"
+          },
+          {
+            "id": "div_finsek_mappe",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000000030"
+          }
+        ],
+        [
+          {
+            "id": "nk",
+            "label": "Nasjonalregnskap og konjunkturer",
+            "sortCode": "0000066"
+          },
+          {
+            "id": "nk01",
+            "label": "Finansregnskap",
+            "sortCode": "0000067"
+          },
+          {
+            "id": "finsek",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000068"
+          },
+          {
+            "id": "div_finsek_mappe",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000000030"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10788?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10788?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10788/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10788/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "09477",
+      "label": "09477: Finansielle sektorregnskaper. Husholdningenes gjelds- og fordringsrater (prosent) 1996K4-2026K1",
+      "description": "",
+      "sortCode": "0000000050",
+      "updated": "2026-06-04T06:00:00Z",
+      "firstPeriod": "1996K4",
+      "lastPeriod": "2026K1",
+      "category": "public",
+      "variableNames": [
+        "type justering",
+        "statistikkvariabel",
+        "kvartal"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "nk",
+      "timeUnit": "Quarterly",
+      "paths": [
+        [
+          {
+            "id": "bf",
+            "label": "Bank og finansmarked",
+            "sortCode": "0000006"
+          },
+          {
+            "id": "bf02",
+            "label": "Finansielle indikatorer",
+            "sortCode": "0000007"
+          },
+          {
+            "id": "finsek",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000008"
+          },
+          {
+            "id": "div_finsek_mappe",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000000030"
+          }
+        ],
+        [
+          {
+            "id": "nk",
+            "label": "Nasjonalregnskap og konjunkturer",
+            "sortCode": "0000066"
+          },
+          {
+            "id": "nk01",
+            "label": "Finansregnskap",
+            "sortCode": "0000067"
+          },
+          {
+            "id": "finsek",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000068"
+          },
+          {
+            "id": "div_finsek_mappe",
+            "label": "Finansielle sektorregnskaper",
+            "sortCode": "0000000030"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09477?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09477?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09477/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09477/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "10308",
+      "label": "10308: Bedrifter, etter foretakenes sektor og antall ansatte (K) 2012-2026",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2026-01-12T07:00:00Z",
+      "firstPeriod": "2012",
+      "lastPeriod": "2026",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "eiersektor",
+        "antall ansatte",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "vf",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "vf",
+            "label": "Bedrifter, foretak og regnskap",
+            "sortCode": "0000010"
+          },
+          {
+            "id": "vf05",
+            "label": "Bedrifter og foretak",
+            "sortCode": "0000011"
+          },
+          {
+            "id": "bedrifter",
+            "label": "Bedrifter",
+            "sortCode": "0000012"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10308?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10308?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10308/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10308/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07091",
+      "label": "07091: Bedrifter, etter næring (SN2007) og antall ansatte (K) 2009-2026",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2026-01-12T07:00:00Z",
+      "firstPeriod": "2009",
+      "lastPeriod": "2026",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "næring (SN2007)",
+        "antall ansatte",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "vf",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "vf",
+            "label": "Bedrifter, foretak og regnskap",
+            "sortCode": "0000010"
+          },
+          {
+            "id": "vf05",
+            "label": "Bedrifter og foretak",
+            "sortCode": "0000011"
+          },
+          {
+            "id": "bedrifter",
+            "label": "Bedrifter",
+            "sortCode": "0000012"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07091?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07091?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07091/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07091/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "10309",
+      "label": "10309: Bedrifter, etter næringshovedområde (SN2007) og antall ansatte (K) 2009-2026",
+      "description": "",
+      "sortCode": "0000000070",
+      "updated": "2026-01-12T07:00:00Z",
+      "firstPeriod": "2009",
+      "lastPeriod": "2026",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "næring (SN2007)",
+        "antall ansatte",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "vf",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "vf",
+            "label": "Bedrifter, foretak og regnskap",
+            "sortCode": "0000010"
+          },
+          {
+            "id": "vf05",
+            "label": "Bedrifter og foretak",
+            "sortCode": "0000011"
+          },
+          {
+            "id": "bedrifter",
+            "label": "Bedrifter",
+            "sortCode": "0000012"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10309?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10309?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10309/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10309/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "06683",
+      "label": "06683: Adopsjoner, etter adopsjonstype 1986-2024",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2025-09-23T06:00:00Z",
+      "firstPeriod": "1986",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "adopsjonstype",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "be",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "be",
+            "label": "Befolkning",
+            "sortCode": "0000016"
+          },
+          {
+            "id": "be01",
+            "label": "Barn, familier og husholdninger",
+            "sortCode": "0000017"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000018"
+          }
+        ],
+        [
+          {
+            "id": "be",
+            "label": "Befolkning",
+            "sortCode": "0000016"
+          },
+          {
+            "id": "be06",
+            "label": "Fødte og døde",
+            "sortCode": "0000021"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000022"
+          }
+        ],
+        [
+          {
+            "id": "be",
+            "label": "Befolkning",
+            "sortCode": "0000016"
+          },
+          {
+            "id": "be07",
+            "label": "Innvandrere",
+            "sortCode": "0000022"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000023"
+          }
+        ],
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in03",
+            "label": "Befolkning",
+            "sortCode": "0000045"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000046"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06683?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06683?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06683/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06683/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07277",
+      "label": "07277: Adopsjoner, etter adopsjonstype (F) 2006-2024",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2025-09-23T06:00:00Z",
+      "firstPeriod": "2006",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "adopsjonstype",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "be",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "be",
+            "label": "Befolkning",
+            "sortCode": "0000016"
+          },
+          {
+            "id": "be01",
+            "label": "Barn, familier og husholdninger",
+            "sortCode": "0000017"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000018"
+          }
+        ],
+        [
+          {
+            "id": "be",
+            "label": "Befolkning",
+            "sortCode": "0000016"
+          },
+          {
+            "id": "be06",
+            "label": "Fødte og døde",
+            "sortCode": "0000021"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000022"
+          }
+        ],
+        [
+          {
+            "id": "be",
+            "label": "Befolkning",
+            "sortCode": "0000016"
+          },
+          {
+            "id": "be07",
+            "label": "Innvandrere",
+            "sortCode": "0000022"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000023"
+          }
+        ],
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in03",
+            "label": "Befolkning",
+            "sortCode": "0000045"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000046"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07277?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07277?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07277/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07277/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "06685",
+      "label": "06685: Adopterte, etter adopsjonstype, kjønn og alder 2006-2024",
+      "description": "",
+      "sortCode": "0000000030",
+      "updated": "2025-09-23T06:00:00Z",
+      "firstPeriod": "2006",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "adopsjonstype",
+        "kjønn",
+        "alder",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "be",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "be",
+            "label": "Befolkning",
+            "sortCode": "0000016"
+          },
+          {
+            "id": "be01",
+            "label": "Barn, familier og husholdninger",
+            "sortCode": "0000017"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000018"
+          }
+        ],
+        [
+          {
+            "id": "be",
+            "label": "Befolkning",
+            "sortCode": "0000016"
+          },
+          {
+            "id": "be06",
+            "label": "Fødte og døde",
+            "sortCode": "0000021"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000022"
+          }
+        ],
+        [
+          {
+            "id": "be",
+            "label": "Befolkning",
+            "sortCode": "0000016"
+          },
+          {
+            "id": "be07",
+            "label": "Innvandrere",
+            "sortCode": "0000022"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000023"
+          }
+        ],
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in03",
+            "label": "Befolkning",
+            "sortCode": "0000045"
+          },
+          {
+            "id": "adopsjon",
+            "label": "Adopsjoner",
+            "sortCode": "0000046"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06685?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06685?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06685/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06685/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "08651",
+      "label": "08651: Byggekostnadsindeks for bustader i alt, etter arbeidstype (2015=100) 1978M01-2026M06",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2026-07-16T06:00:00Z",
+      "firstPeriod": "1978M01",
+      "lastPeriod": "2026M06",
+      "category": "public",
+      "variableNames": [
+        "arbeidstype",
+        "statistikkvariabel",
+        "måned"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "pp",
+      "timeUnit": "Monthly",
+      "paths": [
+        [
+          {
+            "id": "bb",
+            "label": "Bygg, bolig og eiendom",
+            "sortCode": "0000026"
+          },
+          {
+            "id": "bb01",
+            "label": "Bolig og boforhold",
+            "sortCode": "0000027"
+          },
+          {
+            "id": "bkibol",
+            "label": "Byggekostnadsindeks for bustader",
+            "sortCode": "0000028"
+          },
+          {
+            "id": "SBMENU4640",
+            "label": "Månadlege tal",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "bb",
+            "label": "Bygg, bolig og eiendom",
+            "sortCode": "0000026"
+          },
+          {
+            "id": "bb02",
+            "label": "Bygg og anlegg",
+            "sortCode": "0000028"
+          },
+          {
+            "id": "bkibol",
+            "label": "Byggekostnadsindeks for bustader",
+            "sortCode": "0000029"
+          },
+          {
+            "id": "SBMENU4640",
+            "label": "Månadlege tal",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "pp",
+            "label": "Priser og prisindekser",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "pp02",
+            "label": "Byggekostnadsindekser",
+            "sortCode": "0000084"
+          },
+          {
+            "id": "bkibol",
+            "label": "Byggekostnadsindeks for bustader",
+            "sortCode": "0000085"
+          },
+          {
+            "id": "SBMENU4640",
+            "label": "Månadlege tal",
+            "sortCode": "0000000005"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08651?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08651?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08651/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08651/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "08653",
+      "label": "08653: Byggekostnadsindeks for einebustad av tre, etter arbeidstype (2015=100) 1978M01-2026M06",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2026-07-16T06:00:00Z",
+      "firstPeriod": "1978M01",
+      "lastPeriod": "2026M06",
+      "category": "public",
+      "variableNames": [
+        "arbeidstype",
+        "statistikkvariabel",
+        "måned"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "pp",
+      "timeUnit": "Monthly",
+      "paths": [
+        [
+          {
+            "id": "bb",
+            "label": "Bygg, bolig og eiendom",
+            "sortCode": "0000026"
+          },
+          {
+            "id": "bb01",
+            "label": "Bolig og boforhold",
+            "sortCode": "0000027"
+          },
+          {
+            "id": "bkibol",
+            "label": "Byggekostnadsindeks for bustader",
+            "sortCode": "0000028"
+          },
+          {
+            "id": "SBMENU4640",
+            "label": "Månadlege tal",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "bb",
+            "label": "Bygg, bolig og eiendom",
+            "sortCode": "0000026"
+          },
+          {
+            "id": "bb02",
+            "label": "Bygg og anlegg",
+            "sortCode": "0000028"
+          },
+          {
+            "id": "bkibol",
+            "label": "Byggekostnadsindeks for bustader",
+            "sortCode": "0000029"
+          },
+          {
+            "id": "SBMENU4640",
+            "label": "Månadlege tal",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "pp",
+            "label": "Priser og prisindekser",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "pp02",
+            "label": "Byggekostnadsindekser",
+            "sortCode": "0000084"
+          },
+          {
+            "id": "bkibol",
+            "label": "Byggekostnadsindeks for bustader",
+            "sortCode": "0000085"
+          },
+          {
+            "id": "SBMENU4640",
+            "label": "Månadlege tal",
+            "sortCode": "0000000005"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08653?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08653?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08653/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08653/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "08655",
+      "label": "08655: Byggekostnadsindeks for bustadblokk, etter arbeidstype (2015=100) 1978M01-2026M06",
+      "description": "",
+      "sortCode": "0000000030",
+      "updated": "2026-07-16T06:00:00Z",
+      "firstPeriod": "1978M01",
+      "lastPeriod": "2026M06",
+      "category": "public",
+      "variableNames": [
+        "arbeidstype",
+        "statistikkvariabel",
+        "måned"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "pp",
+      "timeUnit": "Monthly",
+      "paths": [
+        [
+          {
+            "id": "bb",
+            "label": "Bygg, bolig og eiendom",
+            "sortCode": "0000026"
+          },
+          {
+            "id": "bb01",
+            "label": "Bolig og boforhold",
+            "sortCode": "0000027"
+          },
+          {
+            "id": "bkibol",
+            "label": "Byggekostnadsindeks for bustader",
+            "sortCode": "0000028"
+          },
+          {
+            "id": "SBMENU4640",
+            "label": "Månadlege tal",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "bb",
+            "label": "Bygg, bolig og eiendom",
+            "sortCode": "0000026"
+          },
+          {
+            "id": "bb02",
+            "label": "Bygg og anlegg",
+            "sortCode": "0000028"
+          },
+          {
+            "id": "bkibol",
+            "label": "Byggekostnadsindeks for bustader",
+            "sortCode": "0000029"
+          },
+          {
+            "id": "SBMENU4640",
+            "label": "Månadlege tal",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "pp",
+            "label": "Priser og prisindekser",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "pp02",
+            "label": "Byggekostnadsindekser",
+            "sortCode": "0000084"
+          },
+          {
+            "id": "bkibol",
+            "label": "Byggekostnadsindeks for bustader",
+            "sortCode": "0000085"
+          },
+          {
+            "id": "SBMENU4640",
+            "label": "Månadlege tal",
+            "sortCode": "0000000005"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08655?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08655?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08655/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08655/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "14091",
+      "label": "14091: Elektrisitetsbalanse (MWh) 1993M01-2026M06",
+      "description": "",
+      "sortCode": "0000000050",
+      "updated": "2026-07-21T06:00:00Z",
+      "firstPeriod": "1993M01",
+      "lastPeriod": "2026M06",
+      "category": "public",
+      "variableNames": [
+        "produksjon og forbruk",
+        "statistikkvariabel",
+        "måned"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ei",
+      "timeUnit": "Monthly",
+      "paths": [
+        [
+          {
+            "id": "ei",
+            "label": "Energi og industri",
+            "sortCode": "0000030"
+          },
+          {
+            "id": "ei01",
+            "label": "Energi",
+            "sortCode": "0000031"
+          },
+          {
+            "id": "elektrisitet",
+            "label": "Elektrisitet",
+            "sortCode": "0000032"
+          },
+          {
+            "id": "SBMENU6800",
+            "label": "Månedlige tall",
+            "sortCode": "0000000010"
+          }
+        ],
+        [
+          {
+            "id": "sv",
+            "label": "Svalbard",
+            "sortCode": "0000092"
+          },
+          {
+            "id": "sv04",
+            "label": "Næringsliv og teknologi",
+            "sortCode": "0000097"
+          },
+          {
+            "id": "elektrisitet",
+            "label": "Elektrisitet",
+            "sortCode": "0000098"
+          },
+          {
+            "id": "SBMENU6800",
+            "label": "Månedlige tall",
+            "sortCode": "0000000010"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14091?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14091?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14091/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14091/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "14092",
+      "label": "14092: Forbruk av elektrisk kraft, etter forbrukergruppe og prisområde (MWh) 2020M01-2026M06",
+      "description": "",
+      "sortCode": "0000000060",
+      "updated": "2026-07-21T06:00:00Z",
+      "firstPeriod": "2020M01",
+      "lastPeriod": "2026M06",
+      "category": "public",
+      "variableNames": [
+        "forbrukergruppe",
+        "prisområde",
+        "statistikkvariabel",
+        "måned"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ei",
+      "timeUnit": "Monthly",
+      "paths": [
+        [
+          {
+            "id": "ei",
+            "label": "Energi og industri",
+            "sortCode": "0000030"
+          },
+          {
+            "id": "ei01",
+            "label": "Energi",
+            "sortCode": "0000031"
+          },
+          {
+            "id": "elektrisitet",
+            "label": "Elektrisitet",
+            "sortCode": "0000032"
+          },
+          {
+            "id": "SBMENU6800",
+            "label": "Månedlige tall",
+            "sortCode": "0000000010"
+          }
+        ],
+        [
+          {
+            "id": "sv",
+            "label": "Svalbard",
+            "sortCode": "0000092"
+          },
+          {
+            "id": "sv04",
+            "label": "Næringsliv og teknologi",
+            "sortCode": "0000097"
+          },
+          {
+            "id": "elektrisitet",
+            "label": "Elektrisitet",
+            "sortCode": "0000098"
+          },
+          {
+            "id": "SBMENU6800",
+            "label": "Månedlige tall",
+            "sortCode": "0000000010"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14092?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14092?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14092/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14092/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "14093",
+      "label": "14093: Produksjon av elektrisk kraft, etter krafttype og prisområde (MWh) 2020M01-2026M06",
+      "description": "",
+      "sortCode": "0000000070",
+      "updated": "2026-07-21T06:00:00Z",
+      "firstPeriod": "2020M01",
+      "lastPeriod": "2026M06",
+      "category": "public",
+      "variableNames": [
+        "prisområde",
+        "statistikkvariabel",
+        "måned"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ei",
+      "timeUnit": "Monthly",
+      "paths": [
+        [
+          {
+            "id": "ei",
+            "label": "Energi og industri",
+            "sortCode": "0000030"
+          },
+          {
+            "id": "ei01",
+            "label": "Energi",
+            "sortCode": "0000031"
+          },
+          {
+            "id": "elektrisitet",
+            "label": "Elektrisitet",
+            "sortCode": "0000032"
+          },
+          {
+            "id": "SBMENU6800",
+            "label": "Månedlige tall",
+            "sortCode": "0000000010"
+          }
+        ],
+        [
+          {
+            "id": "sv",
+            "label": "Svalbard",
+            "sortCode": "0000092"
+          },
+          {
+            "id": "sv04",
+            "label": "Næringsliv og teknologi",
+            "sortCode": "0000097"
+          },
+          {
+            "id": "elektrisitet",
+            "label": "Elektrisitet",
+            "sortCode": "0000098"
+          },
+          {
+            "id": "SBMENU6800",
+            "label": "Månedlige tall",
+            "sortCode": "0000000010"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14093?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14093?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14093/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14093/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "13661",
+      "label": "13661: Brukere av tekniske hjelpemidler for personer med funksjonsnedsettelse, etter teknisk hjelpemiddel, uførestatus, stønad, kjønn og alder 2017-2024",
+      "description": "",
+      "sortCode": "0000000100",
+      "updated": "2025-11-18T07:00:00Z",
+      "firstPeriod": "2017",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "teknisk hjelpemiddel siste 5 år",
+        "uførestatus",
+        "stønad",
+        "kjønn",
+        "alder",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "he",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "he",
+            "label": "Helse",
+            "sortCode": "0000034"
+          },
+          {
+            "id": "he02",
+            "label": "Funksjonsevne",
+            "sortCode": "0000035"
+          },
+          {
+            "id": "funkhem",
+            "label": "Levekår hos personer med funksjonsnedsettelse",
+            "sortCode": "0000036"
+          }
+        ],
+        [
+          {
+            "id": "sk",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000087"
+          },
+          {
+            "id": "sk03",
+            "label": "Levekår",
+            "sortCode": "0000090"
+          },
+          {
+            "id": "funkhem",
+            "label": "Levekår hos personer med funksjonsnedsettelse",
+            "sortCode": "0000091"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13661?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13661?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13661/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13661/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "13653",
+      "label": "13653: Brukere av tekniske hjelpemidler for personer med funksjonsnedsettelse, etter teknisk hjelpemiddel, uførestatus, stønad, innvandringskategori og alder 2017-2024",
+      "description": "",
+      "sortCode": "0000000110",
+      "updated": "2025-11-18T07:00:00Z",
+      "firstPeriod": "2017",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "teknisk hjelpemiddel siste 5 år",
+        "uførestatus",
+        "stønad",
+        "innvandringskategori",
+        "alder",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "he",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "he",
+            "label": "Helse",
+            "sortCode": "0000034"
+          },
+          {
+            "id": "he02",
+            "label": "Funksjonsevne",
+            "sortCode": "0000035"
+          },
+          {
+            "id": "funkhem",
+            "label": "Levekår hos personer med funksjonsnedsettelse",
+            "sortCode": "0000036"
+          }
+        ],
+        [
+          {
+            "id": "sk",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000087"
+          },
+          {
+            "id": "sk03",
+            "label": "Levekår",
+            "sortCode": "0000090"
+          },
+          {
+            "id": "funkhem",
+            "label": "Levekår hos personer med funksjonsnedsettelse",
+            "sortCode": "0000091"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13653?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13653?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13653/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13653/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "13654",
+      "label": "13654: Inntekt for personer med funksjonsnedsettelse, etter teknisk hjelpemiddel, uførestatus, stønad, kjønn og alder 2017-2023",
+      "description": "",
+      "sortCode": "0000000120",
+      "updated": "2025-11-18T07:00:00Z",
+      "firstPeriod": "2017",
+      "lastPeriod": "2023",
+      "category": "public",
+      "variableNames": [
+        "teknisk hjelpemiddel siste 5 år",
+        "uførestatus",
+        "stønad",
+        "kjønn",
+        "alder",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "he",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "he",
+            "label": "Helse",
+            "sortCode": "0000034"
+          },
+          {
+            "id": "he02",
+            "label": "Funksjonsevne",
+            "sortCode": "0000035"
+          },
+          {
+            "id": "funkhem",
+            "label": "Levekår hos personer med funksjonsnedsettelse",
+            "sortCode": "0000036"
+          }
+        ],
+        [
+          {
+            "id": "sk",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000087"
+          },
+          {
+            "id": "sk03",
+            "label": "Levekår",
+            "sortCode": "0000090"
+          },
+          {
+            "id": "funkhem",
+            "label": "Levekår hos personer med funksjonsnedsettelse",
+            "sortCode": "0000091"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13654?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13654?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13654/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13654/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07129",
+      "label": "07129: Varehandelsindeksen, etter næring (SN2007) (2021=100) 2000M01-2026M05",
+      "description": "",
+      "sortCode": "0000000050",
+      "updated": "2026-06-26T06:00:00Z",
+      "firstPeriod": "2000M01",
+      "lastPeriod": "2026M05",
+      "category": "public",
+      "variableNames": [
+        "næring",
+        "statistikkvariabel",
+        "måned"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "vt",
+      "timeUnit": "Monthly",
+      "paths": [
+        [
+          {
+            "id": "if",
+            "label": "Inntekt og forbruk",
+            "sortCode": "0000038"
+          },
+          {
+            "id": "if01",
+            "label": "Forbruk",
+            "sortCode": "0000039"
+          },
+          {
+            "id": "doi",
+            "label": "Varehandelsindeksen",
+            "sortCode": "0000040"
+          }
+        ],
+        [
+          {
+            "id": "vt",
+            "label": "Varehandel og tjenesteyting",
+            "sortCode": "0000125"
+          },
+          {
+            "id": "vt02",
+            "label": "Varehandel",
+            "sortCode": "0000127"
+          },
+          {
+            "id": "doi",
+            "label": "Varehandelsindeksen",
+            "sortCode": "0000128"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07129?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07129?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07129/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07129/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "09296",
+      "label": "09296: Varehandelsindeksen, etter næring (SN2007) (2021=100) 2000-2025",
+      "description": "",
+      "sortCode": "0000000060",
+      "updated": "2026-06-26T06:00:00Z",
+      "firstPeriod": "2000",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "næring (SN2007)",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "vt",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "if",
+            "label": "Inntekt og forbruk",
+            "sortCode": "0000038"
+          },
+          {
+            "id": "if01",
+            "label": "Forbruk",
+            "sortCode": "0000039"
+          },
+          {
+            "id": "doi",
+            "label": "Varehandelsindeksen",
+            "sortCode": "0000040"
+          }
+        ],
+        [
+          {
+            "id": "vt",
+            "label": "Varehandel og tjenesteyting",
+            "sortCode": "0000125"
+          },
+          {
+            "id": "vt02",
+            "label": "Varehandel",
+            "sortCode": "0000127"
+          },
+          {
+            "id": "doi",
+            "label": "Varehandelsindeksen",
+            "sortCode": "0000128"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09296?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09296?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09296/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09296/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "14211",
+      "label": "14211: Varehandelsindeksen, etter næring (SN2007) (2015=100) (avslutta serie) 2000M01-2023M12",
+      "description": "",
+      "sortCode": "0000900060",
+      "updated": "2024-02-29T07:00:00Z",
+      "firstPeriod": "2000M01",
+      "lastPeriod": "2023M12",
+      "category": "public",
+      "variableNames": [
+        "næring",
+        "statistikkvariabel",
+        "måned"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "vt",
+      "timeUnit": "Monthly",
+      "paths": [
+        [
+          {
+            "id": "if",
+            "label": "Inntekt og forbruk",
+            "sortCode": "0000038"
+          },
+          {
+            "id": "if01",
+            "label": "Forbruk",
+            "sortCode": "0000039"
+          },
+          {
+            "id": "doi",
+            "label": "Varehandelsindeksen",
+            "sortCode": "0000040"
+          }
+        ],
+        [
+          {
+            "id": "vt",
+            "label": "Varehandel og tjenesteyting",
+            "sortCode": "0000125"
+          },
+          {
+            "id": "vt02",
+            "label": "Varehandel",
+            "sortCode": "0000127"
+          },
+          {
+            "id": "doi",
+            "label": "Varehandelsindeksen",
+            "sortCode": "0000128"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14211?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14211?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14211/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14211/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "09832",
+      "label": "09832: Gjennomsnittlig næringsinntekt fra jordbruk for brukere, etter driftsform (kr) (F) 2010-2024",
+      "description": "",
+      "sortCode": "0000000090",
+      "updated": "2026-03-10T07:00:00Z",
+      "firstPeriod": "2010",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "driftsform",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "js",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in06",
+            "label": "Inntekt og forbruk",
+            "sortCode": "0000048"
+          },
+          {
+            "id": "binfo",
+            "label": "Gårdbrukernes inntekter og gjeld",
+            "sortCode": "0000049"
+          },
+          {
+            "id": "SBMENU4038",
+            "label": "Inntekter (brutto og netto næringsinntekt)",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "js",
+            "label": "Jord, skog, jakt og fiskeri",
+            "sortCode": "0000053"
+          },
+          {
+            "id": "js04",
+            "label": "Jordbruk",
+            "sortCode": "0000056"
+          },
+          {
+            "id": "binfo",
+            "label": "Gårdbrukernes inntekter og gjeld",
+            "sortCode": "0000057"
+          },
+          {
+            "id": "SBMENU4038",
+            "label": "Inntekter (brutto og netto næringsinntekt)",
+            "sortCode": "0000000005"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09832?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09832?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09832/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09832/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "05038",
+      "label": "05038: Gjennomsnittlige inntekter for brukere (kr) (F) 2002-2024",
+      "description": "",
+      "sortCode": "0000000100",
+      "updated": "2026-03-10T07:00:00Z",
+      "firstPeriod": "2002",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "js",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in06",
+            "label": "Inntekt og forbruk",
+            "sortCode": "0000048"
+          },
+          {
+            "id": "binfo",
+            "label": "Gårdbrukernes inntekter og gjeld",
+            "sortCode": "0000049"
+          },
+          {
+            "id": "SBMENU4038",
+            "label": "Inntekter (brutto og netto næringsinntekt)",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "js",
+            "label": "Jord, skog, jakt og fiskeri",
+            "sortCode": "0000053"
+          },
+          {
+            "id": "js04",
+            "label": "Jordbruk",
+            "sortCode": "0000056"
+          },
+          {
+            "id": "binfo",
+            "label": "Gårdbrukernes inntekter og gjeld",
+            "sortCode": "0000057"
+          },
+          {
+            "id": "SBMENU4038",
+            "label": "Inntekter (brutto og netto næringsinntekt)",
+            "sortCode": "0000000005"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05038?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05038?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05038/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05038/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "09833",
+      "label": "09833: Gjennomsnittlige inntekter for brukere, etter driftsform (kr) 2010-2024",
+      "description": "",
+      "sortCode": "0000000110",
+      "updated": "2026-03-10T07:00:00Z",
+      "firstPeriod": "2010",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "driftsform",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "js",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in06",
+            "label": "Inntekt og forbruk",
+            "sortCode": "0000048"
+          },
+          {
+            "id": "binfo",
+            "label": "Gårdbrukernes inntekter og gjeld",
+            "sortCode": "0000049"
+          },
+          {
+            "id": "SBMENU4038",
+            "label": "Inntekter (brutto og netto næringsinntekt)",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "js",
+            "label": "Jord, skog, jakt og fiskeri",
+            "sortCode": "0000053"
+          },
+          {
+            "id": "js04",
+            "label": "Jordbruk",
+            "sortCode": "0000056"
+          },
+          {
+            "id": "binfo",
+            "label": "Gårdbrukernes inntekter og gjeld",
+            "sortCode": "0000057"
+          },
+          {
+            "id": "SBMENU4038",
+            "label": "Inntekter (brutto og netto næringsinntekt)",
+            "sortCode": "0000000005"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09833?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09833?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09833/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09833/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "08991",
+      "label": "08991: Elvefiske. Fangst, etter elv/vassdrag, fiskeslag og bruken av fangsten 1993-2025",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2026-02-06T07:00:00Z",
+      "firstPeriod": "1993",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "bruk",
+        "elv",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "js",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "js",
+            "label": "Jord, skog, jakt og fiskeri",
+            "sortCode": "0000053"
+          },
+          {
+            "id": "js02",
+            "label": "Fiske og fangst",
+            "sortCode": "0000054"
+          },
+          {
+            "id": "elvefiske",
+            "label": "Elvefiske",
+            "sortCode": "0000055"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08991?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08991?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08991/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08991/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07670",
+      "label": "07670: Elvefiske. Fangst, etter elv/delvassdrag, fiskeslag og  bruken av fangsten 1993-2025",
+      "description": "",
+      "sortCode": "0000000040",
+      "updated": "2026-02-06T07:00:00Z",
+      "firstPeriod": "1993",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "bruk",
+        "elv",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "js",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "js",
+            "label": "Jord, skog, jakt og fiskeri",
+            "sortCode": "0000053"
+          },
+          {
+            "id": "js02",
+            "label": "Fiske og fangst",
+            "sortCode": "0000054"
+          },
+          {
+            "id": "elvefiske",
+            "label": "Elvefiske",
+            "sortCode": "0000055"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07670?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07670?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07670/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07670/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "09787",
+      "label": "09787: Elvefiske. Fangst og talet på elvar med fangst 1876-2025",
+      "description": "",
+      "sortCode": "0000000050",
+      "updated": "2026-02-06T07:00:00Z",
+      "firstPeriod": "1876",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "js",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "js",
+            "label": "Jord, skog, jakt og fiskeri",
+            "sortCode": "0000053"
+          },
+          {
+            "id": "js02",
+            "label": "Fiske og fangst",
+            "sortCode": "0000054"
+          },
+          {
+            "id": "elvefiske",
+            "label": "Elvefiske",
+            "sortCode": "0000055"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09787?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09787?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09787/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09787/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "13372",
+      "label": "13372: Kjønn, alder og friluftslivsaktiviteter  2021-2024",
+      "description": "",
+      "sortCode": "0000001010",
+      "updated": "2024-11-19T07:00:00Z",
+      "firstPeriod": "2021",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "friluftslivsaktivitet",
+        "kjønn",
+        "alder",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "kf",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "kf",
+            "label": "Kultur og fritid",
+            "sortCode": "0000060"
+          },
+          {
+            "id": "kf01",
+            "label": "Idrett og friluftsliv",
+            "sortCode": "0000061"
+          },
+          {
+            "id": "fritid",
+            "label": "Idrett og friluftsliv, levekårsundersøkelsen",
+            "sortCode": "0000062"
+          },
+          {
+            "id": "SBMENU9581",
+            "label": "Friluftslivsaktiviteter siste 12 måneder ",
+            "sortCode": "0000001000"
+          }
+        ],
+        [
+          {
+            "id": "sk",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000087"
+          },
+          {
+            "id": "sk03",
+            "label": "Levekår",
+            "sortCode": "0000090"
+          },
+          {
+            "id": "fritid",
+            "label": "Idrett og friluftsliv, levekårsundersøkelsen",
+            "sortCode": "0000091"
+          },
+          {
+            "id": "SBMENU9581",
+            "label": "Friluftslivsaktiviteter siste 12 måneder ",
+            "sortCode": "0000001000"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13372?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13372?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13372/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13372/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "13373",
+      "label": "13373: Sentralitet og friluftslivsaktiviteter  2021-2024",
+      "description": "",
+      "sortCode": "0000001020",
+      "updated": "2024-11-19T07:00:00Z",
+      "firstPeriod": "2021",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "friluftslivsaktivitet",
+        "sentralitet",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "kf",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "kf",
+            "label": "Kultur og fritid",
+            "sortCode": "0000060"
+          },
+          {
+            "id": "kf01",
+            "label": "Idrett og friluftsliv",
+            "sortCode": "0000061"
+          },
+          {
+            "id": "fritid",
+            "label": "Idrett og friluftsliv, levekårsundersøkelsen",
+            "sortCode": "0000062"
+          },
+          {
+            "id": "SBMENU9581",
+            "label": "Friluftslivsaktiviteter siste 12 måneder ",
+            "sortCode": "0000001000"
+          }
+        ],
+        [
+          {
+            "id": "sk",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000087"
+          },
+          {
+            "id": "sk03",
+            "label": "Levekår",
+            "sortCode": "0000090"
+          },
+          {
+            "id": "fritid",
+            "label": "Idrett og friluftsliv, levekårsundersøkelsen",
+            "sortCode": "0000091"
+          },
+          {
+            "id": "SBMENU9581",
+            "label": "Friluftslivsaktiviteter siste 12 måneder ",
+            "sortCode": "0000001000"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13373?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13373?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13373/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13373/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "13374",
+      "label": "13374: Fylke og friluftslivsaktiviteter (F) 2021-2024",
+      "description": "",
+      "sortCode": "0000001030",
+      "updated": "2024-11-19T07:00:00Z",
+      "firstPeriod": "2021",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "friluftslivsaktivitet",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "kf",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "kf",
+            "label": "Kultur og fritid",
+            "sortCode": "0000060"
+          },
+          {
+            "id": "kf01",
+            "label": "Idrett og friluftsliv",
+            "sortCode": "0000061"
+          },
+          {
+            "id": "fritid",
+            "label": "Idrett og friluftsliv, levekårsundersøkelsen",
+            "sortCode": "0000062"
+          },
+          {
+            "id": "SBMENU9581",
+            "label": "Friluftslivsaktiviteter siste 12 måneder ",
+            "sortCode": "0000001000"
+          }
+        ],
+        [
+          {
+            "id": "sk",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000087"
+          },
+          {
+            "id": "sk03",
+            "label": "Levekår",
+            "sortCode": "0000090"
+          },
+          {
+            "id": "fritid",
+            "label": "Idrett og friluftsliv, levekårsundersøkelsen",
+            "sortCode": "0000091"
+          },
+          {
+            "id": "SBMENU9581",
+            "label": "Friluftslivsaktiviteter siste 12 måneder ",
+            "sortCode": "0000001000"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13374?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13374?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13374/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13374/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07018",
+      "label": "07018: Finansielle sektorregnskaper. Nettofordringer og nettofinansinvesteringer, etter institusjonelle sektorer (mill. kr) (avslutta serie) 1995-2013",
+      "description": "",
+      "sortCode": "0000000915",
+      "updated": "2014-03-27T09:00:00Z",
+      "firstPeriod": "1995",
+      "lastPeriod": "2013",
+      "category": "public",
+      "variableNames": [
+        "sektor",
+        "statistikkvariabel",
+        "år"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "nk",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "nk",
+            "label": "Nasjonalregnskap og konjunkturer",
+            "sortCode": "0000066"
+          },
+          {
+            "id": "nk01",
+            "label": "Finansregnskap",
+            "sortCode": "0000067"
+          },
+          {
+            "id": "finsea",
+            "label": "Finansielt og ikke-finansielt sektorregnskap (opphørt)",
+            "sortCode": "0000068"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07018?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07018?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07018/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07018/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07017",
+      "label": "07017: Finansielle sektorregnskaper. Fordringer og gjeld, etter institusjonell sektor og finansobjekt (mill. kr) (avslutta serie) 1995-2013",
+      "description": "",
+      "sortCode": "0000000925",
+      "updated": "2014-03-27T09:00:00Z",
+      "firstPeriod": "1995",
+      "lastPeriod": "2013",
+      "category": "public",
+      "variableNames": [
+        "institusjonell sektor",
+        "fordringer og gjeld",
+        "statistikkvariabel",
+        "år"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "nk",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "nk",
+            "label": "Nasjonalregnskap og konjunkturer",
+            "sortCode": "0000066"
+          },
+          {
+            "id": "nk01",
+            "label": "Finansregnskap",
+            "sortCode": "0000067"
+          },
+          {
+            "id": "finsea",
+            "label": "Finansielt og ikke-finansielt sektorregnskap (opphørt)",
+            "sortCode": "0000068"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07017?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07017?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07017/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07017/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07016",
+      "label": "07016: Finansielle sektorregnskaper. Kreditorsektor, debitorsektor og finansobjekt (mill. kr) (avslutta serie) 1995-2013",
+      "description": "",
+      "sortCode": "0000000935",
+      "updated": "2014-03-27T09:00:00Z",
+      "firstPeriod": "1995",
+      "lastPeriod": "2013",
+      "category": "public",
+      "variableNames": [
+        "kreditorsektor",
+        "debitorsektor",
+        "finansobjekt",
+        "statistikkvariabel",
+        "år"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "nk",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "nk",
+            "label": "Nasjonalregnskap og konjunkturer",
+            "sortCode": "0000066"
+          },
+          {
+            "id": "nk01",
+            "label": "Finansregnskap",
+            "sortCode": "0000067"
+          },
+          {
+            "id": "finsea",
+            "label": "Finansielt og ikke-finansielt sektorregnskap (opphørt)",
+            "sortCode": "0000068"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07016?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07016?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07016/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07016/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "11016",
+      "label": "11016: Arealbruk i tettsteder, per kommune (km²) (K) 2013-2025",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2026-06-22T06:00:00Z",
+      "firstPeriod": "2013",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "arealklasse",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "nm",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "nm",
+            "label": "Natur og miljø",
+            "sortCode": "0000070"
+          },
+          {
+            "id": "nm01",
+            "label": "Areal",
+            "sortCode": "0000071"
+          },
+          {
+            "id": "arealbruk",
+            "label": "Arealbruk i tettsteder",
+            "sortCode": "0000072"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11016?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11016?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11016/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11016/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "10810",
+      "label": "10810: Arealbruk i tettsteder (km²) (T) 2011-2025",
+      "description": "",
+      "sortCode": "0000000015",
+      "updated": "2026-06-22T06:00:00Z",
+      "firstPeriod": "2011",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "tettsted",
+        "arealklasse",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "nm",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "nm",
+            "label": "Natur og miljø",
+            "sortCode": "0000070"
+          },
+          {
+            "id": "nm01",
+            "label": "Areal",
+            "sortCode": "0000071"
+          },
+          {
+            "id": "arealbruk",
+            "label": "Arealbruk i tettsteder",
+            "sortCode": "0000072"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10810?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10810?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10810/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10810/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "09737",
+      "label": "09737: Arealbruk i tettsteder, etter tettstedsstørrelse (km²) 2011-2025",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2026-06-22T06:00:00Z",
+      "firstPeriod": "2011",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "tettstedstørrelse",
+        "arealklasse",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "nm",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "nm",
+            "label": "Natur og miljø",
+            "sortCode": "0000070"
+          },
+          {
+            "id": "nm01",
+            "label": "Areal",
+            "sortCode": "0000071"
+          },
+          {
+            "id": "arealbruk",
+            "label": "Arealbruk i tettsteder",
+            "sortCode": "0000072"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09737?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09737?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09737/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/09737/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "04591",
+      "label": "04591: Regnskapsstatistikk. Kommunalt eide attføringsforetak. Inntekter og utgifter, etter hovedposter (mill. kr) (avslutta serie) 1999-2011",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2012-12-07T09:00:00Z",
+      "firstPeriod": "1999",
+      "lastPeriod": "2011",
+      "category": "public",
+      "variableNames": [
+        "resultatregnskapet",
+        "statistikkvariabel",
+        "år"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "os",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "attregn",
+            "label": "Kommunale attføringsforetak, regnskap (opphørt)",
+            "sortCode": "0000078"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "offregn",
+            "label": "Offentlige foretak, regnskap",
+            "sortCode": "0000078"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os07",
+            "label": "Statlige finanser",
+            "sortCode": "0000081"
+          },
+          {
+            "id": "offregn",
+            "label": "Offentlige foretak, regnskap",
+            "sortCode": "0000082"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04591?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04591?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04591/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04591/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "04597",
+      "label": "04597: Regnskapsstatistikk. Kommunalt eide attføringsforetak. Balanse (mill. kr) (avslutta serie) 1999-2011",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2012-12-07T09:00:00Z",
+      "firstPeriod": "1999",
+      "lastPeriod": "2011",
+      "category": "public",
+      "variableNames": [
+        "balansepost",
+        "statistikkvariabel",
+        "år"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "os",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "attregn",
+            "label": "Kommunale attføringsforetak, regnskap (opphørt)",
+            "sortCode": "0000078"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "offregn",
+            "label": "Offentlige foretak, regnskap",
+            "sortCode": "0000078"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os07",
+            "label": "Statlige finanser",
+            "sortCode": "0000081"
+          },
+          {
+            "id": "offregn",
+            "label": "Offentlige foretak, regnskap",
+            "sortCode": "0000082"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04597?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04597?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04597/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04597/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "14155",
+      "label": "14155: Eiendomsskatt. Omfang, bruk og inntekter 2007-2026",
+      "description": "",
+      "sortCode": "0000000200",
+      "updated": "2026-06-15T06:00:00Z",
+      "firstPeriod": "2007",
+      "lastPeriod": "2026",
+      "category": "public",
+      "variableNames": [
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "os",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "eiendomsskatt",
+            "label": "Eiendomsskatt",
+            "sortCode": "0000078"
+          },
+          {
+            "id": "SBMENU12109",
+            "label": "Eiendomsskatt",
+            "sortCode": "0000000200"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os05",
+            "label": "Skatteregnskap",
+            "sortCode": "0000080"
+          },
+          {
+            "id": "eiendomsskatt",
+            "label": "Eiendomsskatt",
+            "sortCode": "0000081"
+          },
+          {
+            "id": "SBMENU12109",
+            "label": "Eiendomsskatt",
+            "sortCode": "0000000200"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14155?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14155?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14155/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14155/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "05823",
+      "label": "05823: Nye flerbolighus, prisindeks (avslutta serie) 2000H1-2008H1",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2008-08-25T08:00:00Z",
+      "firstPeriod": "2000H1",
+      "lastPeriod": "2008H1",
+      "category": "public",
+      "variableNames": [
+        "boligtype",
+        "statistikkvariabel",
+        "halvår"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "pp",
+      "timeUnit": "Other",
+      "paths": [
+        [
+          {
+            "id": "pp",
+            "label": "Priser og prisindekser",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "pp01",
+            "label": "Boligpriser og boligprisindekser",
+            "sortCode": "0000083"
+          },
+          {
+            "id": "flerbolig",
+            "label": "Prisindeks for nye flerbolighus (opphørt)",
+            "sortCode": "0000084"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05823?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05823?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05823/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05823/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "11574",
+      "label": "11574: Næringseiendomutleie 2011-2024",
+      "description": "",
+      "sortCode": "0000000700",
+      "updated": "2026-02-17T07:00:00Z",
+      "firstPeriod": "2011",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "type eiendom",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "pp",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "pp",
+            "label": "Priser og prisindekser",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "pp01",
+            "label": "Boligpriser og boligprisindekser",
+            "sortCode": "0000083"
+          },
+          {
+            "id": "naringutl",
+            "label": "Prisindeks for utleie av næringseiendom",
+            "sortCode": "0000084"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11574?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11574?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11574/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11574/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "04596",
+      "label": "04596: Prisindeks for kontor- og forretningseiendommer (2000=100) (avslutta serie) 1996H1-2007H2",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2008-04-16T08:00:00Z",
+      "firstPeriod": "1996H1",
+      "lastPeriod": "2007H2",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "statistikkvariabel",
+        "halvår"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "pp",
+      "timeUnit": "Other",
+      "paths": [
+        [
+          {
+            "id": "pp",
+            "label": "Priser og prisindekser",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "pp01",
+            "label": "Boligpriser og boligprisindekser",
+            "sortCode": "0000083"
+          },
+          {
+            "id": "pkfi",
+            "label": "Prisindeks for kontor- og forretningseiendommer (opphørt)",
+            "sortCode": "0000084"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04596?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04596?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04596/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04596/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "11361",
+      "label": "11361: Barn i barnevernsinstitusjoner per 31. desember, etter region, alder, institusjonens eierskap og institusjonstype 2007-2024",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2025-12-11T07:00:00Z",
+      "firstPeriod": "2007",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "alder",
+        "eierskap",
+        "institusjonstype",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "sk",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "sk",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000087"
+          },
+          {
+            "id": "sk01",
+            "label": "Barne- og familievern",
+            "sortCode": "0000088"
+          },
+          {
+            "id": "barneverni",
+            "label": "Barnevernsinstitusjoner",
+            "sortCode": "0000089"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11361?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11361?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11361/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11361/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "11362",
+      "label": "11362: Barn i barnevernsinstitusjoner per 31. desember, etter region, kjønn, institusjonens eierskap og institusjonstype 2007-2024",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2025-12-11T07:00:00Z",
+      "firstPeriod": "2007",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "kjønn",
+        "eierskap",
+        "institusjonstype",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "sk",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "sk",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000087"
+          },
+          {
+            "id": "sk01",
+            "label": "Barne- og familievern",
+            "sortCode": "0000088"
+          },
+          {
+            "id": "barneverni",
+            "label": "Barnevernsinstitusjoner",
+            "sortCode": "0000089"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11362?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11362?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11362/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11362/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "11647",
+      "label": "11647: Barn i barnevernsinstitusjoner per 31. desember, etter region, plasseringshjemmel (lovparagraf), institusjonens eierskap og institusjonstype 2007-2024",
+      "description": "",
+      "sortCode": "0000000030",
+      "updated": "2025-12-11T07:00:00Z",
+      "firstPeriod": "2007",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "plasseringshjemmel",
+        "eierskap",
+        "institusjonstype",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "sk",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "sk",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000087"
+          },
+          {
+            "id": "sk01",
+            "label": "Barne- og familievern",
+            "sortCode": "0000088"
+          },
+          {
+            "id": "barneverni",
+            "label": "Barnevernsinstitusjoner",
+            "sortCode": "0000089"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11647?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11647?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11647/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11647/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "10143",
+      "label": "10143: Private barnehager, etter barnehagetype (F) 2012-2024",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2025-12-23T07:00:00Z",
+      "firstPeriod": "2012",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "barnehagetype",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ud",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "sv",
+            "label": "Svalbard",
+            "sortCode": "0000092"
+          },
+          {
+            "id": "sv01",
+            "label": "Arbeid, lønn og utdanning",
+            "sortCode": "0000093"
+          },
+          {
+            "id": "barnregnp",
+            "label": "Regnskap for private barnehager",
+            "sortCode": "0000094"
+          }
+        ],
+        [
+          {
+            "id": "ud",
+            "label": "Utdanning",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "ud01",
+            "label": "Barnehager",
+            "sortCode": "0000108"
+          },
+          {
+            "id": "barnregnp",
+            "label": "Regnskap for private barnehager",
+            "sortCode": "0000109"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10143?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10143?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10143/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/10143/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "12408",
+      "label": "12408: Private barnehagers inntekter og kostnader (1 000 kr) (F) 2015-2024",
+      "description": "",
+      "sortCode": "0000000050",
+      "updated": "2025-12-23T07:00:00Z",
+      "firstPeriod": "2015",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ud",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "sv",
+            "label": "Svalbard",
+            "sortCode": "0000092"
+          },
+          {
+            "id": "sv01",
+            "label": "Arbeid, lønn og utdanning",
+            "sortCode": "0000093"
+          },
+          {
+            "id": "barnregnp",
+            "label": "Regnskap for private barnehager",
+            "sortCode": "0000094"
+          }
+        ],
+        [
+          {
+            "id": "ud",
+            "label": "Utdanning",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "ud01",
+            "label": "Barnehager",
+            "sortCode": "0000108"
+          },
+          {
+            "id": "barnregnp",
+            "label": "Regnskap for private barnehager",
+            "sortCode": "0000109"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12408?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12408?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12408/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12408/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "14499",
+      "label": "14499: Private barnehager. Årsresultat, etter organisasjonsform 2023-2024",
+      "description": "",
+      "sortCode": "0000000060",
+      "updated": "2025-12-23T07:00:00Z",
+      "firstPeriod": "2023",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "årsresultat",
+        "organisasjonsform",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ud",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "sv",
+            "label": "Svalbard",
+            "sortCode": "0000092"
+          },
+          {
+            "id": "sv01",
+            "label": "Arbeid, lønn og utdanning",
+            "sortCode": "0000093"
+          },
+          {
+            "id": "barnregnp",
+            "label": "Regnskap for private barnehager",
+            "sortCode": "0000094"
+          }
+        ],
+        [
+          {
+            "id": "ud",
+            "label": "Utdanning",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "ud01",
+            "label": "Barnehager",
+            "sortCode": "0000108"
+          },
+          {
+            "id": "barnregnp",
+            "label": "Regnskap for private barnehager",
+            "sortCode": "0000109"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14499?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14499?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14499/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14499/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "11000",
+      "label": "11000: Andel som har tilgang til diverse IKT, etter husholdningstype og husholdningens nettoinntekt (prosent) 2013-2025",
+      "description": "",
+      "sortCode": "0000001010",
+      "updated": "2025-09-24T06:00:00Z",
+      "firstPeriod": "2013",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "husholdningstype",
+        "husholdningens nettoinntekt",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ti",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "ti",
+            "label": "Teknologi og innovasjon",
+            "sortCode": "0000099"
+          },
+          {
+            "id": "ti02",
+            "label": "Digitalisering, innovasjon og patenter",
+            "sortCode": "0000100"
+          },
+          {
+            "id": "ikthus",
+            "label": "Bruk av IKT i husholdningene",
+            "sortCode": "0000101"
+          },
+          {
+            "id": "SBMENU5306",
+            "label": "Tilgang og bruk av PC, mobil og internett",
+            "sortCode": "0000001000"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11000?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11000?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11000/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11000/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "11124",
+      "label": "11124: Hyppighet på internett- og PC-bruk siste 12 måneder, etter kjønn og alder (prosent) 2009-2025",
+      "description": "",
+      "sortCode": "0000001020",
+      "updated": "2025-09-24T06:00:00Z",
+      "firstPeriod": "2009",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "kjønn",
+        "alder",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ti",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "ti",
+            "label": "Teknologi og innovasjon",
+            "sortCode": "0000099"
+          },
+          {
+            "id": "ti02",
+            "label": "Digitalisering, innovasjon og patenter",
+            "sortCode": "0000100"
+          },
+          {
+            "id": "ikthus",
+            "label": "Bruk av IKT i husholdningene",
+            "sortCode": "0000101"
+          },
+          {
+            "id": "SBMENU5306",
+            "label": "Tilgang og bruk av PC, mobil og internett",
+            "sortCode": "0000001000"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11124?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11124?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11124/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11124/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "06995",
+      "label": "06995: Bruk av PC og internett de siste 3 måneder, etter kjønn og alder (prosent) 2003-2025",
+      "description": "",
+      "sortCode": "0000001030",
+      "updated": "2025-09-24T06:00:00Z",
+      "firstPeriod": "2003",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "kjønn",
+        "alder",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ti",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "ti",
+            "label": "Teknologi og innovasjon",
+            "sortCode": "0000099"
+          },
+          {
+            "id": "ti02",
+            "label": "Digitalisering, innovasjon og patenter",
+            "sortCode": "0000100"
+          },
+          {
+            "id": "ikthus",
+            "label": "Bruk av IKT i husholdningene",
+            "sortCode": "0000101"
+          },
+          {
+            "id": "SBMENU5306",
+            "label": "Tilgang og bruk av PC, mobil og internett",
+            "sortCode": "0000001000"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06995?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06995?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06995/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06995/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07298",
+      "label": "07298: Transportytelser (F) 2008-2018",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2019-05-24T06:00:00Z",
+      "firstPeriod": "2008",
+      "lastPeriod": "2018",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "statistikkvariabel",
+        "enkeltår"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "tr",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "tr",
+            "label": "Transport og reiseliv",
+            "sortCode": "0000102"
+          },
+          {
+            "id": "tr01",
+            "label": "Landtransport",
+            "sortCode": "0000103"
+          },
+          {
+            "id": "transpsg",
+            "label": "Transport med varebiler",
+            "sortCode": "0000104"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07298?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07298?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07298/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07298/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07283",
+      "label": "07283: Transportytelser for ulike bilgrupper 2008-2018",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2019-05-24T06:00:00Z",
+      "firstPeriod": "2008",
+      "lastPeriod": "2018",
+      "category": "public",
+      "variableNames": [
+        "kjøretøytype",
+        "statistikkvariabel",
+        "enkeltår"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "tr",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "tr",
+            "label": "Transport og reiseliv",
+            "sortCode": "0000102"
+          },
+          {
+            "id": "tr01",
+            "label": "Landtransport",
+            "sortCode": "0000103"
+          },
+          {
+            "id": "transpsg",
+            "label": "Transport med varebiler",
+            "sortCode": "0000104"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07283?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07283?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07283/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07283/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07292",
+      "label": "07292: Transportytelser for ulike bilgrupper. Gjennomsnitt 2008-2018",
+      "description": "",
+      "sortCode": "0000000030",
+      "updated": "2019-05-24T06:00:00Z",
+      "firstPeriod": "2008",
+      "lastPeriod": "2018",
+      "category": "public",
+      "variableNames": [
+        "kjøretøytype",
+        "statistikkvariabel",
+        "enkeltår"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "tr",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "tr",
+            "label": "Transport og reiseliv",
+            "sortCode": "0000102"
+          },
+          {
+            "id": "tr01",
+            "label": "Landtransport",
+            "sortCode": "0000103"
+          },
+          {
+            "id": "transpsg",
+            "label": "Transport med varebiler",
+            "sortCode": "0000104"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07292?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07292?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07292/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07292/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "04377",
+      "label": "04377: Vaksenopplæring, etter kjønn, opplæring, institusjonstype, eigeforhold og målform (F) (avslutta serie) 2002",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2003-06-13T08:00:00Z",
+      "firstPeriod": "2002",
+      "lastPeriod": "2002",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "opplæring",
+        "kjønn",
+        "institusjonstype",
+        "eigeforhold",
+        "målform",
+        "statistikkvariabel",
+        "år"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ud",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "ud",
+            "label": "Utdanning",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "ud02",
+            "label": "Grunnskoler",
+            "sortCode": "0000109"
+          },
+          {
+            "id": "grsvo",
+            "label": "Grunnskoleopplæring for vaksne (opphørt)",
+            "sortCode": "0000110"
+          }
+        ],
+        [
+          {
+            "id": "ud",
+            "label": "Utdanning",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "ud06",
+            "label": "Voksnes læring og ferdigheter",
+            "sortCode": "0000114"
+          },
+          {
+            "id": "grsvo",
+            "label": "Grunnskoleopplæring for vaksne (opphørt)",
+            "sortCode": "0000115"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04377?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04377?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04377/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04377/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "04375",
+      "label": "04375: Deltakarar i norsk med samfunnskunnskap, etter kjønn, A-løp og B-løp, institusjonstype, eigeforhold og målform (F) (avslutta serie) 2002",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2003-06-13T08:00:00Z",
+      "firstPeriod": "2002",
+      "lastPeriod": "2002",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "kjønn",
+        "løp",
+        "institusjonstype",
+        "eigeforhold",
+        "målform",
+        "statistikkvariabel",
+        "år"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ud",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "ud",
+            "label": "Utdanning",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "ud02",
+            "label": "Grunnskoler",
+            "sortCode": "0000109"
+          },
+          {
+            "id": "grsvo",
+            "label": "Grunnskoleopplæring for vaksne (opphørt)",
+            "sortCode": "0000110"
+          }
+        ],
+        [
+          {
+            "id": "ud",
+            "label": "Utdanning",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "ud06",
+            "label": "Voksnes læring og ferdigheter",
+            "sortCode": "0000114"
+          },
+          {
+            "id": "grsvo",
+            "label": "Grunnskoleopplæring for vaksne (opphørt)",
+            "sortCode": "0000115"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04375?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04375?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04375/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04375/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "05114",
+      "label": "05114: Lærarar, etter skoleslag og skolefylke (F) (avslutta serie) 1992-2003",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2006-02-20T09:00:00Z",
+      "firstPeriod": "1992",
+      "lastPeriod": "2003",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "skoleslag",
+        "statistikkvariabel",
+        "år"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ud",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "ud",
+            "label": "Utdanning",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "ud02",
+            "label": "Grunnskoler",
+            "sortCode": "0000109"
+          },
+          {
+            "id": "utlaerer",
+            "label": "Lærarar (opphørt)",
+            "sortCode": "0000110"
+          }
+        ],
+        [
+          {
+            "id": "ud",
+            "label": "Utdanning",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "ud03",
+            "label": "Universitets- og høgskoleutdanning",
+            "sortCode": "0000111"
+          },
+          {
+            "id": "utlaerer",
+            "label": "Lærarar (opphørt)",
+            "sortCode": "0000112"
+          }
+        ],
+        [
+          {
+            "id": "ud",
+            "label": "Utdanning",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "ud05",
+            "label": "Videregående utdanning",
+            "sortCode": "0000113"
+          },
+          {
+            "id": "utlaerer",
+            "label": "Lærarar (opphørt)",
+            "sortCode": "0000114"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05114?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05114?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05114/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05114/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "14771",
+      "label": "14771: Betalingsstrømmer mellom Norge og utlandet, etter næring (SN2025) (mill. kr) 2026K1",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2026-05-13T06:00:00Z",
+      "firstPeriod": "2026K1",
+      "lastPeriod": "2026K1",
+      "category": "public",
+      "variableNames": [
+        "inngående verdi og utgående verdi",
+        "næring (SN2025)",
+        "statistikkvariabel",
+        "kvartal"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ut",
+      "timeUnit": "Quarterly",
+      "paths": [
+        [
+          {
+            "id": "ut",
+            "label": "Utenriksøkonomi",
+            "sortCode": "0000115"
+          },
+          {
+            "id": "ut01",
+            "label": "Fordringer og gjeld overfor utlandet",
+            "sortCode": "0000116"
+          },
+          {
+            "id": "betalstr",
+            "label": "Betalingsstrømmer mellom Norge og utlandet",
+            "sortCode": "0000117"
+          }
+        ],
+        [
+          {
+            "id": "ut",
+            "label": "Utenriksøkonomi",
+            "sortCode": "0000115"
+          },
+          {
+            "id": "ut02",
+            "label": "Utenrikshandel",
+            "sortCode": "0000117"
+          },
+          {
+            "id": "betalstr",
+            "label": "Betalingsstrømmer mellom Norge og utlandet",
+            "sortCode": "0000118"
+          }
+        ],
+        [
+          {
+            "id": "ut",
+            "label": "Utenriksøkonomi",
+            "sortCode": "0000115"
+          },
+          {
+            "id": "ut03",
+            "label": "Utenriksregnskap",
+            "sortCode": "0000118"
+          },
+          {
+            "id": "betalstr",
+            "label": "Betalingsstrømmer mellom Norge og utlandet",
+            "sortCode": "0000119"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14771?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14771?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14771/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14771/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "08785",
+      "label": "08785: Betalingsstrømmer mellom Norge og utlandet, etter næring (SN2007) (mill. kr) (avslutta serie) 2008K1-2025K4",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2026-02-13T07:00:00Z",
+      "firstPeriod": "2008K1",
+      "lastPeriod": "2025K4",
+      "category": "public",
+      "variableNames": [
+        "inngående verdi og utgående verdi",
+        "næring (SN2007)",
+        "statistikkvariabel",
+        "kvartal"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ut",
+      "timeUnit": "Quarterly",
+      "paths": [
+        [
+          {
+            "id": "ut",
+            "label": "Utenriksøkonomi",
+            "sortCode": "0000115"
+          },
+          {
+            "id": "ut01",
+            "label": "Fordringer og gjeld overfor utlandet",
+            "sortCode": "0000116"
+          },
+          {
+            "id": "betalstr",
+            "label": "Betalingsstrømmer mellom Norge og utlandet",
+            "sortCode": "0000117"
+          }
+        ],
+        [
+          {
+            "id": "ut",
+            "label": "Utenriksøkonomi",
+            "sortCode": "0000115"
+          },
+          {
+            "id": "ut02",
+            "label": "Utenrikshandel",
+            "sortCode": "0000117"
+          },
+          {
+            "id": "betalstr",
+            "label": "Betalingsstrømmer mellom Norge og utlandet",
+            "sortCode": "0000118"
+          }
+        ],
+        [
+          {
+            "id": "ut",
+            "label": "Utenriksøkonomi",
+            "sortCode": "0000115"
+          },
+          {
+            "id": "ut03",
+            "label": "Utenriksregnskap",
+            "sortCode": "0000118"
+          },
+          {
+            "id": "betalstr",
+            "label": "Betalingsstrømmer mellom Norge og utlandet",
+            "sortCode": "0000119"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08785?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08785?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08785/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08785/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07478",
+      "label": "07478: Betalingsstrømmer mellom Norge og utlandet, etter land (mill. kr) 2008K1-2026K1",
+      "description": "",
+      "sortCode": "0000000030",
+      "updated": "2026-05-13T06:00:00Z",
+      "firstPeriod": "2008K1",
+      "lastPeriod": "2026K1",
+      "category": "public",
+      "variableNames": [
+        "inngående verdi og utgående verdi",
+        "land",
+        "statistikkvariabel",
+        "kvartal"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ut",
+      "timeUnit": "Quarterly",
+      "paths": [
+        [
+          {
+            "id": "ut",
+            "label": "Utenriksøkonomi",
+            "sortCode": "0000115"
+          },
+          {
+            "id": "ut01",
+            "label": "Fordringer og gjeld overfor utlandet",
+            "sortCode": "0000116"
+          },
+          {
+            "id": "betalstr",
+            "label": "Betalingsstrømmer mellom Norge og utlandet",
+            "sortCode": "0000117"
+          }
+        ],
+        [
+          {
+            "id": "ut",
+            "label": "Utenriksøkonomi",
+            "sortCode": "0000115"
+          },
+          {
+            "id": "ut02",
+            "label": "Utenrikshandel",
+            "sortCode": "0000117"
+          },
+          {
+            "id": "betalstr",
+            "label": "Betalingsstrømmer mellom Norge og utlandet",
+            "sortCode": "0000118"
+          }
+        ],
+        [
+          {
+            "id": "ut",
+            "label": "Utenriksøkonomi",
+            "sortCode": "0000115"
+          },
+          {
+            "id": "ut03",
+            "label": "Utenriksregnskap",
+            "sortCode": "0000118"
+          },
+          {
+            "id": "betalstr",
+            "label": "Betalingsstrømmer mellom Norge og utlandet",
+            "sortCode": "0000119"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07478?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07478?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07478/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07478/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "01186",
+      "label": "01186: EF/EU-avstemningen. Avgitte stemmer (K) 1972-1994",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "1999-06-18T10:21:21Z",
+      "firstPeriod": "1972",
+      "lastPeriod": "1994",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "stemmetype",
+        "stemmetidspunkt",
+        "statistikkvariabel",
+        "enkeltår"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "va",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "va",
+            "label": "Valg",
+            "sortCode": "0000119"
+          },
+          {
+            "id": "va01",
+            "label": "Folkeavstemninger",
+            "sortCode": "0000120"
+          },
+          {
+            "id": "euvalg",
+            "label": "Folkeavstemningen om EU (opphørt)",
+            "sortCode": "0000121"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01186?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01186?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01186/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01186/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "01188",
+      "label": "01188: EF/EU-avstemningen. Avgitte stemmer, etter kjønn (K) 1972-1994",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "1999-06-18T10:21:21Z",
+      "firstPeriod": "1972",
+      "lastPeriod": "1994",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "kjønn",
+        "stemmetidspunkt",
+        "statistikkvariabel",
+        "enkeltår"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "va",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "va",
+            "label": "Valg",
+            "sortCode": "0000119"
+          },
+          {
+            "id": "va01",
+            "label": "Folkeavstemninger",
+            "sortCode": "0000120"
+          },
+          {
+            "id": "euvalg",
+            "label": "Folkeavstemningen om EU (opphørt)",
+            "sortCode": "0000121"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01188?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01188?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01188/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01188/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "01187",
+      "label": "01187: EF/EU-avstemningen. Resultatet av avstemningen (K) 1972-1994",
+      "description": "",
+      "sortCode": "0000000030",
+      "updated": "1999-06-16T13:06:41Z",
+      "firstPeriod": "1972",
+      "lastPeriod": "1994",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "ja-/nei-stemmer",
+        "statistikkvariabel",
+        "enkeltår"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "va",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "va",
+            "label": "Valg",
+            "sortCode": "0000119"
+          },
+          {
+            "id": "va01",
+            "label": "Folkeavstemninger",
+            "sortCode": "0000120"
+          },
+          {
+            "id": "euvalg",
+            "label": "Folkeavstemningen om EU (opphørt)",
+            "sortCode": "0000121"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01187?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01187?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01187/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/01187/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "08208",
+      "label": "08208: Næring 70.2 Administrativ rådgivning. Omsetning, etter næring (SN2007) og tjenestetype. Foretak 2008-2024",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2026-05-15T06:00:00Z",
+      "firstPeriod": "2008",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "næring (SN2007)",
+        "tjenestetype",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "vt",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "vt",
+            "label": "Varehandel og tjenesteyting",
+            "sortCode": "0000125"
+          },
+          {
+            "id": "vt01",
+            "label": "Tjenesteyting",
+            "sortCode": "0000126"
+          },
+          {
+            "id": "ftot",
+            "label": "Næringslivstjenester, omsetning etter tjenestetyper",
+            "sortCode": "0000127"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08208?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08208?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08208/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08208/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "08209",
+      "label": "08209: Næring 73.1 Annonse- og reklamevirksomhet. Omsetning, etter næring (SN2007) og tjenestetype. Foretak 2008-2024",
+      "description": "",
+      "sortCode": "0000000020",
+      "updated": "2026-05-15T06:00:00Z",
+      "firstPeriod": "2008",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "næring (SN2007)",
+        "tjenestetype",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "vt",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "vt",
+            "label": "Varehandel og tjenesteyting",
+            "sortCode": "0000125"
+          },
+          {
+            "id": "vt01",
+            "label": "Tjenesteyting",
+            "sortCode": "0000126"
+          },
+          {
+            "id": "ftot",
+            "label": "Næringslivstjenester, omsetning etter tjenestetyper",
+            "sortCode": "0000127"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08209?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08209?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08209/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08209/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "08210",
+      "label": "08210: Næring 78 Arbeidskrafttjenester. Omsetning, etter næring (SN2007) og tjenestetype. Foretak 2008-2024",
+      "description": "",
+      "sortCode": "0000000030",
+      "updated": "2026-05-15T06:00:00Z",
+      "firstPeriod": "2008",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "næring (SN2007)",
+        "tjenestetype",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "vt",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "vt",
+            "label": "Varehandel og tjenesteyting",
+            "sortCode": "0000125"
+          },
+          {
+            "id": "vt01",
+            "label": "Tjenesteyting",
+            "sortCode": "0000126"
+          },
+          {
+            "id": "ftot",
+            "label": "Næringslivstjenester, omsetning etter tjenestetyper",
+            "sortCode": "0000127"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08210?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08210?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08210/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08210/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "pageNumber": 1,
+    "pageSize": 10000,
+    "totalElements": 7747,
+    "totalPages": 1,
+    "links": []
+  },
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "no",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/tables/?lang=no&pagesize=10000&pageNumber=1"
+    }
+  ]
+}
