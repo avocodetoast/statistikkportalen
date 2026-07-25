@@ -220,6 +220,21 @@ const translations = {
     'table.prefix':       'Tabell',
     'table.unnamed':      'Uten navn',
 
+    // Tabellinfo (table-metadata.js). Avsnittsoverskriftene under «sections»
+    // kommer fra kildens API og oversettes ikke — FHI publiserer kun norsk.
+    'metadata.title':           'Tabellinfo',
+    'metadata.source':          'Kilde',
+    'metadata.publishedBy':     'Publisert av',
+    'metadata.updated':         'Sist oppdatert',
+    'metadata.status':          'Status',
+    'metadata.official':        'Offisiell statistikk',
+    'metadata.about':           'Om statistikken',
+    'metadata.notes':           'Merknader',
+    'metadata.contact':         'Kontakt',
+    'metadata.phone':           'tlf',
+    'metadata.flags':           'Tegnforklaring',
+    'metadata.classifications': 'Klassifikasjoner og definisjoner',
+
     // Table rotation dialog
     'rotation.title':        'Roter tabell',
     'rotation.instructions': 'Dra dimensjoner mellom rader og kolonner for å endre tabellens layout.',
@@ -507,6 +522,19 @@ const translations = {
     'table.notApplicable': 'Not applicable',
     'table.prefix':        'Table',
     'table.unnamed':       'Unnamed',
+
+    'metadata.title':           'Table info',
+    'metadata.source':          'Source',
+    'metadata.publishedBy':     'Published by',
+    'metadata.updated':         'Last updated',
+    'metadata.status':          'Status',
+    'metadata.official':        'Official statistics',
+    'metadata.about':           'About the statistics',
+    'metadata.notes':           'Notes',
+    'metadata.contact':         'Contact',
+    'metadata.phone':           'phone',
+    'metadata.flags':           'Symbols',
+    'metadata.classifications': 'Classifications and definitions',
 
     'rotation.title':        'Rotate table',
     'rotation.instructions': 'Drag dimensions between rows and columns to change the table layout.',

@@ -426,6 +426,10 @@ async function loadTableMetadata(tableId) {
   tableMetadata = data;
   logger.log('[VariableSelect] Loaded metadata:', data);
 
+  // Ferske perioder fra metadataene (kilder uten byggetids-katalog, se
+  // BrowserState.syncTablePeriodsFromMetadata) — retter opp tabelloversikten.
+  BrowserState.syncTablePeriodsFromMetadata(tableId, data);
+
   // Update title if it was set as a placeholder during direct URL navigation
   if (data.label && AppState.selectedTable) {
     AppState.selectedTable.label = data.label;

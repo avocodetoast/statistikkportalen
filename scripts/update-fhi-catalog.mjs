@@ -48,10 +48,22 @@
  * Avvik (foreldreløse tabell-id-er, udefinerte kategorier, ukategoriserte
  * tabeller) logges som advarsler.
  *
+ * INKREMENTELL KJØRING (--incremental)
+ * -------------------------------------
+ * En full kjøring er ~740 kall (2 per tabell). Tabell-lista
+ * GET /{source}/table koster derimot ETT kall per kilde og inneholder
+ * modifiedAt/publishedAt — den brukes til å hente KUN de tabellene som er nye
+ * eller endret siden katalogens `generatedAt`, og som fasit på hvilke tabeller
+ * som fortsatt finnes (fjernede tabeller tas ut). Typisk uke-drift er en
+ * håndfull tabeller, altså ~30 kall i stedet for ~740. Kuratering flettes inn
+ * som vanlig, og `lastFullBuildAt` arves så det er synlig når det sist var en
+ * full regenerering. Uendrede rader beholdes ordrett.
+ * Flettelogikken ligger i scripts/lib/fhi-catalog-merge.mjs (enhetstestet).
+ *
  * Kjøres manuelt/periodisk (dataene endrer seg sjelden — nye FHI-tabeller er
  * uvanlig, oppdaterte tallserier endrer ikke tittel/periode-strukturen):
  *   node scripts/update-fhi-catalog.mjs [--rate <kall/min>] [--out <sti>]
- *     [--limit <antall per kilde>] [--curation <sti>]
+ *     [--limit <antall per kilde>] [--curation <sti>] [--incremental]
  *
  * Krever Node 18+ (global fetch). Ingen npm-avhengigheter.
  */
@@ -61,6 +73,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { applyCuration } from './lib/fhi-curation.mjs';
+import { selectStaleTableIds, mergeCatalogSource } from './lib/fhi-catalog-merge.mjs';
 
 const DEFAULT_RATE = 240; // kall/minutt — FHI-API-et dokumenterer ingen grense; holdt beskjedent av høflighet
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -76,6 +89,7 @@ function parseArgs(argv) {
     curation: path.join(REPO_ROOT, 'data', 'sources', 'fhi-curation.json'),
     rate: DEFAULT_RATE,
     limit: null, // maks antall tabeller PER KILDE (for rask testing)
+    incremental: false, // hent kun nye/endrede tabeller (se --incremental)
   };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
@@ -83,6 +97,7 @@ function parseArgs(argv) {
     else if (a === '--curation') args.curation = argv[++i];
     else if (a === '--rate') args.rate = parseInt(argv[++i], 10);
     else if (a === '--limit') args.limit = parseInt(argv[++i], 10);
+    else if (a === '--incremental') args.incremental = true;
     else {
       console.error(`Ukjent argument: ${a}`);
       process.exit(2);
@@ -99,6 +114,26 @@ function parseArgs(argv) {
   args.out = path.resolve(args.out);
   args.curation = path.resolve(args.curation);
   return args;
+}
+
+/**
+ * Les den eksisterende katalogen for --incremental. Mangler den, kan vi ikke
+ * regne ut noe delta — da skal brukeren kjøre en full build først, ikke få en
+ * stille (og svært dyr) fallback.
+ */
+function loadPreviousCatalog(file) {
+  if (!fs.existsSync(file)) {
+    throw new Error(
+      `--incremental krever en eksisterende katalog på ${file}. ` +
+      'Kjør «node scripts/update-fhi-catalog.mjs» (uten --incremental) først.'
+    );
+  }
+  const parsed = JSON.parse(fs.readFileSync(file, 'utf8'));
+  if (!parsed || typeof parsed !== 'object' || !parsed.sources || !parsed.generatedAt) {
+    throw new Error(`Katalogen ${file} mangler «sources» eller «generatedAt» — kjør en full build.`);
+  }
+  console.log(`[fhi-catalog] Inkrementelt fra ${file} (generatedAt: ${parsed.generatedAt}).`);
+  return parsed;
 }
 
 /** Les kurateringsfila; mangler den (første kjøring) → tomt objekt. */
@@ -118,18 +153,29 @@ function loadCuration(file) {
 // App-konfigurasjon (duplisert fra generate-seo-pages.mjs/update-table-metadata.mjs)
 // ---------------------------------------------------------------------------
 
-/** Kjør en browser-global appfil i en sandkasse og les ut window.{key}. */
-function loadBrowserGlobal(file, key) {
-  const src = fs.readFileSync(path.join(REPO_ROOT, 'js', file), 'utf8');
+/**
+ * Kjør en browser-global appfil i en sandkasse og les ut window.{key}.
+ *
+ * `deps` kjøres i SAMME sandkasse først (speiler <script>-rekkefølgen i
+ * index.html). config.js refererer window.NbCatalog (js/sources/nb-catalog.js)
+ * og window.SourceTopology (js/sources/source-topology.js) for kildekatalogen
+ * og emnetre-topologien; uten dem kommer AppConfig ut uten
+ * sources.fhi.sourceIds. Samme mønster som loadAppConfig i
+ * scripts/generate-seo-pages.mjs.
+ */
+function loadBrowserGlobal(file, key, deps = []) {
   const sandbox = { window: {} };
-  vm.runInNewContext(src, sandbox);
+  for (const dep of deps.concat([file])) {
+    vm.runInNewContext(fs.readFileSync(path.join(REPO_ROOT, 'js', dep), 'utf8'), sandbox);
+  }
   const value = sandbox.window[key];
   if (!value) throw new Error(`Klarte ikke å lese ${key} fra js/${file}`);
   return value;
 }
 
 function loadAppConfig() {
-  const cfg = loadBrowserGlobal('config.js', 'AppConfig');
+  const cfg = loadBrowserGlobal('config.js', 'AppConfig',
+    ['sources/nb-catalog.js', 'sources/source-topology.js']);
   const fhi = cfg.sources && cfg.sources.fhi;
   if (!fhi || !fhi.baseUrl || !Array.isArray(fhi.sourceIds) || fhi.sourceIds.length === 0) {
     throw new Error('AppConfig.sources.fhi mangler baseUrl/sourceIds i js/config.js');
@@ -350,10 +396,16 @@ function deriveTitleAndDescription(rawTitle, paragraphs) {
 // Bygging per kilde
 // ---------------------------------------------------------------------------
 
-async function buildSource(appConfig, source, throttle, limit) {
+/** GET /{source}/table — hele tabell-lista, sortert på tableId. */
+async function fetchSourceRows(appConfig, source, throttle) {
   const base = appConfig.sources.fhi.baseUrl.replace(/\/+$/, '');
   const rows = await fetchJson(`${base}/${encodeURIComponent(source)}/table`, throttle);
-  const sorted = (rows || []).slice().sort((a, b) => Number(a.tableId) - Number(b.tableId));
+  return (rows || []).slice().sort((a, b) => Number(a.tableId) - Number(b.tableId));
+}
+
+async function buildSource(appConfig, source, throttle, limit, presetRows) {
+  const base = appConfig.sources.fhi.baseUrl.replace(/\/+$/, '');
+  const sorted = presetRows || await fetchSourceRows(appConfig, source, throttle);
   const queue = limit !== null ? sorted.slice(0, limit) : sorted;
 
   console.log(`[fhi-catalog] Kilde «${source}»: ${sorted.length} tabeller${limit !== null ? ` (behandler ${queue.length})` : ''}.`);
@@ -453,25 +505,85 @@ async function main() {
   }
 
   const curation = loadCuration(args.curation);
+  const previous = args.incremental ? loadPreviousCatalog(args.out) : null;
 
   const sources = {};
+  let probedTotal = 0;
+
   for (const source of sourceIds) {
-    const tables = await buildSource(appConfig, source, throttle, args.limit);
+    let tables;
+
+    if (previous) {
+      // Inkrementelt: tabell-lista (ETT kall per kilde) avgjør både hva som må
+      // hentes på nytt og hva som fortsatt finnes. Kun nye/endrede tabeller
+      // koster /dimension + /metadata-kall.
+      const rows = await fetchSourceRows(appConfig, source, throttle);
+      const existingTables = (previous.sources[source] || {}).tables || [];
+      const staleIds = selectStaleTableIds(existingTables, rows, previous.generatedAt);
+      const staleSet = new Set(staleIds.map(String));
+      const staleRows = rows.filter(r => staleSet.has(String(r.tableId)));
+
+      console.log(`[fhi-catalog] Kilde «${source}»: ${rows.length} tabeller, ` +
+                  `${staleRows.length} nye/endrede siden ${previous.generatedAt}.`);
+
+      const probed = staleRows.length
+        ? await buildSource(appConfig, source, throttle, args.limit, staleRows)
+        : [];
+      probedTotal += probed.length;
+
+      const merged = mergeCatalogSource(existingTables, rows, probed);
+      if (merged.added.length) console.log(`[fhi-catalog]   nye: ${merged.added.join(', ')}`);
+      if (merged.updated.length) console.log(`[fhi-catalog]   oppdatert: ${merged.updated.join(', ')}`);
+      if (merged.removed.length) {
+        console.warn(`[fhi-catalog]   fjernet (borte fra API-et): ${merged.removed.join(', ')}`);
+      }
+      tables = merged.tables;
+    } else {
+      tables = await buildSource(appConfig, source, throttle, args.limit);
+      probedTotal += tables.length;
+    }
+
+    // Kurateringen flettes på nytt over HELE kilden, også inkrementelt: den
+    // ligger i en egen innsjekket fil og er idempotent.
     const built = { title: titleMap[source] || source, tables };
     sources[source] = applyCuration(built, curation.sources[source],
       msg => console.warn(`[fhi-catalog] kuratering ${source}: ${msg}`));
   }
 
+  const now = new Date().toISOString();
   const output = {
-    generatedAt: new Date().toISOString(),
+    generatedAt: now,
+    // Når katalogen sist ble bygget FRA BUNNEN. Inkrementelle kjøringer
+    // arver verdien, så det er synlig når en full regenerering bør kjøres.
+    lastFullBuildAt: previous ? (previous.lastFullBuildAt || previous.generatedAt) : now,
     sources,
   };
 
   fs.mkdirSync(path.dirname(args.out), { recursive: true });
-  atomicWrite(args.out, JSON.stringify(output, null, 2));
+  const json = JSON.stringify(output, null, 2);
+  atomicWrite(args.out, json);
+
+  // Samme katalog som en browser-global, ved siden av .json-fila.
+  // BAKGRUNN: nettleseren blokkerer fetch() av lokale filer når appen åpnes
+  // rett fra disk (file:// → «origin 'null'»), og da faller alle FHI-titler
+  // tilbake til interne kodenavn med tomme periodekolonner. <script> rammes
+  // ikke av CORS, så .js-varianten gjør at den dokumenterte «bare åpne
+  // index.html»-flyten virker. .json-fila beholdes for Node-verktøyene
+  // (scripts/lib/seo-sources.mjs og --incremental her).
+  const jsOut = args.out.replace(/\.json$/, '') + '.js';
+  atomicWrite(jsOut,
+    '// AUTOGENERERT av scripts/update-fhi-catalog.mjs — IKKE rediger for hånd.\n' +
+    '// Speiler data/sources/fhi-catalog.json som en browser-global, slik at\n' +
+    '// katalogen også lastes når index.html åpnes fra disk (file://), der\n' +
+    '// fetch() av lokale filer blokkeres av CORS. Se getCatalog() i\n' +
+    '// js/sources/fhi-adapter.js.\n' +
+    'window.FhiCatalog = ' + json + ';\n');
 
   const totalTables = Object.values(sources).reduce((n, s) => n + s.tables.length, 0);
-  console.log(`\n[fhi-catalog] Ferdig: ${sourceIds.length} kilder, ${totalTables} tabeller skrevet til ${args.out}.`);
+  console.log(`\n[fhi-catalog] Ferdig: ${sourceIds.length} kilder, ${totalTables} tabeller ` +
+              `(${probedTotal} hentet fra API-et) skrevet til:`);
+  console.log(`[fhi-catalog]   ${args.out}`);
+  console.log(`[fhi-catalog]   ${jsOut}  (browser-global, for file://)`);
 }
 
 main().catch(err => {

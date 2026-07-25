@@ -1,5 +1,6 @@
 {
-  "generatedAt": "2026-07-18T16:06:01.479Z",
+  "generatedAt": "2026-07-25T09:13:46.315Z",
+  "lastFullBuildAt": "2026-07-18T16:06:01.479Z",
   "sources": {
     "nokkel": {
       "title": "Folkehelsestatistikk",
@@ -4463,7 +4464,7 @@
           "internalName": "RESPIaggr Influensa antall og andel",
           "description": "",
           "firstPeriod": "2024-w40",
-          "lastPeriod": "2026-w27",
+          "lastPeriod": "2026-w29",
           "timeUnit": null,
           "variableNames": [
             "År og uke",
@@ -4472,7 +4473,7 @@
             "Overvåkingstype",
             "Måltall"
           ],
-          "updated": "2026-07-10T09:06:22.906919Z",
+          "updated": "2026-07-23T10:36:22.763184Z",
           "category": "luftveis"
         },
         {
@@ -4481,7 +4482,7 @@
           "internalName": "RESPIaggr Influensa subtyper",
           "description": "",
           "firstPeriod": "2024-w40",
-          "lastPeriod": "2026-w27",
+          "lastPeriod": "2026-w29",
           "timeUnit": null,
           "variableNames": [
             "År og uke",
@@ -4490,7 +4491,7 @@
             "Influensatype",
             "Måltall"
           ],
-          "updated": "2026-07-10T09:06:30.430526Z",
+          "updated": "2026-07-23T10:36:30.895547Z",
           "category": "luftveis"
         },
         {
@@ -4499,7 +4500,7 @@
           "internalName": "RESPIaggr RSV antall og andel",
           "description": "",
           "firstPeriod": "2024-w40",
-          "lastPeriod": "2026-w27",
+          "lastPeriod": "2026-w29",
           "timeUnit": null,
           "variableNames": [
             "År og uke",
@@ -4508,7 +4509,7 @@
             "RS-virus type",
             "Måltall"
           ],
-          "updated": "2026-07-10T09:06:26.913832Z",
+          "updated": "2026-07-23T10:36:27.191459Z",
           "category": "luftveis"
         },
         {
@@ -4527,7 +4528,7 @@
             "Overvåkingstype",
             "Måltall"
           ],
-          "updated": "2026-07-16T10:36:11.371624Z",
+          "updated": "2026-07-23T10:36:11.78466Z",
           "category": "luftveis"
         },
         {
@@ -4536,7 +4537,7 @@
           "internalName": "RESPIaggr SARS-CoV-2 antall og andel",
           "description": "",
           "firstPeriod": "2024-w40",
-          "lastPeriod": "2026-w27",
+          "lastPeriod": "2026-w29",
           "timeUnit": null,
           "variableNames": [
             "Aldersgruppe",
@@ -4544,7 +4545,7 @@
             "Overvåkingstype",
             "Måltall"
           ],
-          "updated": "2026-07-10T09:06:09.668474Z",
+          "updated": "2026-07-23T10:36:08.738278Z",
           "category": "luftveis"
         },
         {
@@ -4562,7 +4563,7 @@
             "Overvåkingstype",
             "Måltall"
           ],
-          "updated": "2026-07-16T10:36:08.422087Z",
+          "updated": "2026-07-23T10:36:14.837093Z",
           "category": "luftveis"
         },
         {
@@ -4571,7 +4572,7 @@
           "internalName": "Oversikt luftveisagens",
           "description": "",
           "firstPeriod": "2021-01",
-          "lastPeriod": "2026-27",
+          "lastPeriod": "2026-29",
           "timeUnit": null,
           "variableNames": [
             "Smittestoff",
@@ -4580,7 +4581,7 @@
             "Geografi",
             "Måltall"
           ],
-          "updated": "2026-07-09T11:06:42.219622Z",
+          "updated": "2026-07-23T11:06:42.291068Z",
           "category": "luftveis"
         },
         {
@@ -4599,7 +4600,7 @@
             "Overvåkingstype",
             "Måltall"
           ],
-          "updated": "2026-07-16T10:36:14.374689Z",
+          "updated": "2026-07-23T10:36:18.133913Z",
           "category": "luftveis"
         },
         {
@@ -4618,7 +4619,7 @@
             "Geografi",
             "Måltall"
           ],
-          "updated": "2026-07-15T02:36:27.968335Z",
+          "updated": "2026-07-22T02:36:23.619648Z",
           "category": "mage"
         },
         {
@@ -4627,7 +4628,7 @@
           "internalName": "Oversikt gastroenterittvirus",
           "description": "",
           "firstPeriod": "2024-51",
-          "lastPeriod": "2026-28",
+          "lastPeriod": "2026-29",
           "timeUnit": null,
           "variableNames": [
             "Smittestoff",
@@ -4636,7 +4637,7 @@
             "Geografi",
             "Måltall"
           ],
-          "updated": "2026-07-15T02:36:19.997661Z",
+          "updated": "2026-07-22T02:36:14.785879Z",
           "category": "mage"
         }
       ],
@@ -4712,7 +4713,7 @@
           "internalName": "SYSVAK influensavaksinasjon 25/26",
           "description": "",
           "firstPeriod": "2025 -uke 36",
-          "lastPeriod": "2026 -uke 29",
+          "lastPeriod": "2026 -uke 30",
           "timeUnit": null,
           "variableNames": [
             "Geografi",
@@ -4721,7 +4722,7 @@
             "Uke",
             "Måltall"
           ],
-          "updated": "2026-07-18T02:01:44.02544Z"
+          "updated": "2026-07-25T02:01:46.621302Z"
         },
         {
           "tableId": 717,
@@ -4729,7 +4730,7 @@
           "internalName": "SYSVAK koronavaksinasjon 25/26",
           "description": "",
           "firstPeriod": "2025 -uke 36",
-          "lastPeriod": "2026 -uke 29",
+          "lastPeriod": "2026 -uke 30",
           "timeUnit": null,
           "variableNames": [
             "Geografi",
@@ -4739,7 +4740,7 @@
             "Uke",
             "Måltall"
           ],
-          "updated": "2026-07-18T00:03:07.386795Z"
+          "updated": "2026-07-25T00:03:11.41852Z"
         },
         {
           "tableId": 750,
@@ -6629,7 +6630,7 @@
             "Genotype",
             "Måltall"
           ],
-          "updated": "2026-07-18T04:07:06.734133Z",
+          "updated": "2026-07-25T04:07:04.234896Z",
           "category": "hepatitt"
         },
         {

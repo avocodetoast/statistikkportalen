@@ -901,7 +901,12 @@ function renderPage(template, page, site, appConfig) {
   html = mustReplace(html, /<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${escapeAttr(canonicalUrl)}">`, 'og:url');
 
   // Relative asset-stier → absolutte (sidene ligger 1–4 mapper dypt)
-  html = html.replace(/href="css\//g, 'href="/css/').replace(/src="js\//g, 'src="/js/');
+  html = html.replace(/href="css\//g, 'href="/css/')
+    .replace(/src="js\//g, 'src="/js/')
+    // data/ må også absoluttiseres: FHI-katalogen lastes som <script
+    // src="data/sources/fhi-catalog.js"> og ville ellers gitt 404 herfra,
+    // slik at alle FHI-tabeller falt tilbake til interne kodenavn.
+    .replace(/src="data\//g, 'src="/data/');
 
   // JSON-LD strukturerte data ("<" escapes så "</script>" i labels ikke kan bryte ut).
   // id="seo-jsonld" lar appen (js/seo-head.js) fjerne den ved navigering bort.
@@ -1309,7 +1314,12 @@ function renderTablePage(template, entry, site, appConfig, meta = null) {
   html = mustReplace(html, /<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${escapeAttr(url)}">`, 'og:url');
 
   // Relative asset-stier → absolutte (sidene ligger under /table/{id}/)
-  html = html.replace(/href="css\//g, 'href="/css/').replace(/src="js\//g, 'src="/js/');
+  html = html.replace(/href="css\//g, 'href="/css/')
+    .replace(/src="js\//g, 'src="/js/')
+    // data/ må også absoluttiseres: FHI-katalogen lastes som <script
+    // src="data/sources/fhi-catalog.js"> og ville ellers gitt 404 herfra,
+    // slik at alle FHI-tabeller falt tilbake til interne kodenavn.
+    .replace(/src="data\//g, 'src="/data/');
 
   const jsonLd = JSON.stringify(buildTableJsonLd(entry, site, appConfig, meta)).replace(/</g, '\\u003c');
   html = mustReplace(

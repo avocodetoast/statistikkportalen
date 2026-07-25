@@ -104,6 +104,49 @@ const BrowserState = {
   },
 
   /**
+   * Frisk opp én tabells periodefelt i den aggregerte katalogen.
+   *
+   * Bakgrunn: FHIs API har ingen bulk-vei til første/siste observasjon — det
+   * krever ett /dimension-kall PER TABELL, så periodene bygges ved byggetid
+   * (data/sources/fhi-catalog.json) og kan være noen uker gamle. Når en tabell
+   * ÅPNES henter adapteren /dimension uansett og leverer de ferske periodene
+   * som metadata.extension.periods; da retter vi opp katalogen i minnet, slik
+   * at emne-/søkevisningen viser riktig periode etterpå.
+   *
+   * Ingen hierarki-rebuild: perioder inngår ikke i emnetreet, og
+   * renderTableListHTML leser allTables ved rendring.
+   *
+   * Kilder som ikke leverer extension.periods (SSB/NB) er upåvirket.
+   *
+   * @param {string} tableId
+   * @param {object} meta - metadataobjektet fra api.getTableMetadata
+   * @returns {boolean} om noe faktisk ble endret
+   */
+  syncTablePeriodsFromMetadata(tableId, meta) {
+    const periods = meta && meta.extension && meta.extension.periods;
+    if (!periods || !tableId || !Array.isArray(this.allTables)) return false;
+    const table = this.allTables.find(t => t.id === tableId);
+    if (!table) return false;
+
+    const firstPeriod = periods.first;
+    const lastPeriod = periods.last;
+    let changed = false;
+    if (firstPeriod && table.firstPeriod !== firstPeriod) {
+      table.firstPeriod = firstPeriod;
+      changed = true;
+    }
+    if (lastPeriod && table.lastPeriod !== lastPeriod) {
+      table.lastPeriod = lastPeriod;
+      changed = true;
+    }
+    if (changed) {
+      logger.log('[BrowserState] Oppdaterte perioder for ' + tableId + ': ' +
+                 table.firstPeriod + '–' + table.lastPeriod);
+    }
+    return changed;
+  },
+
+  /**
    * Ta i bruk en ny tabelliste for én kilde: merge inn, invalider
    * søkeindeksen (ellers serverer enhanced-søket døde tabellobjekter),
    * og bygg emnehierarkiet på nytt. Eneste mutasjonssti etter init.

@@ -139,6 +139,7 @@ async function loadTableData() {
       const bc = document.querySelector('.breadcrumb-current');
       if (bc) bc.textContent = AppState.selectedTable.id + ' ' + extractTableTitle(currentFullMetadata.label);
     }
+    BrowserState.syncTablePeriodsFromMetadata(tableId, currentFullMetadata);
   } catch (e) {
     logger.warn('[TableDisplay] Could not load full metadata:', e);
     currentFullMetadata = null;

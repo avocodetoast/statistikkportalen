@@ -29,12 +29,35 @@
  * -----------------
  *   AppConfig.sources.fhi.baseUrl    // 'https://statistikk-data.fhi.no/api/open/v1'
  *   AppConfig.sources.fhi.sourceIds  // ['nokkel', 'mfr', 'daar']
- *   GET  /Common/source                          — kildetitler (13 stk, kun norsk)
+ *   GET  /Common/source                          — kildeinfo (13 stk, kun norsk):
+ *                                                   {id,title,description,aboutUrl,publishedBy}
  *   GET  /{source}/table                          — katalog: [{tableId,title,publishedAt,modifiedAt}]
+ *                                                   (støtter ?modifiedAfter=<ISO>)
  *   GET  /{source}/Table/{id}/dimension           — dimensjoner (nøstet via children[])
  *   GET  /{source}/Table/{id}/query               — prefylt spørring (brukes som defaultselection)
+ *   GET  /{source}/Table/{id}/metadata            — {name, isOfficialStatistics, paragraphs:[{header,content}]}
+ *   GET  /{source}/Table/{id}/flag                — tegnforklaring: [{value,symbol,description}]
  *   POST /{source}/Table/{id}/data                — {dimensions:[{code,filter,values}], response:{format,maxRowCount}}
  *   API-et har INGEN lang-parameter — alt er kun på norsk.
+ *   Det finnes INGEN bulk-/expand-variant: periode og metadata krever ett kall
+ *   PER TABELL (derfor byggetids-katalogen over).
+ *
+ * TABELLINFO-BERIKELSE (/metadata + /flag + /Common/source)
+ * ---------------------------------------------------------
+ * buildMetadataCore henter /dimension, /query, /metadata og /flag PARALLELT.
+ * Kun /dimension er kritisk; de øvrige logges og hoppes over ved feil, slik at
+ * tabellen alltid kan åpnes. Resultatet legges på metadataobjektets
+ * `extension` med BEVISST kildeagnostiske navn (js/table-metadata.js rendrer
+ * dem uten FHI-spesifikk kode, og andre adaptere kan levere det samme):
+ *   extension.px['official-statistics']  ← isOfficialStatistics
+ *   extension.sections  [{header, lines[]}]  ← paragraphs, HTML→tekst
+ *   extension.flags     [{symbol, description}]
+ *   extension.aboutUrl / extension.publishedBy  ← /Common/source
+ *   extension.periods   {first, last}  ← tidsdimensjonen (frisker opp katalogen)
+ * paragraphs[] avsluttes med ett avsnitt PER DIMENSJON som ramser opp alle
+ * verdiene i klartekst («Geografi» lister samtlige kommuner) — de filtreres
+ * bort ved å matche overskrift mot dimensjonsetikettene, se
+ * filterMetadataParagraphs.
  *
  * LIVE-FUNN SOM AVVIKER FRA DEN OPPRINNELIGE ANTAKELSEN «AAR→tid, GEO→geo»
  * -------------------------------------------------------------------------
@@ -142,6 +165,7 @@
   // har kun nb-etiketter, så pickLabel-fallbacken (nb→en) dekker det uansett.
   const pickLabel = window.SourceCommon.pickLabel;
   const uiLabelLang = window.SourceCommon.uiLabelLang;
+  const stripTitleMetadataTail = window.SourceCommon.stripTitleMetadataTail;
 
   // ---- Pregenerert katalog (data/sources/fhi-catalog.json, se
   // scripts/update-fhi-catalog.mjs) — tittel/periode-berikelse bygget ved
@@ -157,6 +181,22 @@
   let _catalogPromise = null;
   function getCatalog() {
     if (_catalogPromise) return _catalogPromise;
+
+    // 1) window.FhiCatalog fra <script src="data/sources/fhi-catalog.js">.
+    //    <script> rammes IKKE av CORS, så dette er den eneste veien som
+    //    fungerer når appen åpnes rett fra disk (file://) — der blokkerer
+    //    Chrome enhver fetch() av en lokal fil («origin 'null'»), og uten
+    //    katalogen faller alle FHI-titler tilbake til interne kodenavn og
+    //    periodekolonnene blir tomme. Se scripts/update-fhi-catalog.mjs, som
+    //    skriver .js-fila ved siden av .json-fila (sistnevnte leses av
+    //    Node-verktøyene: SEO-byggeren og byggescriptet selv).
+    if (window.FhiCatalog && window.FhiCatalog.sources) {
+      _catalogPromise = Promise.resolve(window.FhiCatalog);
+      return _catalogPromise;
+    }
+
+    // 2) Fallback: hent JSON-fila. Virker over http(s), og dekker sider som
+    //    ikke laster katalog-scriptet.
     _catalogPromise = window.SourceCommon.fetchWithTimeout('data/sources/fhi-catalog.json',
       { headers: JSON_HEADERS },
       { timeoutMs: FETCH_TIMEOUT_MS, timeoutErrorPrefix: '[FHIAdapter] Tidsavbrudd' })
@@ -172,9 +212,13 @@
       })
       .catch(e => {
         logger.warn(
-          '[FHIAdapter] Klarte ikke laste data/sources/fhi-catalog.json ' +
-          '(kjør «node scripts/update-fhi-catalog.mjs» for å generere den) — ' +
-          'faller tilbake til live /table-liste uten tittel-/periodeberikelse:', e
+          '[FHIAdapter] Fant verken window.FhiCatalog (data/sources/fhi-catalog.js) ' +
+          'eller data/sources/fhi-catalog.json — FHI-tabellene vises med interne ' +
+          'kodenavn og TOMME periodekolonner. Vanligste årsak: siden er åpnet fra ' +
+          'disk (file://), der nettleseren blokkerer fetch() av lokale filer — ' +
+          'sjekk at <script src="data/sources/fhi-catalog.js"> er med i index.html, ' +
+          'eller kjør appen over http. Mangler filene, kjør ' +
+          '«node scripts/update-fhi-catalog.mjs».', e
         );
         return null;
       });
@@ -306,22 +350,42 @@
     return depth > 0 ? (NOT_SIGN.repeat(depth) + ' ' + label) : label;
   }
 
-  // ---- Common/source (kildetitler, cached) ----
+  // ---- Common/source (kildeinfo, cached) ----
 
-  async function getSourceTitles() {
-    const key = 'fhi_common_source';
+  /**
+   * Kildekatalogen: { <sourceId>: { title, aboutUrl, publishedBy } }.
+   * `aboutUrl`/`publishedBy` brukes i Tabellinfo (registerets egen «Om
+   * statistikken»-side, og hvem som faktisk publiserer — `nokkel` utgis av
+   * Helsedirektoratet, ikke FHI).
+   * Cache-nøkkelen er versjonert: formen var tidligere { id: title }.
+   */
+  async function getSourceInfo() {
+    const key = 'fhi_common_source_v2';
     const cached = await cacheGet(key);
     if (cached) return cached;
     try {
       const list = await fetchJson(BASE + '/Common/source', { headers: JSON_HEADERS });
       const map = {};
-      (list || []).forEach(s => { if (s && s.id) map[s.id] = s.title || s.id; });
+      (list || []).forEach(s => {
+        if (!s || !s.id) return;
+        map[s.id] = {
+          title: s.title || s.id,
+          aboutUrl: s.aboutUrl || '',
+          publishedBy: s.publishedBy || ''
+        };
+      });
       await cacheSet(key, map);
       return map;
     } catch (e) {
       logger.warn('[FHIAdapter] Klarte ikke hente /Common/source (bruker kilde-id som fallback):', e);
       return {};
     }
+  }
+
+  /** Tittel for én kilde, med kilde-id som fallback. */
+  function sourceTitleOf(infoMap, source) {
+    const info = infoMap && infoMap[source];
+    return (info && info.title) || source;
   }
 
   // ---- Katalog per kilde (cached) ----
@@ -362,7 +426,7 @@
     return (await fetchSourceTableList(source, false)).list;
   }
 
-  async function buildSourceCatalogue(source, titleMap, lang, force) {
+  async function buildSourceCatalogue(source, infoMap, lang, force) {
     const fetched = await fetchSourceTableList(source, force); // kaster ved nettverksfeil uten cache → fanges av allSettled i getTables
     const rows = fetched.list;
     const catalog = await getCatalog(); // null hvis fila mangler/feiler — se getCatalog
@@ -421,7 +485,7 @@
       };
       return basePaths.map(p => p.concat([seg]));
     }
-    const sourceTitle = titleMap[source] || source;
+    const sourceTitle = sourceTitleOf(infoMap, source);
 
     const tables = (rows || []).map(row => {
       // Katalogoppføringen (data/sources/fhi-catalog.json) gir en tittel
@@ -433,7 +497,11 @@
       // å laste) faller alt dette tilbake til den rå API-tittelen og tomme
       // periodefelt, akkurat som før katalogen fantes.
       const cat = catById.get(String(row.tableId));
-      const title = (cat && cat.title) || row.title || String(row.tableId);
+      // Rå API-titler ryddes for periode-/oppdateringshale (lmr legger begge
+      // deler i selve tittelen, og begge har egne kolonner i tabellistene).
+      // Kuraterte katalogtitler er allerede rene og røres ikke.
+      const title = (cat && cat.title) ||
+        stripTitleMetadataTail(row.title) || String(row.tableId);
 
       return {
         id: 'fhi-' + source + '-' + row.tableId,
@@ -488,12 +556,12 @@
     const force = opts.useCache === false;
 
     const lang = currentLang();
-    const titleMap = await getSourceTitles();
+    const infoMap = await getSourceInfo();
 
     // Promise.allSettled PER FHI-kilde (nokkel/mfr/daar …) — én kilde nede
     // (f.eks. mfr) skal ikke hindre at nokkel/daar vises i katalogen.
     const settled = await Promise.allSettled(
-      SOURCE_IDS.map(source => buildSourceCatalogue(source, titleMap, lang, force))
+      SOURCE_IDS.map(source => buildSourceCatalogue(source, infoMap, lang, force))
     );
 
     const tables = [];
@@ -530,11 +598,81 @@
 
   // ---- Metadata ----
 
+  /**
+   * Første/siste periode på tidsdimensjonen (bladkategoriene i API-rekkefølge —
+   * verifisert kronologisk). Brukes til å friske opp katalogens
+   * firstPeriod/lastPeriod for tabeller brukeren faktisk åpner; katalogfila
+   * bygges ved byggetid og kan være noen uker gammel.
+   *
+   * MERK: samme regel som deriveTimeInfo() i scripts/update-fhi-catalog.mjs.
+   * Bevisst duplisering (byggescriptet kan ikke laste nettleser-globaler) —
+   * hold dem i sync, på samme måte som TIME_PATTERN over.
+   *
+   * @returns {{first:string,last:string}|null}
+   */
+  function derivePeriods(dims) {
+    const timeDim = (dims || []).find(d => isTimeDim(d.code, d.label));
+    if (!timeDim) return null;
+    const leaves = flattenCategories(timeDim.categories || []).filter(e => e.label);
+    if (!leaves.length) return null;
+    return { first: leaves[0].label, last: leaves[leaves.length - 1].label };
+  }
+
+  /**
+   * Avsnittene fra /Table/{id}/metadata → [{header, lines}] for Tabellinfo.
+   *
+   * Filtrerer bort:
+   *  - tomt innhold (f.eks. «Relatert materiale» uten tekst) og den tomme
+   *    {header:'',content:''}-separatoren API-et legger inn;
+   *  - avsnitt der overskriften ER en dimensjonsetikett. FHI avslutter
+   *    paragraphs[] med ett avsnitt per dimensjon som ramser opp samtlige
+   *    verdier i klartekst («Geografi» lister alle kommuner). Det er redundant
+   *    (variabelvelgeren viser det samme) og ofte svært langt.
+   *
+   * @param {Array<{header:string,content:string}>} paragraphs
+   * @param {string[]} dimLabels - dimensjonsetiketter fra /dimension
+   */
+  function filterMetadataParagraphs(paragraphs, dimLabels) {
+    const norm = s => String(s || '').trim().toLowerCase();
+    const dimSet = new Set((dimLabels || []).map(norm).filter(Boolean));
+
+    return (paragraphs || []).reduce((acc, p) => {
+      const header = String((p && p.header) || '').trim();
+      if (!header || dimSet.has(norm(header))) return acc;
+      const lines = window.SourceCommon.htmlToPlainLines(p && p.content);
+      if (lines.length) acc.push({ header: header, lines: lines });
+      return acc;
+    }, []);
+  }
+
+  /**
+   * Tegnforklaring fra /Table/{id}/flag. Raden uten symbol
+   * ({value:0, symbol:'', description:'Verdi finnes i tabellen'}) er ikke en
+   * forklaring på noe og tas ikke med.
+   */
+  function parseFlags(flagList) {
+    return (flagList || [])
+      .filter(f => f && f.symbol && f.description)
+      .map(f => ({ symbol: String(f.symbol), description: String(f.description) }));
+  }
+
   async function buildMetadataCore(source, rawId) {
-    const dimJson = await fetchJson(
-      BASE + '/' + encodeURIComponent(source) + '/Table/' + encodeURIComponent(rawId) + '/dimension',
-      { headers: JSON_HEADERS }
-    );
+    const tableBase = BASE + '/' + encodeURIComponent(source) +
+      '/Table/' + encodeURIComponent(rawId);
+    const get = path => fetchJson(tableBase + path, { headers: JSON_HEADERS });
+
+    // Fire uavhengige kall — hentes parallelt, ikke sekvensielt. Kun
+    // /dimension er kritisk; de tre andre er berikelse og skal aldri hindre at
+    // tabellen åpner (allSettled + logger.warn per feilende kall).
+    const [dimRes, queryRes, metaRes, flagRes] = await Promise.allSettled([
+      get('/dimension'),
+      get('/query'),
+      get('/metadata'),
+      get('/flag')
+    ]);
+
+    if (dimRes.status === 'rejected') throw dimRes.reason;
+    const dimJson = dimRes.value;
     const dims = (dimJson && dimJson.dimensions) || [];
 
     const id = [];
@@ -569,16 +707,13 @@
       if (isMetricDim(code)) role.metric.push(code);
     });
 
-    // Query-mal (kilde for getDefaultSelection) — hentes og caches sammen med
-    // metadata siden begge trengs ved første tabellbesøk uansett.
-    try {
-      const queryTemplate = await fetchJson(
-        BASE + '/' + encodeURIComponent(source) + '/Table/' + encodeURIComponent(rawId) + '/query',
-        { headers: JSON_HEADERS }
-      );
-      await cacheSet('table_fhi-' + source + '-' + rawId + '_query', queryTemplate);
-    } catch (e) {
-      logger.warn('[FHIAdapter] Klarte ikke hente query-mal for ' + source + '/' + rawId + ':', e);
+    // Query-mal (kilde for getDefaultSelection) — caches sammen med metadata
+    // siden begge trengs ved første tabellbesøk uansett.
+    if (queryRes.status === 'fulfilled') {
+      await cacheSet('table_fhi-' + source + '-' + rawId + '_query', queryRes.value);
+    } else {
+      logger.warn('[FHIAdapter] Klarte ikke hente query-mal for ' + source + '/' + rawId + ':',
+        queryRes.reason);
     }
 
     // Tabelltittel + sist oppdatert finnes ikke i /dimension — slås opp i den
@@ -589,7 +724,9 @@
       const rows = await getSourceTableList(source);
       const row = (rows || []).find(r => String(r.tableId) === String(rawId));
       if (row) {
-        title = row.title || title;
+        // Se buildSourceCatalogue: rå API-titler ryddes for periode-/
+        // oppdateringshale; katalogtittelen under overstyrer uansett når den finnes.
+        title = stripTitleMetadataTail(row.title) || title;
         updated = row.modifiedAt || row.publishedAt || null;
       }
     } catch (e) {
@@ -612,11 +749,45 @@
       logger.warn('[FHIAdapter] Klarte ikke slå opp katalogoppføring for ' + source + '/' + rawId + ':', e);
     }
 
-    const titles = await getSourceTitles();
-    const sourceTitle = titles[source] || source;
+    const infoMap = await getSourceInfo();
+    const sourceTitle = sourceTitleOf(infoMap, source);
+    const sourceInfo = infoMap[source] || {};
 
     const heading = id.filter(c => role.time.indexOf(c) === -1);
     const stub = id.filter(c => role.time.indexOf(c) !== -1);
+
+    // Berikelse fra /metadata og /flag. Feilende kall logges og hoppes over —
+    // tabellen skal alltid kunne åpnes. Feltnavnene er BEVISST kildeagnostiske
+    // (sections/flags/aboutUrl/publishedBy/periods) slik at js/table-metadata.js
+    // ikke trenger FHI-spesifikk kode og andre adaptere kan levere det samme.
+    const extension = { px: { heading: heading, stub: stub } };
+
+    if (metaRes.status === 'fulfilled') {
+      const metaJson = metaRes.value || {};
+      if (metaJson.isOfficialStatistics) extension.px['official-statistics'] = true;
+      const sections = filterMetadataParagraphs(
+        metaJson.paragraphs,
+        dims.map(d => d.label)
+      );
+      if (sections.length) extension.sections = sections;
+    } else {
+      logger.warn('[FHIAdapter] Klarte ikke hente /metadata for ' + source + '/' + rawId + ':',
+        metaRes.reason);
+    }
+
+    if (flagRes.status === 'fulfilled') {
+      const flags = parseFlags(flagRes.value);
+      if (flags.length) extension.flags = flags;
+    } else {
+      logger.warn('[FHIAdapter] Klarte ikke hente /flag for ' + source + '/' + rawId + ':',
+        flagRes.reason);
+    }
+
+    if (sourceInfo.aboutUrl) extension.aboutUrl = sourceInfo.aboutUrl;
+    if (sourceInfo.publishedBy) extension.publishedBy = sourceInfo.publishedBy;
+
+    const periods = derivePeriods(dims);
+    if (periods) extension.periods = periods;
 
     const meta = {
       id: id,
@@ -626,7 +797,7 @@
       updated: updated,
       dimension: dimension,
       role: role,
-      extension: { px: { heading: heading, stub: stub } },
+      extension: extension,
       // Internt felt — IKKE del av JSON-Stat2-kontrakten. Gjenbrukes av
       // getTableData for å ¬-prefikse dataresponsens etiketter konsistent
       // med metadata, uten et ekstra /dimension-kall.
@@ -643,7 +814,10 @@
     if (SOURCE_IDS.indexOf(source) === -1) {
       throw new Error('[FHIAdapter] Ukjent FHI-kilde: ' + source);
     }
-    const cacheKey = 'table_fhi-' + source + '-' + rawId + '_meta';
+    // _v2: metadataformen fikk extension.sections/flags/aboutUrl/publishedBy/
+    // periods. Bump versjonen når formen endres igjen, ellers serverer en varm
+    // cache (24 t) gamle objekter uten de nye feltene.
+    const cacheKey = 'table_fhi-' + source + '-' + rawId + '_meta_v2';
 
     let meta = null;
     if (useCache !== false) {
