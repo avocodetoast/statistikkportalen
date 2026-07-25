@@ -23,5 +23,7 @@ data/table-metadata/*.json
 
 # Git
 .gitignore.local
-# Lokale Claude Code-innstillinger
-.claude/
+# Lokale Claude Code-innstillinger (settings.local.json m.m.),
+# men delte skills sjekkes inn
+.claude/*
+!.claude/skills/
