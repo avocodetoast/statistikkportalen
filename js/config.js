@@ -225,6 +225,12 @@ const AppConfig = {
     // (BrowserState venter på hele katalogaggregeringen).
     fetchTimeoutMs: 15000,
 
+    // Maks samtidige nettverkskall PER FREMMEDKILDE (kø i
+    // js/sources/source-common.js). NB/FHI går utenom SSBs egen throttle, så
+    // uten dette taket treffer en tvungen katalogoppfriskning kilden med hele
+    // radlista på én gang.
+    maxConcurrentRequests: 4,
+
     // Statistisk sentralbyrå (PxWebApi v2) — apiBaseUrl over.
     // displayName brukes i API-statuspanelet (source-status.js).
     ssb: {

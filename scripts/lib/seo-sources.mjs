@@ -124,8 +124,9 @@ function buildPathSegments(placement, subjectNames, sourceNodes, lang) {
 /**
  * Norges Bank-katalogen, nettverksfritt fra AppConfig.sources.nb.dataflows +
  * AppConfig.sourceNodes (speiler buildCatalogue i norges-bank-adapter.js).
- * Perioder/updated er tomme strenger — generatoren kan fylle dem etterpå via
- * en best-effort nettverksprobe (se fetchNbPeriods i generate-seo-pages.mjs).
+ * Perioder/updated er tomme strenger — generatoren fyller dem etterpå fra den
+ * innsjekkede data/sources/nb-periods.json (se applyNbPeriods i
+ * generate-seo-pages.mjs), samme fil appen selv laster.
  */
 export function buildNbCatalogue(appConfig, subjectNames, lang) {
   const cfg = appConfig?.sources?.nb || {};

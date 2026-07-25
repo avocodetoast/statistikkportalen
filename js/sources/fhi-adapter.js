@@ -265,7 +265,7 @@
    */
   async function fetchJson(url, options) {
     const res = await window.SourceCommon.fetchWithTimeout(url, options,
-      { timeoutMs: FETCH_TIMEOUT_MS, timeoutErrorPrefix: '[FHIAdapter] Tidsavbrudd' });
+      { timeoutMs: FETCH_TIMEOUT_MS, timeoutErrorPrefix: '[FHIAdapter] Tidsavbrudd', queue: 'fhi' });
     if (!res.ok) {
       let message = '';
       try {
@@ -359,7 +359,35 @@
    * Helsedirektoratet, ikke FHI).
    * Cache-nøkkelen er versjonert: formen var tidligere { id: title }.
    */
+  /**
+   * Kildeinfoen fra den innsjekkede katalogfila, når den har den.
+   * scripts/update-fhi-catalog.mjs baker inn title/aboutUrl/publishedBy nettopp
+   * for å slippe /Common/source-kallet ved hver app-init. En eldre katalogfil
+   * (bygget før feltene fantes) mangler dem — da returneres null og
+   * getSourceInfo faller tilbake til live-kallet.
+   */
+  async function bakedSourceInfo() {
+    const catalog = await getCatalog();
+    const sources = catalog && catalog.sources;
+    if (!sources) return null;
+    const map = {};
+    let haveInfo = false;
+    Object.keys(sources).forEach(id => {
+      const s = sources[id] || {};
+      map[id] = {
+        title: s.title || id,
+        aboutUrl: s.aboutUrl || '',
+        publishedBy: s.publishedBy || ''
+      };
+      if (s.aboutUrl || s.publishedBy) haveInfo = true;
+    });
+    return haveInfo ? map : null;
+  }
+
   async function getSourceInfo() {
+    const baked = await bakedSourceInfo();
+    if (baked) return baked;
+
     const key = 'fhi_common_source_v2';
     const cached = await cacheGet(key);
     if (cached) return cached;
@@ -427,12 +455,34 @@
   }
 
   async function buildSourceCatalogue(source, infoMap, lang, force) {
-    const fetched = await fetchSourceTableList(source, force); // kaster ved nettverksfeil uten cache → fanges av allSettled i getTables
-    const rows = fetched.list;
     const catalog = await getCatalog(); // null hvis fila mangler/feiler — se getCatalog
     const catSource = (catalog && catalog.sources && catalog.sources[source]) || null;
     const catRows = (catSource && catSource.tables) || [];
     const catById = new Map(catRows.map(t => [String(t.tableId), t]));
+
+    // Radlista: den innsjekkede katalogfila er standardkilden. Den inneholder
+    // ALT en katalogoppføring trenger (id, tittel, perioder, timeUnit,
+    // beskrivelse, søkeord, kategori, sist oppdatert) — den live /table-lista
+    // ga i praksis bare de samme radene, til prisen av ett kall per delkilde
+    // ved hver app-init. Live-lista brukes fortsatt når:
+    //   - katalogfila mangler kilden helt (ny sourceId aktivert i config før
+    //     katalogen ble regenerert), eller fila ikke lot seg laste, og
+    //   - brukeren ber om en tvungen oppfriskning (statuspanelets «Oppdater»,
+    //     useCache: false) — da er live-lista fasit på medlemskapet, så nye
+    //     og fjernede tabeller slår gjennom uten at katalogen bygges på nytt.
+    const useBaked = catRows.length > 0 && !force;
+    const fetched = useBaked
+      ? { list: null, fromCache: true, stale: false,
+          fetchedAt: (catalog.generatedAt ? Date.parse(catalog.generatedAt) : NaN) || Date.now() }
+      // Kaster ved nettverksfeil uten cache → fanges av allSettled i getTables.
+      : await fetchSourceTableList(source, force);
+
+    // Radformen normaliseres til {tableId, title, modifiedAt/publishedAt} slik
+    // resten av funksjonen forventer — katalogfila har ikke modifiedAt, men
+    // dens `updated` er utledet fra nettopp de feltene ved byggetid.
+    const rows = useBaked
+      ? catRows.map(t => ({ tableId: t.tableId, title: t.title, modifiedAt: t.updated || '' }))
+      : fetched.list;
     // Kuraterte kategorier (register → kategori, se data/sources/fhi-curation.json
     // og scripts/lib/fhi-curation.mjs): {katId: {label, sortCode}}. Tabeller med
     // `category` i katalogen får et TREDJE path-segment under registernoden;
@@ -599,6 +649,30 @@
   // ---- Metadata ----
 
   /**
+   * KUN bladkategoriene, i API-rekkefølge — foreldrenoder utelates.
+   *
+   * Tidsdimensjoner er ofte nestet under en aggregatnode: mfr-411 har én rot
+   * «Fødselsår: Alle» med 59 årsbarn. Tas roten med, blir «første periode»
+   * etiketten hennes i stedet for 1967. Speiler collectLeafCategories() i
+   * scripts/update-fhi-catalog.mjs (som alltid har gjort det riktig — derfor
+   * er periodene i katalogfila korrekte).
+   */
+  function leafCategories(categories) {
+    let result = [];
+    (categories || []).forEach(cat => {
+      if (cat.children && cat.children.length) {
+        result = result.concat(leafCategories(cat.children));
+      } else {
+        result.push({
+          code: String(cat.value),
+          label: cat.label != null ? String(cat.label) : String(cat.value)
+        });
+      }
+    });
+    return result;
+  }
+
+  /**
    * Første/siste periode på tidsdimensjonen (bladkategoriene i API-rekkefølge —
    * verifisert kronologisk). Brukes til å friske opp katalogens
    * firstPeriod/lastPeriod for tabeller brukeren faktisk åpner; katalogfila
@@ -613,7 +687,7 @@
   function derivePeriods(dims) {
     const timeDim = (dims || []).find(d => isTimeDim(d.code, d.label));
     if (!timeDim) return null;
-    const leaves = flattenCategories(timeDim.categories || []).filter(e => e.label);
+    const leaves = leafCategories(timeDim.categories || []).filter(e => e.label);
     if (!leaves.length) return null;
     return { first: leaves[0].label, last: leaves[leaves.length - 1].label };
   }
@@ -716,37 +790,45 @@
         queryRes.reason);
     }
 
-    // Tabelltittel + sist oppdatert finnes ikke i /dimension — slås opp i den
-    // (cachede) katalog-listen for kilden.
+    // Tabelltittel + sist oppdatert finnes ikke i /dimension.
+    //
+    // Pregenerert katalog (se getCatalog) er førstevalget: den har både en
+    // lesbar tittel — utledet fra metadata-sammendraget der API-tittelen bare
+    // er et internt kodenavn (se scripts/update-fhi-catalog.mjs) — og en
+    // beskrivelse som legges inn som en metadata-note under (append, ikke
+    // erstatning; se getTableMetadata som ev. legger til EN-språknoten).
     let title = rawId;
     let updated = null;
-    try {
-      const rows = await getSourceTableList(source);
-      const row = (rows || []).find(r => String(r.tableId) === String(rawId));
-      if (row) {
-        // Se buildSourceCatalogue: rå API-titler ryddes for periode-/
-        // oppdateringshale; katalogtittelen under overstyrer uansett når den finnes.
-        title = stripTitleMetadataTail(row.title) || title;
-        updated = row.modifiedAt || row.publishedAt || null;
-      }
-    } catch (e) {
-      logger.warn('[FHIAdapter] Klarte ikke slå opp tabelltittel for ' + source + '/' + rawId + ':', e);
-    }
-
-    // Pregenerert katalog (se getCatalog) foretrekkes for tittelen — utledet
-    // fra metadata-sammendraget der API-tittelen bare er et internt kodenavn
-    // (se scripts/update-fhi-catalog.mjs) — og gir en beskrivelse som legges
-    // inn som en metadata-note under (append, ikke erstatning — se
-    // getTableMetadata som ev. legger til EN-språknoten i tillegg).
     let description = null;
+    let catEntry = null;
     try {
-      const catEntry = await getCatalogEntry(source, rawId);
+      catEntry = await getCatalogEntry(source, rawId);
       if (catEntry) {
         if (catEntry.title) title = catEntry.title;
         if (catEntry.description) description = catEntry.description;
+        if (catEntry.updated) updated = catEntry.updated;
       }
     } catch (e) {
       logger.warn('[FHIAdapter] Klarte ikke slå opp katalogoppføring for ' + source + '/' + rawId + ':', e);
+    }
+
+    // Live-lista er kun fallback: den koster ETT kall som henter HELE kildens
+    // tabelliste (opptil 120 rader) for å slå opp én tittel. Hentes derfor bare
+    // når katalogfila ikke dekker tabellen — en tabell som er ny siden forrige
+    // katalogbygg, eller en kilde uten oppføring i fila.
+    if (!catEntry) {
+      try {
+        const rows = await getSourceTableList(source);
+        const row = (rows || []).find(r => String(r.tableId) === String(rawId));
+        if (row) {
+          // Se buildSourceCatalogue: rå API-titler ryddes for periode-/
+          // oppdateringshale (kuraterte katalogtitler er allerede rene).
+          title = stripTitleMetadataTail(row.title) || title;
+          updated = row.modifiedAt || row.publishedAt || null;
+        }
+      } catch (e) {
+        logger.warn('[FHIAdapter] Klarte ikke slå opp tabelltittel for ' + source + '/' + rawId + ':', e);
+      }
     }
 
     const infoMap = await getSourceInfo();

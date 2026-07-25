@@ -84,8 +84,8 @@ Sidene er fulle app-skall: brukere som lander der overføres umiddelbart til den
 Generatoren dekker alle aktiverte kilder i `AppConfig.sources` — også Norges Bank- og
 FHI-tabeller (`nb-*`/`fhi-*`) får egne `/table/{id}/`-sider og inngår i emnesider, sitemap og
 `seo-map.json`. Katalogene bygges av per-kilde-providere i `scripts/lib/seo-sources.mjs`:
-Norges Bank nettverksfritt fra config (tidsperioder probes best-effort mot NB-API-et, skru av
-med `--no-probe-nb-periods`), FHI fra den innsjekkede `data/sources/fhi-catalog.json`.
+Norges Bank nettverksfritt fra config + den innsjekkede `data/sources/nb-periods.json`
+(tidsperioder), FHI fra den innsjekkede `data/sources/fhi-catalog.json`.
 Kildeattribusjon (JSON-LD `creator`/`license`, «Kilde:»-linjer) hentes per tabell fra
 `AppConfig.sources.<kilde>.branding`. En feilende fremmed kilde logges og hoppes over; feil
 mot SSB avbryter fortsatt hele kjøringen uten å røre webroot.

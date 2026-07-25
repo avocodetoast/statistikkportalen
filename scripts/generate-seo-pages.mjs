@@ -45,7 +45,7 @@
  * FLERKILDE (Statistikkportalen 2.0): i tillegg til SSB enumereres alle
  * aktiverte kilder i AppConfig.sources via providere i
  * scripts/lib/seo-sources.mjs — Norges Bank nettverksfritt fra config
- * (tidsperioder probes best-effort, skru av med --no-probe-nb-periods) og
+ * (tidsperioder fra den innsjekkede data/sources/nb-periods.json) og
  * FHI fra den innsjekkede data/sources/fhi-catalog.json. Tabeller med
  * nb-/fhi-prefiks får dermed egne /table/{id}/-sider og inngår i emnesider,
  * sitemap og
@@ -79,7 +79,6 @@ import {
 } from './lib/seo-sources.mjs';
 
 const MIN_TABLE_COUNT = 5000; // sanity-terskel for SSB-katalogen: færre tabeller = trolig API-feil (overstyres med --min-tables)
-const NB_PROBE_DELAY_MS = 1000; // pause mellom periodeprobe-kall mot Norges Bank (skånsomt om dataflow-listen vokser)
 
 // Navn som aldri kan brukes som mappe på toppnivå i webroot
 const RESERVED_TOP_LEVEL = new Set([
@@ -100,7 +99,6 @@ function parseArgs(argv) {
   const args = {
     webroot: null, site: null, dryRun: false, minTables: MIN_TABLE_COUNT,
     metadataDir: path.join(REPO_ROOT, 'data', 'table-metadata'),
-    probeNbPeriods: true,
   };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
@@ -109,14 +107,16 @@ function parseArgs(argv) {
     else if (a === '--min-tables') args.minTables = parseInt(argv[++i], 10);
     else if (a === '--metadata-dir') args.metadataDir = argv[++i];
     else if (a === '--dry-run') args.dryRun = true;
-    else if (a === '--no-probe-nb-periods') args.probeNbPeriods = false;
+    // Beholdt som no-op: Norges Bank-periodene probes ikke lenger her, de
+    // leses fra data/sources/nb-periods.json. Eldre kall skal ikke feile.
+    else if (a === '--no-probe-nb-periods') { /* utgått */ }
     else {
       console.error(`Ukjent argument: ${a}`);
       process.exit(2);
     }
   }
   if (!args.webroot || !args.site || !Number.isFinite(args.minTables) || !args.metadataDir) {
-    console.error('Bruk: node scripts/generate-seo-pages.mjs --webroot <sti> --site <https://...> [--metadata-dir <sti>] [--min-tables <antall>] [--no-probe-nb-periods] [--dry-run]');
+    console.error('Bruk: node scripts/generate-seo-pages.mjs --webroot <sti> --site <https://...> [--metadata-dir <sti>] [--min-tables <antall>] [--dry-run]');
     process.exit(2);
   }
   args.webroot = path.resolve(args.webroot);
@@ -159,62 +159,32 @@ async function fetchAllTables(appConfig, minTables) {
 }
 
 /**
- * Best-effort tidsperiode/oppdatert-dato for Norges Bank-katalogen: samme
- * lette endepunkt som fetchCataloguePeriod i js/sources/norges-bank-adapter.js
- * (firstNObservations=1&lastNObservations=1 → første og siste obs per serie).
- * Kallene går sekvensielt med NB_PROBE_DELAY_MS pause, så proben skalerer
- * skånsomt om dataflow-listen vokser. Feil per flow logges og gir tomme
- * periodefelter (temporalCoverage utelates) — aldri abort.
+ * Tidsperiode/oppdatert-dato for Norges Bank-katalogen fra den innsjekkede
+ * data/sources/nb-periods.json (skrevet av scripts/update-nb-periods.mjs) —
+ * samme fil appen selv leser, så SEO-sidene og portalen viser samme vindu.
+ * Nettverksfritt, som FHI-katalogen. Mangler fila eller en rad, bygges siden
+ * uten tidsperiode (temporalCoverage utelates) — aldri abort.
  */
-async function fetchNbPeriods(appConfig, entries) {
-  const nbCfg = appConfig.sources?.nb || {};
-  const base = String(nbCfg.baseUrl || 'https://data.norges-bank.no/api').replace(/\/+$/, '');
-  const flowById = new Map((nbCfg.dataflows || []).map(f => [f.tableId, f]));
-  // Flere config-rader kan dele samme flow (REGNET-snittene). Proben avhenger
-  // bare av flow + probeKey, så resultatet caches på det paret i stedet for å
-  // fyre av ett identisk kall per tabell.
-  const cache = new Map();
-  let first = true;
+function applyNbPeriods(entries) {
+  const file = path.join(REPO_ROOT, 'data', 'sources', 'nb-periods.json');
+  if (!fs.existsSync(file)) {
+    console.warn(`[SEO] Fant ikke ${path.relative(REPO_ROOT, file)} — Norges Bank-sidene bygges ` +
+                 'uten tidsperiode. Kjør «node scripts/update-nb-periods.mjs».');
+    return;
+  }
+  const baked = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const byId = baked.tables || {};
+  const missing = [];
   for (const entry of entries) {
-    const flow = flowById.get(entry.id);
-    if (!flow) continue;
-    // Samme smale probenøkkel som js/sources/norges-bank-adapter.js bruker
-    // (probeKeyFor(flow, 'period')) — for snittede rader er det snittets
-    // tidsvindu vi vil ha, ikke hele flowens.
-    const pk = flow.probeKey;
-    const probeKey = (typeof pk === 'string' ? pk : (pk && pk.period)) || '';
-    const cacheKey = `${flow.flow}|${probeKey}`;
-
-    if (!cache.has(cacheKey)) {
-      if (!first) await new Promise(resolve => setTimeout(resolve, NB_PROBE_DELAY_MS));
-      first = false;
-      const url = `${base}/data/${encodeURIComponent(flow.flow)}/${probeKey}?format=sdmx-json&firstNObservations=1&lastNObservations=1`;
-      try {
-        const res = await fetch(url, { headers: { Accept: 'application/json, */*' } });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        // SDMX-JSON kan ha data.structure (objekt) eller data.structures[0] (array)
-        const struct = json?.data?.structure ||
-          (Array.isArray(json?.data?.structures) ? json.data.structures[0] : null);
-        const obsDim = struct?.dimensions?.observation?.[0];
-        const years = (obsDim?.values || [])
-          .map(v => String(v.id || '').match(/\d{4}/)?.[0])
-          .filter(Boolean)
-          .map(Number);
-        if (years.length === 0) throw new Error('ingen tidsverdier i svaret');
-        cache.set(cacheKey, {
-          firstPeriod: String(Math.min(...years)),
-          lastPeriod: String(Math.max(...years)),
-          updated: json.meta?.prepared || '',
-        });
-      } catch (err) {
-        cache.set(cacheKey, null);
-        console.warn(`[SEO] Periodeprobe mot Norges Bank feilet for ${entry.id} (${err.message}) — siden bygges uten tidsperiode.`);
-      }
-    }
-
-    const period = cache.get(cacheKey);
-    if (period) Object.assign(entry, period);
+    const period = byId[entry.id];
+    if (!period) { missing.push(entry.id); continue; }
+    entry.firstPeriod = period.firstPeriod || '';
+    entry.lastPeriod = period.lastPeriod || '';
+    entry.updated = period.updated || '';
+  }
+  if (missing.length) {
+    console.warn(`[SEO] Uten tidsperiode i nb-periods.json: ${missing.join(', ')} — ` +
+                 'kjør «node scripts/update-nb-periods.mjs» på nytt.');
   }
 }
 
@@ -236,7 +206,7 @@ async function enumerateAllTables(appConfig, subjectConfig, args) {
       let sourceTables = [];
       if (src.adapter === 'norges-bank') {
         sourceTables = buildNbCatalogue(appConfig, subjectConfig.subjectNames, lang);
-        if (args.probeNbPeriods) await fetchNbPeriods(appConfig, sourceTables);
+        applyNbPeriods(sourceTables);
       } else if (src.adapter === 'fhi') {
         const catalogPath = path.join(REPO_ROOT, 'data', 'sources', 'fhi-catalog.json');
         const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));

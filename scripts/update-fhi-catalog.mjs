@@ -496,10 +496,21 @@ async function main() {
   console.log(`[fhi-catalog] Ut: ${args.out}`);
 
   const base = appConfig.sources.fhi.baseUrl.replace(/\/+$/, '');
-  let titleMap = {};
+  // Kildeinfoen bakes inn i katalogfila: aboutUrl/publishedBy vises i
+  // Tabellinfo (registerets egen «Om statistikken»-side, og hvem som faktisk
+  // utgir — `nokkel` utgis av Helsedirektoratet, ikke FHI). Med dem i fila
+  // slipper adapteren å hente /Common/source ved hver app-init.
+  const infoMap = {};
   try {
     const list = await fetchJson(`${base}/Common/source`, throttle);
-    (list || []).forEach(s => { if (s && s.id) titleMap[s.id] = s.title || s.id; });
+    (list || []).forEach(s => {
+      if (!s || !s.id) return;
+      infoMap[s.id] = {
+        title: s.title || s.id,
+        aboutUrl: s.aboutUrl || '',
+        publishedBy: s.publishedBy || ''
+      };
+    });
   } catch (err) {
     console.warn(`[fhi-catalog] Klarte ikke hente /Common/source (${err.message}) — bruker kilde-id som tittel.`);
   }
@@ -545,7 +556,15 @@ async function main() {
 
     // Kurateringen flettes på nytt over HELE kilden, også inkrementelt: den
     // ligger i en egen innsjekket fil og er idempotent.
-    const built = { title: titleMap[source] || source, tables };
+    const info = infoMap[source] || {};
+    const built = {
+      title: info.title || source,
+      // Tomme felt utelates: adapteren faller da tilbake til live
+      // /Common/source, slik at en eldre katalogfil fortsatt virker.
+      ...(info.aboutUrl ? { aboutUrl: info.aboutUrl } : {}),
+      ...(info.publishedBy ? { publishedBy: info.publishedBy } : {}),
+      tables
+    };
     sources[source] = applyCuration(built, curation.sources[source],
       msg => console.warn(`[fhi-catalog] kuratering ${source}: ${msg}`));
   }

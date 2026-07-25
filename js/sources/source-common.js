@@ -23,24 +23,116 @@
     return labelObj[l] || labelObj.nb || labelObj.en || '';
   }
 
+  // ---- Forespørselskø ----
+
+  // NB- og FHI-adapterne går UTENOM SSBs egen throttle (SSBApi._throttledFetch
+  // i js/api.js) — den er bundet til SSB-instansen. Uten køen her fyres derfor
+  // alt de trenger av gårde samtidig: en tvungen katalogoppfriskning treffer
+  // kilden med hele radlista på én gang, og en tabellåpning med fire parallelle
+  // metadatakall. Køen holder samtidigheten nede PER BASSENG (én per kilde), så
+  // en treg kilde ikke spiser den andres slots.
+  const DEFAULT_LIMIT = 4;
+  /** @type {Object<string, {limit:number, active:number, waiting:Function[], inflight:Map}>} */
+  const pools = Object.create(null);
+
+  function poolFor(name, limit) {
+    let pool = pools[name];
+    if (!pool) {
+      pool = pools[name] = { limit: limit, active: 0, waiting: [], inflight: new Map() };
+    }
+    // Første kall bestemmer taket; senere kall kan ikke krympe et basseng med
+    // ventende forespørsler under seg.
+    if (limit > pool.limit) pool.limit = limit;
+    return pool;
+  }
+
+  /** Vent på en ledig slot i bassenget (løser umiddelbart når det er plass). */
+  function acquire(pool) {
+    if (pool.active < pool.limit) {
+      pool.active++;
+      return Promise.resolve();
+    }
+    return new Promise(resolve => pool.waiting.push(resolve));
+  }
+
+  /** Gi fra deg sloten — enten til neste i køen eller tilbake til bassenget. */
+  function release(pool) {
+    const next = pool.waiting.shift();
+    if (next) next();          // sloten går rett videre, active er uendret
+    else pool.active--;
+  }
+
   /**
-   * fetch() wrapped in an AbortSignal.timeout so a hanging source API can't
-   * block app initialization (the catalogue aggregation in source-registry.js
-   * waits for every source). Rethrows a friendlier Error on timeout/abort;
-   * other errors (real network failures) propagate unchanged.
+   * fetch() bak en samtidighetskø og en AbortSignal.timeout, slik at en hengende
+   * kilde-API ikke kan blokkere appoppstarten (katalogaggregeringen i
+   * source-registry.js venter på hver kilde). Kaster en vennligere Error ved
+   * timeout/abort; andre feil (ekte nettverksfeil) propagerer uendret.
+   *
+   * Samtidige GET-er mot samme URL kollapses til ÉN forespørsel (in-flight-
+   * dedupe). Det er ikke en responscache: oppføringen fjernes så snart kallet
+   * er ferdig, så et senere kall går på nett igjen. Delere får hver sin
+   * `clone()` — en Response-kropp kan bare leses én gang. POST/PUT dedupes
+   * ikke: samme URL med ulik kropp er ulike forespørsler.
    *
    * @param {string} url
    * @param {object} [fetchOptions] - passed through to fetch() (headers etc.)
    * @param {object} opts
    * @param {number} opts.timeoutMs
    * @param {string} opts.timeoutErrorPrefix - e.g. '[NBAdapter] Tidsavbrudd'
+   * @param {string} [opts.queue] - bassengnavn (én per kilde), default 'default'
+   * @param {number} [opts.limit] - maks samtidige i bassenget, default 4
    * @returns {Promise<Response>}
    */
-  async function fetchWithTimeout(url, fetchOptions, opts) {
+  function fetchWithTimeout(url, fetchOptions, opts) {
     const o = opts || {};
+    const configured = (window.AppConfig && window.AppConfig.sources &&
+      window.AppConfig.sources.maxConcurrentRequests) || DEFAULT_LIMIT;
+    const pool = poolFor(o.queue || 'default', o.limit || configured);
+
+    const method = String((fetchOptions && fetchOptions.method) || 'GET').toUpperCase();
+    const key = method === 'GET' ? url : null;
+
+    if (key) {
+      const existing = pool.inflight.get(key);
+      if (existing) {
+        existing.sharers++;
+        return existing.promise.then(res => shareResponse(res, existing));
+      }
+    }
+
+    const entry = { sharers: 1, promise: null };
+    entry.promise = runQueued(pool, url, fetchOptions, o);
+    if (key) {
+      pool.inflight.set(key, entry);
+      // Fjernes FØR kallernes .then kjører, så ingen ny deler kan koble seg på
+      // et allerede løst kall (da ville sharers-tellingen under vært utdatert).
+      entry.promise.then(
+        () => pool.inflight.delete(key),
+        () => pool.inflight.delete(key)
+      );
+    }
+    return entry.promise.then(res => shareResponse(res, entry));
+  }
+
+  /**
+   * Én Response kan bare konsumeres én gang. Ble kallet delt, får ALLE (også
+   * den første) en klone, slik at ingen leserekkefølge kan tømme kroppen for
+   * de andre. Uten delere returneres responsen urørt — klargjøring koster
+   * bufring av kroppen. Testdubler uten clone() slipper gjennom som de er.
+   */
+  function shareResponse(res, entry) {
+    if (entry.sharers < 2 || !res || typeof res.clone !== 'function') return res;
+    return res.clone();
+  }
+
+  /** Selve kallet: vent på slot, START DA klokka, kjør, gi fra deg sloten. */
+  async function runQueued(pool, url, fetchOptions, o) {
+    await acquire(pool);
+    // Tidsavbruddet måles fra kallet FAKTISK starter, ikke fra det ble lagt i
+    // køen — ellers ville en ventende forespørsel kunne dø før den fikk gå.
     const timeoutMs = o.timeoutMs || 15000;
-    const fetchOpts = Object.assign({}, fetchOptions, { signal: AbortSignal.timeout(timeoutMs) });
     try {
+      const fetchOpts = Object.assign({}, fetchOptions, { signal: AbortSignal.timeout(timeoutMs) });
       return await fetch(url, fetchOpts);
     } catch (e) {
       // AbortSignal.timeout gir DOMException 'TimeoutError' (noen miljøer 'AbortError').
@@ -49,6 +141,8 @@
         throw new Error(prefix + ' etter ' + timeoutMs + ' ms: ' + url);
       }
       throw e; // Ekte nettverksfeil.
+    } finally {
+      release(pool);
     }
   }
 

@@ -4,11 +4,13 @@
 // fetch() av lokale filer blokkeres av CORS. Se getCatalog() i
 // js/sources/fhi-adapter.js.
 window.FhiCatalog = {
-  "generatedAt": "2026-07-25T09:13:46.315Z",
+  "generatedAt": "2026-07-25T10:00:09.037Z",
   "lastFullBuildAt": "2026-07-18T16:06:01.479Z",
   "sources": {
     "nokkel": {
       "title": "Folkehelsestatistikk",
+      "aboutUrl": "https://www.helsedirektoratet.no/forebygging-diagnose-og-behandling/forebygging-og-levevaner/folkehelsestatistikk-og-profiler",
+      "publishedBy": "Helsedirektoratet",
       "tables": [
         {
           "tableId": 171,
@@ -2349,6 +2351,8 @@ window.FhiCatalog = {
     },
     "mfr": {
       "title": "Medisinsk fødselsregister (MFR)",
+      "aboutUrl": "https://www.fhi.no/op/mfr",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 411,
@@ -3997,6 +4001,8 @@ window.FhiCatalog = {
     },
     "daar": {
       "title": "Dødsårsaksregisteret (DÅR)",
+      "aboutUrl": "https://www.fhi.no/op/dodsarsaksregisteret/",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 268,
@@ -4462,6 +4468,8 @@ window.FhiCatalog = {
     },
     "msis": {
       "title": "Meldingssystem for smittsomme sykdommer (MSIS)",
+      "aboutUrl": "https://allvis.fhi.no/msis",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 724,
@@ -4659,6 +4667,8 @@ window.FhiCatalog = {
     },
     "sysvak": {
       "title": "Nasjonalt vaksinasjonsregister (SYSVAK)",
+      "aboutUrl": "https://www.fhi.no/va/sysvak/",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 324,
@@ -4811,6 +4821,8 @@ window.FhiCatalog = {
     },
     "npr": {
       "title": "Norsk pasientregister (NPR)",
+      "aboutUrl": "https://www.fhi.no/he/npr",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 464,
@@ -5944,6 +5956,8 @@ window.FhiCatalog = {
     },
     "kpr": {
       "title": "Kommunalt pasient- og brukerregister (KPR)",
+      "aboutUrl": "https://www.fhi.no/he/kpr/statistikk-og-rapporter",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 522,
@@ -5997,6 +6011,8 @@ window.FhiCatalog = {
     },
     "lmr": {
       "title": "Legemiddelregisteret (LMR)",
+      "aboutUrl": "https://www.fhi.no/he/legemiddelregisteret/",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 819,
@@ -6121,6 +6137,8 @@ window.FhiCatalog = {
     },
     "gs": {
       "title": "Grossistbasert legemiddelstatistikk",
+      "aboutUrl": "https://www.fhi.no/he/legemiddelbruk/om-den-grossistbaserte-legemiddelfo/#statistikkbanker-med-data-om-legemiddelforbruk",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 847,
@@ -6291,6 +6309,8 @@ window.FhiCatalog = {
     },
     "hkr": {
       "title": "Hjerte- og karregisteret (HKR)",
+      "aboutUrl": "https://www.fhi.no/is/hjertekar2/",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 410,
@@ -6383,6 +6403,8 @@ window.FhiCatalog = {
     },
     "abr": {
       "title": "Abortregisteret (ABR)",
+      "aboutUrl": "https://www.fhi.no/op/abortregisteret",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 253,
@@ -6621,6 +6643,8 @@ window.FhiCatalog = {
     },
     "ngs": {
       "title": "Mikrobiologisk genomovervåkning",
+      "aboutUrl": "https://www.fhi.no/hd/laboratorie-analyser",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 665,
@@ -6820,6 +6844,8 @@ window.FhiCatalog = {
     },
     "skast": {
       "title": "Skadedyrstatistikken",
+      "aboutUrl": "https://www.fhi.no/sk/skadedyrbekjempelse/statistikk-om-skadedyr",
+      "publishedBy": "Folkehelseinstituttet",
       "tables": [
         {
           "tableId": 773,

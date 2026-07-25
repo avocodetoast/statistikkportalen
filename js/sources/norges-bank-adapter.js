@@ -165,7 +165,7 @@
       window.AppConfig.sources.fetchTimeoutMs) || 15000;
     const res = await window.SourceCommon.fetchWithTimeout(url,
       { headers: { Accept: 'application/json, */*' } },
-      { timeoutMs, timeoutErrorPrefix: '[NBAdapter] Tidsavbrudd' });
+      { timeoutMs, timeoutErrorPrefix: '[NBAdapter] Tidsavbrudd', queue: 'nb' });
     if (res.status === 404) return { status: 404, json: null };
     if (!res.ok) {
       // Norges Bank returnerer XML-feil; vi trenger bare statuskoden.
@@ -242,6 +242,19 @@
     });
   }
 
+  /**
+   * Bakte katalogperioder fra data/sources/nb-periods.js (window.NbPeriods,
+   * skrevet av scripts/update-nb-periods.mjs). Lastes som <script> i
+   * index.html — den eneste veien som virker over file://, der nettleseren
+   * blokkerer fetch() av lokale filer. Mangler fila, degraderer katalogen til
+   * tomme periodekolonner (som før fila fantes), og radene fylles etter hvert
+   * som tabeller åpnes (se fetchCataloguePeriod + extension.periods).
+   */
+  function bakedPeriods() {
+    const baked = window.NbPeriods;
+    return (baked && baked.tables) || null;
+  }
+
   async function getTables(options) {
     const opts = options || {};
     // Server-søk / nylig-oppdaterte er SSB-only semantikk.
@@ -249,26 +262,44 @@
     const force = opts.useCache === false;
 
     const tables = buildCatalogue(currentLang());
-    // Fyll Tidsperiode/Sist oppdatert fra ett lite, cachet kall pr. flow (24 t).
-    // Feiltolerant: hvis en probe feiler beholdes '' (degradér pent).
+    const baked = bakedPeriods();
+
+    // Tidsperiode/Sist oppdatert fylles UTEN nettverk. Norges Banks SDMX-API
+    // har ingen bulkvei til tidsvinduene, og ett probekall per rad betød 31
+    // samtidige kall for hver kalde sidelasting — blokkerende for
+    // BrowserState.init(). Kildene, i prioritert rekkefølge:
+    //   1. fersk cache-oppføring — skrevet av fetchCataloguePeriod forrige
+    //      gang tabellen ble åpnet, altså ferskere enn den innsjekkede fila
+    //   2. den bakte fila (window.NbPeriods)
+    //   3. tomme strenger
+    // `force` (statuspanelets «Oppdater») hopper over cachen og går rett på
+    // den bakte fila; ferske perioder hentes når en tabell faktisk åpnes.
     await Promise.all(tables.map(async (entry) => {
       const flow = flowForId(entry.id);
       if (!flow) return;
-      try {
-        const period = await fetchCataloguePeriod(flow, force);
-        if (period) {
-          entry.firstPeriod = period.firstPeriod || '';
-          entry.lastPeriod = period.lastPeriod || '';
-          entry.updated = period.updated || '';
-        }
-      } catch (e) { /* behold tomme strenger */ }
+      let period = null;
+      if (!force) {
+        try { period = await cacheGet(cataloguePeriodCacheKey(flow)); } catch (e) { period = null; }
+      }
+      if (!period && baked) period = baked[entry.id] || null;
+      if (period) {
+        entry.firstPeriod = period.firstPeriod || '';
+        entry.lastPeriod = period.lastPeriod || '';
+        entry.updated = period.updated || '';
+      }
     }));
-    // Katalogen er config-bygget og kan ikke reelt feile — sourceMeta
-    // rapporterer derfor alltid ferskt resultat (statuspanelet i
-    // source-registry/source-status bruker dette).
+
+    // Katalogen er config-bygget og kan ikke reelt feile. fromCache markerer at
+    // ingenting ble hentet over nett, så statuspanelet (source-status.js) ikke
+    // påstår et ferskt API-svar; fetchedAt er da filas byggetidspunkt.
+    const generatedAt = window.NbPeriods && window.NbPeriods.generatedAt;
     return {
       tables,
-      sourceMeta: { fromCache: false, stale: false, fetchedAt: Date.now() }
+      sourceMeta: {
+        fromCache: true,
+        stale: false,
+        fetchedAt: (generatedAt ? Date.parse(generatedAt) : NaN) || Date.now()
+      }
     };
   }
 
@@ -501,12 +532,20 @@
    * eller null. Cachet 24 t (språkuavhengig). Kalles fra getTables (hver app-init)
    * — derfor cachet og feiltolerant.
    */
-  async function fetchCataloguePeriod(flow, force) {
-    // Probenøkkelen er en del av cachenøkkelen: flere config-rader kan dele
-    // samme flow med hvert sitt snitt (REGNET), og de har ulik historikk.
+  /**
+   * Cachenøkkelen for en flows katalogperiode. Probenøkkelen inngår: flere
+   * config-rader kan dele samme flow med hvert sitt snitt (REGNET), og de har
+   * ulik historikk. v2 = firstCode/lastCode i tillegg til årstallene.
+   * Delt av fetchCataloguePeriod (skriver) og getTables (leser).
+   */
+  function cataloguePeriodCacheKey(flow) {
     const periodKey = probeKeyFor(flow, 'period') || '';
-    // v2 = firstCode/lastCode i tillegg til årstallene.
-    const cacheKey = 'nb-catperiod-v2-' + flow.flow + (periodKey ? '_' + periodKey : '');
+    return 'nb-catperiod-v2-' + flow.flow + (periodKey ? '_' + periodKey : '');
+  }
+
+  async function fetchCataloguePeriod(flow, force) {
+    const periodKey = probeKeyFor(flow, 'period') || '';
+    const cacheKey = cataloguePeriodCacheKey(flow);
     if (!force) {
       const cached = await cacheGet(cacheKey);
       if (cached) return cached;
@@ -956,14 +995,16 @@
     const flow = flowForId(tableId);
     if (!flow) throw new Error('[NBAdapter] Ukjent tabell: ' + tableId);
     const locale = apiLang(lang || currentLang());
-    // 'v10' = dropDims/dimSort/intervalPicker uten FREQ + eksakte timeBounds
-    // (firstCode/lastCode) (v9: dimOrder — permutert meta.id + fullDimId satt
+    // 'v11' = extension.periods (fersk katalogperiode tilbake til tabellistene
+    // via BrowserState.syncTablePeriodsFromMetadata) (v10: dropDims/dimSort/
+    // intervalPicker uten FREQ + eksakte timeBounds (firstCode/lastCode);
+    // v9: dimOrder — permutert meta.id + fullDimId satt
     // uten splice; v8: collapseDims.labelStyle:'suffix'; v7: sliceDims; v6:
     // slice/pinnedDims + fullDimId; v5: lokaliserte
     // verdinavn fra serieskeys-proben; v4: collapsedDims + configetikett-
     // tittel; v3: intervalPicker/timeBounds; v2: timePeriodsByFreq +
     // singleSelect) — ny nøkkel så gamle cacheoppføringer ikke serveres i 24 t.
-    const cacheKey = 'table_' + tableId + '_meta_v10_' + locale;
+    const cacheKey = 'table_' + tableId + '_meta_v11_' + locale;
 
     if (useCache !== false) {
       const cached = await cacheGet(cacheKey);
@@ -1092,6 +1133,13 @@
     // firstCode/lastCode er de eksakte ytterperiodene fra katalogproben,
     // firstPeriod/lastPeriod årstallene deres. Feiltolerant — velgeren virker
     // uten grenser.
+    // Katalogperioden hentes ÉN gang her (cachet 24 t) og brukes to steder:
+    // tidsvelgerens grenser under, og extension.periods lenger nede.
+    let cataloguePeriod = null;
+    try {
+      cataloguePeriod = await fetchCataloguePeriod(flow);
+    } catch (e) { /* degradér pent — begge bruksstedene er feiltolerante */ }
+
     const pickerGran = flow.intervalPicker && flow.intervalPicker.granularity;
     if (meta.extension && (meta.extension.timePeriodsByFreq || pickerGran)) {
       const timeId = (meta.extension.timePeriodsByFreq &&
@@ -1102,18 +1150,28 @@
           meta.dimension[timeId].extension || {};
         timeExt.intervalPicker = true;
         if (pickerGran) timeExt.pickerGran = pickerGran;
-        try {
-          const period = await fetchCataloguePeriod(flow);
-          if (period) {
-            timeExt.timeBounds = {
-              firstPeriod: period.firstPeriod || '',
-              lastPeriod: period.lastPeriod || '',
-              firstCode: period.firstCode || '',
-              lastCode: period.lastCode || ''
-            };
-          }
-        } catch (e) { /* uten grenser — velgeren degraderer pent */ }
+        if (cataloguePeriod) {
+          timeExt.timeBounds = {
+            firstPeriod: cataloguePeriod.firstPeriod || '',
+            lastPeriod: cataloguePeriod.lastPeriod || '',
+            firstCode: cataloguePeriod.firstCode || '',
+            lastCode: cataloguePeriod.lastCode || ''
+          };
+        }
       }
+    }
+
+    // Fersk tidsperiode tilbake til tabellistene: katalogen bygges fra den
+    // innsjekkede data/sources/nb-periods.js, som kan være noen uker gammel.
+    // Åpnes en tabell, probes flowen uansett (over) — da retter
+    // BrowserState.syncTablePeriodsFromMetadata() opp katalogen i minnet.
+    // Samme kildeagnostiske felt som fhi-adapter.js bruker.
+    if (cataloguePeriod && (cataloguePeriod.firstPeriod || cataloguePeriod.lastPeriod)) {
+      meta.extension = meta.extension || {};
+      meta.extension.periods = {
+        first: cataloguePeriod.firstPeriod || '',
+        last: cataloguePeriod.lastPeriod || ''
+      };
     }
 
     // FREQ er gjensidig utelukkende: SDMX-nøkkelen støtter riktignok 'A+M',

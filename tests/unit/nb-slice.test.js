@@ -653,7 +653,14 @@ describe('NBAdapter — katalog for snittede rader', () => {
   });
 
   it('rader som deler flow, men har ulik probeKey, deler ikke periodecache', async () => {
-    const res = await adapter.getTables({ useCache: false });
+    // Katalogen probes ikke lenger ved oppstart (periodene kommer fra
+    // data/sources/nb-periods.js) — probene kjøres når en tabell ÅPNES og
+    // skrives til cachen, som getTables leser. Samme egenskap som før: hver
+    // rad må få SITT tidsvindu, ikke naboens.
+    await adapter.getTableMetadata('nb-REG-PROD', false, 'no');
+    await adapter.getTableMetadata('nb-REG-REGION', false, 'no');
+
+    const res = await adapter.getTables({});
     const prod = res.tables.find(t => t.id === 'nb-REG-PROD');
     const region = res.tables.find(t => t.id === 'nb-REG-REGION');
     assert.equal(prod.firstPeriod, '2010');

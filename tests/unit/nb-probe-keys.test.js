@@ -160,8 +160,12 @@ describe('NBAdapter — discontinued-flagg i katalogen', () => {
     assert.equal(midfreq.discontinued, false);
   });
 
-  it('bruker probeKey (period-varianten) i katalogperiode-proben', () => {
-    // getTables over har allerede probet periodene for alle flows.
+  it('bruker probeKey (period-varianten) i katalogperiode-proben', async () => {
+    // Katalogen probes ikke lenger ved oppstart (periodene kommer fra
+    // data/sources/nb-periods.js) — periodeproben kjøres når en tabell ÅPNES.
+    await adapter.getTableMetadata('nb-PKSTR', false, 'no');
+    await adapter.getTableMetadata('nb-PKOBJ', false, 'no');
+
     assert.ok(urlsFor('PKSTR').some(u =>
       u.includes('/data/PKSTR/B.U..?') && u.includes('firstNObservations=1')),
       'PKSTR-periodeproben skal bruke probeKey-strengen');
