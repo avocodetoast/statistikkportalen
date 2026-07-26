@@ -22,10 +22,12 @@ import {
   runSearchFlow,
   runTopicFlow,
   runTableFlow,
+  readVariableSelection,
   readSourceBadge,
   DEFAULT_TABLE,
   NB_TABLE,
-  FHI_TABLE
+  FHI_TABLE,
+  SOURCE_TABLES
 } from './helpers/flows.mjs';
 
 const availability = e2eAvailable();
@@ -205,6 +207,46 @@ describe('E2E røyktest (file://)', { skip: availability.ok ? false : availabili
         JSON.stringify(withoutPeriods.slice(0, 5))
     );
   });
+});
+
+/**
+ * Deep-link ved KALD last: `#variables/{id}` som aller første navigasjon, uten
+ * å innom forsiden. index.html kaller `URLRouter.handleRoute()` når det finnes
+ * en hash ved oppstart, og ruten må overleve at katalogen ennå ikke er lastet.
+ *
+ * Hver test starter sin egen nettleser — det er nettopp kaldstarten som testes,
+ * så en gjenbrukt side ville gjort fragmentnavigasjon ut av det og målt noe helt
+ * annet. Ingen nye fixtures: kallene er de samme som `runTableFlow()` gjør.
+ *
+ * (Skillet dokumenterte tidligere dette som en kjent feil. Det stemte ikke —
+ * derfor står det nå en test her i stedet for en påstand i et dokument.)
+ */
+describe('E2E deep-link ved kald last', { skip: availability.ok ? false : availability.reason }, () => {
+  for (const { source, tableId } of SOURCE_TABLES) {
+    it(`${source}: #variables/${tableId} som første navigasjon`, async () => {
+      const app = await launchApp({
+        mode: MODE_HTTP,
+        network: NETWORK,
+        keepTables: [tableId],
+        hash: `#variables/${tableId}`,
+        shotPrefix: `deeplink-${source}`
+      });
+
+      try {
+        const result = await readVariableSelection(app.page);
+
+        assert.equal(result.view, 'variables', `havnet i «${result.view}» i stedet for variabelvalget`);
+        assert.match(result.hash, new RegExp(`^#variables/${tableId}`), `hashen ble «${result.hash}»`);
+        assert.ok(result.dimensionCount > 0, 'ingen dimensjonskort rendret');
+        assert.equal(result.subjectCount, 0, 'forsiden ble rendret i stedet for variabelvalget');
+
+        await app.shot(`deeplink-${tableId}`);
+        assertClean(app, `Deep-link til ${tableId}`);
+      } finally {
+        await app.close();
+      }
+    });
+  }
 });
 
 /**

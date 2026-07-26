@@ -39,6 +39,22 @@ export const SOURCE_TABLES = [
 const TIMEOUT = 20000;
 
 /**
+ * Venter til variabelvalget faktisk har rendret, og rapporterer hva appen viser.
+ *
+ * Brukes av deep-link-testene: der er poenget nettopp at man IKKE går via
+ * forsiden, så `runTableFlow()` (som navigerer selv) passer ikke.
+ */
+export async function readVariableSelection(page) {
+  await page.waitForSelector('[data-dimension]', { timeout: TIMEOUT });
+  return {
+    view: await page.evaluate(() => window.AppState?.currentView),
+    hash: await page.evaluate(() => window.location.hash),
+    dimensionCount: await page.locator('[data-dimension]').count(),
+    subjectCount: await page.locator('[data-subject]').count()
+  };
+}
+
+/**
  * Forside → søk. Søket utløses av Enter (ikke av debounce), jf.
  * front-page.js: keydown-handleren navigerer til #search.
  */

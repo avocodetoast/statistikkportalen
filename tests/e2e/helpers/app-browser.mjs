@@ -78,6 +78,40 @@ function enableAppLogging() {
 }
 
 /**
+ * Sett denne til en nettleserbinær for å kjøre mot noe annet enn Google Chrome
+ * (f.eks. Chromium eller Brave). Da brukes `executablePath` i stedet for
+ * `channel`, som bare slår opp Googles egne kanaler.
+ */
+const CHROME_OVERRIDE = process.env.E2E_CHROME || null;
+
+/**
+ * Stier der `channel: 'chrome'` faktisk finner noe. Chromium hører IKKE hjemme
+ * her: `channel: 'chrome'` slår bare opp Google Chrome-kanalene, så en maskin
+ * med kun Chromium ville bestått preflighten og deretter fått «Executable
+ * doesn't exist» fra launch() — nøyaktig den feilklassen dette laget finnes for
+ * å fjerne. Har du bare Chromium, sett E2E_CHROME til binæren.
+ */
+const CHROME_PATHS = [
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  '/usr/bin/google-chrome',
+  '/usr/bin/google-chrome-stable',
+  '/opt/google/chrome/chrome',
+  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+];
+
+/**
+ * Feilsøkingsbrytere. Standard er headless — `npm run test:e2e` skal aldri åpne
+ * vinduer. Men når en test feiler på noe skjermbildene ikke fanger (en klikk
+ * som ikke treffer, et kort som lukker seg igjen), er det å SE det skje raskeste
+ * vei til svaret:
+ *
+ *   E2E_HEADED=1 E2E_SLOWMO=250 node --test --test-name-pattern="…" "tests/e2e/**\/*.e2e.mjs"
+ */
+const HEADED = Boolean(process.env.E2E_HEADED);
+const SLOWMO = Number(process.env.E2E_SLOWMO) || 0;
+
+/**
  * Er miljøet i stand til å kjøre E2E? Brukes til å skippe rent i stedet for
  * å feile på en maskin uten Chrome eller uten `npm install`.
  *
@@ -90,16 +124,19 @@ export function e2eAvailable() {
     return { ok: false, reason: 'playwright-core er ikke installert — kjør `npm install`' };
   }
 
-  const chromePaths = [
-    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    '/Applications/Chromium.app/Contents/MacOS/Chromium',
-    '/usr/bin/google-chrome',
-    '/usr/bin/chromium',
-    '/usr/bin/chromium-browser',
-    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
-  ];
-  if (!chromePaths.some((p) => fs.existsSync(p))) {
-    return { ok: false, reason: 'Fant ingen installert Chrome/Chromium (channel: chrome)' };
+  if (CHROME_OVERRIDE) {
+    if (!fs.existsSync(CHROME_OVERRIDE)) {
+      return { ok: false, reason: `E2E_CHROME peker på ${CHROME_OVERRIDE}, som ikke finnes` };
+    }
+    return { ok: true };
+  }
+
+  if (!CHROME_PATHS.some((p) => fs.existsSync(p))) {
+    return {
+      ok: false,
+      reason: 'Fant ingen installert Google Chrome (channel: chrome). Har du en annen ' +
+        'Chromium-basert nettleser, sett E2E_CHROME=<sti til binæren>'
+    };
   }
   return { ok: true };
 }
@@ -128,7 +165,11 @@ export async function launchApp(options = {}) {
   } = options;
 
   const { chromium } = await import('playwright-core');
-  const browser = await chromium.launch({ channel: 'chrome' });
+  const browser = await chromium.launch({
+    ...(CHROME_OVERRIDE ? { executablePath: CHROME_OVERRIDE } : { channel: 'chrome' }),
+    headless: !HEADED,
+    slowMo: SLOWMO
+  });
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await context.newPage();
 

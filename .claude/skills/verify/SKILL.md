@@ -14,10 +14,15 @@ allerede satt opp, og dette dokumentet beskriver hvordan.
 | Kommando | Hva den gjør | Tid |
 |---|---|---|
 | `npm run check` | Statiske sjekker. Ingen nettleser, ingen nettverk. | ~1 s |
-| `npm test` | Enhetssuiten (508 tester). Uendret, null avhengigheter. | ~2 s |
+| `npm test` | Enhetssuiten (508 tester). Uendret, null avhengigheter. | ~1,5 s |
 | `npm run coverage` | Dekningsport: feiler hvis ny kode er utestet. | ~2 s |
-| `npm run test:e2e` | Røyktest i ekte Chrome mot fixtures. | ~10 s |
-| `npm run verify` | Alle fire, i rekkefølge. **Kjør denne før commit.** | ~15 s |
+| `npm run test:e2e` | Røyktest i ekte Chrome mot fixtures (13 tester). | ~12 s |
+| `npm run verify` | Alle fire, i rekkefølge. **Kjør denne før commit.** | ~17 s |
+
+`verify` kjører enhetssuiten to ganger — én gang som `npm test`, én gang inni
+`coverage`, som må måle den med `NODE_V8_COVERAGE`. Det er målt til ~1,4 s ekstra, og
+prisen er bevisst: `npm test`-linja er den synlige kvitteringen på at testene passerer,
+og CLAUDE.md ber om at den vises før commit. Ikke «optimaliser» den bort.
 
 Flagg til `test:e2e`:
 
@@ -26,6 +31,9 @@ Flagg til `test:e2e`:
 | `E2E_LIVE=1` | Kjør mot ekte SSB/NB/FHI-API-er i stedet for fixtures. |
 | `E2E_SHOTS=1` | Lagre skjermbilder for hvert steg. |
 | `E2E_SHOT_DIR=<sti>` | Hvor skjermbildene havner (standard: `$TMPDIR/statistikkportalen-e2e-shots`). |
+| `E2E_HEADED=1` | Kjør med synlig nettleservindu i stedet for headless. |
+| `E2E_SLOWMO=<ms>` | Bremse hver handling, så du rekker å se hva som skjer. |
+| `E2E_CHROME=<sti>` | Kjør mot en annen Chromium-basert binær enn Google Chrome. |
 
 ## Dette kjører automatisk
 
@@ -35,7 +43,7 @@ utføres av selve verktøyet, ikke av modellen:
 | Hook | Når | Kjører | Gate |
 |---|---|---|---|
 | `PostToolUse` (`Edit`/`Write`) | etter hver filendring | `npm run check` (~1 s) | kun `js/`, `css/`, `data/sources/`, `index.html` |
-| `Stop` | når Claude avslutter et svar | `npm run verify` (~15 s) | kun hvis arbeidstreet har ucommittede endringer i kode |
+| `Stop` | når Claude avslutter et svar | `npm run verify` (~17 s) | kun hvis arbeidstreet har ucommittede endringer i kode |
 
 Begge avslutter med **exit 2** ved feil, som sender feilmeldingen tilbake til Claude
 for retting. Logikken ligger i `scripts/hooks/*.sh` (ikke inline i settings.json), så
@@ -44,7 +52,13 @@ den kan pipe-testes:
 ```bash
 echo '{"tool_input":{"file_path":"'$PWD'/js/utils.js"}}' | ./scripts/hooks/post-edit-check.sh
 echo '{}' | ./scripts/hooks/stop-verify.sh
+echo '{"stop_hook_active":true}' | ./scripts/hooks/stop-verify.sh   # skal exit 0 straks
 ```
+
+Stop-hooken slipper taket når `stop_hook_active` er sann, altså når runden allerede
+kjører *fordi* hooken blokkerte forrige gang. Uten den porten blir en `verify`-feil
+modellen ikke får rettet — flaky nettleser, eller en halvferdig endring brukeren selv
+ba om å få stå — en runde som ikke kan avsluttes.
 
 Stop-hookens git-port er grunnen til at rene spørsmål-og-svar-runder ikke koster 15
 sekunder. Er treet rent, avslutter den på ~0,2 s uten å starte npm.
@@ -74,6 +88,33 @@ tid og sier ingenting.
 Etter `E2E_SHOTS=1` — **les bildene med Read-verktøyet**, ikke bare bekreft at filene
 finnes. Poenget er å se resultatet.
 
+### Når en E2E-test feiler
+
+I denne rekkefølgen — hvert steg koster mer enn det forrige:
+
+```bash
+# 1. Isolér. Kjør bare den ene testen, ikke hele suiten.
+node --test --test-name-pattern="Norges Bank" "tests/e2e/**/*.e2e.mjs"
+
+# 2. Se sluttilstanden.
+E2E_SHOTS=1 node --test --test-name-pattern="Norges Bank" "tests/e2e/**/*.e2e.mjs"
+
+# 3. Se det skje. Åpner et ekte vindu.
+E2E_HEADED=1 E2E_SLOWMO=250 node --test --test-name-pattern="Norges Bank" "tests/e2e/**/*.e2e.mjs"
+```
+
+Les feilmeldingen før du gjør noe av dette. `problems()` skiller allerede mellom tre
+årsaker, og de peker helt ulike veier:
+
+| I meldingen | Betyr |
+|---|---|
+| `Uncaught exceptions:` | Appen kastet. Ekte bug — start i stacktracen. |
+| `Konsollfeil:` med `[app]`-prefiks | Appen logget selv feilen via `logger.error`. Ekte bug. |
+| `Ustubbede kall:` | Flyten gjør et API-kall det ikke finnes fixture for. Spill inn på nytt (se under) — ikke myk opp testen. |
+
+**En rød test som bruker 20 sekunder henger ikke** — den venter ut `waitForSelector`
+mot `TIMEOUT` i `flows.mjs`. Det er ventet oppførsel når elementet aldri dukker opp.
+
 ## Preflight
 
 E2E hopper over seg selv med en tydelig begrunnelse hvis noe mangler. Ved skip:
@@ -81,7 +122,13 @@ E2E hopper over seg selv med en tydelig begrunnelse hvis noe mangler. Ved skip:
 | Melding | Fiks |
 |---|---|
 | `playwright-core er ikke installert` | `npm install` (1 pakke, 13 MB, laster **ikke** ned nettlesere) |
-| `Fant ingen installert Chrome/Chromium` | Installer Google Chrome |
+| `Fant ingen installert Google Chrome` | Installer Google Chrome, eller sett `E2E_CHROME=<sti>` |
+
+Preflighten godtar bare stier der `channel: 'chrome'` faktisk finner noe — altså Googles
+egne kanaler, **ikke** Chromium. Ville den godtatt `/Applications/Chromium.app/…` ville
+den sagt OK og `launch()` deretter kastet «Executable doesn't exist», som er akkurat den
+feilklassen laget skal fjerne. Har du bare Chromium/Brave/Edge: `E2E_CHROME=<binær>`
+bytter fra `channel` til `executablePath`.
 
 **Ikke kjør `npx playwright install`.** Oppsettet bruker systemets Chrome via
 `channel: 'chrome'`. Playwrights egen Chromium er ~150 MB og pinnet til en eksakt
@@ -112,7 +159,9 @@ ikke matche det mønsteret. Døp en ny E2E-fil `*.e2e.mjs`.
 
 `stub-routes.mjs` bruker Playwrights `page.route()`. **Ikke foreslå MSW** — det ville
 krevd en ekte npm-avhengighet, en innsjekket service worker og oppkobling i
-`index.html`, i en app uten byggesteg. Appen gjør bare seks API-kall i hele røyktesten.
+`index.html`, i en app uten byggesteg. Hele røyktesten treffer 18 unike endepunkter
+(6 SSB, 7 Norges Bank, 5 FHI — tell `tests/e2e/fixtures/`), og tre av dem ved kaldstart.
+`page.route()` dekker det med god margin.
 
 Tre modi:
 
@@ -135,12 +184,28 @@ Fixtures committes. `/tables` trimmes fra ~10 000 til 70 rader som fortsatt dekk
 assertionen. Legg da også det nye steget inn i `record-fixtures.mjs`, ellers spilles det
 ikke inn.
 
+**Grønn replay mot utdaterte fixtures beviser ingenting.** Fixturene er frosne svar; de
+blir ikke feil av at API-et endrer seg, de blir bare gamle. Kjør derfor
+`E2E_LIVE=1 npm run test:e2e` etter enhver adapterendring, og når en kilde varsler
+API-endring. Feiler live mens replay er grønt, er det fixturene som skal spilles inn på
+nytt — ikke testen som skal mykes opp.
+
 ## Å legge til en ny flyt
 
 1. Skriv steget i `flows.mjs` (driver appen, asserter ikke).
 2. Kall det fra `record-fixtures.mjs` **og** `smoke.e2e.mjs`.
 3. `node tests/e2e/helpers/record-fixtures.mjs`
 4. `npm run test:e2e`
+5. **Negativ kontroll: brekk det du nettopp asserterte, og se testen bli rød.** Kommenter
+   ut `<script>`-taggen, snu en betingelse, returner feil verdi — kjør, bekreft rødt av
+   *riktig* årsak, angre. En assertion som aldri er sett feile er ikke verifisert, den er
+   bare grønn. Det var slik den falske «deep-link virker ikke»-påstanden ble avslørt, og
+   slik stride-eksperimentet under viste hva E2E faktisk fanger.
+
+Vent på **tilstand**, ikke på tid. `runTopicFlow()` har to `waitForTimeout(400/500)` som
+står der av historiske grunner; ikke ta dem som mønster. Nye steg skal bruke
+`waitForSelector`/`waitForFunction` — faste sleeps er raske nok på din maskin og flaky
+på en tregere.
 
 ## Selektorkart
 
@@ -167,9 +232,10 @@ Fallgruver som har kostet tid — alle observert, ikke antatt:
   `[data-dimension]:not(.card-auto-hidden)`.
 - **Radioknappene i single-select-dimensjoner er visuelt skjulte** inni
   `<label class="api-pill">`. `.check()` henger; klikk labelen.
-- **Deep-link ved kald last virker ikke.** `page.goto(url + '#variables/13760')` som
-  aller første navigasjon havner på `#home` — for alle tre kildene. Gå via forsiden
-  først. (Se «Kjente avvik».)
+- **Deep-link ved kald last virker.** `launchApp({ hash: '#variables/13760' })` som
+  aller første navigasjon lander riktig — `index.html` kaller `URLRouter.handleRoute()`
+  når det finnes en hash. Du trenger ikke gå via forsiden. Dekket av
+  «deep-link ved kald last» i `smoke.e2e.mjs`.
 
 ## Kildene oppfører seg ulikt
 
@@ -221,10 +287,16 @@ Legg scriptet i scratchpad-katalogen, ikke i repoet. `mode: 'file'` laster over 
    `generate-seo-pages.mjs` — ellers 404-er den på hver forhåndsrendret underside.
 5. Duplikate id-er i `index.html`.
 
+**Og hva den ikke fanger.** Sjekkene er linje- og regexbaserte, ikke en HTML-parser: en
+tag delt over flere linjer, eller attributter i enkeltfnutter, er usynlig for både
+asset- og id-sjekken. Den typesjekker ingenting, kjører ingen kode, og ser ikke HTML som
+bygges i JS — altså det meste av appens markup. Grønn `check` betyr «skallet henger
+sammen», ikke «koden virker». Det er E2E-lagets jobb.
+
 `npm run test:e2e`: at appen laster, at søk/emnetre/variabelvalg/datahenting/eksport
-henger sammen for **alle tre kildene**, at det ikke er konsollfeil eller uncaught
-exceptions underveis, at `file://`-modus virker, og at appen degraderer synlig i stedet
-for å kræsje når en kilde er nede.
+henger sammen for **alle tre kildene**, at deep-link ved kald last lander riktig, at det
+ikke er konsollfeil eller uncaught exceptions underveis, at `file://`-modus virker, og at
+appen degraderer synlig i stedet for å kræsje når en kilde er nede.
 
 ## Dekningsporten — den eneste som krever NYE tester
 
@@ -249,8 +321,18 @@ hva du senket og hvorfor.
 
 `npm run coverage:report` viser dekningen per fil uten å porte.
 
-To ting å vite om målingen:
+Tre ting å vite om målingen:
 
+- **Porten måler bare filer en enhetstest faktisk laster.** V8-dekningen inneholder
+  ingenting om en fil `loadApp()` aldri kjørte, så den er verken «dekket» eller
+  «nedgang» — den er usynlig. 11 av 40 filer under `js/` står slik utenfor
+  (`export.js`, `seo-head.js`, `variable-select*.js`, `source-status.js`, `menu-bar.js`,
+  `table-rotation.js`, `table-save-query.js`, `*-sv.js`). Legger du utestet logikk i én
+  av dem, sier porten fortsatt «OK» — noe å vite, siden `export.js` og
+  `variable-select-api.js` inneholder ren logikk TDD-reglene ellers ville krevd test for.
+  Basislinjen fører dem opp i `untracked`, og porten feiler på en **ny** `js/`-fil som
+  verken er lastet av en test eller ført opp der. Skal du teste en av dem: legg filen
+  inn i en `SCRIPTS`-liste i `tests/helpers/app-env.js`, så begynner den å telle.
 - **`node --test --experimental-test-coverage` rapporterer ingenting for `js/*.js`.**
   Harnessen laster appfilene med `vm.runInThisContext()`, og Nodes egen rapport tar
   bare med filer den selv lastet som moduler. Rå `NODE_V8_COVERAGE` ser dem derimot,
@@ -267,7 +349,8 @@ E2E asserter **struktur**, ikke **verdier**. Det er verifisert, ikke antatt: en 
 innført feil i `computeStrides()` i `sdmx-to-jsonstat.js` (reverserte strides, altså
 riktig tabell med gale tall) ga
 
-- `npm run test:e2e`: **10/10 grønt** — tabellen rendret fortsatt med rader
+- `npm run test:e2e`: **alt grønt** (suiten var 10 tester den gang) — tabellen rendret
+  fortsatt med rader
 - `npm test`: **8 feil** i `dataToJsonStat`- og `NBAdapter`-testene
 
 Så: tallriktighet hører hjemme i enhetstestene, og en grønn røyktest sier ingenting om
@@ -279,11 +362,6 @@ mobil-layout, tilgjengelighet. Ikke påstå at noe av dette er verifisert.
 
 ## Kjente avvik
 
-- **Deep-link ved kald last havner på forsiden.** Å åpne
-  `…/index.html#variables/13760` som første navigasjon ender på `#home`. Gjelder alle
-  tre kildene, altså ikke en kildespesifikk feil. Verifisert manuelt; ikke undersøkt
-  om det påvirker produksjon (de forhåndsrendrede SEO-sidene bruker sti-URL-er,
-  `/table/{id}/`, ikke hash). Det finnes **ingen** test som dekker dette ennå.
 - **`js/router.js` har null funksjonsdekning** (0/15) — `encode`, `decode`,
   `parseHash`, `buildHash` og rutehåndtererne er alle utestet, selv om CLAUDE.md
   nevner «router.js encode/decode» som en av de beste TDD-kandidatene.

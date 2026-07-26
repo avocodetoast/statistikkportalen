@@ -55,21 +55,17 @@ Workflow rules:
 `npm test` covers pure logic only. To confirm a change works in the actual app there is a browser layer:
 
 ```bash
-npm run check        # statiske sjekker, ingen nettleser        (~1 s)
-npm run coverage     # dekningsport: er ny kode testet?         (~2 s)
-npm run test:e2e     # røyktest i ekte Chrome mot fixtures      (~10 s)
-npm run verify       # check + test + coverage + test:e2e       (~15 s)
+npm run check        # statiske sjekker, ingen nettleser
+npm run coverage     # dekningsport: er ny kode testet?
+npm run test:e2e     # røyktest i ekte Chrome mot fixtures
+npm run verify       # check + test + coverage + test:e2e — kjør denne før commit
 ```
-
-It drives the **system's Chrome** via `playwright-core` (the repo's only devDependency) — never `npx playwright install`, which downloads a 150 MB Chromium pinned to a build revision that drifts. `npm test` still runs on a checkout without `npm install`; the E2E suites skip with a reason.
-
-The suite covers one table per source (SSB `13760`, Norges Bank `nb-IR`, FHI `fhi-nokkel-185`) because the three take genuinely different paths through the adapter layer — and asserts the per-source capability matrix (NB has no `/defaultselection`; Excel export and saved queries are SSB-only).
 
 **Two hooks in `.claude/settings.json` run this automatically** (`scripts/hooks/*.sh`): `npm run check` after every edit to `js/`/`css/`/`data/sources/`/`index.html`, and `npm run verify` when a response ends with uncommitted code changes. Both feed failures back for fixing. Don't remove them without asking.
 
-**E2E asserts structure, not values.** A deliberate bug in `sdmx-to-jsonstat.js` that produced a correctly-shaped table with wrong numbers passed all 10 E2E tests and failed 8 unit tests. Never cite a green smoke run as evidence that a conversion or calculation is correct.
+**E2E asserts structure, not values.** A deliberate bug in `sdmx-to-jsonstat.js` that produced a correctly-shaped table with wrong numbers passed the whole E2E suite and failed 8 unit tests. Never cite a green smoke run as evidence that a conversion or calculation is correct.
 
-**Load the `verify` skill** (`.claude/skills/verify/SKILL.md`) before running or extending this layer — it has the selector map, the record/replay fixture workflow, when to take screenshots, and how to drive the app manually. Don't re-derive it, and don't write a one-off browser script.
+**Load the `verify` skill** (`.claude/skills/verify/SKILL.md`) before running or extending this layer — it has the command reference, the selector map, the record/replay fixture workflow, how to debug a failing E2E test, when to take screenshots, and how to drive the app manually. Don't re-derive it, and don't write a one-off browser script. Never run `npx playwright install`; the skill explains why.
 
 ## Subagent Model Selection
 

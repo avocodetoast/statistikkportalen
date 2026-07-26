@@ -93,6 +93,16 @@ When it fires, **write the test**. `npm run coverage:baseline` exists for
 deliberate drops only — typically new DOM-heavy view code that this file
 already exempts from unit testing.
 
+**What the gate cannot see:** a file no unit test loads produces no V8 coverage
+at all, so it is neither covered nor a regression — it is invisible. 11 of the
+40 files under `js/` are in that position (`export.js`, `seo-head.js`,
+`variable-select*.js`, `source-status.js`, `menu-bar.js`, `table-rotation.js`,
+`table-save-query.js`, the `*-sv.js` instance files); the baseline lists them
+under `untracked`. Adding untested logic *there* still passes. What the gate
+does enforce is that a **new** `js/` file cannot appear without either being
+loaded by a test or being consciously added to that list. To bring one under
+the gate, add it to a `SCRIPTS` list in `helpers/app-env.js`.
+
 Two implementation notes worth knowing:
 
 - `node --test --experimental-test-coverage` reports **nothing** for `js/*.js`,

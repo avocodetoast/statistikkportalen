@@ -46,6 +46,32 @@ const BASELINE_FILE = path.join(REPO_ROOT, 'tests', 'coverage-baseline.json');
 /** Bare appkoden. scripts/ og tests/ har sine egne tester og er ikke poenget her. */
 const INCLUDE_PREFIX = 'js/';
 
+/**
+ * HULLET DENNE LUKKER: målingen ser bare filer en test faktisk laster gjennom
+ * loadApp(). En fil ingen test laster dukker ikke opp i V8-dekningen i det hele
+ * tatt, så porteløkka under inspiserer den aldri — den er verken dekket eller
+ * «nedgang». Uten dette kunne man legge ti utestede funksjoner i js/export.js og
+ * fortsatt få «Dekning OK».
+ *
+ * Derfor enumereres js/**\/*.js fra disk og sammenlignes med basislinjen: en ny
+ * fil må enten bli lastet av en test (og få en basislinje) eller føres opp i
+ * `untracked` under, som er en bevisst avgjørelse noen må ta.
+ */
+function listAppFiles() {
+  const out = [];
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(full);
+      // V8-dekningen bruker skråstrek uansett plattform; normaliser så
+      // sammenligningen mot basislinjen virker på Windows også.
+      else if (entry.name.endsWith('.js')) out.push(path.relative(REPO_ROOT, full).split(path.sep).join('/'));
+    }
+  };
+  walk(path.join(REPO_ROOT, 'js'));
+  return out.sort();
+}
+
 function parseArgs(argv) {
   return {
     update: argv.includes('--update'),
@@ -73,6 +99,10 @@ function collectCoverage() {
 
   if (result.status !== 0) {
     fs.rmSync(covDir, { recursive: true, force: true });
+    // Vis hva som faktisk feilet. Uten dette sier et frittstående
+    // `npm run coverage` bare at «noe» er rødt, og man må kjøre npm test selv.
+    if (result.stdout) console.error(result.stdout);
+    if (result.stderr) console.error(result.stderr);
     console.error('Enhetstestene feiler — fiks dem før dekningen er meningsfull.');
     process.exit(1);
   }
@@ -129,13 +159,19 @@ function writeBaseline(summary) {
   for (const [url, { covered, total }] of [...summary].sort(([a], [b]) => a.localeCompare(b))) {
     files[url] = { covered, total };
   }
+  const untracked = listAppFiles().filter((f) => !files[f]);
   const payload = {
     _comment:
       'Autogenerert av scripts/check-coverage.mjs. Funksjonsdekning per appfil. ' +
       'Porten feiler når en fil får FLERE udekkede funksjoner enn her. ' +
       'Oppdater bevisst med `npm run coverage:baseline` når du senker terskelen med vitende og vilje.',
+    _untrackedComment:
+      'Filer INGEN enhetstest laster, og som porten derfor ikke kan måle i det hele tatt. ' +
+      'Dukker det opp en ny js/-fil som verken står her eller i `files`, feiler porten — ' +
+      'da må du enten skrive en test som laster den, eller føre den opp her med vitende og vilje.',
     generatedAt: new Date().toISOString(),
-    files
+    files,
+    untracked
   };
   fs.writeFileSync(BASELINE_FILE, JSON.stringify(payload, null, 2) + '\n');
 }
@@ -181,6 +217,20 @@ function main() {
   }
 
   const failures = [];
+
+  // Filer porten ikke kan se i det hele tatt (ingen test laster dem). En ny
+  // slik fil skal ikke kunne gli inn i stillhet — se listAppFiles().
+  const known = new Set([...Object.keys(baseline.files), ...(baseline.untracked || [])]);
+  const unknown = listAppFiles().filter((f) => !known.has(f));
+  if (unknown.length > 0) {
+    failures.push(
+      `${unknown.length} ny(e) fil(er) under js/ som ingen enhetstest laster:\n` +
+        unknown.map((f) => `        ${f}`).join('\n') +
+        `\n      Porten kan ikke måle dem. Skriv en test som laster filen (se SCRIPTS i\n` +
+        `      tests/helpers/app-env.js), eller før den opp i "untracked" i basislinjen\n` +
+        `      med npm run coverage:baseline hvis den bevisst skal stå utenfor.`
+    );
+  }
 
   for (const [url, current] of summary) {
     const before = baseline.files[url];
