@@ -57,9 +57,17 @@ Workflow rules:
 ```bash
 npm run check        # statiske sjekker, ingen nettleser
 npm run coverage     # dekningsport: er ny kode testet?
-npm run test:e2e     # røyktest i ekte Chrome mot fixtures
+npm run test:e2e     # røyktest + variabelvalg/API-bygger i ekte Chrome mot fixtures
 npm run verify       # check + test + coverage + test:e2e — kjør denne før commit
 ```
+
+The E2E layer is two suites: `smoke.e2e.mjs` (app loads, main flows hang together, one
+table per source) and `variable-select.e2e.mjs` (Ctrl+A/star selection, optional
+dimensions, codelist groupings and the API builder, across SSB 08801/13472/11189/12850).
+Both run fully offline from recorded fixtures — no test may hit SSB, which rate-limits at
+30 calls/min. Re-recording (`node tests/e2e/helpers/record-fixtures.mjs`) is deliberately
+paced under that limit and trims oversized metadata/codelist responses; see the `verify`
+skill before touching it.
 
 **Two hooks in `.claude/settings.json` run this automatically** (`scripts/hooks/*.sh`): `npm run check` after every edit to `js/`/`css/`/`data/sources/`/`index.html`, and `npm run verify` when a response ends with uncommitted code changes. Both feed failures back for fixing. Don't remove them without asking.
 

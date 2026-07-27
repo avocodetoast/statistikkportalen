@@ -3801,6 +3801,72 @@
           "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08799/data?lang=no&outputFormat=json-stat2"
         }
       ]
+    },
+    {
+      "id": "08801",
+      "label": "08801: Utenrikshandel med varer, etter varenummer (HS) og land 1988-2025",
+      "description": "",
+      "sortCode": "0000000070",
+      "updated": "2026-05-15T06:00:00Z",
+      "firstPeriod": "1988",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "varenummer",
+        "import/eksport",
+        "land",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ut",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "ut",
+            "label": "Utenriksøkonomi",
+            "sortCode": "0000115"
+          },
+          {
+            "id": "ut02",
+            "label": "Utenrikshandel",
+            "sortCode": "0000117"
+          },
+          {
+            "id": "muh",
+            "label": "Utenrikshandel med varer",
+            "sortCode": "0000118"
+          },
+          {
+            "id": "SBMENU4159",
+            "label": "Gruppering etter Tolltariffen/HS-nomenklaturen",
+            "sortCode": "0000000055"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08801?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08801?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08801/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08801/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
     }
   ],
   "page": {

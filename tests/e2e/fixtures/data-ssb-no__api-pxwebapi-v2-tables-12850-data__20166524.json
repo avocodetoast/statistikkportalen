@@ -1,0 +1,138 @@
+{
+  "version": "2.0",
+  "class": "dataset",
+  "label": "12850: Sysselsatte per 4. kvartal, etter år",
+  "source": "Statistisk sentralbyrå",
+  "updated": "2025-08-13T06:00:00Z",
+  "note": [
+    "Alle ett-tall og to-tall i tabellen er endret til '0' eller '3' for å ivareta personvernet.",
+    "Fra og med 2015 bygger statistikken på nye datakilder (a-ordningen), se nærmere omtale i «Om statistikken». Totalt antall sysselsatte blir heller ikke samordnet med Arbeidskraftundersøkelsene (AKU) slik det ble før 2015, og det samsvarer dermed ikke lenger med AKUs totaltall. Årgangene fra og med 2015 blir følgelig ikke sammenlignbare med tidligere årganger. Se nærmere omtale i [artikkelen tilknyttet 2015-tallene](https://www.ssb.no/arbeid-og-lonn/statistikker/regsys/aar/2016-05-27).",
+    "Bedrifter i næring 09.1 Tjenester tilknyttet utvinning av råolje og naturgass får landkode av Enhetsregisteret, selv om arbeidet kan foregå på sokkelen. Det samme kan også forekomme innenfor andre næringer. Tidligere ble bedrifter SSB anså at tilhørte sokkelen omkodet, noe SSB fra og med publiseringen i 2018 sluttet med. Dette har resultert i en justering som medfører at en rekke arbeidsforhold som tidligere var registrert på sokkelen er blitt plassert på fastlandet fra og med 4. kvartal 2018 (hovedsakelig næring 09.1). I 4. kvartal 2019 gir dette hovedsakelig utslag i næringene 09.1 og næringer knyttet til cateringvirksomhet. Dette har gitt en ikke-reell nedgang i antall sysselsatte på sokkelen og en tilsvarende ikke-reell økning i andre fylker, i hovedsak Rogaland. Endringen omfatter om lag 6500 lønnstakere 4. kv. 2018 og 2000 lønnstakere 4. kv. 2019."
+  ],
+  "role": {
+    "time": [
+      "Tid"
+    ],
+    "metric": [
+      "ContentsCode"
+    ]
+  },
+  "id": [
+    "ContentsCode",
+    "Tid"
+  ],
+  "size": [
+    1,
+    1
+  ],
+  "dimension": {
+    "ContentsCode": {
+      "label": "statistikkvariabel",
+      "category": {
+        "index": {
+          "SysselsatteBosted": 0
+        },
+        "label": {
+          "SysselsatteBosted": "Sysselsatte etter bosted"
+        },
+        "unit": {
+          "SysselsatteBosted": {
+            "base": "personer",
+            "decimals": 0
+          }
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "refperiod": {
+          "SysselsatteBosted": "4. kvartal"
+        },
+        "show": "value",
+        "measuringType": {
+          "SysselsatteBosted": "Stock"
+        },
+        "priceType": {
+          "SysselsatteBosted": "NotApplicable"
+        },
+        "adjustment": {
+          "SysselsatteBosted": "None"
+        },
+        "alternativeText": {
+          "SysselsatteBosted": "Sysselsatte etter bosted"
+        }
+      },
+      "link": {
+        "describedby": [
+          {
+            "extension": {
+              "SysselsatteBosted": "urn:ssb:conceptvariable:vardok:1116"
+            }
+          }
+        ]
+      }
+    },
+    "Tid": {
+      "label": "år",
+      "category": {
+        "index": {
+          "2024": 0
+        },
+        "label": {
+          "2024": "2024"
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "show": "code"
+      }
+    }
+  },
+  "extension": {
+    "px": {
+      "infofile": "None",
+      "tableid": "12850",
+      "decimals": 0,
+      "official-statistics": true,
+      "aggregallowed": true,
+      "copyright": false,
+      "language": "no",
+      "contents": "12850: Sysselsatte per 4. kvartal,",
+      "descriptiondefault": false,
+      "heading": [
+        "ContentsCode",
+        "Tid"
+      ],
+      "stub": [],
+      "matrix": "12850",
+      "subject-code": "al",
+      "subject-area": "Arbeid og lønn"
+    },
+    "discontinued": null,
+    "contact": [
+      {
+        "name": "Pål Nordby",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "40 90 23 78",
+        "mail": "rby@ssb.no",
+        "raw": "Pål Nordby, Statistisk sentralbyrå# +47 40 90 23 78#rby@ssb.no"
+      },
+      {
+        "name": "Arbeidsmarked",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "62 88 50 00",
+        "mail": "arbeidsmarked@ssb.no",
+        "raw": " Arbeidsmarked, Statistisk sentralbyrå# +47 62 88 50 00#arbeidsmarked@ssb.no"
+      },
+      {
+        "name": "Malin Pettersen",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "40 90 25 63",
+        "mail": "inp@ssb.no",
+        "raw": "Malin Pettersen, Statistisk sentralbyrå# +47 40 90 25 63#inp@ssb.no"
+      }
+    ]
+  },
+  "value": [
+    2863317
+  ]
+}

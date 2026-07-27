@@ -1,0 +1,215 @@
+{
+  "id": "vs_Fylker",
+  "label": "Alle fylker ",
+  "language": "no",
+  "languages": [
+    "en",
+    "no"
+  ],
+  "elimination": true,
+  "eliminationValueCode": "",
+  "type": "Valueset",
+  "values": [
+    {
+      "code": "31",
+      "label": "Østfold",
+      "valueMap": [
+        "31"
+      ]
+    },
+    {
+      "code": "32",
+      "label": "Akershus",
+      "valueMap": [
+        "32"
+      ]
+    },
+    {
+      "code": "30",
+      "label": "Viken (2020-2023)",
+      "valueMap": [
+        "30"
+      ]
+    },
+    {
+      "code": "01",
+      "label": "Østfold (-2019)",
+      "valueMap": [
+        "01"
+      ]
+    },
+    {
+      "code": "02",
+      "label": "Akershus (-2019)",
+      "valueMap": [
+        "02"
+      ]
+    },
+    {
+      "code": "03",
+      "label": "Oslo - Oslove",
+      "valueMap": [
+        "03"
+      ]
+    },
+    {
+      "code": "34",
+      "label": "Innlandet",
+      "valueMap": [
+        "34"
+      ]
+    },
+    {
+      "code": "04",
+      "label": "Hedmark (-2019)",
+      "valueMap": [
+        "04"
+      ]
+    },
+    {
+      "code": "05",
+      "label": "Oppland (-2019)",
+      "valueMap": [
+        "05"
+      ]
+    },
+    {
+      "code": "33",
+      "label": "Buskerud",
+      "valueMap": [
+        "33"
+      ]
+    },
+    {
+      "code": "06",
+      "label": "Buskerud (-2019)",
+      "valueMap": [
+        "06"
+      ]
+    },
+    {
+      "code": "39",
+      "label": "Vestfold",
+      "valueMap": [
+        "39"
+      ]
+    },
+    {
+      "code": "40",
+      "label": "Telemark",
+      "valueMap": [
+        "40"
+      ]
+    },
+    {
+      "code": "38",
+      "label": "Vestfold og Telemark (2020-2023)",
+      "valueMap": [
+        "38"
+      ]
+    },
+    {
+      "code": "07",
+      "label": "Vestfold (-2019)",
+      "valueMap": [
+        "07"
+      ]
+    },
+    {
+      "code": "08",
+      "label": "Telemark (-2019)",
+      "valueMap": [
+        "08"
+      ]
+    },
+    {
+      "code": "42",
+      "label": "Agder",
+      "valueMap": [
+        "42"
+      ]
+    },
+    {
+      "code": "09",
+      "label": "Aust-Agder (-2019)",
+      "valueMap": [
+        "09"
+      ]
+    },
+    {
+      "code": "10",
+      "label": "Vest-Agder (-2019)",
+      "valueMap": [
+        "10"
+      ]
+    },
+    {
+      "code": "11",
+      "label": "Rogaland",
+      "valueMap": [
+        "11"
+      ]
+    },
+    {
+      "code": "46",
+      "label": "Vestland",
+      "valueMap": [
+        "46"
+      ]
+    },
+    {
+      "code": "12",
+      "label": "Hordaland (-2019)",
+      "valueMap": [
+        "12"
+      ]
+    },
+    {
+      "code": "13",
+      "label": "Bergen (-1971)",
+      "valueMap": [
+        "13"
+      ]
+    },
+    {
+      "code": "14",
+      "label": "Sogn og Fjordane (-2019)",
+      "valueMap": [
+        "14"
+      ]
+    },
+    {
+      "code": "15",
+      "label": "Møre og Romsdal",
+      "valueMap": [
+        "15"
+      ]
+    },
+    {
+      "code": "50",
+      "label": "Trøndelag - Trööndelage",
+      "valueMap": [
+        "50"
+      ]
+    },
+    {
+      "code": "16",
+      "label": "Sør-Trøndelag (-2017)",
+      "valueMap": [
+        "16"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "no",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_Fylker?lang=no"
+    },
+    {
+      "rel": "alternate",
+      "hreflang": "en",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_Fylker?lang=en"
+    }
+  ]
+}

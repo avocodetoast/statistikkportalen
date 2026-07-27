@@ -129,9 +129,63 @@ It drives the **system's Chrome** (`channel: 'chrome'`) rather than a
 Playwright-downloaded Chromium — no 150 MB download, and no browser-revision
 drift to repair every time Playwright is upgraded.
 
-One table per source is covered (SSB `13760`, Norges Bank `nb-IR`, FHI
-`fhi-nokkel-185`) since all three take different paths through the adapter
-layer, and the per-source capability matrix is asserted rather than assumed.
+One table per source is covered by the smoke suite (SSB `13760`, Norges Bank
+`nb-IR`, FHI `fhi-nokkel-185`) since all three take different paths through the
+adapter layer, and the per-source capability matrix is asserted rather than
+assumed.
+
+`variable-select.e2e.mjs` covers the variable-selection and API-builder
+mechanics that the smoke suite deliberately doesn't, through four SSB tables
+picked for one property each:
+
+| Table | Property under test |
+|---|---|
+| `08801` | Varekoder (13 429 values) *and* Land (262) in one table — both sides of the Ctrl+A star threshold (500) |
+| `13472` | three optional dimensions + Region's fourteen groupings (`agg_` vs `vs_`) |
+| `11189` | ten statistic variables + two dimensions with their own groupings |
+| `12850` | seven dimensions of which five are optional, so the parameter count is asserted exactly |
+
+Each table is driven **once** in a `before()` hook and many `it()`s assert on
+what that drive returned — four table loads instead of thirty, and
+`record-fixtures.mjs` runs the very same flow functions.
+
+**Large responses are trimmed at record time** (`MAX_DIM_VALUES = 700` in
+`helpers/stub-routes.mjs`). 08801's metadata is 2.3 MB and its auto-preloaded
+codelist `vs_VareKoderKN8Siff` another 3.0 MB; trimmed they are ~140 KB each.
+`trimMetadata()` keeps `size[]`, `category.index` and every code-keyed side map
+consistent, and `trimCodelist()` filters `valueMap`s to the surviving codes so
+`originalCodes` can never reference a code the metadata no longer has. The cap
+sits **above** the star threshold on purpose, so the behaviour under test
+survives the trim — and no assertion hardcodes 13 429: the tests read both the
+threshold and the actual count from the running app and assert the relation.
+DOM-scale performance (does a 13 429-row list stay responsive?) is *not*
+covered by any assertion; that stays a manual / `E2E_LIVE=1` check.
+
+`topic-hierarchy.e2e.mjs` covers navigating the topic tree and that tables land
+where they should, through the two routes where SSB shares a node with a foreign
+source: `#topic/os/os07/offogjeld` (SSB + Norges Bank's government-debt series)
+and `#topic/he/he04/helsetjko` (SSB + FHI's KPR register). Both are depth 3 while
+SSB's own paths are depth 4, so tables sit in child `details.hierarchy-group`
+sections and the foreign node has to appear alongside them — sorting **last**,
+because `sortCode` is compared as a string (`'912' > '0000900010'`). It also
+asserts the curated FHI/NB titles as the user sees them, the source badges, the
+discontinued filter, and that clicking down from the front page lands in the same
+place as the deep link.
+
+Division of labour with the unit layer: `/tables` is trimmed, so the E2E suite
+asserts *"these ids are in this section"* and never SSB totals. Totals and tree
+structure are asserted against the real, full catalogue in
+`tests/unit/hierarchy-real-catalog.test.js`, which loads the checked-in
+`data/sources/fhi-catalog.js` + `nb-periods.js` and builds all 31 NB + 370 FHI
+rows with **zero network calls** — the throwing default `fetch` is the proof.
+Tables the topic tests need are pinned via `TOPIC_KEEP_TABLES` so `trimTableList`
+can't drop them.
+
+Recording is paced to ~1 call per 2.2 s (`E2E_RECORD_DELAY_MS`) because SSB
+allows 30/min and `SSBApi._throttledFetch` only spaces requests 100 ms apart. A
+non-2xx response during recording is **never** written to disk — otherwise an
+error body would replay as HTTP 200 forever and the suite would stay green
+against garbage.
 
 **The E2E layer checks structure, not values.** A deliberate stride bug in
 `sdmx-to-jsonstat.js` — right table shape, wrong numbers — passed every E2E

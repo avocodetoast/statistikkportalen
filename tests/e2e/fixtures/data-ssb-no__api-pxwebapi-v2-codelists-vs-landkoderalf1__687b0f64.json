@@ -1,0 +1,1860 @@
+{
+  "id": "vs_LandKoderAlf1",
+  "label": "Alle land ",
+  "language": "no",
+  "languages": [
+    "en",
+    "no"
+  ],
+  "elimination": true,
+  "eliminationValueCode": "",
+  "type": "Valueset",
+  "values": [
+    {
+      "code": "AF",
+      "label": "Afghanistan",
+      "valueMap": [
+        "AF"
+      ]
+    },
+    {
+      "code": "AL",
+      "label": "Albania",
+      "valueMap": [
+        "AL"
+      ]
+    },
+    {
+      "code": "DZ",
+      "label": "Algerie",
+      "valueMap": [
+        "DZ"
+      ]
+    },
+    {
+      "code": "AS",
+      "label": "Amerikansk Samoa",
+      "valueMap": [
+        "AS"
+      ]
+    },
+    {
+      "code": "VI",
+      "label": "De amerikanske Jomfruøyene",
+      "valueMap": [
+        "VI"
+      ]
+    },
+    {
+      "code": "AD",
+      "label": "Andorra",
+      "valueMap": [
+        "AD"
+      ]
+    },
+    {
+      "code": "AO",
+      "label": "Angola",
+      "valueMap": [
+        "AO"
+      ]
+    },
+    {
+      "code": "AI",
+      "label": "Anguilla",
+      "valueMap": [
+        "AI"
+      ]
+    },
+    {
+      "code": "AG",
+      "label": "Antigua og Barbuda",
+      "valueMap": [
+        "AG"
+      ]
+    },
+    {
+      "code": "AR",
+      "label": "Argentina",
+      "valueMap": [
+        "AR"
+      ]
+    },
+    {
+      "code": "AM",
+      "label": "Armenia",
+      "valueMap": [
+        "AM"
+      ]
+    },
+    {
+      "code": "AW",
+      "label": "Aruba",
+      "valueMap": [
+        "AW"
+      ]
+    },
+    {
+      "code": "AZ",
+      "label": "Aserbajdsjan",
+      "valueMap": [
+        "AZ"
+      ]
+    },
+    {
+      "code": "AU",
+      "label": "Australia",
+      "valueMap": [
+        "AU"
+      ]
+    },
+    {
+      "code": "BS",
+      "label": "Bahamas",
+      "valueMap": [
+        "BS"
+      ]
+    },
+    {
+      "code": "BH",
+      "label": "Bahrain",
+      "valueMap": [
+        "BH"
+      ]
+    },
+    {
+      "code": "BD",
+      "label": "Bangladesh",
+      "valueMap": [
+        "BD"
+      ]
+    },
+    {
+      "code": "BB",
+      "label": "Barbados",
+      "valueMap": [
+        "BB"
+      ]
+    },
+    {
+      "code": "BY",
+      "label": "Belarus",
+      "valueMap": [
+        "BY"
+      ]
+    },
+    {
+      "code": "BE",
+      "label": "Belgia",
+      "valueMap": [
+        "BE"
+      ]
+    },
+    {
+      "code": "BZ",
+      "label": "Belize",
+      "valueMap": [
+        "BZ"
+      ]
+    },
+    {
+      "code": "BJ",
+      "label": "Benin",
+      "valueMap": [
+        "BJ"
+      ]
+    },
+    {
+      "code": "BM",
+      "label": "Bermuda",
+      "valueMap": [
+        "BM"
+      ]
+    },
+    {
+      "code": "BT",
+      "label": "Bhutan",
+      "valueMap": [
+        "BT"
+      ]
+    },
+    {
+      "code": "BO",
+      "label": "Bolivia",
+      "valueMap": [
+        "BO"
+      ]
+    },
+    {
+      "code": "BQ",
+      "label": "Bonaire, Sint Eustatius og Saba",
+      "valueMap": [
+        "BQ"
+      ]
+    },
+    {
+      "code": "BA",
+      "label": "Bosnia-Hercegovina",
+      "valueMap": [
+        "BA"
+      ]
+    },
+    {
+      "code": "BW",
+      "label": "Botswana",
+      "valueMap": [
+        "BW"
+      ]
+    },
+    {
+      "code": "BR",
+      "label": "Brasil",
+      "valueMap": [
+        "BR"
+      ]
+    },
+    {
+      "code": "VG",
+      "label": "De britiske Jomfruøyene",
+      "valueMap": [
+        "VG"
+      ]
+    },
+    {
+      "code": "IO",
+      "label": "Det britiske territoriet i Indiahavet",
+      "valueMap": [
+        "IO"
+      ]
+    },
+    {
+      "code": "BN",
+      "label": "Brunei",
+      "valueMap": [
+        "BN"
+      ]
+    },
+    {
+      "code": "BG",
+      "label": "Bulgaria",
+      "valueMap": [
+        "BG"
+      ]
+    },
+    {
+      "code": "BF",
+      "label": "Burkina Faso",
+      "valueMap": [
+        "BF"
+      ]
+    },
+    {
+      "code": "BU",
+      "label": "Burma (-1991)",
+      "valueMap": [
+        "BU"
+      ]
+    },
+    {
+      "code": "BI",
+      "label": "Burundi",
+      "valueMap": [
+        "BI"
+      ]
+    },
+    {
+      "code": "CA",
+      "label": "Canada",
+      "valueMap": [
+        "CA"
+      ]
+    },
+    {
+      "code": "KY",
+      "label": "Caymanøyene",
+      "valueMap": [
+        "KY"
+      ]
+    },
+    {
+      "code": "XC",
+      "label": "Ceuta og Melilla",
+      "valueMap": [
+        "XC"
+      ]
+    },
+    {
+      "code": "CL",
+      "label": "Chile",
+      "valueMap": [
+        "CL"
+      ]
+    },
+    {
+      "code": "CX",
+      "label": "Christmasøya",
+      "valueMap": [
+        "CX"
+      ]
+    },
+    {
+      "code": "CO",
+      "label": "Colombia",
+      "valueMap": [
+        "CO"
+      ]
+    },
+    {
+      "code": "CK",
+      "label": "Cookøyene",
+      "valueMap": [
+        "CK"
+      ]
+    },
+    {
+      "code": "CR",
+      "label": "Costa Rica",
+      "valueMap": [
+        "CR"
+      ]
+    },
+    {
+      "code": "CU",
+      "label": "Cuba",
+      "valueMap": [
+        "CU"
+      ]
+    },
+    {
+      "code": "CW",
+      "label": "Curacao",
+      "valueMap": [
+        "CW"
+      ]
+    },
+    {
+      "code": "DK",
+      "label": "Danmark",
+      "valueMap": [
+        "DK"
+      ]
+    },
+    {
+      "code": "DJ",
+      "label": "Djibouti",
+      "valueMap": [
+        "DJ"
+      ]
+    },
+    {
+      "code": "DM",
+      "label": "Dominica",
+      "valueMap": [
+        "DM"
+      ]
+    },
+    {
+      "code": "DO",
+      "label": "Den dominikanske republikk",
+      "valueMap": [
+        "DO"
+      ]
+    },
+    {
+      "code": "EC",
+      "label": "Ecuador",
+      "valueMap": [
+        "EC"
+      ]
+    },
+    {
+      "code": "EG",
+      "label": "Egypt",
+      "valueMap": [
+        "EG"
+      ]
+    },
+    {
+      "code": "GQ",
+      "label": "Ekvatorial-Guinea",
+      "valueMap": [
+        "GQ"
+      ]
+    },
+    {
+      "code": "SV",
+      "label": "El Salvador",
+      "valueMap": [
+        "SV"
+      ]
+    },
+    {
+      "code": "CI",
+      "label": "Elfenbeinskysten",
+      "valueMap": [
+        "CI"
+      ]
+    },
+    {
+      "code": "ER",
+      "label": "Eritrea",
+      "valueMap": [
+        "ER"
+      ]
+    },
+    {
+      "code": "EE",
+      "label": "Estland",
+      "valueMap": [
+        "EE"
+      ]
+    },
+    {
+      "code": "SZ",
+      "label": "Eswatini",
+      "valueMap": [
+        "SZ"
+      ]
+    },
+    {
+      "code": "ET",
+      "label": "Etiopia",
+      "valueMap": [
+        "ET"
+      ]
+    },
+    {
+      "code": "FK",
+      "label": "Falklandsøyene",
+      "valueMap": [
+        "FK"
+      ]
+    },
+    {
+      "code": "FJ",
+      "label": "Fiji",
+      "valueMap": [
+        "FJ"
+      ]
+    },
+    {
+      "code": "PH",
+      "label": "Filippinene",
+      "valueMap": [
+        "PH"
+      ]
+    },
+    {
+      "code": "FI",
+      "label": "Finland",
+      "valueMap": [
+        "FI"
+      ]
+    },
+    {
+      "code": "AE",
+      "label": "De forente arabiske emirater",
+      "valueMap": [
+        "AE"
+      ]
+    },
+    {
+      "code": "FR",
+      "label": "Frankrike",
+      "valueMap": [
+        "FR"
+      ]
+    },
+    {
+      "code": "GF",
+      "label": "Fransk Guyana",
+      "valueMap": [
+        "GF"
+      ]
+    },
+    {
+      "code": "PF",
+      "label": "Fransk Polynesia",
+      "valueMap": [
+        "PF"
+      ]
+    },
+    {
+      "code": "TF",
+      "label": "De franske sørterritorier",
+      "valueMap": [
+        "TF"
+      ]
+    },
+    {
+      "code": "FO",
+      "label": "Færøyene",
+      "valueMap": [
+        "FO"
+      ]
+    },
+    {
+      "code": "GA",
+      "label": "Gabon",
+      "valueMap": [
+        "GA"
+      ]
+    },
+    {
+      "code": "GM",
+      "label": "Gambia",
+      "valueMap": [
+        "GM"
+      ]
+    },
+    {
+      "code": "GE",
+      "label": "Georgia",
+      "valueMap": [
+        "GE"
+      ]
+    },
+    {
+      "code": "GH",
+      "label": "Ghana",
+      "valueMap": [
+        "GH"
+      ]
+    },
+    {
+      "code": "GI",
+      "label": "Gibraltar",
+      "valueMap": [
+        "GI"
+      ]
+    },
+    {
+      "code": "GD",
+      "label": "Grenada",
+      "valueMap": [
+        "GD"
+      ]
+    },
+    {
+      "code": "GL",
+      "label": "Grønland",
+      "valueMap": [
+        "GL"
+      ]
+    },
+    {
+      "code": "GP",
+      "label": "Guadeloupe",
+      "valueMap": [
+        "GP"
+      ]
+    },
+    {
+      "code": "GU",
+      "label": "Guam",
+      "valueMap": [
+        "GU"
+      ]
+    },
+    {
+      "code": "GT",
+      "label": "Guatemala",
+      "valueMap": [
+        "GT"
+      ]
+    },
+    {
+      "code": "GG",
+      "label": "Guernsey",
+      "valueMap": [
+        "GG"
+      ]
+    },
+    {
+      "code": "GN",
+      "label": "Guinea",
+      "valueMap": [
+        "GN"
+      ]
+    },
+    {
+      "code": "GW",
+      "label": "Guinea-Bissau",
+      "valueMap": [
+        "GW"
+      ]
+    },
+    {
+      "code": "GY",
+      "label": "Guyana",
+      "valueMap": [
+        "GY"
+      ]
+    },
+    {
+      "code": "HT",
+      "label": "Haiti",
+      "valueMap": [
+        "HT"
+      ]
+    },
+    {
+      "code": "HM",
+      "label": "Heard- og McDonaldøyene",
+      "valueMap": [
+        "HM"
+      ]
+    },
+    {
+      "code": "GR",
+      "label": "Hellas",
+      "valueMap": [
+        "GR"
+      ]
+    },
+    {
+      "code": "HN",
+      "label": "Honduras",
+      "valueMap": [
+        "HN"
+      ]
+    },
+    {
+      "code": "HK",
+      "label": "Hong Kong",
+      "valueMap": [
+        "HK"
+      ]
+    },
+    {
+      "code": "IN",
+      "label": "India",
+      "valueMap": [
+        "IN"
+      ]
+    },
+    {
+      "code": "ID",
+      "label": "Indonesia",
+      "valueMap": [
+        "ID"
+      ]
+    },
+    {
+      "code": "IQ",
+      "label": "Irak",
+      "valueMap": [
+        "IQ"
+      ]
+    },
+    {
+      "code": "IR",
+      "label": "Iran",
+      "valueMap": [
+        "IR"
+      ]
+    },
+    {
+      "code": "IE",
+      "label": "Irland",
+      "valueMap": [
+        "IE"
+      ]
+    },
+    {
+      "code": "IS",
+      "label": "Island",
+      "valueMap": [
+        "IS"
+      ]
+    },
+    {
+      "code": "IM",
+      "label": "Isle of Man",
+      "valueMap": [
+        "IM"
+      ]
+    },
+    {
+      "code": "IL",
+      "label": "Israel",
+      "valueMap": [
+        "IL"
+      ]
+    },
+    {
+      "code": "IT",
+      "label": "Italia",
+      "valueMap": [
+        "IT"
+      ]
+    },
+    {
+      "code": "JM",
+      "label": "Jamaica",
+      "valueMap": [
+        "JM"
+      ]
+    },
+    {
+      "code": "JP",
+      "label": "Japan",
+      "valueMap": [
+        "JP"
+      ]
+    },
+    {
+      "code": "YE",
+      "label": "Jemen",
+      "valueMap": [
+        "YE"
+      ]
+    },
+    {
+      "code": "JE",
+      "label": "Jersey",
+      "valueMap": [
+        "JE"
+      ]
+    },
+    {
+      "code": "JO",
+      "label": "Jordan",
+      "valueMap": [
+        "JO"
+      ]
+    },
+    {
+      "code": "YU",
+      "label": "Jugoslavia (-2003)",
+      "valueMap": [
+        "YU"
+      ]
+    },
+    {
+      "code": "KH",
+      "label": "Kambodsja",
+      "valueMap": [
+        "KH"
+      ]
+    },
+    {
+      "code": "CM",
+      "label": "Kamerun",
+      "valueMap": [
+        "CM"
+      ]
+    },
+    {
+      "code": "XB",
+      "label": "Kanariøyene",
+      "valueMap": [
+        "XB"
+      ]
+    },
+    {
+      "code": "CV",
+      "label": "Kapp Verde",
+      "valueMap": [
+        "CV"
+      ]
+    },
+    {
+      "code": "KZ",
+      "label": "Kasakhstan",
+      "valueMap": [
+        "KZ"
+      ]
+    },
+    {
+      "code": "KE",
+      "label": "Kenya",
+      "valueMap": [
+        "KE"
+      ]
+    },
+    {
+      "code": "CN",
+      "label": "Kina",
+      "valueMap": [
+        "CN"
+      ]
+    },
+    {
+      "code": "KG",
+      "label": "Kirgisistan",
+      "valueMap": [
+        "KG"
+      ]
+    },
+    {
+      "code": "KI",
+      "label": "Kiribati",
+      "valueMap": [
+        "KI"
+      ]
+    },
+    {
+      "code": "CC",
+      "label": "Kokosøyene",
+      "valueMap": [
+        "CC"
+      ]
+    },
+    {
+      "code": "KM",
+      "label": "Komorene",
+      "valueMap": [
+        "KM"
+      ]
+    },
+    {
+      "code": "CD",
+      "label": "Kongo",
+      "valueMap": [
+        "CD"
+      ]
+    },
+    {
+      "code": "CG",
+      "label": "Kongo-Brazzaville",
+      "valueMap": [
+        "CG"
+      ]
+    },
+    {
+      "code": "XK",
+      "label": "Kosovo",
+      "valueMap": [
+        "XK"
+      ]
+    },
+    {
+      "code": "HR",
+      "label": "Kroatia",
+      "valueMap": [
+        "HR"
+      ]
+    },
+    {
+      "code": "KW",
+      "label": "Kuwait",
+      "valueMap": [
+        "KW"
+      ]
+    },
+    {
+      "code": "CY",
+      "label": "Kypros",
+      "valueMap": [
+        "CY"
+      ]
+    },
+    {
+      "code": "LA",
+      "label": "Laos",
+      "valueMap": [
+        "LA"
+      ]
+    },
+    {
+      "code": "LV",
+      "label": "Latvia",
+      "valueMap": [
+        "LV"
+      ]
+    },
+    {
+      "code": "LS",
+      "label": "Lesotho",
+      "valueMap": [
+        "LS"
+      ]
+    },
+    {
+      "code": "LB",
+      "label": "Libanon",
+      "valueMap": [
+        "LB"
+      ]
+    },
+    {
+      "code": "LR",
+      "label": "Liberia",
+      "valueMap": [
+        "LR"
+      ]
+    },
+    {
+      "code": "LY",
+      "label": "Libya",
+      "valueMap": [
+        "LY"
+      ]
+    },
+    {
+      "code": "LI",
+      "label": "Liechtenstein",
+      "valueMap": [
+        "LI"
+      ]
+    },
+    {
+      "code": "LT",
+      "label": "Litauen",
+      "valueMap": [
+        "LT"
+      ]
+    },
+    {
+      "code": "LU",
+      "label": "Luxembourg",
+      "valueMap": [
+        "LU"
+      ]
+    },
+    {
+      "code": "MO",
+      "label": "Macao",
+      "valueMap": [
+        "MO"
+      ]
+    },
+    {
+      "code": "MG",
+      "label": "Madagaskar",
+      "valueMap": [
+        "MG"
+      ]
+    },
+    {
+      "code": "MW",
+      "label": "Malawi",
+      "valueMap": [
+        "MW"
+      ]
+    },
+    {
+      "code": "MY",
+      "label": "Malaysia",
+      "valueMap": [
+        "MY"
+      ]
+    },
+    {
+      "code": "MV",
+      "label": "Maldivene",
+      "valueMap": [
+        "MV"
+      ]
+    },
+    {
+      "code": "ML",
+      "label": "Mali",
+      "valueMap": [
+        "ML"
+      ]
+    },
+    {
+      "code": "MT",
+      "label": "Malta",
+      "valueMap": [
+        "MT"
+      ]
+    },
+    {
+      "code": "MA",
+      "label": "Marokko",
+      "valueMap": [
+        "MA"
+      ]
+    },
+    {
+      "code": "MH",
+      "label": "Marshalløyene",
+      "valueMap": [
+        "MH"
+      ]
+    },
+    {
+      "code": "MQ",
+      "label": "Martinique",
+      "valueMap": [
+        "MQ"
+      ]
+    },
+    {
+      "code": "MR",
+      "label": "Mauritania",
+      "valueMap": [
+        "MR"
+      ]
+    },
+    {
+      "code": "MU",
+      "label": "Mauritius",
+      "valueMap": [
+        "MU"
+      ]
+    },
+    {
+      "code": "YT",
+      "label": "Mayotte",
+      "valueMap": [
+        "YT"
+      ]
+    },
+    {
+      "code": "MX",
+      "label": "Mexico",
+      "valueMap": [
+        "MX"
+      ]
+    },
+    {
+      "code": "FM",
+      "label": "Mikronesiaføderasjonen",
+      "valueMap": [
+        "FM"
+      ]
+    },
+    {
+      "code": "MD",
+      "label": "Moldova",
+      "valueMap": [
+        "MD"
+      ]
+    },
+    {
+      "code": "MC",
+      "label": "Monaco",
+      "valueMap": [
+        "MC"
+      ]
+    },
+    {
+      "code": "MN",
+      "label": "Mongolia",
+      "valueMap": [
+        "MN"
+      ]
+    },
+    {
+      "code": "ME",
+      "label": "Montenegro",
+      "valueMap": [
+        "ME"
+      ]
+    },
+    {
+      "code": "MS",
+      "label": "Montserrat",
+      "valueMap": [
+        "MS"
+      ]
+    },
+    {
+      "code": "MZ",
+      "label": "Mosambik",
+      "valueMap": [
+        "MZ"
+      ]
+    },
+    {
+      "code": "MM",
+      "label": "Myanmar",
+      "valueMap": [
+        "MM"
+      ]
+    },
+    {
+      "code": "NA",
+      "label": "Namibia",
+      "valueMap": [
+        "NA"
+      ]
+    },
+    {
+      "code": "NR",
+      "label": "Nauru",
+      "valueMap": [
+        "NR"
+      ]
+    },
+    {
+      "code": "NL",
+      "label": "Nederland",
+      "valueMap": [
+        "NL"
+      ]
+    },
+    {
+      "code": "AN",
+      "label": "De nederlandske Antiller (-2010)",
+      "valueMap": [
+        "AN"
+      ]
+    },
+    {
+      "code": "NP",
+      "label": "Nepal",
+      "valueMap": [
+        "NP"
+      ]
+    },
+    {
+      "code": "NZ",
+      "label": "New Zealand",
+      "valueMap": [
+        "NZ"
+      ]
+    },
+    {
+      "code": "NI",
+      "label": "Nicaragua",
+      "valueMap": [
+        "NI"
+      ]
+    },
+    {
+      "code": "NE",
+      "label": "Niger",
+      "valueMap": [
+        "NE"
+      ]
+    },
+    {
+      "code": "NG",
+      "label": "Nigeria",
+      "valueMap": [
+        "NG"
+      ]
+    },
+    {
+      "code": "NU",
+      "label": "Niue",
+      "valueMap": [
+        "NU"
+      ]
+    },
+    {
+      "code": "KP",
+      "label": "Nord-Korea",
+      "valueMap": [
+        "KP"
+      ]
+    },
+    {
+      "code": "MK",
+      "label": "Nord-Makedonia",
+      "valueMap": [
+        "MK"
+      ]
+    },
+    {
+      "code": "MP",
+      "label": "Nord-Marianene",
+      "valueMap": [
+        "MP"
+      ]
+    },
+    {
+      "code": "NF",
+      "label": "Norfolkøya",
+      "valueMap": [
+        "NF"
+      ]
+    },
+    {
+      "code": "NC",
+      "label": "Ny-Caledonia",
+      "valueMap": [
+        "NC"
+      ]
+    },
+    {
+      "code": "NT",
+      "label": "Nøytralsone (-2011)",
+      "valueMap": [
+        "NT"
+      ]
+    },
+    {
+      "code": "OM",
+      "label": "Oman",
+      "valueMap": [
+        "OM"
+      ]
+    },
+    {
+      "code": "PK",
+      "label": "Pakistan",
+      "valueMap": [
+        "PK"
+      ]
+    },
+    {
+      "code": "PW",
+      "label": "Palau",
+      "valueMap": [
+        "PW"
+      ]
+    },
+    {
+      "code": "PS",
+      "label": "Palestina",
+      "valueMap": [
+        "PS"
+      ]
+    },
+    {
+      "code": "PA",
+      "label": "Panama",
+      "valueMap": [
+        "PA"
+      ]
+    },
+    {
+      "code": "PG",
+      "label": "Papua Ny-Guinea",
+      "valueMap": [
+        "PG"
+      ]
+    },
+    {
+      "code": "PY",
+      "label": "Paraguay",
+      "valueMap": [
+        "PY"
+      ]
+    },
+    {
+      "code": "PE",
+      "label": "Peru",
+      "valueMap": [
+        "PE"
+      ]
+    },
+    {
+      "code": "PN",
+      "label": "Pitcairn",
+      "valueMap": [
+        "PN"
+      ]
+    },
+    {
+      "code": "PL",
+      "label": "Polen",
+      "valueMap": [
+        "PL"
+      ]
+    },
+    {
+      "code": "PT",
+      "label": "Portugal",
+      "valueMap": [
+        "PT"
+      ]
+    },
+    {
+      "code": "PR",
+      "label": "Puerto Rico",
+      "valueMap": [
+        "PR"
+      ]
+    },
+    {
+      "code": "QA",
+      "label": "Qatar",
+      "valueMap": [
+        "QA"
+      ]
+    },
+    {
+      "code": "RE",
+      "label": "Réunion",
+      "valueMap": [
+        "RE"
+      ]
+    },
+    {
+      "code": "RO",
+      "label": "Romania",
+      "valueMap": [
+        "RO"
+      ]
+    },
+    {
+      "code": "RU",
+      "label": "Russland",
+      "valueMap": [
+        "RU"
+      ]
+    },
+    {
+      "code": "RW",
+      "label": "Rwanda",
+      "valueMap": [
+        "RW"
+      ]
+    },
+    {
+      "code": "KN",
+      "label": "Saint Kitts og Nevis",
+      "valueMap": [
+        "KN"
+      ]
+    },
+    {
+      "code": "MF",
+      "label": "Saint Martin",
+      "valueMap": [
+        "MF"
+      ]
+    },
+    {
+      "code": "PM",
+      "label": "Saint Pierre og Miquelon",
+      "valueMap": [
+        "PM"
+      ]
+    },
+    {
+      "code": "VC",
+      "label": "Saint Vincent og Grenadinene",
+      "valueMap": [
+        "VC"
+      ]
+    },
+    {
+      "code": "BL",
+      "label": "Saint-Barthélemy",
+      "valueMap": [
+        "BL"
+      ]
+    },
+    {
+      "code": "SB",
+      "label": "Salomonøyene",
+      "valueMap": [
+        "SB"
+      ]
+    },
+    {
+      "code": "WS",
+      "label": "Samoa",
+      "valueMap": [
+        "WS"
+      ]
+    },
+    {
+      "code": "SM",
+      "label": "San Marino",
+      "valueMap": [
+        "SM"
+      ]
+    },
+    {
+      "code": "SH",
+      "label": "Sankt Helena, Ascension og Tristan da Cunha",
+      "valueMap": [
+        "SH"
+      ]
+    },
+    {
+      "code": "ST",
+      "label": "São Tomé og Príncipe",
+      "valueMap": [
+        "ST"
+      ]
+    },
+    {
+      "code": "SA",
+      "label": "Saudi-Arabia",
+      "valueMap": [
+        "SA"
+      ]
+    },
+    {
+      "code": "SN",
+      "label": "Senegal",
+      "valueMap": [
+        "SN"
+      ]
+    },
+    {
+      "code": "CF",
+      "label": "Den sentralafrikanske republikk",
+      "valueMap": [
+        "CF"
+      ]
+    },
+    {
+      "code": "RS",
+      "label": "Serbia",
+      "valueMap": [
+        "RS"
+      ]
+    },
+    {
+      "code": "CS",
+      "label": "Serbia og Montenegro (2004-2006)",
+      "valueMap": [
+        "CS"
+      ]
+    },
+    {
+      "code": "SC",
+      "label": "Seychellene",
+      "valueMap": [
+        "SC"
+      ]
+    },
+    {
+      "code": "SL",
+      "label": "Sierra Leone",
+      "valueMap": [
+        "SL"
+      ]
+    },
+    {
+      "code": "SG",
+      "label": "Singapore",
+      "valueMap": [
+        "SG"
+      ]
+    },
+    {
+      "code": "SX",
+      "label": "Sint Marteen",
+      "valueMap": [
+        "SX"
+      ]
+    },
+    {
+      "code": "SK",
+      "label": "Slovakia",
+      "valueMap": [
+        "SK"
+      ]
+    },
+    {
+      "code": "SI",
+      "label": "Slovenia",
+      "valueMap": [
+        "SI"
+      ]
+    },
+    {
+      "code": "SO",
+      "label": "Somalia",
+      "valueMap": [
+        "SO"
+      ]
+    },
+    {
+      "code": "SU",
+      "label": "Sovjetunionen (-1992)",
+      "valueMap": [
+        "SU"
+      ]
+    },
+    {
+      "code": "ES",
+      "label": "Spania",
+      "valueMap": [
+        "ES"
+      ]
+    },
+    {
+      "code": "LK",
+      "label": "Sri Lanka",
+      "valueMap": [
+        "LK"
+      ]
+    },
+    {
+      "code": "LC",
+      "label": "St. Lucia",
+      "valueMap": [
+        "LC"
+      ]
+    },
+    {
+      "code": "GB",
+      "label": "Storbritannia",
+      "valueMap": [
+        "GB"
+      ]
+    },
+    {
+      "code": "SD",
+      "label": "Sudan",
+      "valueMap": [
+        "SD"
+      ]
+    },
+    {
+      "code": "SR",
+      "label": "Surinam",
+      "valueMap": [
+        "SR"
+      ]
+    },
+    {
+      "code": "CH",
+      "label": "Sveits",
+      "valueMap": [
+        "CH"
+      ]
+    },
+    {
+      "code": "SE",
+      "label": "Sverige",
+      "valueMap": [
+        "SE"
+      ]
+    },
+    {
+      "code": "SY",
+      "label": "Syria",
+      "valueMap": [
+        "SY"
+      ]
+    },
+    {
+      "code": "ZA",
+      "label": "Sør-Afrika",
+      "valueMap": [
+        "ZA"
+      ]
+    },
+    {
+      "code": "GS",
+      "label": "Sør-Georgia og Sør-Sandwichøyene",
+      "valueMap": [
+        "GS"
+      ]
+    },
+    {
+      "code": "YD",
+      "label": "Sør-Jemen (-1990)",
+      "valueMap": [
+        "YD"
+      ]
+    },
+    {
+      "code": "KR",
+      "label": "Sør-Korea",
+      "valueMap": [
+        "KR"
+      ]
+    },
+    {
+      "code": "SS",
+      "label": "Sør-Sudan",
+      "valueMap": [
+        "SS"
+      ]
+    },
+    {
+      "code": "TJ",
+      "label": "Tadsjikistan",
+      "valueMap": [
+        "TJ"
+      ]
+    },
+    {
+      "code": "TW",
+      "label": "Taiwan",
+      "valueMap": [
+        "TW"
+      ]
+    },
+    {
+      "code": "TZ",
+      "label": "Tanzania",
+      "valueMap": [
+        "TZ"
+      ]
+    },
+    {
+      "code": "TH",
+      "label": "Thailand",
+      "valueMap": [
+        "TH"
+      ]
+    },
+    {
+      "code": "TG",
+      "label": "Togo",
+      "valueMap": [
+        "TG"
+      ]
+    },
+    {
+      "code": "TK",
+      "label": "Tokelau",
+      "valueMap": [
+        "TK"
+      ]
+    },
+    {
+      "code": "TO",
+      "label": "Tonga",
+      "valueMap": [
+        "TO"
+      ]
+    },
+    {
+      "code": "TT",
+      "label": "Trinidad og Tobago",
+      "valueMap": [
+        "TT"
+      ]
+    },
+    {
+      "code": "TD",
+      "label": "Tsjad",
+      "valueMap": [
+        "TD"
+      ]
+    },
+    {
+      "code": "CZ",
+      "label": "Tsjekkia",
+      "valueMap": [
+        "CZ"
+      ]
+    },
+    {
+      "code": "CS_",
+      "label": "Tsjekkoslovakia (-1992)",
+      "valueMap": [
+        "CS_"
+      ]
+    },
+    {
+      "code": "TN",
+      "label": "Tunisia",
+      "valueMap": [
+        "TN"
+      ]
+    },
+    {
+      "code": "TM",
+      "label": "Turkmenistan",
+      "valueMap": [
+        "TM"
+      ]
+    },
+    {
+      "code": "TC",
+      "label": "Turks- og Caicosøyene",
+      "valueMap": [
+        "TC"
+      ]
+    },
+    {
+      "code": "TV",
+      "label": "Tuvalu",
+      "valueMap": [
+        "TV"
+      ]
+    },
+    {
+      "code": "TR",
+      "label": "Tyrkia",
+      "valueMap": [
+        "TR"
+      ]
+    },
+    {
+      "code": "DE",
+      "label": "Tyskland",
+      "valueMap": [
+        "DE"
+      ]
+    },
+    {
+      "code": "UG",
+      "label": "Uganda",
+      "valueMap": [
+        "UG"
+      ]
+    },
+    {
+      "code": "UA",
+      "label": "Ukraina",
+      "valueMap": [
+        "UA"
+      ]
+    },
+    {
+      "code": "HU",
+      "label": "Ungarn",
+      "valueMap": [
+        "HU"
+      ]
+    },
+    {
+      "code": "UY",
+      "label": "Uruguay",
+      "valueMap": [
+        "UY"
+      ]
+    },
+    {
+      "code": "US",
+      "label": "USA",
+      "valueMap": [
+        "US"
+      ]
+    },
+    {
+      "code": "UM",
+      "label": "USAs ytre småøyer",
+      "valueMap": [
+        "UM"
+      ]
+    },
+    {
+      "code": "UZ",
+      "label": "Usbekistan",
+      "valueMap": [
+        "UZ"
+      ]
+    },
+    {
+      "code": "VU",
+      "label": "Vanuatu",
+      "valueMap": [
+        "VU"
+      ]
+    },
+    {
+      "code": "VA",
+      "label": "Vatikanstaten",
+      "valueMap": [
+        "VA"
+      ]
+    },
+    {
+      "code": "VE",
+      "label": "Venezuela",
+      "valueMap": [
+        "VE"
+      ]
+    },
+    {
+      "code": "XI",
+      "label": "Vestbredden/Gazastripen (-2000)",
+      "valueMap": [
+        "XI"
+      ]
+    },
+    {
+      "code": "EH",
+      "label": "Vest-Sahara",
+      "valueMap": [
+        "EH"
+      ]
+    },
+    {
+      "code": "VN",
+      "label": "Vietnam",
+      "valueMap": [
+        "VN"
+      ]
+    },
+    {
+      "code": "WF",
+      "label": "Wallis- og Futunaøyene",
+      "valueMap": [
+        "WF"
+      ]
+    },
+    {
+      "code": "ZR",
+      "label": "Zaire (-1997)",
+      "valueMap": [
+        "ZR"
+      ]
+    },
+    {
+      "code": "ZM",
+      "label": "Zambia",
+      "valueMap": [
+        "ZM"
+      ]
+    },
+    {
+      "code": "ZW",
+      "label": "Zimbabwe",
+      "valueMap": [
+        "ZW"
+      ]
+    },
+    {
+      "code": "AT",
+      "label": "Østerrike",
+      "valueMap": [
+        "AT"
+      ]
+    },
+    {
+      "code": "TP",
+      "label": "Øst-Timor (-2002)",
+      "valueMap": [
+        "TP"
+      ]
+    },
+    {
+      "code": "TL",
+      "label": "Øst-Timor",
+      "valueMap": [
+        "TL"
+      ]
+    },
+    {
+      "code": "DD",
+      "label": "Øst-Tyskland (DDR) (-1990)",
+      "valueMap": [
+        "DD"
+      ]
+    },
+    {
+      "code": "AX",
+      "label": "Åland",
+      "valueMap": [
+        "AX"
+      ]
+    },
+    {
+      "code": "ZZ",
+      "label": "Internasjonale organisasjoner (-2011)",
+      "valueMap": [
+        "ZZ"
+      ]
+    },
+    {
+      "code": "97",
+      "label": "Uspesifisert",
+      "valueMap": [
+        "97"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "no",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_LandKoderAlf1?lang=no"
+    },
+    {
+      "rel": "alternate",
+      "hreflang": "en",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_LandKoderAlf1?lang=en"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "id": "vs_NRInvArtAgg3",
+  "label": "Aggregert investeringsart",
+  "language": "no",
+  "languages": [
+    "en",
+    "no"
+  ],
+  "elimination": true,
+  "eliminationValueCode": "NR08_",
+  "type": "Valueset",
+  "values": [
+    {
+      "code": "NR08_",
+      "label": "Alle investeringsarter",
+      "valueMap": [
+        "NR08_"
+      ]
+    },
+    {
+      "code": "NR0815",
+      "label": "Bygg og anlegg",
+      "valueMap": [
+        "NR0815"
+      ]
+    },
+    {
+      "code": "NR08OLJE",
+      "label": "Oljeboring, oljeleting, olje- og gasrørledning",
+      "valueMap": [
+        "NR08OLJE"
+      ]
+    },
+    {
+      "code": "NR0838",
+      "label": "Oljeutvinningsplattformer, borerigger og moduler",
+      "valueMap": [
+        "NR0838"
+      ]
+    },
+    {
+      "code": "NR0841",
+      "label": "Skip og båter",
+      "valueMap": [
+        "NR0841"
+      ]
+    },
+    {
+      "code": "NR08TRANSP",
+      "label": "Transportmidler",
+      "valueMap": [
+        "NR08TRANSP"
+      ]
+    },
+    {
+      "code": "NR0855",
+      "label": "Maskiner og utstyr",
+      "valueMap": [
+        "NR0855"
+      ]
+    },
+    {
+      "code": "NR0860",
+      "label": "Endring i livdyr- og frukttrebestand",
+      "valueMap": [
+        "NR0860"
+      ]
+    },
+    {
+      "code": "NR0879",
+      "label": "FOU og annen immatriell realkapital",
+      "valueMap": [
+        "NR0879"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "no",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_NRInvArtAgg3?lang=no"
+    },
+    {
+      "rel": "alternate",
+      "hreflang": "en",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_NRInvArtAgg3?lang=en"
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 {
   "meta": {
-    "id": "IREF948630",
+    "id": "IREF353319",
     "test": false,
     "schema": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
-    "prepared": "2026-07-25T15:54:22Z",
+    "prepared": "2026-07-27T06:55:36Z",
     "contentLanguages": [
       "en",
       "no"

@@ -1,0 +1,843 @@
+{
+  "version": "2.0",
+  "class": "dataset",
+  "label": "11189: Investeringer og kapitalbeholdninger, etter investeringsart og næring 1970-2023",
+  "source": "Statistisk sentralbyrå",
+  "updated": "2026-06-02T06:00:00Z",
+  "link": {
+    "related": [
+      {
+        "extension": {
+          "relation": "statistics-homepage",
+          "metaid": "KORTNAVN:knr"
+        },
+        "href": "https://www.ssb.no/knr",
+        "label": "Statistikkside",
+        "type": "text/html"
+      },
+      {
+        "extension": {
+          "relation": "about-statistics",
+          "metaid": "KORTNAVN:knr"
+        },
+        "href": "https://www.ssb.no/knr#om-statistikken",
+        "label": "Definisjoner og forklaringer",
+        "type": "text/html"
+      }
+    ]
+  },
+  "note": [
+    "De enkelte tallene i faste priser summerer seg ikke opp til del- og totalsummene på grunn av kjedingsavvik."
+  ],
+  "role": {
+    "time": [
+      "Tid"
+    ],
+    "metric": [
+      "ContentsCode"
+    ]
+  },
+  "id": [
+    "Investeringsart",
+    "NACE",
+    "ContentsCode",
+    "Tid"
+  ],
+  "size": [
+    23,
+    152,
+    10,
+    54
+  ],
+  "dimension": {
+    "Investeringsart": {
+      "label": "investeringsart",
+      "category": {
+        "index": {
+          "NR08_": 0,
+          "NR0815": 1,
+          "NR08OLJE": 2,
+          "NR0838": 3,
+          "NR0841": 4,
+          "NR08TRANSP": 5,
+          "NR0855": 6,
+          "NR0860": 7,
+          "NR0879": 8,
+          "A64EU08_": 9,
+          "A64EU0835": 10,
+          "A64NP0810": 11,
+          "A64EU0825": 12,
+          "A64EU0850": 13,
+          "A64EU0840": 14,
+          "A64EU0851": 15,
+          "A64NP0856": 16,
+          "A64NP0857": 17,
+          "A64EU0852": 18,
+          "A64NP0860": 19,
+          "A64EU0870": 20,
+          "A64NP0874": 21,
+          "A64NP0872": 22
+        },
+        "label": {
+          "NR08_": "Alle investeringsarter",
+          "NR0815": "Bygg og anlegg",
+          "NR08OLJE": "Oljeboring, oljeleting, olje- og gasrørledning",
+          "NR0838": "Oljeutvinningsplattformer, borerigger og moduler",
+          "NR0841": "Skip og båter",
+          "NR08TRANSP": "Transportmidler",
+          "NR0855": "Maskiner og utstyr",
+          "NR0860": "Endring i livdyr- og frukttrebestand",
+          "NR0879": "FOU og annen immatriell realkapital",
+          "A64EU08_": "Fast realkapital",
+          "A64EU0835": "¬ Bygg og anlegg",
+          "A64NP0810": "¬¬ Boliger",
+          "A64EU0825": "¬¬ Andre bygg og anlegg",
+          "A64EU0850": "¬ Maskiner og utstyr og våpensystemer",
+          "A64EU0840": "¬¬ Transportmidler",
+          "A64EU0851": "¬¬ IKT utstyr",
+          "A64NP0856": "¬¬¬ IT utstyr",
+          "A64NP0857": "¬¬¬ Telekommunikasjonsutstyr",
+          "A64EU0852": "¬¬ Andre maskiner og utstyr og våpensystemer",
+          "A64NP0860": "¬ Livdyr- og frukttrebestand",
+          "A64EU0870": "¬ FOU og annen immatriell realkapital",
+          "A64NP0874": "¬¬ Programvare og databaser",
+          "A64NP0872": "¬¬ Forskning og utvikling"
+        }
+      },
+      "extension": {
+        "elimination": true,
+        "show": "value",
+        "codelists": [
+          {
+            "id": "vs_NRInvArtAgg3",
+            "label": "Aggregert investeringsart",
+            "type": "Valueset",
+            "links": [
+              {
+                "rel": "metadata",
+                "hreflang": "no",
+                "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_NRInvArtAgg3?lang=no"
+              }
+            ]
+          },
+          {
+            "id": "vs_NRInvArtAgg4",
+            "label": "Detaljert investeringsart ",
+            "type": "Valueset",
+            "links": [
+              {
+                "rel": "metadata",
+                "hreflang": "no",
+                "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_NRInvArtAgg4?lang=no"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "NACE": {
+      "label": "næring",
+      "category": {
+        "index": {
+          "nr23_6": 0,
+          "pub2X01_02": 1,
+          "pub2X03": 2,
+          "pub2X05": 3,
+          "nr2X06_09": 4,
+          "pub2X06": 5,
+          "pub2X09": 6,
+          "nr23ind": 7,
+          "pub2X10_12": 8,
+          "pub2X13_15": 9,
+          "nr2315": 10,
+          "nr2316": 11,
+          "pub2X18": 12,
+          "pub2X19_21": 13,
+          "nr2319": 14,
+          "pub2X22_23": 15,
+          "pub2X24": 16,
+          "pub2X25_28": 17,
+          "pub2X29_30": 18,
+          "pub2X31_32": 19,
+          "pub2X33": 20,
+          "pub2X35": 21,
+          "pub2X36_39": 22,
+          "pub2X41_43": 23,
+          "pub2X45_47": 24,
+          "pub2X49B": 25,
+          "pub2X50A": 26,
+          "pub2X49A_52": 27,
+          "pub2X53": 28,
+          "pub2X55_56": 29,
+          "pub2X58_63": 30,
+          "pub2X64_66": 31,
+          "pub2X68A": 32,
+          "pub2X68B": 33,
+          "pub2X69_75": 34,
+          "pub2X77_82": 35,
+          "pub2X84": 36,
+          "pub2X85": 37,
+          "pub2X86_88": 38,
+          "pub2X90_97": 39,
+          "nr23_6fn": 40,
+          "nr24_5": 41,
+          "nr24_": 42,
+          "nr24sivil": 43,
+          "nr2482": 44,
+          "nr25_": 45,
+          "A38NP2X01_03": 46,
+          "A38NP2X05_09": 47,
+          "A38NP2X10_12": 48,
+          "A38NP2X13_15": 49,
+          "A38NP2X16_18": 50,
+          "A38NP2X19_21": 51,
+          "A38NP2X22_23": 52,
+          "A38NP2X24_25": 53,
+          "A38NP2X26": 54,
+          "A38NP2X27": 55,
+          "A38NP2X28": 56,
+          "A38NP2X29_30": 57,
+          "A38NP2X31_33": 58,
+          "A38NP2X35": 59,
+          "A38NP2X36_39": 60,
+          "A38NP2X41_43": 61,
+          "A38NP2X45_47": 62,
+          "A38NP2X49_53": 63,
+          "A38NP2X55_56": 64,
+          "A38NP2X58_60": 65,
+          "A38NP2X61": 66,
+          "A38NP2X62_63": 67,
+          "A38NP2X64_66": 68,
+          "A38NP2X68": 69,
+          "A38NP2X69_71": 70,
+          "A38NP2X72": 71,
+          "A38NP2X73_75": 72,
+          "A38NP2X77_82": 73,
+          "A38NP2X84": 74,
+          "A38NP2X85": 75,
+          "A38NP2X86": 76,
+          "A38NP2X87_88": 77,
+          "A38NP2X90_93": 78,
+          "A38NP2X94_96": 79,
+          "A38NP2X97_98": 80,
+          "A64NP2X01": 81,
+          "A64NP2X02": 82,
+          "A64NP2X03A": 83,
+          "A64NP2X03B": 84,
+          "A64NP2X05": 85,
+          "A64NP2X06": 86,
+          "A64NP2X09": 87,
+          "A64NP2X10_12": 88,
+          "A64NP2X13_15": 89,
+          "A64NP2X16": 90,
+          "A64NP2X17": 91,
+          "A64NP2X18": 92,
+          "A64NP2X19_21": 93,
+          "A64NP2X22": 94,
+          "A64NP2X23": 95,
+          "A64NP2X24": 96,
+          "A64NP2X25": 97,
+          "A64NP2X26": 98,
+          "A64NP2X27": 99,
+          "A64NP2X28": 100,
+          "A64NP2X29": 101,
+          "A64NP2X30": 102,
+          "A64NP2X31_32": 103,
+          "A64NP2X33": 104,
+          "A64NP2X35": 105,
+          "A64NP2X36": 106,
+          "A64NP2X37_39": 107,
+          "A64NP2X41_43": 108,
+          "A64NP2X45": 109,
+          "A64NP2X46": 110,
+          "A64NP2X47": 111,
+          "A64NP2X49A": 112,
+          "A64NP2X49B": 113,
+          "A64NP2X50A": 114,
+          "A64NP2X50B": 115,
+          "A64NP2X51": 116,
+          "A64NP2X52": 117,
+          "A64NP2X53": 118,
+          "A64NP2X55_56": 119,
+          "A64NP2X58": 120,
+          "A64NP2X59_60": 121,
+          "A64NP2X61": 122,
+          "A64NP2X62_63": 123,
+          "A64NP2X64": 124,
+          "A64NP2X65": 125,
+          "A64NP2X66": 126,
+          "A64NP2X68": 127,
+          "A64NP2X69_70": 128,
+          "A64NP2X71": 129,
+          "A64NP2X72": 130,
+          "A64NP2X73": 131,
+          "A64NP2X74_75": 132,
+          "A64NP2X77": 133,
+          "A64NP2X78": 134,
+          "A64NP2X79": 135,
+          "A64NP2X80_82": 136,
+          "A64NP2X84": 137,
+          "A64NP2X85": 138,
+          "A64NP2X86": 139,
+          "A64NP2X87_88": 140,
+          "A64NP2X90_92": 141,
+          "A64NP2X93": 142,
+          "A64NP2X94": 143,
+          "A64NP2X95": 144,
+          "A64NP2X96": 145,
+          "A64NP2X97": 146,
+          "nr2310": 147,
+          "nr2312": 148,
+          "nr23fn": 149,
+          "nr23mark": 150,
+          "nrimark": 151
+        },
+        "label": {
+          "nr23_6": "Totalt for næringer",
+          "pub2X01_02": "Jordbruk og skogbruk",
+          "pub2X03": "Fiske, fangst og akvakultur",
+          "pub2X05": "Bergverksdrift",
+          "nr2X06_09": "Utvinning av råolje og naturgass, inkl. tjenester",
+          "pub2X06": "¬ Utvinning av råolje og naturgass",
+          "pub2X09": "¬ Tjenester tilknyttet utvinning av råolje og naturgass",
+          "nr23ind": "Industri",
+          "pub2X10_12": "¬ Nærings-, drikkevare- og tobakksindustri",
+          "pub2X13_15": "¬ Tekstil-, beklednings- og lærvareindustri",
+          "nr2315": "¬ Trelast- og trevareindustri, unntatt møbler",
+          "nr2316": "¬ Produksjon av papir og papirvarer",
+          "pub2X18": "¬ Trykking og reproduksjon av innspilte opptak",
+          "pub2X19_21": "¬ Oljeraffinering, kjemisk og farmasøytisk industri",
+          "nr2319": "¬¬ Produksjon av kjemiske råvarer",
+          "pub2X22_23": "¬ Gummivare- og plastindustri, mineralproduktindustri",
+          "pub2X24": "¬ Produksjon av metaller",
+          "pub2X25_28": "¬ Produksjon av metallvarer, elektrisk utstyr og maskiner",
+          "pub2X29_30": "¬ Verftsindustri og annen transportmiddelindustri",
+          "pub2X31_32": "¬ Produksjon av møbler og annen industriproduksjon",
+          "pub2X33": "¬ Reparasjon og installasjon av maskiner og utstyr",
+          "pub2X35": "Elektrisitets-, gass- og varmtvannsforsyning",
+          "pub2X36_39": "Vannforsyning, avløp og renovasjon",
+          "pub2X41_43": "Bygge- og anleggsvirksomhet",
+          "pub2X45_47": "Varehandel og reparasjon av motorvogner",
+          "pub2X49B": "Rørtransport",
+          "pub2X50A": "Utenriks sjøfart",
+          "pub2X49A_52": "Transport utenom utenriks sjøfart",
+          "pub2X53": "Post og distribusjonsvirksomhet",
+          "pub2X55_56": "Overnattings- og serveringsvirksomhet",
+          "pub2X58_63": "Informasjon og kommunikasjon",
+          "pub2X64_66": "Finansierings- og forsikringsvirksomhet",
+          "pub2X68A": "Omsetning og drift av fast eiendom",
+          "pub2X68B": "Boligtjenester, egen bolig",
+          "pub2X69_75": "Faglig, vitenskapelig og teknisk tjenesteyting",
+          "pub2X77_82": "Forretningsmessig tjenesteyting",
+          "pub2X84": "Offentlig administrasjon og forsvar",
+          "pub2X85": "Undervisning",
+          "pub2X86_88": "Helse- og omsorgstjenester",
+          "pub2X90_97": "Kultur, underholdning og annen tjenesteyting",
+          "nr23_6fn": "Fastlands-Norge",
+          "nr24_5": "¬ Offentlig forvaltning",
+          "nr24_": "¬¬ Statsforvaltning",
+          "nr24sivil": "¬¬¬ Sivil forvaltning",
+          "nr2482": "¬¬¬ Forsvar",
+          "nr25_": "¬¬ Kommuneforvaltning",
+          "A38NP2X01_03": "Jordbruk, skogbruk og fiske",
+          "A38NP2X05_09": "Bergverksdrift og oljeutvinning",
+          "A38NP2X10_12": "Nærings-, drikkevare- og tobakksindustri",
+          "A38NP2X13_15": "Tekstil-, beklednings- og lærvareindustri",
+          "A38NP2X16_18": "Trelast-, papirindustri og trykking",
+          "A38NP2X19_21": "Oljeraffinering, kjemisk og farmasøytisk industri",
+          "A38NP2X22_23": "Produksjon av gummi-, plast- og mineralprodukter",
+          "A38NP2X24_25": "Produksjon av metaller og metallvarer, unntatt maskiner og utstyr",
+          "A38NP2X26": "Produksjon av datamaskiner og elektroniske produkter",
+          "A38NP2X27": "Produksjon av elektrisk utstyr",
+          "A38NP2X28": "Produksjon av maskiner og utstyr ellers",
+          "A38NP2X29_30": "Produksjon av transportmidler",
+          "A38NP2X31_33": "Produksjon av møbler, reparasjon og installasjon av maskiner",
+          "A38NP2X35": "Elektrisitets-, gass- og varmtvannsforsyning",
+          "A38NP2X36_39": "Vannforsyning, avløp og renovasjon",
+          "A38NP2X41_43": "Bygge- og anleggsvirksomhet",
+          "A38NP2X45_47": "Varehandel og reparasjon av motorvogner",
+          "A38NP2X49_53": "Transport og lagring",
+          "A38NP2X55_56": "Overnattings- og serveringsvirksomhet",
+          "A38NP2X58_60": "Forlagsvirksomhet, audiovisuell produksjon og kringkasting",
+          "A38NP2X61": "Telekommunikasjon",
+          "A38NP2X62_63": "Tjenester tilknyttet informasjonsteknologi og informasjonstjenester",
+          "A38NP2X64_66": "Finansierings- og forsikringsvirksomhet",
+          "A38NP2X68": "Omsetning og drift av fast eiendom",
+          "A38NP2X69_71": "Juridisk og regnskapsmessig tjenesteyting, arkitektvirksomhet mv.",
+          "A38NP2X72": "Forskning og utviklingsarbeid",
+          "A38NP2X73_75": "Annonse- og reklamevirksomhet, annen faglig og teknisk tjenesteyting",
+          "A38NP2X77_82": "Forretningsmessig tjenesteyting",
+          "A38NP2X84": "Offentlig administrasjon og forsvar",
+          "A38NP2X85": "Undervisning",
+          "A38NP2X86": "Helsetjenester",
+          "A38NP2X87_88": "Pleie- og omsorgstjenester, barnehager og SFO",
+          "A38NP2X90_93": "Kulturell virksomhet, underholdning og fritidsaktiviteter",
+          "A38NP2X94_96": "Annen tjenesteyting",
+          "A38NP2X97_98": "Lønnet arbeid i private husholdninger",
+          "A64NP2X01": "Jordbruk, jakt og viltstell",
+          "A64NP2X02": "Skogbruk",
+          "A64NP2X03A": "Fiske og fangst",
+          "A64NP2X03B": "Akvakultur",
+          "A64NP2X05": "Bergverksdrift",
+          "A64NP2X06": "Utvinning av råolje og naturgass",
+          "A64NP2X09": "Tjenester tilknyttet utvinning av råolje og naturgass",
+          "A64NP2X10_12": "Nærings-, drikkevare- og tobakksindustri",
+          "A64NP2X13_15": "Tekstil-, beklednings- og lærvareindustri",
+          "A64NP2X16": "Trelast- og trevareindustri, unntatt møbler",
+          "A64NP2X17": "Produksjon av papir og papirvarer",
+          "A64NP2X18": "Trykking og reproduksjon av innspilte opptak",
+          "A64NP2X19_21": "Oljeraffinering, kjemisk og farmasøytisk industri",
+          "A64NP2X22": "Produksjon av gummi- og plastprodukter",
+          "A64NP2X23": "Produksjon av andre ikke-metallholdige mineralprodukter",
+          "A64NP2X24": "Produksjon av metaller",
+          "A64NP2X25": "Produksjon av metallvarer, unntatt maskiner og utstyr",
+          "A64NP2X26": "Produksjon av datamaskiner og elektroniske produkter",
+          "A64NP2X27": "Produksjon av elektrisk utstyr",
+          "A64NP2X28": "Produksjon av maskiner og utstyr ellers",
+          "A64NP2X29": "Produksjon av motorvogner og tilhengere",
+          "A64NP2X30": "Verftsindustri og annen transportmiddelindustri",
+          "A64NP2X31_32": "Produksjon av møbler og annen industriproduksjon",
+          "A64NP2X33": "Reparasjon og installasjon av maskiner og utstyr",
+          "A64NP2X35": "Elektrisitets-, gass- og varmtvannsforsyning",
+          "A64NP2X36": "Uttak fra kilde, rensing og distribusjon av vann",
+          "A64NP2X37_39": "Avløps- og renovasjonsvirksomhet",
+          "A64NP2X41_43": "Bygge- og anleggsvirksomhet",
+          "A64NP2X45": "Handel med og reparasjoner av motorvogner",
+          "A64NP2X46": "Agentur- og engroshandel, unntatt med motorvogner",
+          "A64NP2X47": "Detaljhandel, unntatt med motorvogner",
+          "A64NP2X49A": "Landtransport, unntatt rørtransport",
+          "A64NP2X49B": "Rørtransport",
+          "A64NP2X50A": "Utenriks sjøfart",
+          "A64NP2X50B": "Innenriks sjøfart og supplyvirksomhet",
+          "A64NP2X51": "Lufttransport",
+          "A64NP2X52": "Lagring og andre tjenester tilknyttet transport",
+          "A64NP2X53": "Post og distribusjonsvirksomhet",
+          "A64NP2X55_56": "Overnattings- og serveringsvirksomhet",
+          "A64NP2X58": "Forlagsvirksomhet",
+          "A64NP2X59_60": "Film-, video- og musikkproduksjon, kringkasting",
+          "A64NP2X61": "Telekommunikasjon",
+          "A64NP2X62_63": "Tjenester tilknyttet informasjonsteknologi og informasjonstjenester",
+          "A64NP2X64": "Finansieringsvirksomhet",
+          "A64NP2X65": "Forsikringsvirksomhet, unntatt offentlige trygdeordninger",
+          "A64NP2X66": "Tjenester tilknyttet finansierings- og forsikringsvirksomhet",
+          "A64NP2X68": "Omsetning og drift av fast eiendom",
+          "A64NP2X69_70": "Juridisk og regnskapsmessig tjenesteyting, administrativ rådgiving",
+          "A64NP2X71": "Arkitektvirksomhet og teknisk konsulentvirksomhet",
+          "A64NP2X72": "Forskning og utviklingsarbeid",
+          "A64NP2X73": "Annonse- og reklamevirksomhet og markedsundersøkelser",
+          "A64NP2X74_75": "Annen faglig og teknisk tjenesteyting og veterinærtjenester",
+          "A64NP2X77": "Utleie- og leasingvirksomhet",
+          "A64NP2X78": "Arbeidskrafttjenester",
+          "A64NP2X79": "Reisebyrå- og reisearrangørvirksomhet",
+          "A64NP2X80_82": "Vakttjeneste og tjenester tilknyttet eiendomsdrift",
+          "A64NP2X84": "Offentlig administrasjon og forsvar",
+          "A64NP2X85": "Undervisning",
+          "A64NP2X86": "Helsetjenester",
+          "A64NP2X87_88": "Pleie- og omsorgstjenester, barnehager og SFO",
+          "A64NP2X90_92": "Kunsterisk virksomhet, underholdning og spill",
+          "A64NP2X93": "Sports- og fritidsaktiviteter",
+          "A64NP2X94": "Aktiviteter i medlemsorganisasjoner",
+          "A64NP2X95": "Reparasjoner av datamaskiner og husholdningsvarer",
+          "A64NP2X96": "Annen personlig tjenesteyting",
+          "A64NP2X97": "Lønnet arbeid i private husholdninger",
+          "nr2310": "¬¬ Næringsmidler u/fiskeforedling  inkl. drikkevarer og tobakk",
+          "nr2312": "¬¬ Bearbeiding og konservering av fisk mv",
+          "nr23fn": "¬ Markedsrettet virksomhet Fastlands-Norge",
+          "nr23mark": "Markedsrettet virksomhet",
+          "nrimark": "Ikke-markedsrettet virksomhet"
+        }
+      },
+      "extension": {
+        "elimination": true,
+        "show": "value",
+        "codelists": [
+          {
+            "id": "vs_NRNaeringPubAgg",
+            "label": "Hovednæring",
+            "type": "Valueset",
+            "links": [
+              {
+                "rel": "metadata",
+                "hreflang": "no",
+                "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_NRNaeringPubAgg?lang=no"
+              }
+            ]
+          },
+          {
+            "id": "vs_NRNaeringA38NP",
+            "label": "Næring (A38)",
+            "type": "Valueset",
+            "links": [
+              {
+                "rel": "metadata",
+                "hreflang": "no",
+                "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_NRNaeringA38NP?lang=no"
+              }
+            ]
+          },
+          {
+            "id": "vs_NRNaeringA64NP",
+            "label": "Næring (A64)",
+            "type": "Valueset",
+            "links": [
+              {
+                "rel": "metadata",
+                "hreflang": "no",
+                "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_NRNaeringA64NP?lang=no"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "ContentsCode": {
+      "label": "statistikkvariabel",
+      "category": {
+        "index": {
+          "DEP": 0,
+          "DEP3": 1,
+          "DEP2": 2,
+          "BIF": 3,
+          "BIF2": 4,
+          "BIF3": 5,
+          "BIF4": 6,
+          "KAPN": 7,
+          "KAPN3": 8,
+          "KAPN2": 9
+        },
+        "label": {
+          "DEP": "Kapitalslit. Løpende priser (mill. kr)",
+          "DEP3": "Kapitalslit. Faste 2023-priser (mill. kr)",
+          "DEP2": "Kapitalslit. Volumendring, årlig (prosent)",
+          "BIF": "Bruttoinvestering i fast realkapital. Løpende priser (mill. kr)",
+          "BIF2": "Bruttoinvestering i fast realkapital. Faste 2023-priser (mill. kr)",
+          "BIF3": "Bruttoinvestering i fast realkapital. Volumendring, årlig (prosent)",
+          "BIF4": "Bruttoinvestering i fast realkapital. Prisendring, årlig (prosent)",
+          "KAPN": "Fast realkapital. Løpende priser (mill. kr)",
+          "KAPN3": "Fast realkapital. Faste 2023-priser (mill. kr)",
+          "KAPN2": "Fast realkapital. Volumendring, årlig  (prosent)"
+        },
+        "unit": {
+          "DEP": {
+            "base": "mill. kr",
+            "decimals": 0
+          },
+          "DEP3": {
+            "base": "mill. kr",
+            "decimals": 0
+          },
+          "DEP2": {
+            "base": "prosent",
+            "decimals": 1
+          },
+          "BIF": {
+            "base": "mill. kr",
+            "decimals": 0
+          },
+          "BIF2": {
+            "base": "mill. kr",
+            "decimals": 0
+          },
+          "BIF3": {
+            "base": "prosent",
+            "decimals": 1
+          },
+          "BIF4": {
+            "base": "prosent",
+            "decimals": 1
+          },
+          "KAPN": {
+            "base": "mill. kr",
+            "decimals": 0
+          },
+          "KAPN3": {
+            "base": "mill. kr",
+            "decimals": 0
+          },
+          "KAPN2": {
+            "base": "prosent",
+            "decimals": 1
+          }
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "refperiod": {
+          "DEP": "31.12.",
+          "DEP3": "31.12.",
+          "DEP2": "31.12.",
+          "BIF": "Kvartal",
+          "BIF2": "31.12.",
+          "BIF3": "31.12.",
+          "BIF4": "31.12.",
+          "KAPN": "31.12.",
+          "KAPN3": "31.12.",
+          "KAPN2": "31.12."
+        },
+        "show": "value",
+        "codelists": [],
+        "measuringType": {
+          "DEP": "Flow",
+          "DEP3": "Flow",
+          "DEP2": "Average",
+          "BIF": "Flow",
+          "BIF2": "Flow",
+          "BIF3": "Average",
+          "BIF4": "Average",
+          "KAPN": "Flow",
+          "KAPN3": "Flow",
+          "KAPN2": "Average"
+        },
+        "priceType": {
+          "DEP": "Fixed",
+          "DEP3": "Fixed",
+          "DEP2": "Fixed",
+          "BIF": "Fixed",
+          "BIF2": "Fixed",
+          "BIF3": "Fixed",
+          "BIF4": "Fixed",
+          "KAPN": "Fixed",
+          "KAPN3": "Fixed",
+          "KAPN2": "Fixed"
+        },
+        "adjustment": {
+          "DEP": "None",
+          "DEP3": "None",
+          "DEP2": "None",
+          "BIF": "None",
+          "BIF2": "None",
+          "BIF3": "None",
+          "BIF4": "None",
+          "KAPN": "None",
+          "KAPN3": "None",
+          "KAPN2": "None"
+        },
+        "alternativeText": {
+          "DEP": "Kapitalslit. Løpende priser (mill. kr)",
+          "DEP3": "Kapitalslit. Faste 2023-priser (mill. kr)",
+          "DEP2": "Kapitalslit. Volumendring, årlig (prosent)",
+          "BIF": "Bruttoinvestering i fast realkapital. Løpende priser (mill. kr)",
+          "BIF2": "Bruttoinvestering i fast realkapital. Faste 2023-priser (mill. kr)",
+          "BIF3": "Bruttoinvestering i fast realkapital. Volumendring, årlig (prosent)",
+          "BIF4": "Bruttoinvestering i fast realkapital. Prisendring, årlig (prosent)",
+          "KAPN": "Fast realkapital. Løpende priser (mill. kr)",
+          "KAPN3": "Fast realkapital. Faste 2023-priser (mill. kr)",
+          "KAPN2": "Fast realkapital. Volumendring, årlig  (prosent)"
+        }
+      },
+      "link": {
+        "describedby": [
+          {
+            "extension": {
+              "DEP": "urn:ssb:conceptvariable:vardok:1768",
+              "BIF": "urn:ssb:conceptvariable:vardok:1741",
+              "KAPN": "urn:ssb:conceptvariable:vardok:1761"
+            }
+          }
+        ],
+        "related": [
+          {
+            "extension": {
+              "relation": "definitions",
+              "category": "DEP",
+              "metaid": "urn:ssb:conceptvariable:vardok:1768"
+            },
+            "href": "https://www.ssb.no/a/metadata/conceptvariable/vardok/1768/nb",
+            "label": "Variabeldefinisjon av Kapitalslit. Løpende priser (mill. kr)",
+            "type": "text/html"
+          },
+          {
+            "extension": {
+              "relation": "definitions",
+              "category": "BIF",
+              "metaid": "urn:ssb:conceptvariable:vardok:1741"
+            },
+            "href": "https://www.ssb.no/a/metadata/conceptvariable/vardok/1741/nb",
+            "label": "Variabeldefinisjon av Bruttoinvestering i fast realkapital. Løpende priser (mill. kr)",
+            "type": "text/html"
+          },
+          {
+            "extension": {
+              "relation": "definitions",
+              "category": "KAPN",
+              "metaid": "urn:ssb:conceptvariable:vardok:1761"
+            },
+            "href": "https://www.ssb.no/a/metadata/conceptvariable/vardok/1761/nb",
+            "label": "Variabeldefinisjon av Fast realkapital. Løpende priser (mill. kr)",
+            "type": "text/html"
+          }
+        ]
+      }
+    },
+    "Tid": {
+      "label": "år",
+      "category": {
+        "index": {
+          "1970": 0,
+          "1971": 1,
+          "1972": 2,
+          "1973": 3,
+          "1974": 4,
+          "1975": 5,
+          "1976": 6,
+          "1977": 7,
+          "1978": 8,
+          "1979": 9,
+          "1980": 10,
+          "1981": 11,
+          "1982": 12,
+          "1983": 13,
+          "1984": 14,
+          "1985": 15,
+          "1986": 16,
+          "1987": 17,
+          "1988": 18,
+          "1989": 19,
+          "1990": 20,
+          "1991": 21,
+          "1992": 22,
+          "1993": 23,
+          "1994": 24,
+          "1995": 25,
+          "1996": 26,
+          "1997": 27,
+          "1998": 28,
+          "1999": 29,
+          "2000": 30,
+          "2001": 31,
+          "2002": 32,
+          "2003": 33,
+          "2004": 34,
+          "2005": 35,
+          "2006": 36,
+          "2007": 37,
+          "2008": 38,
+          "2009": 39,
+          "2010": 40,
+          "2011": 41,
+          "2012": 42,
+          "2013": 43,
+          "2014": 44,
+          "2015": 45,
+          "2016": 46,
+          "2017": 47,
+          "2018": 48,
+          "2019": 49,
+          "2020": 50,
+          "2021": 51,
+          "2022": 52,
+          "2023": 53
+        },
+        "label": {
+          "1970": "1970",
+          "1971": "1971",
+          "1972": "1972",
+          "1973": "1973",
+          "1974": "1974",
+          "1975": "1975",
+          "1976": "1976",
+          "1977": "1977",
+          "1978": "1978",
+          "1979": "1979",
+          "1980": "1980",
+          "1981": "1981",
+          "1982": "1982",
+          "1983": "1983",
+          "1984": "1984",
+          "1985": "1985",
+          "1986": "1986",
+          "1987": "1987",
+          "1988": "1988",
+          "1989": "1989",
+          "1990": "1990",
+          "1991": "1991",
+          "1992": "1992",
+          "1993": "1993",
+          "1994": "1994",
+          "1995": "1995",
+          "1996": "1996",
+          "1997": "1997",
+          "1998": "1998",
+          "1999": "1999",
+          "2000": "2000",
+          "2001": "2001",
+          "2002": "2002",
+          "2003": "2003",
+          "2004": "2004",
+          "2005": "2005",
+          "2006": "2006",
+          "2007": "2007",
+          "2008": "2008",
+          "2009": "2009",
+          "2010": "2010",
+          "2011": "2011",
+          "2012": "2012",
+          "2013": "2013",
+          "2014": "2014",
+          "2015": "2015",
+          "2016": "2016",
+          "2017": "2017",
+          "2018": "2018",
+          "2019": "2019",
+          "2020": "2020",
+          "2021": "2021",
+          "2022": "2022",
+          "2023": "2023"
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "show": "code",
+        "codelists": []
+      }
+    }
+  },
+  "extension": {
+    "px": {
+      "infofile": "None",
+      "tableid": "11189",
+      "decimals": 0,
+      "official-statistics": true,
+      "aggregallowed": false,
+      "copyright": false,
+      "language": "no",
+      "contents": "11189: Investeringer og kapitalbeholdninger,",
+      "descriptiondefault": false,
+      "heading": [
+        "ContentsCode",
+        "Tid"
+      ],
+      "stub": [
+        "Investeringsart",
+        "NACE"
+      ],
+      "matrix": "11189",
+      "subject-code": "nk",
+      "subject-area": "Nasjonalregnskap og konjunkturer"
+    },
+    "contact": [
+      {
+        "name": "Johan Nitter-Hauge",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "40 90 26 83",
+        "mail": "jni@ssb.no",
+        "raw": "Johan Nitter-Hauge, Statistisk sentralbyrå# +47 40 90 26 83#jni@ssb.no"
+      },
+      {
+        "name": "Ingunn Sagelvmo",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "40 90 26 32",
+        "mail": "isa@ssb.no",
+        "raw": "Ingunn Sagelvmo, Statistisk sentralbyrå# +47 40 90 26 32#isa@ssb.no"
+      },
+      {
+        "name": "Steinar Todsen",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "95 91 00 74",
+        "mail": "sto@ssb.no",
+        "raw": "Steinar Todsen, Statistisk sentralbyrå# +47 95 91 00 74#sto@ssb.no"
+      }
+    ]
+  },
+  "value": []
+}

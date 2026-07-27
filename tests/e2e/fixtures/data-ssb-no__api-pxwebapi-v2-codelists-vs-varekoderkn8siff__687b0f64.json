@@ -1,0 +1,4926 @@
+{
+  "id": "vs_VareKoderKN8Siff",
+  "label": "Alle varekoder 8-siffer-nivå ",
+  "language": "no",
+  "languages": [
+    "en",
+    "no"
+  ],
+  "elimination": true,
+  "eliminationValueCode": "",
+  "type": "Valueset",
+  "values": [
+    {
+      "code": "00000011_1988",
+      "label": "Uspesifiserte varer, tollbare (1988-2003) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "00000011_1988"
+      ]
+    },
+    {
+      "code": "00000031_1988",
+      "label": "Proviant (1988-2002) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "00000031_1988"
+      ]
+    },
+    {
+      "code": "00000032_1988",
+      "label": "Forbruksartikler (1988-2002) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "00000032_1988"
+      ]
+    },
+    {
+      "code": "00000055_1988",
+      "label": "Uspesifiserte varer, tollfrie (1988-2003) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "00000055_1988"
+      ]
+    },
+    {
+      "code": "00000066_1999",
+      "label": "Varer og tjenester over telenettet eller via satelitt (1999-2002) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "00000066_1999"
+      ]
+    },
+    {
+      "code": "00000088_2023",
+      "label": "Gaveforsendelser fra privatperson til privatperson (2023-) (M1=kg, M2=nei)",
+      "valueMap": [
+        "00000088_2023"
+      ]
+    },
+    {
+      "code": "00000099_1988",
+      "label": "Uspesifiserte varer (1988-2003) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "00000099_1988"
+      ]
+    },
+    {
+      "code": "01011010_2002",
+      "label": "Hester, til avl (2002-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01011010_2002"
+      ]
+    },
+    {
+      "code": "01011090_2002",
+      "label": "Esler, muldyr og mulesler, til avl (2002-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01011090_2002"
+      ]
+    },
+    {
+      "code": "01011100_1988",
+      "label": "Hester, til avl (1988-2001) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01011100_1988"
+      ]
+    },
+    {
+      "code": "01011910_2001",
+      "label": "Hester, over 1/2 år, levende, ikke til avl (2001-2001) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01011910_2001"
+      ]
+    },
+    {
+      "code": "01011911_1988",
+      "label": "Vallaker, over 1/2 år, levende (1988-2000) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01011911_1988"
+      ]
+    },
+    {
+      "code": "01011919_1988",
+      "label": "Hester, over 1/2 år, levende, ikke vallaker, ikke til avl (1988-2000) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01011919_1988"
+      ]
+    },
+    {
+      "code": "01011990_1988",
+      "label": "Hester, opp t.o.m. 1/2 år, levende, ikke til avl (1988-2001) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01011990_1988"
+      ]
+    },
+    {
+      "code": "01012000_1988",
+      "label": "Esler, muldyr og mulesler, levende (1988-2001) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01012000_1988"
+      ]
+    },
+    {
+      "code": "01012100_2012",
+      "label": "Hester, til avl (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01012100_2012"
+      ]
+    },
+    {
+      "code": "01012901_2012",
+      "label": "Hester, over 1/2 år, levende, ikke til avl (2012-2014) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01012901_2012"
+      ]
+    },
+    {
+      "code": "01012902_2015",
+      "label": "Hester, levende, ikke til avl, med vekt under 133 kg (2015-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01012902_2015"
+      ]
+    },
+    {
+      "code": "01012908_2015",
+      "label": "Hester, levende, ikke til avl, med vekt over 133 kg (2015-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01012908_2015"
+      ]
+    },
+    {
+      "code": "01012909_2012",
+      "label": "Hester, opp t.o.m. 1/2 år, levende, ikke til avl (2012-2014) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01012909_2012"
+      ]
+    },
+    {
+      "code": "01013000_2012",
+      "label": "Esler, levende (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01013000_2012"
+      ]
+    },
+    {
+      "code": "01019000_2012",
+      "label": "Muldyr og mulesler, levende (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01019000_2012"
+      ]
+    },
+    {
+      "code": "01019011_2002",
+      "label": "Hester, over 1/2 år, levende, ikke til avl (2002-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01019011_2002"
+      ]
+    },
+    {
+      "code": "01019019_2002",
+      "label": "Hester, opp t.o.m. 1/2 år, levende, ikke til avl (2002-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01019019_2002"
+      ]
+    },
+    {
+      "code": "01019080_2002",
+      "label": "Esler, muldyr og mulesler, levende, ikke til avl (2002-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01019080_2002"
+      ]
+    },
+    {
+      "code": "01021000_1988",
+      "label": "Storfe, til avl (1988-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01021000_1988"
+      ]
+    },
+    {
+      "code": "01022100_2012",
+      "label": "Kveg, til avl (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01022100_2012"
+      ]
+    },
+    {
+      "code": "01022900_2012",
+      "label": "Kveg, levende, ikke til avl (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01022900_2012"
+      ]
+    },
+    {
+      "code": "01023100_2012",
+      "label": "Bøfler, til avl (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01023100_2012"
+      ]
+    },
+    {
+      "code": "01023900_2012",
+      "label": "Bøfler, levende, ikke til avl (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01023900_2012"
+      ]
+    },
+    {
+      "code": "01029000_1988",
+      "label": "Storfe, levende, ikke til avl (1988-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01029000_1988"
+      ]
+    },
+    {
+      "code": "01029000_2012",
+      "label": "Storfe, unnt kveg og bøfler, levende (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01029000_2012"
+      ]
+    },
+    {
+      "code": "01031000_1988",
+      "label": "Svin, til avl (1988-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01031000_1988"
+      ]
+    },
+    {
+      "code": "01039100_1988",
+      "label": "Svin, levende, vekt under 50 kg, ikke til avl (1988-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01039100_1988"
+      ]
+    },
+    {
+      "code": "01039200_1988",
+      "label": "Svin, levende, vekt min 50 kg, ikke til avl (1988-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01039200_1988"
+      ]
+    },
+    {
+      "code": "01041000_1988",
+      "label": "Sauer, levende (1988-1995) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01041000_1988"
+      ]
+    },
+    {
+      "code": "01041000_2015",
+      "label": "Sauer, levende (2015-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01041000_2015"
+      ]
+    },
+    {
+      "code": "01041001_1995",
+      "label": "Sauer, til avl (1995-2014) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01041001_1995"
+      ]
+    },
+    {
+      "code": "01041009_1995",
+      "label": "Sauer, levende, ikke til avl (1995-2014) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01041009_1995"
+      ]
+    },
+    {
+      "code": "01042000_1988",
+      "label": "Geiter, levende (1988-1995) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01042000_1988"
+      ]
+    },
+    {
+      "code": "01042000_2015",
+      "label": "Geiter, levende (2015-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01042000_2015"
+      ]
+    },
+    {
+      "code": "01042001_1995",
+      "label": "Geiter, til avl (1995-2014) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01042001_1995"
+      ]
+    },
+    {
+      "code": "01042009_1995",
+      "label": "Geiter, ikke til avl, levende (1995-2014) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01042009_1995"
+      ]
+    },
+    {
+      "code": "01051100_1988",
+      "label": "Høns av arten Gallus domesticus, levende, maks vekt 185 gram (1988-1995) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051100_1988"
+      ]
+    },
+    {
+      "code": "01051101_1995",
+      "label": "Hønekyllinger av arten Gallus domesticus, maks vekt 185 gram, til avl og formering (1995-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051101_1995"
+      ]
+    },
+    {
+      "code": "01051109_1995",
+      "label": "Høns av arten Gallus domesticus, levende, maks vekt 185 gram, unnt hønekyllinger til avl og formering (1995-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051109_1995"
+      ]
+    },
+    {
+      "code": "01051201_1996",
+      "label": "Kalkunkyllinger, maks vekt 185 gram, til avl og formering (1996-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051201_1996"
+      ]
+    },
+    {
+      "code": "01051209_1996",
+      "label": "Kalkuner, levende, maks vekt 185 gram, unnt kyllinger til avl og formering (1996-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051209_1996"
+      ]
+    },
+    {
+      "code": "01051300_2012",
+      "label": "Ender, levende, maks vekt 185 gram (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051300_2012"
+      ]
+    },
+    {
+      "code": "01051400_2012",
+      "label": "Gjess, levende, maks vekt 185 gram (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051400_2012"
+      ]
+    },
+    {
+      "code": "01051500_2012",
+      "label": "Perlehøns, levende, maks vekt 185 gram (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051500_2012"
+      ]
+    },
+    {
+      "code": "01051900_1988",
+      "label": "Ender/gjess/kalkuner/perlehøns, levende, maks vekt 185 gram, unnt arten Gallus domesticus (1988-1995) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051900_1988"
+      ]
+    },
+    {
+      "code": "01051901_1995",
+      "label": "Hønekyllinger (ender,gjess,kalkuner,perlehøns), til avl/formering, maks vekt 185 gram, unnt arten Gallus domesticus (1995-1995) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051901_1995"
+      ]
+    },
+    {
+      "code": "01051901_1996",
+      "label": "Kyllinger av ender, gjess, perlehøns, til avl/formering, maks vekt 185 gram (1996-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051901_1996"
+      ]
+    },
+    {
+      "code": "01051909_1995",
+      "label": "Ender/gjess/kalkuner/perlehøns, levende, maks vekt 185 gram, ikke hønekyll. til avl/formering el arten Gallus domesticus (1995-1995) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051909_1995"
+      ]
+    },
+    {
+      "code": "01051909_1996",
+      "label": "Ender/gjess/perlehøns, levende, maks vekt 185 gram, ikke kyllinger til avl/formering (1996-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01051909_1996"
+      ]
+    },
+    {
+      "code": "01059100_1988",
+      "label": "Høns av arten Gallus domesticus, levende, over 185 gram (1988-1995) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01059100_1988"
+      ]
+    },
+    {
+      "code": "01059200_1996",
+      "label": "Høns av arten Gallus domesticus, levende, vekt over 185 gram maks 2000 gram (1996-2006) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01059200_1996"
+      ]
+    },
+    {
+      "code": "01059300_1996",
+      "label": "Høns av arten Gallus domesticus, levende, vekt over 2000 gram (1996-2006) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01059300_1996"
+      ]
+    },
+    {
+      "code": "01059400_2007",
+      "label": "Høns av arten Gallus domesticus, levende, vekt over 185 gram (2007-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01059400_2007"
+      ]
+    },
+    {
+      "code": "01059900_1988",
+      "label": "Ender/gjess/kalkuner/perlehøns, over 185 gram, unnt arten Gallus domesticus, levende (1988-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01059900_1988"
+      ]
+    },
+    {
+      "code": "01060010_1988",
+      "label": "Reinsdyr, levende (1988-2001) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01060010_1988"
+      ]
+    },
+    {
+      "code": "01060020_1988",
+      "label": "Fasaner, levende (1988-2001) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01060020_1988"
+      ]
+    },
+    {
+      "code": "01060091_1988",
+      "label": "Pelsdyr, levende (1988-2001) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01060091_1988"
+      ]
+    },
+    {
+      "code": "01060094_1999",
+      "label": "Struts, levende (1999-2001) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01060094_1999"
+      ]
+    },
+    {
+      "code": "01060099_1988",
+      "label": "Levende dyr, unnt hester, esler, muldyr, mulesler, storfe, svin, sauer, geiter, fjærfe, reinsdyr og pelsdyr (1988-1998) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01060099_1988"
+      ]
+    },
+    {
+      "code": "01060099_1999",
+      "label": "Levende dyr, unnt hester, esler, muldyr, mulesler, storfe, svin, sauer, geiter, fjærfe, reinsdyr, pelsdyr og struts (1999-2000) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01060099_1999"
+      ]
+    },
+    {
+      "code": "01060099_2001",
+      "label": "Levende dyr, unnt hester, esler, muldyr, mulesler, storfe, svin, sauer, geiter, fjærfe, reinsdyr, pelsdyr og struts (2001-2001) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01060099_2001"
+      ]
+    },
+    {
+      "code": "01061100_2002",
+      "label": "Primater, levende (2002-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01061100_2002"
+      ]
+    },
+    {
+      "code": "01061200_2002",
+      "label": "Hvaler, delfiner og niser (pattedyr av ordenen Cetacea), manater og sjøkuer (pattedyr av ordenen Sirenia), levende (2002-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01061200_2002"
+      ]
+    },
+    {
+      "code": "01061200_2012",
+      "label": "Hvaler, delfiner og niser (av ordenen Cetacea), manater og sjøkuer (av ordenen Sirenia), seler, sjøløver og hvalrosser (av underordenen Pinnipedia), levende (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01061200_2012"
+      ]
+    },
+    {
+      "code": "01061300_2012",
+      "label": "Kameler og andre kameldyr (Camelidae), levende (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01061300_2012"
+      ]
+    },
+    {
+      "code": "01061400_2012",
+      "label": "Kaniner og harer, levende (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01061400_2012"
+      ]
+    },
+    {
+      "code": "01061910_2002",
+      "label": "Reinsdyr, levende (2002-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01061910_2002"
+      ]
+    },
+    {
+      "code": "01061991_2002",
+      "label": "Kaniner, levende (2002-2006) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01061991_2002"
+      ]
+    },
+    {
+      "code": "01061992_2002",
+      "label": "Pelsdyr, heru mink, chinchilla, rev, sel, bisamrotte og andre, ikke nevnt eller innbefattet annet sted, levende (2002-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01061992_2002"
+      ]
+    },
+    {
+      "code": "01061999_2002",
+      "label": "Levende pattedyr, heru hunder, katter, mus, rotter og hamstre, unnt primater hvaler, niser, manater, sjøkuer, reinsdyr, kaniner og pelsdyr (2002-2006) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01061999_2002"
+      ]
+    },
+    {
+      "code": "01061999_2007",
+      "label": "Pattedyr, levende, heru hunder, katter, mus, rotter og hamstre, unnt primater, hvaler, niser, manater, sjøkuer, reinsdyr og pelsdyr (2007-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01061999_2007"
+      ]
+    },
+    {
+      "code": "01061999_2012",
+      "label": "Levende pattedyr,heru hunder,katter og mus,unnt primater,hvaler,delfiner,niser,manater,sjøkuer,seler,sjøløver,hvalrosser,kameler,kaniner,harer,reinsdyr,pelsdyr (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01061999_2012"
+      ]
+    },
+    {
+      "code": "01062000_2002",
+      "label": "Reptiler (herunder slanger og skilpadder), levende (2002-2017) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01062000_2002"
+      ]
+    },
+    {
+      "code": "01062001_2018",
+      "label": "Slanger, levende (2018-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01062001_2018"
+      ]
+    },
+    {
+      "code": "01062002_2018",
+      "label": "Skilpadder, levende (2018-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01062002_2018"
+      ]
+    },
+    {
+      "code": "01062009_2018",
+      "label": "Reptiler, unnt slanger og skilpadder, levende (2018-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01062009_2018"
+      ]
+    },
+    {
+      "code": "01063100_2002",
+      "label": "Rovfugler, levende (2002-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01063100_2002"
+      ]
+    },
+    {
+      "code": "01063200_2002",
+      "label": "Papegøyefugler (herunder papegøyer, parakitter, undulater, ara og kakaduer), levende (2002-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01063200_2002"
+      ]
+    },
+    {
+      "code": "01063300_2012",
+      "label": "Strutser; emuer (Dromaius novaehollandiae), levende (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01063300_2012"
+      ]
+    },
+    {
+      "code": "01063910_2002",
+      "label": "Fasaner, levende (2002-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01063910_2002"
+      ]
+    },
+    {
+      "code": "01063990_2012",
+      "label": "Levende fulger, unnt rovfugler, papegøyefugler (heru papegøyer, parakitter, araer, kakaduer), strutser, emuer og fasaner (2012-) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01063990_2012"
+      ]
+    },
+    {
+      "code": "01063991_2002",
+      "label": "Struts, levende (2002-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01063991_2002"
+      ]
+    },
+    {
+      "code": "01063992_2002",
+      "label": "Duer, levende (2002-2006) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01063992_2002"
+      ]
+    },
+    {
+      "code": "01063999_2002",
+      "label": "Levende fulger, heru kanarifugler, unnt rovfugler, papegøyefugler, fasaner, struts og duer (2002-2006) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01063999_2002"
+      ]
+    },
+    {
+      "code": "01063999_2007",
+      "label": "Fugler, levende, heru kanarifugler, unnt rovfugler, papegøyefugler, fasaner og struts (2007-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01063999_2007"
+      ]
+    },
+    {
+      "code": "01064100_2012",
+      "label": "Bier, levende (2012-2016) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01064100_2012"
+      ]
+    },
+    {
+      "code": "01064100_2017",
+      "label": "Bier, levende (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01064100_2017"
+      ]
+    },
+    {
+      "code": "01064900_2012",
+      "label": "Insekter, levende, unnt bier (2012-2016) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01064900_2012"
+      ]
+    },
+    {
+      "code": "01064900_2017",
+      "label": "Insekter, levende, unnt bier (2017-2017) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01064900_2017"
+      ]
+    },
+    {
+      "code": "01064901_2018",
+      "label": "Humler (Bombus sp.), levende (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01064901_2018"
+      ]
+    },
+    {
+      "code": "01064902_2018",
+      "label": "Sommerfugler (Lepidoptera) og maur (Formicidae), levende (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01064902_2018"
+      ]
+    },
+    {
+      "code": "01064903_2018",
+      "label": "Fluer (Brachycera), herunder rovfluer (Asilidae), levende (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01064903_2018"
+      ]
+    },
+    {
+      "code": "01064904_2018",
+      "label": "Biller (Coleptera), levende (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01064904_2018"
+      ]
+    },
+    {
+      "code": "01064905_2018",
+      "label": "Pinnedyr (Phasmatodea), vandrende blad (Phylliidae) og knelere (Mantodea), levende (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01064905_2018"
+      ]
+    },
+    {
+      "code": "01064906_2018",
+      "label": "Gresshopper og sirisser (Saltatoria), levende (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01064906_2018"
+      ]
+    },
+    {
+      "code": "01064907_2018",
+      "label": "Kakerlakker (Blattodea), levende (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01064907_2018"
+      ]
+    },
+    {
+      "code": "01064909_2018",
+      "label": "Insekter, levende, unnt bier, humler, sommerfugler, maur, fluer, rovfluer, biller, pinnedyr, vandrende blad, knelere, gresshopper, sirisser og kakerlakker (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01064909_2018"
+      ]
+    },
+    {
+      "code": "01069000_2002",
+      "label": "Levende dyr heru fluer, maggott, mark, skorpioner, ikke pattedyr, reptiler, fugler, høns, ender, gjess, kalkuner og perlehøns (2002-2009) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01069000_2002"
+      ]
+    },
+    {
+      "code": "01069000_2012",
+      "label": "Levende dyr, unnt pattedyr, reptiler, fugler, fjærfe og instekter (2012-2016) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01069000_2012"
+      ]
+    },
+    {
+      "code": "01069000_2017",
+      "label": "Levende dyr, unnt pattedyr, reptiler, fugler, fjærfe og instekter (2017-2017) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01069000_2017"
+      ]
+    },
+    {
+      "code": "01069001_2010",
+      "label": "Bier, levende (2010-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01069001_2010"
+      ]
+    },
+    {
+      "code": "01069002_2018",
+      "label": "Meitemark (Megadrilacea), levende (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01069002_2018"
+      ]
+    },
+    {
+      "code": "01069003_2018",
+      "label": "Edderkoppdyr (Arachnida), herunder skorpioner (Scorpionidae), levende (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01069003_2018"
+      ]
+    },
+    {
+      "code": "01069004_2018",
+      "label": "Frosker og salamandere, levende (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01069004_2018"
+      ]
+    },
+    {
+      "code": "01069008_2018",
+      "label": "Levende dyr, unnt pattedyr, reptiler, fugler, fjærfe, insekter, meitemark, edderkoppdyr, skorpioner, frosker og salamandere (2018-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "01069008_2018"
+      ]
+    },
+    {
+      "code": "01069009_2010",
+      "label": "Levende dyr heru fluer, maggott, mark, skorpioner, ikke pattedyr, reptiler, fugler, fjærfe og bier (2010-2011) (M1=kg,  M2=stk)",
+      "valueMap": [
+        "01069009_2010"
+      ]
+    },
+    {
+      "code": "02011000_1988",
+      "label": "Hele og halve skrotter av storfe, fersk eller kjølt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02011000_1988"
+      ]
+    },
+    {
+      "code": "02012000_1988",
+      "label": "Kjøttstykker, ikke utbeinet, av storfe, fersk el kjølt, ikke hele el halve skrotter (1988-1997) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02012000_1988"
+      ]
+    },
+    {
+      "code": "02012001_1998",
+      "label": "Kvarte skrotter av storfe (forpart og bakpart) av samme dyr som foreligger samtidig (Compensated quarters), ikke utbeinet, fersk eller kjølt (1998-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02012001_1998"
+      ]
+    },
+    {
+      "code": "02012002_2006",
+      "label": "Kvarte skrotter, forparter, ikke utbeinet, av storfe, fersk eller kjølt (2006-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02012002_2006"
+      ]
+    },
+    {
+      "code": "02012003_2006",
+      "label": "Kvarte skrotter, bakparter, ikke utbeinet, av storfe, fersk eller kjølt (2006-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02012003_2006"
+      ]
+    },
+    {
+      "code": "02012004_2008",
+      "label": "Pistoler (bakpart hvor slagside og sidebein er tatt bort), av storfe, fersk eller kjølt (2008-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02012004_2008"
+      ]
+    },
+    {
+      "code": "02012008_2008",
+      "label": "Kjøttstykker, av storfe, ikke utbeinet, unnt hele, halve eller kvarte skrotter og pistoler, fersk eller kjølt (2008-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02012008_2008"
+      ]
+    },
+    {
+      "code": "02012009_1998",
+      "label": "Kjøttstykker, ikke utbeinet, av storfe, ikke hele, halve eller kvarte skrotter, fersk eller kjølt (1998-2007) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02012009_1998"
+      ]
+    },
+    {
+      "code": "02013001_1988",
+      "label": "Biffer og fileter av storfe, utbeinet, fersk eller kjølt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02013001_1988"
+      ]
+    },
+    {
+      "code": "02013009_1988",
+      "label": "Kjøtt av storfe, utbeinet, ikke biffer og fileter, fersk eller kjølt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02013009_1988"
+      ]
+    },
+    {
+      "code": "02021000_1988",
+      "label": "Hele eller halve skrotter av storfe, fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02021000_1988"
+      ]
+    },
+    {
+      "code": "02022000_1988",
+      "label": "Kjøttstykker, ikke utbeinet, av storfe, fryst, ikke hele el halve skrotter (1988-1997) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02022000_1988"
+      ]
+    },
+    {
+      "code": "02022001_1998",
+      "label": "Kvarte skrotter av storfe (forpart og bakpart) av samme dyr som foreligger samtidig (Compensated quarters), ikke utbeinet, fryst (1998-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02022001_1998"
+      ]
+    },
+    {
+      "code": "02022002_2006",
+      "label": "Kvarte skrotter, forparter, ikke utbeinet, av storfe, fryst (2006-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02022002_2006"
+      ]
+    },
+    {
+      "code": "02022003_2006",
+      "label": "Kvarte skrotter, bakparter, ikke utbeinet, av storfe, fryst (2006-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02022003_2006"
+      ]
+    },
+    {
+      "code": "02022004_2008",
+      "label": "Pistoler (bakpart hvor slagside og sidebein er tatt bort), av storfe, fryst (2008-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02022004_2008"
+      ]
+    },
+    {
+      "code": "02022008_2008",
+      "label": "Kjøttstykker, av storfe, ikke utbeinet, unnt hele, halve eller kvarte skrotter og pistoler, fryst (2008-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02022008_2008"
+      ]
+    },
+    {
+      "code": "02022009_1998",
+      "label": "Kjøttstykker, ikke utbeinet, av storfe, ikke kvarte, hele eller halve skrotter, fryst (1998-2007) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02022009_1998"
+      ]
+    },
+    {
+      "code": "02023000_1988",
+      "label": "Utbeinet kjøtt av storfe, fryst (1988-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02023000_1988"
+      ]
+    },
+    {
+      "code": "02023001_1996",
+      "label": "Biffer og fileter av storfe, fryst (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02023001_1996"
+      ]
+    },
+    {
+      "code": "02023009_1996",
+      "label": "Utbeinet kjøtt av storfe, ikke biffer og fileter, fryst (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02023009_1996"
+      ]
+    },
+    {
+      "code": "02031100_1988",
+      "label": "Hele eller halve skrotter av svin, ferskt el kjølt (1988-2003) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031100_1988"
+      ]
+    },
+    {
+      "code": "02031101_2010",
+      "label": "Hele eller halve skrotter av tamsvin, ferskt el kjølt (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031101_2010"
+      ]
+    },
+    {
+      "code": "02031109_2010",
+      "label": "Hele eller halve skrotter av svin, unnt av tamsvin, ferskt el kjølt (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031109_2010"
+      ]
+    },
+    {
+      "code": "02031110_2004",
+      "label": "Hele eller halve skrotter av tamsvin, ferskt el kjølt (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031110_2004"
+      ]
+    },
+    {
+      "code": "02031190_2004",
+      "label": "Hele eller halve skrotter av svin, unnt av tamsvin, ferskt el kjølt (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031190_2004"
+      ]
+    },
+    {
+      "code": "02031200_1988",
+      "label": "Skinker, boger og stykker derav, ikke utbeinet, av svin, ferskt el kjølt (1988-2003) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031200_1988"
+      ]
+    },
+    {
+      "code": "02031201_2010",
+      "label": "Skinker og stykker derav, ikke utbeinet, av tamsvin, ferskt el kjølt (2010-2019) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031201_2010"
+      ]
+    },
+    {
+      "code": "02031202_2010",
+      "label": "Boger og stykker derav, ikke utbeinet, av tamsvin, ferskt el kjølt (2010-2019) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031202_2010"
+      ]
+    },
+    {
+      "code": "02031203_2020",
+      "label": "Skinker, boger og stykker derav, ikke utbeinet, av tamsvin, ferskt el kjølt (2020-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031203_2020"
+      ]
+    },
+    {
+      "code": "02031209_2010",
+      "label": "Skinker, boger og stykker derav, ikke utbeinet, av svin, unnt av tamsvin, ferskt el kjølt (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031209_2010"
+      ]
+    },
+    {
+      "code": "02031211_2004",
+      "label": "Skinker og stykker derav, ikke utbeinet, av tamsvin, ferskt el kjølt (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031211_2004"
+      ]
+    },
+    {
+      "code": "02031219_2004",
+      "label": "Boger og stykker derav, ikke utbeinet, av tamsvin, ferskt el kjølt (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031219_2004"
+      ]
+    },
+    {
+      "code": "02031290_2004",
+      "label": "Skinker, boger og stykker derav, ikke utbeinet, av svin, unnt av tamsvin, ferskt el kjølt (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031290_2004"
+      ]
+    },
+    {
+      "code": "02031900_1988",
+      "label": "Kjøtt av svin, unnt hele og halve skrotter, skinker, boger og stykker derav, ikke utbeinet, fersk eller kjølt (1988-2003) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031900_1988"
+      ]
+    },
+    {
+      "code": "02031901_2010",
+      "label": "Forparter og stykker derav, av tamsvin, fersk eller kjølt (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031901_2010"
+      ]
+    },
+    {
+      "code": "02031902_2010",
+      "label": "Kam og stykker derav, av tamsvin, fersk eller kjølt (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031902_2010"
+      ]
+    },
+    {
+      "code": "02031903_2010",
+      "label": "Flesk av tamsvin, utbeinet, som inneholder høyst 7 vektprosent kjøtt (såkalt småflesk), fersk eller kjølt (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031903_2010"
+      ]
+    },
+    {
+      "code": "02031904_2010",
+      "label": "Sideflesk og stykker derav (heru ribbe), ikke utbeinet, av tamsvin, fersk eller kjølt (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031904_2010"
+      ]
+    },
+    {
+      "code": "02031905_2010",
+      "label": "Sideflesk og stykker derav (heru ribbe), utbeinet, av tamsvin, fersk eller kjølt (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031905_2010"
+      ]
+    },
+    {
+      "code": "02031907_2010",
+      "label": "Kjøtt av tamsvin, ikke utbeinet, unnt skinker, boger, forparter, kam, sideflesk og stykker av disse, hele og halve skrotter, fersk eller kjølt (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031907_2010"
+      ]
+    },
+    {
+      "code": "02031908_2010",
+      "label": "Kjøtt av tamsvin, utbeinet, unnt forparter, kam, småflesk, sideflesk og stykker av disse, fersk eller kjølt (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031908_2010"
+      ]
+    },
+    {
+      "code": "02031909_2010",
+      "label": "Kjøtt av svin, unnt tamsvin, unnt hele og halve skrotter, skinker, boger og stykker derav, fersk eller kjølt, ikke utbeinet (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031909_2010"
+      ]
+    },
+    {
+      "code": "02031911_2004",
+      "label": "Forparter og stykker derav, av tamsvin, fersk eller kjølt (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031911_2004"
+      ]
+    },
+    {
+      "code": "02031913_2004",
+      "label": "Kam og stykker derav, av tamsvin, fersk eller kjølt (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031913_2004"
+      ]
+    },
+    {
+      "code": "02031916_2004",
+      "label": "Sideflesk og stykker derav (heru ribbe), utbeinet, av tamsvin, fersk eller kjølt (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031916_2004"
+      ]
+    },
+    {
+      "code": "02031917_2004",
+      "label": "Sideflesk og stykker derav (heru ribbe), ikke utbeinet, av tamsvin, fersk eller kjølt (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031917_2004"
+      ]
+    },
+    {
+      "code": "02031955_2004",
+      "label": "Kjøtt av tamsvin, utbeinet, unnt forparter, kam, sideflesk og stykker av disse, fersk eller kjølt (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031955_2004"
+      ]
+    },
+    {
+      "code": "02031959_2004",
+      "label": "Kjøtt av tamsvin, ikke utbeinet, unnt skinker, boger, forparter, kam, sideflesk og stykker av disse, hele og halve skrotter, fersk eller kjølt (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031959_2004"
+      ]
+    },
+    {
+      "code": "02031990_2004",
+      "label": "Kjøtt av svin, unnt tamsvin, unnt hele og halve skrotter, skinker, boger og stykker derav, fersk eller kjølt, ikke utbeinet (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02031990_2004"
+      ]
+    },
+    {
+      "code": "02032100_1988",
+      "label": "Hele eller halve skrotter av svin, fryst (1988-2003) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032100_1988"
+      ]
+    },
+    {
+      "code": "02032101_2010",
+      "label": "Hele eller halve skrotter av tamsvin, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032101_2010"
+      ]
+    },
+    {
+      "code": "02032109_2010",
+      "label": "Hele eller halve skrotter av svin, unnt tamsvin, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032109_2010"
+      ]
+    },
+    {
+      "code": "02032110_2004",
+      "label": "Hele eller halve skrotter av tamsvin, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032110_2004"
+      ]
+    },
+    {
+      "code": "02032190_2004",
+      "label": "Hele eller halve skrotter av svin, unnt tamsvin, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032190_2004"
+      ]
+    },
+    {
+      "code": "02032200_1988",
+      "label": "Skinker, boger og stykker derav,ikke utbeinet, av svin, fryst (1988-2003) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032200_1988"
+      ]
+    },
+    {
+      "code": "02032201_2010",
+      "label": "Skinker og stykker derav, ikke utbeinet, av tamsvin, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032201_2010"
+      ]
+    },
+    {
+      "code": "02032202_2010",
+      "label": "Boger og stykker derav, ikke utbeinet, av tamsvin, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032202_2010"
+      ]
+    },
+    {
+      "code": "02032209_2010",
+      "label": "Skinker, boger og stykker derav, av svin, unnt av tamsvin, ikke utbeinet, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032209_2010"
+      ]
+    },
+    {
+      "code": "02032211_2004",
+      "label": "Skinker og stykker derav, ikke utbeinet, av tamsvin, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032211_2004"
+      ]
+    },
+    {
+      "code": "02032219_2004",
+      "label": "Boger og stykker derav, ikke utbeinet, av tamsvin, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032219_2004"
+      ]
+    },
+    {
+      "code": "02032290_2004",
+      "label": "Skinker, boger og stykker derav, av svin, unnt av tamsvin, ikke utbeinet, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032290_2004"
+      ]
+    },
+    {
+      "code": "02032900_1988",
+      "label": "Kjøtt av svin, unnt hele og halve skrotter, skinker, boger, og stykker derav, ikke utbeinet, fryst (1988-2003) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032900_1988"
+      ]
+    },
+    {
+      "code": "02032901_2010",
+      "label": "Forparter og stykker derav, av tamsvin, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032901_2010"
+      ]
+    },
+    {
+      "code": "02032902_2010",
+      "label": "Kam og stykker derav, av tamsvin, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032902_2010"
+      ]
+    },
+    {
+      "code": "02032903_2010",
+      "label": "Flesk av tamsvin, utbeinet, som inneholder høyst 7 vektprosent kjøtt (såkalt småflesk), fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032903_2010"
+      ]
+    },
+    {
+      "code": "02032904_2010",
+      "label": "Sideflesk og stykker derav (heru ribbe), ikke utbeinet, av tamsvin, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032904_2010"
+      ]
+    },
+    {
+      "code": "02032905_2010",
+      "label": "Sideflesk og stykker derav (heru ribbe), utbeinet, av tamsvin, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032905_2010"
+      ]
+    },
+    {
+      "code": "02032907_2010",
+      "label": "Kjøtt av tamsvin, ikke utbeinet, unnt skinker, boger, forparter, kam, sideflesk og stykker av disse, hele og halve skrotter, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032907_2010"
+      ]
+    },
+    {
+      "code": "02032908_2010",
+      "label": "Kjøtt av tamsvin, utbeinet, unnt forparter, kam, småflesk, sideflesk og stykker av disse, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032908_2010"
+      ]
+    },
+    {
+      "code": "02032909_2010",
+      "label": "Kjøtt av svin, unnt tamsvin, unnt hele og halve skrotter, skinker, boger og stykker derav, fryst (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032909_2010"
+      ]
+    },
+    {
+      "code": "02032911_2004",
+      "label": "Forparter og stykker derav, av tamsvin, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032911_2004"
+      ]
+    },
+    {
+      "code": "02032913_2004",
+      "label": "Kam og stykker derav, av tamsvin, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032913_2004"
+      ]
+    },
+    {
+      "code": "02032916_2004",
+      "label": "Sideflesk og stykker derav (heru ribbe), utbeinet, av tamsvin, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032916_2004"
+      ]
+    },
+    {
+      "code": "02032917_2004",
+      "label": "Sideflesk og stykker derav (heru ribbe), ikke utbeinet, av tamsvin, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032917_2004"
+      ]
+    },
+    {
+      "code": "02032955_2004",
+      "label": "Kjøtt av tamsvin, utbeinet, unnt forparter, kam, sideflesk og stykker av disse, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032955_2004"
+      ]
+    },
+    {
+      "code": "02032959_2004",
+      "label": "Kjøtt av tamsvin, ikke utbeinet, unnt skinker, boger, forparter, kam, sideflesk og stykker av disse, hele og halve skrotter, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032959_2004"
+      ]
+    },
+    {
+      "code": "02032990_2004",
+      "label": "Kjøtt av svin, unnt tamsvin, unnt hele og halve skrotter, skinker, boger og stykker derav, fryst (2004-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02032990_2004"
+      ]
+    },
+    {
+      "code": "02041000_1988",
+      "label": "Lammekjøtt, hele eller halve skrotter, ferskt eller kjølt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02041000_1988"
+      ]
+    },
+    {
+      "code": "02042100_1988",
+      "label": "Sauekjøtt, hele eller halve skrotter, ferskt eller kjølt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02042100_1988"
+      ]
+    },
+    {
+      "code": "02042200_1988",
+      "label": "Sauekjøtt, ikke utbeinet, ikke hele og halve skrotter, ferskt eller kjølt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02042200_1988"
+      ]
+    },
+    {
+      "code": "02042300_1988",
+      "label": "Sauekjøtt, utbeinet, ferskt eller kjølt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02042300_1988"
+      ]
+    },
+    {
+      "code": "02043000_1988",
+      "label": "Lammekjøtt, hele eller halve skrotter, fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02043000_1988"
+      ]
+    },
+    {
+      "code": "02044100_1988",
+      "label": "Sauekjøtt, hele eller halve skrotter, fryst, ikke lam (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02044100_1988"
+      ]
+    },
+    {
+      "code": "02044200_1988",
+      "label": "Sauekjøtt, ikke utbeinet, ikke hele og halve skrotter, fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02044200_1988"
+      ]
+    },
+    {
+      "code": "02044300_1988",
+      "label": "Sauekjøtt, utbeinet, fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02044300_1988"
+      ]
+    },
+    {
+      "code": "02045000_1988",
+      "label": "Kjøtt av geiter, ferskt, kjølt eller fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02045000_1988"
+      ]
+    },
+    {
+      "code": "02050000_1988",
+      "label": "Kjøtt av hester, esler, muldyr eller mulesler, ferskt, kjølt eller fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02050000_1988"
+      ]
+    },
+    {
+      "code": "02061000_1988",
+      "label": "Spiselig slakteavfall av storfe, ferskt eller kjølt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02061000_1988"
+      ]
+    },
+    {
+      "code": "02062100_1988",
+      "label": "Tunger av storfe, fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02062100_1988"
+      ]
+    },
+    {
+      "code": "02062200_1988",
+      "label": "Lever av storfe, fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02062200_1988"
+      ]
+    },
+    {
+      "code": "02062900_1988",
+      "label": "Spiselig slakteavfall av storfe, unnt tunge og lever, fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02062900_1988"
+      ]
+    },
+    {
+      "code": "02063000_1988",
+      "label": "Spiselig slakteavfall av svin, ferskt eller kjølt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02063000_1988"
+      ]
+    },
+    {
+      "code": "02064100_1988",
+      "label": "Lever av svin, fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02064100_1988"
+      ]
+    },
+    {
+      "code": "02064900_1988",
+      "label": "Spiselig slakteavfall av svin, unnt lever, fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02064900_1988"
+      ]
+    },
+    {
+      "code": "02068000_1988",
+      "label": "Spiselig slakteavfall av sauer, geiter, hester, esler, muldyr eller mulesler, ferskt eller kjølt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02068000_1988"
+      ]
+    },
+    {
+      "code": "02069000_1988",
+      "label": "Spiselig slakteavfall av sauer, geiter, hester, esler, muldyr eller mulesler, fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02069000_1988"
+      ]
+    },
+    {
+      "code": "02071000_1988",
+      "label": "Fjærfe, ferskt eller kjølt, ikke oppdelt (1988-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02071000_1988"
+      ]
+    },
+    {
+      "code": "02071100_1996",
+      "label": "Høns av arten Gallus domesticus, fersk eller kjølt, ikke oppdelt (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02071100_1996"
+      ]
+    },
+    {
+      "code": "02071200_1996",
+      "label": "Høns av arten Gallus domesticus, ikke oppdelt, fryst (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02071200_1996"
+      ]
+    },
+    {
+      "code": "02071300_1996",
+      "label": "Kjøttstykker og spiselig slakteavfall av hønsearten Gallus domesticus, fersk eller kjølt (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02071300_1996"
+      ]
+    },
+    {
+      "code": "02071410_1996",
+      "label": "Lever av hønsearten Gallus domesticus, fryst (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02071410_1996"
+      ]
+    },
+    {
+      "code": "02071490_1996",
+      "label": "Kjøttstykker og spiselig slakteavfall av høns av arten Gallus domesticus, ikke lever, fryst (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02071490_1996"
+      ]
+    },
+    {
+      "code": "02072100_1988",
+      "label": "Høns av arten Gallus domesticus, ikke oppdelt, fryst (1988-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02072100_1988"
+      ]
+    },
+    {
+      "code": "02072200_1988",
+      "label": "Kalkuner, ikke oppdelt, fryst (1988-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02072200_1988"
+      ]
+    },
+    {
+      "code": "02072300_1988",
+      "label": "Ender, gjess og perlehøns, ikke oppdelt, fryst (1988-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02072300_1988"
+      ]
+    },
+    {
+      "code": "02072400_1996",
+      "label": "Kalkuner, ikke oppdelt, fersk eller kjølt (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02072400_1996"
+      ]
+    },
+    {
+      "code": "02072500_1996",
+      "label": "Kalkuner, ikke oppdelt, fryst (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02072500_1996"
+      ]
+    },
+    {
+      "code": "02072600_1996",
+      "label": "Kjøttstykker og spiselig slakteavfall av kalkuner, fersk eller kjølt (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02072600_1996"
+      ]
+    },
+    {
+      "code": "02072710_1996",
+      "label": "Kalkunlever, fryst (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02072710_1996"
+      ]
+    },
+    {
+      "code": "02072790_1996",
+      "label": "Kjøttstykker og spiselig slakteavfall av kalkuner, ikke lever, fryst (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02072790_1996"
+      ]
+    },
+    {
+      "code": "02073100_1988",
+      "label": "Fettlever av gjess eller ender, fersk eller kjølt (1988-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02073100_1988"
+      ]
+    },
+    {
+      "code": "02073200_1996",
+      "label": "Ender, gjess eller perlehøns, ikke oppdelt, fersk eller kjølt (1996-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02073200_1996"
+      ]
+    },
+    {
+      "code": "02073300_1996",
+      "label": "Ender, gjess eller perlehøns, ikke oppdelt, fryst (1996-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02073300_1996"
+      ]
+    },
+    {
+      "code": "02073400_1996",
+      "label": "Fettlever av ender, gjess eller perlehøns, fersk eller kjølt (1996-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02073400_1996"
+      ]
+    },
+    {
+      "code": "02073500_1996",
+      "label": "Kjøttstykker og spiselig slakteavfall av ender, gjess eller perlehøns, ikke fettlever, fersk eller kjølt (1996-2010) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02073500_1996"
+      ]
+    },
+    {
+      "code": "02073501_2011",
+      "label": "Bryst og stykker derav av ender, fersk eller kjølt (2011-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02073501_2011"
+      ]
+    },
+    {
+      "code": "02073509_2011",
+      "label": "Kjøttstykker og spiselig slakteavfall av ender, gjess eller perlehøns, unnt bryst og stykker derav av ender eller fettlever, fersk eller kjølt (2011-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02073509_2011"
+      ]
+    },
+    {
+      "code": "02073610_1996",
+      "label": "Lever av ender, gjess eller perlehøns, fryst (1996-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02073610_1996"
+      ]
+    },
+    {
+      "code": "02073690_1996",
+      "label": "Kjøttstykker og spiselig slakteavfall av ender, gjess el perlehøns, unnt lever, fryst (1996-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02073690_1996"
+      ]
+    },
+    {
+      "code": "02073900_1988",
+      "label": "Kjøttstykker og spiselig slakteavfall av fjærfe, ferskt eller kjølt, unnt fettlever av gjess eller ender (1988-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02073900_1988"
+      ]
+    },
+    {
+      "code": "02074100_1988",
+      "label": "Kjøttstykker og spiselig slakteavfall av høns av arten Gallus domesticus, fryst, unnt lever (1988-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02074100_1988"
+      ]
+    },
+    {
+      "code": "02074100_2012",
+      "label": "Ender, ikke oppdelt, fersk eller kjølt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02074100_2012"
+      ]
+    },
+    {
+      "code": "02074200_1988",
+      "label": "Kjøttstykker og spiselig slakteavfall av kalkuner, fryst, unnt lever (1988-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02074200_1988"
+      ]
+    },
+    {
+      "code": "02074200_2012",
+      "label": "Ender, ikke oppdelt, fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02074200_2012"
+      ]
+    },
+    {
+      "code": "02074300_1988",
+      "label": "Kjøttstykker og spiselig slakteavfall av ender, gjess eller perlehøns, fryst, unnt lever (1988-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02074300_1988"
+      ]
+    },
+    {
+      "code": "02074300_2012",
+      "label": "Fettlever av ender, fersk eller kjølt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02074300_2012"
+      ]
+    },
+    {
+      "code": "02074401_2012",
+      "label": "Bryst og stykker derav av ender, fersk eller kjølt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02074401_2012"
+      ]
+    },
+    {
+      "code": "02074409_2012",
+      "label": "Kjøttstykker og spiselig slakteavfall av ender, unnt fettlever, bryst og stykker derav, fersk eller kjølt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02074409_2012"
+      ]
+    },
+    {
+      "code": "02074510_2012",
+      "label": "Lever av ender, fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02074510_2012"
+      ]
+    },
+    {
+      "code": "02074590_2012",
+      "label": "Kjøttstykker og spiselig slakteavfall av ender, unnt lever, fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02074590_2012"
+      ]
+    },
+    {
+      "code": "02075000_1988",
+      "label": "Lever av fjærfe, fryst (1988-1992) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02075000_1988"
+      ]
+    },
+    {
+      "code": "02075001_1993",
+      "label": "Fettlever av gjess eller ender, fryst (1993-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02075001_1993"
+      ]
+    },
+    {
+      "code": "02075009_1993",
+      "label": "Lever av fjærfe, fryst, unnt fettlever av gjess og ender (1993-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02075009_1993"
+      ]
+    },
+    {
+      "code": "02075100_2012",
+      "label": "Gjess, ikke oppdelt, fersk eller kjølt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02075100_2012"
+      ]
+    },
+    {
+      "code": "02075200_2012",
+      "label": "Gjess, ikke oppdelt, fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02075200_2012"
+      ]
+    },
+    {
+      "code": "02075300_2012",
+      "label": "Fettlever av gjess, fersk eller kjølt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02075300_2012"
+      ]
+    },
+    {
+      "code": "02075400_2012",
+      "label": "Kjøttstykker og spiselig slakteavfall av gjess, unnt fettlever, fersk eller kjølt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02075400_2012"
+      ]
+    },
+    {
+      "code": "02075510_2012",
+      "label": "Lever av gjess, fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02075510_2012"
+      ]
+    },
+    {
+      "code": "02075590_2012",
+      "label": "Kjøttstykker og spiselig slakteavfall av gjess, unnt lever, fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02075590_2012"
+      ]
+    },
+    {
+      "code": "02076010_2012",
+      "label": "Perlehøns, ikke oppdelt, fersk, kjølt eller fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02076010_2012"
+      ]
+    },
+    {
+      "code": "02076090_2012",
+      "label": "Kjøttstykker og spiselig slakteavfall av perlehøns, fersk, kjølt eller fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02076090_2012"
+      ]
+    },
+    {
+      "code": "02081000_1988",
+      "label": "Kjøtt og spiselig slakteavfall av kaniner eller harer, ferskt, kjølt eller fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02081000_1988"
+      ]
+    },
+    {
+      "code": "02082000_1988",
+      "label": "Froskelår, ferskt, kjølt eller fryst (1988-2006) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02082000_1988"
+      ]
+    },
+    {
+      "code": "02083000_2002",
+      "label": "Kjøtt og spiselig slakteavfall av primater, ferskt, kjølt eller fryst (2002-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02083000_2002"
+      ]
+    },
+    {
+      "code": "02084010_2002",
+      "label": "Kjøtt og spiselig slakteavfall av hval, ferskt, kjølt eller fryst (2002-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02084010_2002"
+      ]
+    },
+    {
+      "code": "02084090_2002",
+      "label": "Kjøtt og spiselig slakteavfall av delfiner, niser (Cetacea), manater og sjøkuer (Sirenia), ferskt, kjølt eller fryst (2002-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02084090_2002"
+      ]
+    },
+    {
+      "code": "02084091_2012",
+      "label": "Kjøtt og spiselig slakteavfall av seler, ferskt, kjølt eller fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02084091_2012"
+      ]
+    },
+    {
+      "code": "02084099_2012",
+      "label": "Kjøtt og spiselig slakteavfall av delfiner, niser, manater, sjøkuer, sjøløver og hvalrosser, unnt hvaler og seler, ferskt, kjølt eller fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02084099_2012"
+      ]
+    },
+    {
+      "code": "02085000_2002",
+      "label": "Kjøtt og spiselig slakteavfall, av reptiler (herunder slanger og skilpadder), ferskt, kjølt eller fryst (2002-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02085000_2002"
+      ]
+    },
+    {
+      "code": "02086000_2012",
+      "label": "Kjøtt og spiselig slakteavfall av kameler og andre kameldyr (Camelidae), ferskt, kjølt eller fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02086000_2012"
+      ]
+    },
+    {
+      "code": "02089010_1988",
+      "label": "Tunger, ferskt, kjølt eller fryst (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089010_1988"
+      ]
+    },
+    {
+      "code": "02089020_1995",
+      "label": "Kjøtt og spiselig slakteavfall av rein, ferskt, kjølt eller fryst (1995-1995) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089020_1995"
+      ]
+    },
+    {
+      "code": "02089021_1988",
+      "label": "Kjøtt og spiselig slakteavfall av rein, ferskt, kjølt eller fryst (1988-1994) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089021_1988"
+      ]
+    },
+    {
+      "code": "02089021_1996",
+      "label": "Hele og halve skrotter av rein, unntatt tunger, fersk, kjølt eller fryst (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089021_1996"
+      ]
+    },
+    {
+      "code": "02089022_1988",
+      "label": "Kjøtt og spiselig slakteavfall av skogsfugl og ryper, ferskt, kjølt eller fryst (1988-1994) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089022_1988"
+      ]
+    },
+    {
+      "code": "02089022_1996",
+      "label": "Kjøttstykker, ikke utbeinet, av rein, unntatt tunger, fersk, kjølt eller fryst (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089022_1996"
+      ]
+    },
+    {
+      "code": "02089029_1996",
+      "label": "Kjøtt av rein, utbeinet, fersk, kjølt eller fryst (1996-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089029_1996"
+      ]
+    },
+    {
+      "code": "02089030_1995",
+      "label": "Kjøtt og spiselig slakteavfall av skogsfugl og ryper, ferskt, kjølt eller fryst (1995-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089030_1995"
+      ]
+    },
+    {
+      "code": "02089041_1995",
+      "label": "Kjøtt og spiselig slakteavfall av hjort, ferskt, kjølt eller fryst (1995-2000) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089041_1995"
+      ]
+    },
+    {
+      "code": "02089042_1995",
+      "label": "Kjøtt og spiselig slakteavfall av elg, ferskt, kjølt eller fryst (1995-1999) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089042_1995"
+      ]
+    },
+    {
+      "code": "02089043_2000",
+      "label": "Hele og halve skrotter av elg, ferskt, kjølt eller fryst (2000-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089043_2000"
+      ]
+    },
+    {
+      "code": "02089044_2000",
+      "label": "Kjøttstykker, ikke utbeinet, av elg, ferskt, kjølt eller fryst (2000-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089044_2000"
+      ]
+    },
+    {
+      "code": "02089045_2000",
+      "label": "Kjøtt av elg, utbeinet, ferskt, kjølt eller fryst (2000-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089045_2000"
+      ]
+    },
+    {
+      "code": "02089046_2001",
+      "label": "Hele og halve skrotter av hjort, ferskt, kjølt eller fryst (2001-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089046_2001"
+      ]
+    },
+    {
+      "code": "02089047_2001",
+      "label": "Kjøttstykker, ikke utbeinet, av hjort, ferskt, kjølt eller fryst (2001-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089047_2001"
+      ]
+    },
+    {
+      "code": "02089048_2001",
+      "label": "Kjøtt av hjort, utbeinet, ferskt, kjølt eller fryst (2001-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089048_2001"
+      ]
+    },
+    {
+      "code": "02089050_1995",
+      "label": "Kjøtt og spiselig slakteavfall av hval, ferskt, kjølt eller fryst (1995-2001) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089050_1995"
+      ]
+    },
+    {
+      "code": "02089060_2007",
+      "label": "Froskelår, ferskt, kjølt eller fryst (2007-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089060_2007"
+      ]
+    },
+    {
+      "code": "02089091_1988",
+      "label": "Kjøtt og spiselig slakteavfall av hjort, ferskt, kjølt eller fryst (1988-1994) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089091_1988"
+      ]
+    },
+    {
+      "code": "02089092_1988",
+      "label": "Kjøtt og spiselig slakteavfall av elg, ferskt, kjølt eller fryst (1988-1994) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089092_1988"
+      ]
+    },
+    {
+      "code": "02089093_1988",
+      "label": "Kjøtt og spiselig slakteavfall av hval, ferskt, kjølt eller fryst (1988-1994) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089093_1988"
+      ]
+    },
+    {
+      "code": "02089094_2001",
+      "label": "Kjøtt og spiselig slakteavfall, unntatt tunger, av struts, ferskt, kjølt eller fryst (2001-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089094_2001"
+      ]
+    },
+    {
+      "code": "02089095_2002",
+      "label": "Kjøtt og spiselig slakteavfall, unntatt tunger, av sel, ferskt, kjølt eller fryst (2002-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089095_2002"
+      ]
+    },
+    {
+      "code": "02089099_1988",
+      "label": "Kjøtt og spiselig slakteavfall, ferskt, kjølt eller fryst, i.e.n. (1988-2000) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089099_1988"
+      ]
+    },
+    {
+      "code": "02089099_2001",
+      "label": "Kjøtt og spiselig slakteavfall, i.e.n., ferskt, kjølt eller fryst (2001-2001) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089099_2001"
+      ]
+    },
+    {
+      "code": "02089099_2002",
+      "label": "Kjøtt og spiselig slakteavfall, unntatt tunger, i.e.n., ferskt, kjølt eller fryst (2002-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02089099_2002"
+      ]
+    },
+    {
+      "code": "02090000_1988",
+      "label": "Svinefett rent for kjøtt og fjærfekjøtt, ikke utsmeltet eller ekstrahert på annen måte, ferskt, kjølt, fryst, saltet, i saltlake, tørket el røykt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02090000_1988"
+      ]
+    },
+    {
+      "code": "02091000_2012",
+      "label": "Svinefett rent for kjøtt, ikke utsmeltet eller ekstrahert på annen måte, ferskt, kjølt, fryst, saltet, i saltlake, tørket el røykt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02091000_2012"
+      ]
+    },
+    {
+      "code": "02099000_2012",
+      "label": "Fjærfefett, ikke utsmeltet eller ekstrahert på annen måte, ferskt, kjølt, fryst, saltet, i saltlake, tørket el røykt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02099000_2012"
+      ]
+    },
+    {
+      "code": "02101100_1988",
+      "label": "Skinker, boger og stykker derav av svin, ikke utbeinet, saltet, i saltlake, tørket eller røykt (1988-2009) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02101100_1988"
+      ]
+    },
+    {
+      "code": "02101101_2010",
+      "label": "Skinker, boger og stykker derav av svin, som inneholder minst 15 vektprosent bein, saltet, i saltlake, tørket eller røykt (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02101101_2010"
+      ]
+    },
+    {
+      "code": "02101109_2010",
+      "label": "Skinker, boger og stykker derav av svin, som inneholder under 15 vektprosent bein, saltet, i saltlake, tørket eller røykt, ikke utbeinet (2010-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02101109_2010"
+      ]
+    },
+    {
+      "code": "02101200_1988",
+      "label": "Sideflesk og stykker derav av svin, saltet, i saltlake, tørket eller røykt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02101200_1988"
+      ]
+    },
+    {
+      "code": "02101900_1988",
+      "label": "Kjøtt av svin, unnt skinker, boger og stykker derav, ikke utbeinet, sideflesk og stykker derav, saltet, i saltlake, tørket, røykt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02101900_1988"
+      ]
+    },
+    {
+      "code": "02102000_1988",
+      "label": "Kjøtt av storfe, saltet, i saltlake, tørket eller røykt (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02102000_1988"
+      ]
+    },
+    {
+      "code": "02109000_1988",
+      "label": "Kjøtt, herunder spiselig mel av kjøtt el slakteavfall, saltet, i saltlake, tørket el røykt, unnt av svin, storfe og fjærfe (1988-2001) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02109000_1988"
+      ]
+    },
+    {
+      "code": "02109100_2002",
+      "label": "Kjøtt, herunder spiselig mel av kjøtt el slakteavfall, saltet, i saltlake, tørket el røykt av primater (2002-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02109100_2002"
+      ]
+    },
+    {
+      "code": "02109200_2002",
+      "label": "Kjøtt, heru spiselig mel av kjøtt el slakteavfall, saltet, i saltlake, tørket el røykt av hvaler, delfiner og niser (Cetacea); av manater og sjøkuer (Sirenia) (2002-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02109200_2002"
+      ]
+    },
+    {
+      "code": "02109200_2012",
+      "label": "Kjøtt av hvaler,delfiner og niser;av manater og sjøkuer;av seler,sjøløver og hvalrosser,heru spiselig mel av kjøtt/slakteavfall,saltet/i saltlake/tørket/røykt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02109200_2012"
+      ]
+    },
+    {
+      "code": "02109300_2002",
+      "label": "Kjøtt, herunder spiselig mel av kjøtt el slakteavfall, saltet, i saltlake, tørket el røykt av reptiler (herunder slanger og skilpadder) (2002-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02109300_2002"
+      ]
+    },
+    {
+      "code": "02109901_2002",
+      "label": "Kjøtt, herunder spiselig mel av kjøtt el slakteavfall, saltet, i saltlake, tørket el røykt av hester (2002-2014) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02109901_2002"
+      ]
+    },
+    {
+      "code": "02109902_2002",
+      "label": "Kjøtt av sau eller geit, herunder spiselig mel av kjøtt el slakteavfall, saltet, i saltlake, tørket el røykt (2002-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02109902_2002"
+      ]
+    },
+    {
+      "code": "02109903_2002",
+      "label": "Kjøtt av reinsdyr, herunder spiselig mel av kjøtt el slakteavfall, saltet, i saltlake, tørket el røykt (2002-2014) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02109903_2002"
+      ]
+    },
+    {
+      "code": "02109904_2002",
+      "label": "Kjøtt av fjærfe, herunder spiselig mel av kjøtt el slakteavfall, saltet, i saltlake, tørket el røykt (2002-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02109904_2002"
+      ]
+    },
+    {
+      "code": "02109908_2015",
+      "label": "Kjøtt, herunder spiselig mel av kjøtt el slakteavfall, saltet, i saltlake, tørket el røykt, i.e.n. (2015-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02109908_2015"
+      ]
+    },
+    {
+      "code": "02109909_2002",
+      "label": "Kjøtt, herunder spiselig mel av kjøtt el slakteavfall, saltet, i saltlake, tørket el røykt, i.e.n. (2002-2014) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "02109909_2002"
+      ]
+    },
+    {
+      "code": "03011000_1988",
+      "label": "Akvariefisk, levende (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03011000_1988"
+      ]
+    },
+    {
+      "code": "03011100_2012",
+      "label": "Akvariefisk, ferskvannsfisk, levende (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03011100_2012"
+      ]
+    },
+    {
+      "code": "03011900_2012",
+      "label": "Akvariefisk, unnt ferskvannsfisk, levende (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03011900_2012"
+      ]
+    },
+    {
+      "code": "03019100_1988",
+      "label": "Ørret, levende (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019100_1988"
+      ]
+    },
+    {
+      "code": "03019200_1988",
+      "label": "Ål (Anguilla-arter), levende (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019200_1988"
+      ]
+    },
+    {
+      "code": "03019300_1988",
+      "label": "Karpe, levende (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019300_1988"
+      ]
+    },
+    {
+      "code": "03019300_2017",
+      "label": "Karpe, levende, av artene (Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophthalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.) (2017-) (M1=kg,   M2=nei)",
+      "valueMap": [
+        "03019300_2017"
+      ]
+    },
+    {
+      "code": "03019400_2007",
+      "label": "Makrellstørje, levende (2007-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019400_2007"
+      ]
+    },
+    {
+      "code": "03019400_2012",
+      "label": "Makrellstørje (atlanterhavs- og stillehavs-), levende (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019400_2012"
+      ]
+    },
+    {
+      "code": "03019500_2007",
+      "label": "Sydlig blåfinnet tunfisk, levende (2007-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019500_2007"
+      ]
+    },
+    {
+      "code": "03019901_1988",
+      "label": "Laks (f.eks yngel, smolt), levende (1988-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019901_1988"
+      ]
+    },
+    {
+      "code": "03019902_1992",
+      "label": "Piggvar (f.eks yngel, smolt), levende (1992-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019902_1992"
+      ]
+    },
+    {
+      "code": "03019903_2016",
+      "label": "Stør (Acipenser spp.), levende (2016-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019903_2016"
+      ]
+    },
+    {
+      "code": "03019904_2016",
+      "label": "Leppefisk (Labridae spp.), levende (2016-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019904_2016"
+      ]
+    },
+    {
+      "code": "03019905_2016",
+      "label": "Rognkjeks, rognkall (Cyclopterus lumpus), levende (2016-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019905_2016"
+      ]
+    },
+    {
+      "code": "03019906_2016",
+      "label": "Arktisk røye (Salvelinus alpinus), levende (2016-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019906_2016"
+      ]
+    },
+    {
+      "code": "03019908_2016",
+      "label": "Levende fisk, unnt akvariefisk, ørret, ål, karpe, makrellstørje, sydlig blåfinnet tunfisk, laks, piggvar, stør, leppefisk, rognkjeks, rognkall og arktisk røye (2016-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019908_2016"
+      ]
+    },
+    {
+      "code": "03019908_2017",
+      "label": "Levende fisk, unnt akvariefisk, ørret, ål, karpe, makrellstørje, sydlig blåfinnet tunfisk, laks, piggvar, stør, leppefisk, rognkjeks, rognkall og arktisk røye (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019908_2017"
+      ]
+    },
+    {
+      "code": "03019909_1988",
+      "label": "Levende fisk, unnt ørret, ål, karpe, laks, piggvar og akvariefisk (1988-1991) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019909_1988"
+      ]
+    },
+    {
+      "code": "03019909_1992",
+      "label": "Levende fisk, unnt ørret, ål, karpe, laks, piggvar og akvariefisk (1992-2006) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019909_1992"
+      ]
+    },
+    {
+      "code": "03019909_2007",
+      "label": "Levende fisk, unnt ørret, ål, karpe, makrellstørje, sydlig blåfinnet tunfisk, laks, piggvar og akvariefisk (2007-2015) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03019909_2007"
+      ]
+    },
+    {
+      "code": "03021101_1988",
+      "label": "Ørret, oppdrettet, fersk eller kjølt (1988-2003) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021101_1988"
+      ]
+    },
+    {
+      "code": "03021102_2004",
+      "label": "Ørret, oppdrettet, med hode, fersk eller kjølt (2004-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021102_2004"
+      ]
+    },
+    {
+      "code": "03021103_2004",
+      "label": "Ørret, oppdrettet, unnt med hode, fersk eller kjølt (2004-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021103_2004"
+      ]
+    },
+    {
+      "code": "03021109_1988",
+      "label": "Ørret, ikke oppdrettet, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021109_1988"
+      ]
+    },
+    {
+      "code": "03021111_2012",
+      "label": "Ørret, oppdrettet, med hode, fersk eller kjølt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021111_2012"
+      ]
+    },
+    {
+      "code": "03021119_2012",
+      "label": "Ørret, oppdrettet, unnt med hode, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021119_2012"
+      ]
+    },
+    {
+      "code": "03021119_2017",
+      "label": "Ørret (Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache og Oncorhynchus chrysogaster), oppdrettet, unnt med hode, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021119_2017"
+      ]
+    },
+    {
+      "code": "03021190_2012",
+      "label": "Ørret, ikke oppdrettet, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021190_2012"
+      ]
+    },
+    {
+      "code": "03021190_2017",
+      "label": "Ørret (Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache og Oncorhynchus chrysogaster), ikke oppdrettet, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021190_2017"
+      ]
+    },
+    {
+      "code": "03021201_1988",
+      "label": "Stillehavslaks, atlanterhavslaks og donaulaks, oppdrettet, fersk eller kjølt (1988-1997) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021201_1988"
+      ]
+    },
+    {
+      "code": "03021201_1998",
+      "label": "Stillehavslaks, atlanterhavslaks og donaulaks, oppdrettet, med hode, fersk eller kjølt (1998-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021201_1998"
+      ]
+    },
+    {
+      "code": "03021202_1998",
+      "label": "Stillehavslaks, atlanterhavslaks og donaulaks, oppdrettet, uten hode, fersk eller kjølt (1998-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021202_1998"
+      ]
+    },
+    {
+      "code": "03021209_1988",
+      "label": "Stillehavslaks, atlanterhavslaks og donaulaks, ikke oppdrettet, fersk eller kjølt (1988-1997) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021209_1988"
+      ]
+    },
+    {
+      "code": "03021209_1998",
+      "label": "Stillehavslaks, atlanterhavslaks og donaulaks, ikke oppdrettet, fersk eller kjølt (1998-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021209_1998"
+      ]
+    },
+    {
+      "code": "03021300_2012",
+      "label": "Stillehavslaks, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021300_2012"
+      ]
+    },
+    {
+      "code": "03021300_2017",
+      "label": "Stillehavslaks (Oncorhynchus nerka, Oncorhynchus gorbuscha, Oncorhynchus keta, Oncorhynchus tschawytscha, Oncorhynchus kisutch, Oncorhynchus masou og Oncorhynchus rhodurus), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021300_2017"
+      ]
+    },
+    {
+      "code": "03021411_2012",
+      "label": "Atlanterhavslaks (Salmo salar) og donaulaks (Hucho hucho), oppdrettet, med hode, fersk eller kjølt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021411_2012"
+      ]
+    },
+    {
+      "code": "03021419_2012",
+      "label": "Atlanterhavslaks (Salmo salar) og donaulaks (Hucho hucho), oppdrettet, uten hode, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021419_2012"
+      ]
+    },
+    {
+      "code": "03021419_2017",
+      "label": "Atlanterhavslaks (Salmo salar) og donaulaks (Hucho hucho), oppdrettet, uten hode, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021419_2017"
+      ]
+    },
+    {
+      "code": "03021490_2012",
+      "label": "Atlanterhavslaks (Salmo salar) og donaulaks (Hucho hucho) ikke oppdrettet, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021490_2012"
+      ]
+    },
+    {
+      "code": "03021490_2017",
+      "label": "Atlanterhavslaks (Salmo salar) og donaulaks (Hucho hucho) ikke oppdrettet, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021490_2017"
+      ]
+    },
+    {
+      "code": "03021900_1988",
+      "label": "Laksefisk unnt ørret, stillehavslaks, atlanterhavslaks, donaulaks og røye, fersk eller kjølt (1988-1991) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021900_1988"
+      ]
+    },
+    {
+      "code": "03021901_1992",
+      "label": "Røye, fersk eller kjølt (1992-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021901_1992"
+      ]
+    },
+    {
+      "code": "03021901_2017",
+      "label": "Røye (Salvelinus spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021901_2017"
+      ]
+    },
+    {
+      "code": "03021909_1992",
+      "label": "Laksefisk, unnt ørret, stillehavslaks, atlanterhavslaks, donaulaks og røye, fersk eller kjølt (1992-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021909_1992"
+      ]
+    },
+    {
+      "code": "03021909_2017",
+      "label": "Laksefisk (salmonidae), unnt ørret, stillehavslaks, atlanterhavslaks, donaulaks og røye, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03021909_2017"
+      ]
+    },
+    {
+      "code": "03022101_1988",
+      "label": "Blåkveite, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022101_1988"
+      ]
+    },
+    {
+      "code": "03022102_1988",
+      "label": "Kveite unnt blåkveite, fersk eller kjølt (1988-2000) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022102_1988"
+      ]
+    },
+    {
+      "code": "03022103_2006",
+      "label": "Kveite, unnt blåkveite, oppdrettet, fersk eller kjølt (2006-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022103_2006"
+      ]
+    },
+    {
+      "code": "03022104_2006",
+      "label": "Kveite, unnt blåkveite, ikke oppdrettet, fersk eller kjølt (2006-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022104_2006"
+      ]
+    },
+    {
+      "code": "03022105_2001",
+      "label": "Atlanterhavskveite, oppdrettet, fersk eller kjølt (2001-2005) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022105_2001"
+      ]
+    },
+    {
+      "code": "03022106_2001",
+      "label": "Atlanterhavskveite, unntatt oppdrettet, fersk eller kjølt (2001-2005) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022106_2001"
+      ]
+    },
+    {
+      "code": "03022107_2001",
+      "label": "Stillehavskveite, fersk eller kjølt (2001-2005) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022107_2001"
+      ]
+    },
+    {
+      "code": "03022110_2012",
+      "label": "Blåkveite, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022110_2012"
+      ]
+    },
+    {
+      "code": "03022110_2017",
+      "label": "Blåkveite (Reinhardtius hippoglossoides), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022110_2017"
+      ]
+    },
+    {
+      "code": "03022191_2012",
+      "label": "Kveite, unnt blåkveite, oppdrettet, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022191_2012"
+      ]
+    },
+    {
+      "code": "03022191_2017",
+      "label": "Kveite (Hippoglossus hippoglossus, Hippoglossus stenolepis), unnt blåkveite, oppdrettet, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022191_2017"
+      ]
+    },
+    {
+      "code": "03022199_2012",
+      "label": "Kveite, unnt blåkveite, ikke oppdrettet, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022199_2012"
+      ]
+    },
+    {
+      "code": "03022199_2017",
+      "label": "Kveite (Hippoglossus hippoglossus, Hippoglossus stenolepis), unnt blåkveite, ikke oppdrettet, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022199_2017"
+      ]
+    },
+    {
+      "code": "03022200_1988",
+      "label": "Rødspette, fersk eller kjølt (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022200_1988"
+      ]
+    },
+    {
+      "code": "03022200_2017",
+      "label": "Rødspette (Pleuronectes platessa), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022200_2017"
+      ]
+    },
+    {
+      "code": "03022300_1988",
+      "label": "Tunge, fersk eller kjølt (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022300_1988"
+      ]
+    },
+    {
+      "code": "03022300_2017",
+      "label": "Tunge (Solea spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022300_2017"
+      ]
+    },
+    {
+      "code": "03022401_2012",
+      "label": "Piggvar, oppdrettet, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022401_2012"
+      ]
+    },
+    {
+      "code": "03022401_2017",
+      "label": "Piggvar (Psetta maxima), oppdrettet, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022401_2017"
+      ]
+    },
+    {
+      "code": "03022409_2012",
+      "label": "Piggvar, ikke oppdrettet, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022409_2012"
+      ]
+    },
+    {
+      "code": "03022409_2017",
+      "label": "Piggvar (Psetta maxima), ikke oppdrettet, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022409_2017"
+      ]
+    },
+    {
+      "code": "03022900_1988",
+      "label": "Flyndrefisk, fersk eller kjølt, unnt kveite, rødspette og tunge (1988-2000) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022900_1988"
+      ]
+    },
+    {
+      "code": "03022900_2012",
+      "label": "Flyndrefisk, unnt kveite, rødspette, tunge og piggvar, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022900_2012"
+      ]
+    },
+    {
+      "code": "03022900_2017",
+      "label": "Flyndrefisk, unnt kveite, rødspette, tunge og piggvar, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022900_2017"
+      ]
+    },
+    {
+      "code": "03022901_2001",
+      "label": "Piggvar, oppdrettet, fersk eller kjølt (2001-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022901_2001"
+      ]
+    },
+    {
+      "code": "03022909_2001",
+      "label": "Flyndrefisk, unnt kveite, rødspette, tunge og oppdrettet piggvar, fersk eller kjølt (2001-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03022909_2001"
+      ]
+    },
+    {
+      "code": "03023100_1988",
+      "label": "Albakor eller langfinnet tunfisk, fersk eller kjølt (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023100_1988"
+      ]
+    },
+    {
+      "code": "03023100_2017",
+      "label": "Albakor eller langfinnet tunfisk (Thunnus alalunga), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023100_2017"
+      ]
+    },
+    {
+      "code": "03023200_1988",
+      "label": "Gulfinnet tunfisk, fersk eller kjølt (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023200_1988"
+      ]
+    },
+    {
+      "code": "03023200_2017",
+      "label": "Gulfinnet tunfisk (Thunnus albacares), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023200_2017"
+      ]
+    },
+    {
+      "code": "03023300_1988",
+      "label": "Stripet pelamide (tunfisk), fersk eller kjølt (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023300_1988"
+      ]
+    },
+    {
+      "code": "03023300_2017",
+      "label": "Stripet pelamide (tunfisk), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023300_2017"
+      ]
+    },
+    {
+      "code": "03023400_2002",
+      "label": "Storøyet tunfisk, (Thunnus obesus) fersk eller kjølt (2002-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023400_2002"
+      ]
+    },
+    {
+      "code": "03023400_2017",
+      "label": "Storøyet tunfisk (Thunnus obesus), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023400_2017"
+      ]
+    },
+    {
+      "code": "03023500_2002",
+      "label": "Makrellstørje (Thunnus thynnus), fersk eller kjølt (2002-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023500_2002"
+      ]
+    },
+    {
+      "code": "03023501_2012",
+      "label": "Atlanterhavsmakrellstørje (Thunnus thynnus), fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023501_2012"
+      ]
+    },
+    {
+      "code": "03023501_2017",
+      "label": "Atlanterhavsmakrellstørje (Thunnus thynnus), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023501_2017"
+      ]
+    },
+    {
+      "code": "03023502_2012",
+      "label": "Stillehavsmakrellstørje (Thunnus orientalis), fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023502_2012"
+      ]
+    },
+    {
+      "code": "03023502_2017",
+      "label": "Stillehavsmakrellstørje (Thunnus orientalis), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023502_2017"
+      ]
+    },
+    {
+      "code": "03023600_2002",
+      "label": "Sydlig blåfinnet tunfisk (Thunnus maccoyii), fersk eller kjølt (2002-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023600_2002"
+      ]
+    },
+    {
+      "code": "03023600_2017",
+      "label": "Sydlig blåfinnet tunfisk (Thunnus maccoyii), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023600_2017"
+      ]
+    },
+    {
+      "code": "03023900_1988",
+      "label": "Tunfisk unnt albakor, langfinnet-, gulfinnet- eller stripet pelamide, fersk eller kjølt (1988-2001) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023900_1988"
+      ]
+    },
+    {
+      "code": "03023900_2012",
+      "label": "Tunfisk av slekten Thunnus,unnt albakor,stripet pelamide,lang-/gulfinnet-,storøyet-,sydlig blåfinnet tunfisk,atlanterhavs-/stillehavsmakrellstørje,fersk/kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023900_2012"
+      ]
+    },
+    {
+      "code": "03023900_2017",
+      "label": "Størje (tunfisk) av slekten Thunnus, unnt albakor, stripet pelamide, langfinnet-, gulfinnet-, storøyet-, sydlig blåfinnet tunfisk, atlanterhavs- og stillehavsmakrellstørje, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023900_2017"
+      ]
+    },
+    {
+      "code": "03023909_2002",
+      "label": "Tunfisk) av slekten Thunnus, unnt albakor, stripet pelamide, langfinnet-, gulfinnet-, storøyet-, sydlig blåfinnet tunfisk og makrellstørje, fersk eller kjølt (2002-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03023909_2002"
+      ]
+    },
+    {
+      "code": "03024001_1988",
+      "label": "Vintersild, fersk eller kjølt (1988-2004) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024001_1988"
+      ]
+    },
+    {
+      "code": "03024002_1988",
+      "label": "Norsk vårgytende sild (heru mussa, småsild) unnt vintersild, fersk eller kjølt (1988-2004) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024002_1988"
+      ]
+    },
+    {
+      "code": "03024003_1988",
+      "label": "Nordsjøsild, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024003_1988"
+      ]
+    },
+    {
+      "code": "03024004_2005",
+      "label": "Norsk vårgytende sild (NVG-sild), fersk eller kjølt (2005-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024004_2005"
+      ]
+    },
+    {
+      "code": "03024009_1988",
+      "label": "Sild (Clupea harengus og Clupea pallasii), unnt nordsjøsild og norsk vårgytende sild (NVG-sild) , fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024009_1988"
+      ]
+    },
+    {
+      "code": "03024101_2012",
+      "label": "Nordsjøsild, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024101_2012"
+      ]
+    },
+    {
+      "code": "03024101_2017",
+      "label": "Nordsjøsild, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024101_2017"
+      ]
+    },
+    {
+      "code": "03024102_2012",
+      "label": "Norsk vårgytende sild (NVG-sild), fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024102_2012"
+      ]
+    },
+    {
+      "code": "03024102_2017",
+      "label": "Norsk vårgytende sild (NVG-sild), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024102_2017"
+      ]
+    },
+    {
+      "code": "03024109_2012",
+      "label": "Sild (Clupea harengus og Clupea pallasii), unnt nordsjøsild og norsk vårgytende sild (NVG-sild), fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024109_2012"
+      ]
+    },
+    {
+      "code": "03024109_2017",
+      "label": "Sild (Clupea harengus og Clupea pallasii), unnt nordsjøsild og norsk vårgytende sild (NVG-sild), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024109_2017"
+      ]
+    },
+    {
+      "code": "03024200_2012",
+      "label": "Ansjos, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024200_2012"
+      ]
+    },
+    {
+      "code": "03024200_2017",
+      "label": "Ansjos (Engraulis spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024200_2017"
+      ]
+    },
+    {
+      "code": "03024300_2012",
+      "label": "Sardiner, sardinella, brisling, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024300_2012"
+      ]
+    },
+    {
+      "code": "03024300_2017",
+      "label": "Sardiner (Sardina pilchardus, Sardinops spp), sardinella (Sardinella spp.), brisling (Sprattus sprattus), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024300_2017"
+      ]
+    },
+    {
+      "code": "03024400_2012",
+      "label": "Makrell, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024400_2012"
+      ]
+    },
+    {
+      "code": "03024400_2017",
+      "label": "Makrell (Scomber scombrus, Scomber australasicus, Scomber japonicus), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024400_2017"
+      ]
+    },
+    {
+      "code": "03024500_2012",
+      "label": "Taggmakrell (hestemakrell), fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024500_2012"
+      ]
+    },
+    {
+      "code": "03024500_2017",
+      "label": "Taggmakrell (hestemakrell) (Trachurus spp), fersk eller kjølt, ikke spiselige biprodukter (2017-2018) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024500_2017"
+      ]
+    },
+    {
+      "code": "03024501_2019",
+      "label": "Hestmakrell (Trachurus trachurus), fersk eller kjølt, ikke spiselige biprodukter (2019-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024501_2019"
+      ]
+    },
+    {
+      "code": "03024509_2019",
+      "label": "Hestmakrell (taggmakrell) (Trachurus spp.), unntatt hestmakrell (Trachurus trachurus), fersk eller kjølt, ikke spiselige biprodukter (2019-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024509_2019"
+      ]
+    },
+    {
+      "code": "03024600_2012",
+      "label": "Cobia, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024600_2012"
+      ]
+    },
+    {
+      "code": "03024600_2017",
+      "label": "Cobia (Rachycentron canadum), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024600_2017"
+      ]
+    },
+    {
+      "code": "03024700_2012",
+      "label": "Sverdfisk, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024700_2012"
+      ]
+    },
+    {
+      "code": "03024700_2017",
+      "label": "Sverdfisk (Xiphias gladius), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024700_2017"
+      ]
+    },
+    {
+      "code": "03024900_2017",
+      "label": "Indisk makrell, kongemakrell, smørfisk, stillehavsmakrellgjedde, alminnelig hestemakrell, lodde, kawakawa, pelamide, marlin, seilfisk, spydfisk, fersk eller kjølt, ikke spiselige biprodukter (2017-2019) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024900_2017"
+      ]
+    },
+    {
+      "code": "03024901_2020",
+      "label": "Lodde (Mallotus villosus), fersk eller kjølt, ikke spiselige biprodukter (2020-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024901_2020"
+      ]
+    },
+    {
+      "code": "03024909_2020",
+      "label": "Indisk makrell, kongemakrell, smørfisk, stillehavsmakrellgjedde, alminnelig hestemakrell, kawakawa, pelamide, marlin, seilfisk, spydfisk, fersk eller kjølt, ikke spiselige biprodukter (2020-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03024909_2020"
+      ]
+    },
+    {
+      "code": "03025000_1988",
+      "label": "Torsk, fersk eller kjølt (1988-2000) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025000_1988"
+      ]
+    },
+    {
+      "code": "03025001_2001",
+      "label": "Atlanterhavstorsk, oppdrettet, fersk eller kjølt (2001-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025001_2001"
+      ]
+    },
+    {
+      "code": "03025002_2001",
+      "label": "Atlanterhavstorsk, unntatt oppdrettet, fersk eller kjølt (2001-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025002_2001"
+      ]
+    },
+    {
+      "code": "03025009_2001",
+      "label": "Torsk, unntatt atlanterhavstorsk, fersk eller kjølt (2001-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025009_2001"
+      ]
+    },
+    {
+      "code": "03025110_2013",
+      "label": "Spiselige biprodukter av torsk (Gadus morhua, Gadus ogac, Gadus macrocephalus), fersk eller kjølt (2013-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025110_2013"
+      ]
+    },
+    {
+      "code": "03025111_2012",
+      "label": "Atlanterhavstorsk (Gadus morhua), oppdrettet, fersk eller kjølt (2012-2012) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025111_2012"
+      ]
+    },
+    {
+      "code": "03025119_2012",
+      "label": "Atlanterhavstorsk (Gadus morhua), unntatt oppdrettet, fersk eller kjølt (2012-2012) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025119_2012"
+      ]
+    },
+    {
+      "code": "03025121_2013",
+      "label": "Atlanterhavstorsk (Gadus morhua), unntatt spiselige biprodukter, oppdrettet, fersk eller kjølt (2013-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025121_2013"
+      ]
+    },
+    {
+      "code": "03025122_2015",
+      "label": "Skrei (Gadus morhua), unntatt spiselige biprodukter, ikke oppdrettet, fersk eller kjølt (2015-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025122_2015"
+      ]
+    },
+    {
+      "code": "03025123_2019",
+      "label": "Atlanterhavstorsk (Gadus morhua), levendelagret, unntatt skrei, ikke oppdrettet, fersk eller kjølt, ikke spiselige biprodukter (2019-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025123_2019"
+      ]
+    },
+    {
+      "code": "03025127_2019",
+      "label": "Atlanterhavstorsk (Gadus morhua) unntatt skrei, ikke oppdrettet eller levendelagret, fersk eller kjølt, ikke spiselige biprodukter (2019-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025127_2019"
+      ]
+    },
+    {
+      "code": "03025128_2015",
+      "label": "Atlanterhavstorsk (Gadus morhua) utenom skrei, unntatt spiselige biprodukter, ikke oppdrettet, fersk eller kjølt (2015-2018) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025128_2015"
+      ]
+    },
+    {
+      "code": "03025129_2013",
+      "label": "Atlanterhavstorsk (Gadus morhua), unntatt spiselige biprodukter, ikke oppdrettet, fersk eller kjølt (2013-2014) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025129_2013"
+      ]
+    },
+    {
+      "code": "03025190_2012",
+      "label": "Torsk, unntatt atlanterhavstorsk (Gadus morhua), fersk eller kjølt (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025190_2012"
+      ]
+    },
+    {
+      "code": "03025200_2012",
+      "label": "Hyse, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025200_2012"
+      ]
+    },
+    {
+      "code": "03025200_2017",
+      "label": "Hyse (Melanogrammus aeglefinus), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025200_2017"
+      ]
+    },
+    {
+      "code": "03025300_2012",
+      "label": "Sei, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025300_2012"
+      ]
+    },
+    {
+      "code": "03025300_2017",
+      "label": "Sei (Pollachius virens), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025300_2017"
+      ]
+    },
+    {
+      "code": "03025400_2012",
+      "label": "Lysing, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025400_2012"
+      ]
+    },
+    {
+      "code": "03025400_2017",
+      "label": "Lysing (Merluccius spp., Urophycis spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025400_2017"
+      ]
+    },
+    {
+      "code": "03025500_2012",
+      "label": "Alaskatheragra (Alaska pollack), fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025500_2012"
+      ]
+    },
+    {
+      "code": "03025500_2017",
+      "label": "Alaskatheragra (Alaska pollack) (Theragra chalcogramma), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025500_2017"
+      ]
+    },
+    {
+      "code": "03025600_2012",
+      "label": "Kolmule, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025600_2012"
+      ]
+    },
+    {
+      "code": "03025600_2017",
+      "label": "Kolmule (Micromesistius poutassou, Micromesistius australis), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025600_2017"
+      ]
+    },
+    {
+      "code": "03025901_2012",
+      "label": "Lyr, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025901_2012"
+      ]
+    },
+    {
+      "code": "03025901_2017",
+      "label": "Lyr (Pollachius pollachius), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025901_2017"
+      ]
+    },
+    {
+      "code": "03025902_2013",
+      "label": "Lange (Molva spp), fersk eller kjølt (2013-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025902_2013"
+      ]
+    },
+    {
+      "code": "03025902_2017",
+      "label": "Lange (Molva spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025902_2017"
+      ]
+    },
+    {
+      "code": "03025909_2012",
+      "label": "Fisk av familiene Bregmacerotidae,Euclichthyidae,Gadidae,Macroutidae,Melanonidae,Merlucciidae,Moridae og Muraenolepididae,fersk eller kjølt,i.e.n. (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025909_2012"
+      ]
+    },
+    {
+      "code": "03025909_2017",
+      "label": "Fisk av familiene Bregmacerotidae, Euclichthyidae, Gadidae, Macroutidae, Melanonidae, Merlucciidae, Moridae og Muraenolepididae, fersk eller kjølt, i.e.n., ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03025909_2017"
+      ]
+    },
+    {
+      "code": "03026100_1988",
+      "label": "Sardiner, sardinella, brisling, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026100_1988"
+      ]
+    },
+    {
+      "code": "03026200_1988",
+      "label": "Hyse, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026200_1988"
+      ]
+    },
+    {
+      "code": "03026300_1988",
+      "label": "Sei, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026300_1988"
+      ]
+    },
+    {
+      "code": "03026400_1988",
+      "label": "Makrell, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026400_1988"
+      ]
+    },
+    {
+      "code": "03026501_1988",
+      "label": "Pigghå, fersk eller kjølt (1988-1996) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026501_1988"
+      ]
+    },
+    {
+      "code": "03026502_1997",
+      "label": "Pigghå, hel, ikke sløyd, fersk eller kjølt (1997-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026502_1997"
+      ]
+    },
+    {
+      "code": "03026503_1997",
+      "label": "Pigghå, sløyd, med hode, fersk eller kjølt (1997-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026503_1997"
+      ]
+    },
+    {
+      "code": "03026504_1997",
+      "label": "Pigghå, fersk eller kjølt, i.e.n. (1997-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026504_1997"
+      ]
+    },
+    {
+      "code": "03026509_1988",
+      "label": "Haifisker, unnt pigghå, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026509_1988"
+      ]
+    },
+    {
+      "code": "03026600_1988",
+      "label": "Ål (Anguilla-arter), fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026600_1988"
+      ]
+    },
+    {
+      "code": "03026700_2007",
+      "label": "Sverdfisk, fersk eller kjølt (2007-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026700_2007"
+      ]
+    },
+    {
+      "code": "03026800_2007",
+      "label": "Tannfisk, fersk eller kjølt (2007-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026800_2007"
+      ]
+    },
+    {
+      "code": "03026901_1988",
+      "label": "Lysing, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026901_1988"
+      ]
+    },
+    {
+      "code": "03026902_1988",
+      "label": "Lange, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026902_1988"
+      ]
+    },
+    {
+      "code": "03026903_1988",
+      "label": "Uer, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026903_1988"
+      ]
+    },
+    {
+      "code": "03026904_1988",
+      "label": "Lyr, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026904_1988"
+      ]
+    },
+    {
+      "code": "03026905_1992",
+      "label": "Havabor, fersk eller kjølt (1992-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026905_1992"
+      ]
+    },
+    {
+      "code": "03026906_1992",
+      "label": "Breiflabb, fersk eller kjølt (1992-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026906_1992"
+      ]
+    },
+    {
+      "code": "03026907_1997",
+      "label": "Steinbit, fersk el kjølt (1997-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026907_1997"
+      ]
+    },
+    {
+      "code": "03026909_1988",
+      "label": "Fisk, fersk eller kjølt, i.e.n. (1988-1991) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026909_1988"
+      ]
+    },
+    {
+      "code": "03026909_1992",
+      "label": "Fisk, fersk eller kjølt, i.e.n. (1992-1996) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026909_1992"
+      ]
+    },
+    {
+      "code": "03026909_1997",
+      "label": "Fisk, fersk eller kjølt, i.e.n. (1997-2006) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026909_1997"
+      ]
+    },
+    {
+      "code": "03026909_2007",
+      "label": "Fisk, fersk eller kjølt, i.e.n. (2007-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03026909_2007"
+      ]
+    },
+    {
+      "code": "03027000_1988",
+      "label": "Lever, rogn og melke fra fisk, fersk eller kjølt (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03027000_1988"
+      ]
+    },
+    {
+      "code": "03027100_2012",
+      "label": "Tilapia, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03027100_2012"
+      ]
+    },
+    {
+      "code": "03027100_2017",
+      "label": "Tilapia (Oreochromis spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03027100_2017"
+      ]
+    },
+    {
+      "code": "03027200_2012",
+      "label": "Malle, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03027200_2012"
+      ]
+    },
+    {
+      "code": "03027200_2017",
+      "label": "Malle (Pangasius spp., Siluris spp., Clarias spp., Ictalurus spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03027200_2017"
+      ]
+    },
+    {
+      "code": "03027300_2012",
+      "label": "Karpe, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03027300_2012"
+      ]
+    },
+    {
+      "code": "03027300_2017",
+      "label": "Karpe (Cyprinus spp.,Carassius spp.,Ctenopharyngodon idellus,Hypophthalmichthys spp.,Cirrhinus spp.,Mylopharyngodon piceus,Catla catla,Labeo spp.,Osteochilus hasselti,Leptobarbus hoeveni,Megalobrama spp.),fersk el kjølt,ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03027300_2017"
+      ]
+    },
+    {
+      "code": "03027400_2012",
+      "label": "Ål (Anguilla-arter), fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03027400_2012"
+      ]
+    },
+    {
+      "code": "03027400_2017",
+      "label": "Ål (Anguilla spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03027400_2017"
+      ]
+    },
+    {
+      "code": "03027900_2012",
+      "label": "Nilabbor og slangehodefisk, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03027900_2012"
+      ]
+    },
+    {
+      "code": "03027900_2017",
+      "label": "Nilabbor (Lates niloticus) og slangehodefisk (Chenna spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03027900_2017"
+      ]
+    },
+    {
+      "code": "03028110_2013",
+      "label": "Pigghå (Squalus acanthias), fersk eller kjølt (2013-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028110_2013"
+      ]
+    },
+    {
+      "code": "03028110_2017",
+      "label": "Pigghå (Squalus acanthias), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028110_2017"
+      ]
+    },
+    {
+      "code": "03028111_2012",
+      "label": "Pigghå, hel, ikke sløyd, fersk eller kjølt (2012-2012) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028111_2012"
+      ]
+    },
+    {
+      "code": "03028112_2012",
+      "label": "Pigghå, sløyd, med hode, fersk eller kjølt (2012-2012) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028112_2012"
+      ]
+    },
+    {
+      "code": "03028119_2012",
+      "label": "Pigghå, fersk eller kjølt, i.e.n. (2012-2012) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028119_2012"
+      ]
+    },
+    {
+      "code": "03028190_2012",
+      "label": "Haifisker, unnt pigghå, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028190_2012"
+      ]
+    },
+    {
+      "code": "03028190_2017",
+      "label": "Haifisker, unnt pigghå, fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028190_2017"
+      ]
+    },
+    {
+      "code": "03028200_2012",
+      "label": "Skate, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028200_2012"
+      ]
+    },
+    {
+      "code": "03028200_2017",
+      "label": "Skate (Rajidae), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028200_2017"
+      ]
+    },
+    {
+      "code": "03028300_2012",
+      "label": "Tannfisk, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028300_2012"
+      ]
+    },
+    {
+      "code": "03028300_2017",
+      "label": "Tannfisk (Dissostichus spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028300_2017"
+      ]
+    },
+    {
+      "code": "03028400_2012",
+      "label": "Havabbor, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028400_2012"
+      ]
+    },
+    {
+      "code": "03028400_2017",
+      "label": "Havabbor (Dicentrarchus spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028400_2017"
+      ]
+    },
+    {
+      "code": "03028500_2012",
+      "label": "Havkaruss, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028500_2012"
+      ]
+    },
+    {
+      "code": "03028500_2017",
+      "label": "Havkaruss (Sparidae), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028500_2017"
+      ]
+    },
+    {
+      "code": "03028901_2012",
+      "label": "Lange, fersk eller kjølt (2012-2012) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028901_2012"
+      ]
+    },
+    {
+      "code": "03028902_2012",
+      "label": "Uer, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028902_2012"
+      ]
+    },
+    {
+      "code": "03028902_2017",
+      "label": "Uer (Sebastes spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028902_2017"
+      ]
+    },
+    {
+      "code": "03028903_2012",
+      "label": "Breiflabb, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028903_2012"
+      ]
+    },
+    {
+      "code": "03028903_2017",
+      "label": "Breiflabb (Lophius spp.), fersk eller kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028903_2017"
+      ]
+    },
+    {
+      "code": "03028904_2012",
+      "label": "Steinbit, fersk el kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028904_2012"
+      ]
+    },
+    {
+      "code": "03028904_2017",
+      "label": "Steinbit (Anarhichas spp.), fersk el kjølt, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028904_2017"
+      ]
+    },
+    {
+      "code": "03028909_2012",
+      "label": "Fisk, fersk eller kjølt, i.e.n. (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028909_2012"
+      ]
+    },
+    {
+      "code": "03028909_2017",
+      "label": "Fisk, fersk eller kjølt, i.e.n., ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03028909_2017"
+      ]
+    },
+    {
+      "code": "03029000_2012",
+      "label": "Lever, rogn og melke, fersk eller kjølt (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03029000_2012"
+      ]
+    },
+    {
+      "code": "03029100_2017",
+      "label": "Lever, rogn og melke, fersk eller kjølt (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03029100_2017"
+      ]
+    },
+    {
+      "code": "03029200_2017",
+      "label": "Haifinner, fersk eller kjølt (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03029200_2017"
+      ]
+    },
+    {
+      "code": "03029901_2017",
+      "label": "Spiselige biprodukter av torsk (Gadus morhua, Gadus ogac, Gadus macrocephalus), fersk eller kjølt (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03029901_2017"
+      ]
+    },
+    {
+      "code": "03029909_2017",
+      "label": "Spiselige biprodukter av fisk, fersk eller kjølt, i.e.n. (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03029909_2017"
+      ]
+    },
+    {
+      "code": "03031000_1988",
+      "label": "Stillehavslaks, fryst, unnt lever, rogn og melke (1988-2001) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031000_1988"
+      ]
+    },
+    {
+      "code": "03031100_2002",
+      "label": "Stillehavslaks, rødlaks (Oncorhynchus nerka), unnt lever, rogn og melke, fryst (2002-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031100_2002"
+      ]
+    },
+    {
+      "code": "03031100_2017",
+      "label": "Rødlaks (Oncorhynchus nerka), unnt lever, rogn og melke, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031100_2017"
+      ]
+    },
+    {
+      "code": "03031200_2012",
+      "label": "Stillehavslaks, unnt rødlaks (Oncorhynchus nerka), fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031200_2012"
+      ]
+    },
+    {
+      "code": "03031200_2017",
+      "label": "Stillehavslaks (Oncorhynchus gorbuscha, Oncorhynchus keta, Oncorhynchus tschawytscha, Oncorhynchus kisutch, Oncorhynchus masou og Oncorhynchus rhodurus), unnt rødlaks (Oncorhynchus nerka), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031200_2017"
+      ]
+    },
+    {
+      "code": "03031311_2012",
+      "label": "Atlanterhavslaks og donaulaks, oppdrettet, med hode, fryst, ikke spiselige biprodukter (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031311_2012"
+      ]
+    },
+    {
+      "code": "03031312_2012",
+      "label": "Spiselige biprodukter av oppdrettet atlanterhavslaks og donaulaks, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031312_2012"
+      ]
+    },
+    {
+      "code": "03031319_2012",
+      "label": "Atlanterhavslaks og donaulaks, oppdrettet, unnt med hode og spiselige biprodukter, fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031319_2012"
+      ]
+    },
+    {
+      "code": "03031390_2012",
+      "label": "Atlanterhavslaks og donaulaks, ikke oppdrettet, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031390_2012"
+      ]
+    },
+    {
+      "code": "03031390_2017",
+      "label": "Atlanterhavslaks og donaulaks, ikke oppdrettet, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031390_2017"
+      ]
+    },
+    {
+      "code": "03031411_2012",
+      "label": "Ørret, oppdrettet, med hode, fryst (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031411_2012"
+      ]
+    },
+    {
+      "code": "03031419_2012",
+      "label": "Ørret, oppdrettet, unnt med hode, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031419_2012"
+      ]
+    },
+    {
+      "code": "03031419_2017",
+      "label": "Ørret (Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache og Oncorhynchus chrysogaster), oppdrettet, unnt med hode, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031419_2017"
+      ]
+    },
+    {
+      "code": "03031490_2012",
+      "label": "Ørret, ikke oppdrettet, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031490_2012"
+      ]
+    },
+    {
+      "code": "03031490_2017",
+      "label": "Ørret (Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache og Oncorhynchus chrysogaster), ikke oppdrettet, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031490_2017"
+      ]
+    },
+    {
+      "code": "03031900_2002",
+      "label": "Stillehavslaks, unnt rødlaks (Oncorhynchus nerka) og lever, rogn og melke, fryst (2002-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031900_2002"
+      ]
+    },
+    {
+      "code": "03031900_2012",
+      "label": "Laksefisk (salmonidae), unnt rødlaks, stillehavslaks, atlanterhavslaks, donaulaks og ørret, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031900_2012"
+      ]
+    },
+    {
+      "code": "03031900_2017",
+      "label": "Laksefisk (salmonidae), unnt rødlaks, stillehavslaks, atlanterhavslaks, donaulaks og ørret, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03031900_2017"
+      ]
+    },
+    {
+      "code": "03032101_1988",
+      "label": "Ørret, oppdrettet, fryst (1988-2003) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032101_1988"
+      ]
+    },
+    {
+      "code": "03032102_2004",
+      "label": "Ørret, oppdrettet, med hode, fryst (2004-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032102_2004"
+      ]
+    },
+    {
+      "code": "03032103_2004",
+      "label": "Ørret, oppdrettet, unnt med hode, fryst (2004-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032103_2004"
+      ]
+    },
+    {
+      "code": "03032109_1988",
+      "label": "Ørret, ikke oppdrettet, fryst (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032109_1988"
+      ]
+    },
+    {
+      "code": "03032201_1988",
+      "label": "Atlanterhavslaks og donaulaks, oppdrettet, fryst (1988-1997) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032201_1988"
+      ]
+    },
+    {
+      "code": "03032201_1998",
+      "label": "Atlanterhavslaks og donaulaks, oppdrettet, med hode, fryst (1998-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032201_1998"
+      ]
+    },
+    {
+      "code": "03032202_1998",
+      "label": "Atlanterhavslaks og donaulaks, oppdrettet, uten hode, fryst (1998-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032202_1998"
+      ]
+    },
+    {
+      "code": "03032209_1988",
+      "label": "Atlanterhavslaks og donaulaks, ikke oppdrettet, fryst (1988-1997) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032209_1988"
+      ]
+    },
+    {
+      "code": "03032209_1998",
+      "label": "Atlanterhavslaks og donaulaks, ikke oppdrettet, fryst (1998-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032209_1998"
+      ]
+    },
+    {
+      "code": "03032300_2012",
+      "label": "Tilapia, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032300_2012"
+      ]
+    },
+    {
+      "code": "03032300_2017",
+      "label": "Tilapia (Oreochromis spp.), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032300_2017"
+      ]
+    },
+    {
+      "code": "03032400_2012",
+      "label": "Malle, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032400_2012"
+      ]
+    },
+    {
+      "code": "03032400_2017",
+      "label": "Malle (Pangasius spp., Siluris spp., Clarias spp., Ictalurus spp.), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032400_2017"
+      ]
+    },
+    {
+      "code": "03032500_2012",
+      "label": "Karpe, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032500_2012"
+      ]
+    },
+    {
+      "code": "03032500_2017",
+      "label": "Karpe (Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophthalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032500_2017"
+      ]
+    },
+    {
+      "code": "03032600_2012",
+      "label": "Ål (Anguilla-arter), fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032600_2012"
+      ]
+    },
+    {
+      "code": "03032600_2017",
+      "label": "Ål (Anguilla spp.), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032600_2017"
+      ]
+    },
+    {
+      "code": "03032900_2009",
+      "label": "Laksefisk (salmonidae), unnt stillehavslaks, atlanterhavslaks, donaulaks og ørre, fryst (2009-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032900_2009"
+      ]
+    },
+    {
+      "code": "03032900_2012",
+      "label": "Nilabbor og slangehodefisk, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032900_2012"
+      ]
+    },
+    {
+      "code": "03032900_2017",
+      "label": "Nilabbor (Lates niloticus) og slangehodefisk (Chenna spp.), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032900_2017"
+      ]
+    },
+    {
+      "code": "03032901_1988",
+      "label": "Lodde, fryst (1988-2008) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032901_1988"
+      ]
+    },
+    {
+      "code": "03032909_1988",
+      "label": "Laksefisk, unnt stillehavslaks, atlanterhavslaks og donaulaks, ørretfisk og lodde, fryst (1988-2008) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03032909_1988"
+      ]
+    },
+    {
+      "code": "03033101_1988",
+      "label": "Blåkveite, fryst (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033101_1988"
+      ]
+    },
+    {
+      "code": "03033101_2017",
+      "label": "Blåkveite (Reinhardtius hippoglossoides), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033101_2017"
+      ]
+    },
+    {
+      "code": "03033102_1988",
+      "label": "Kveite, unnt blåkveite, fryst (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033102_1988"
+      ]
+    },
+    {
+      "code": "03033102_2017",
+      "label": "Kveite (Hippoglossus hippoglossus, Hippoglossus stenolepis), unnt blåkveite, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033102_2017"
+      ]
+    },
+    {
+      "code": "03033200_1988",
+      "label": "Rødspette, fryst (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033200_1988"
+      ]
+    },
+    {
+      "code": "03033200_2017",
+      "label": "Rødspette (Pleuronectes platessa), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033200_2017"
+      ]
+    },
+    {
+      "code": "03033300_1988",
+      "label": "Tunge, fryst (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033300_1988"
+      ]
+    },
+    {
+      "code": "03033300_2017",
+      "label": "Tunge (Solea spp.), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033300_2017"
+      ]
+    },
+    {
+      "code": "03033400_2012",
+      "label": "Piggvar, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033400_2012"
+      ]
+    },
+    {
+      "code": "03033400_2017",
+      "label": "Piggvar (Psetta maxima), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033400_2017"
+      ]
+    },
+    {
+      "code": "03033900_1988",
+      "label": "Flyndrefisk, unnt kveite, rødspette eller tunge, fryst (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033900_1988"
+      ]
+    },
+    {
+      "code": "03033900_2012",
+      "label": "Flyndrefisk, unnt kveite, rødspette, tunge og piggvar, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033900_2012"
+      ]
+    },
+    {
+      "code": "03033900_2017",
+      "label": "Flyndrefisk, unnt kveite, rødspette, tunge og piggvar, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03033900_2017"
+      ]
+    },
+    {
+      "code": "03034100_1988",
+      "label": "Albakor eller langfinnet tunfisk, fryst (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034100_1988"
+      ]
+    },
+    {
+      "code": "03034100_2017",
+      "label": "Albakor eller langfinnet tunfisk (Thunnus alalunga), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034100_2017"
+      ]
+    },
+    {
+      "code": "03034200_1988",
+      "label": "Gulfinnet tunfisk, fryst (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034200_1988"
+      ]
+    },
+    {
+      "code": "03034200_2017",
+      "label": "Gulfinnet tunfisk (Thunnus albacares), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034200_2017"
+      ]
+    },
+    {
+      "code": "03034300_1988",
+      "label": "Stripet pelamide, fryst (1988-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034300_1988"
+      ]
+    },
+    {
+      "code": "03034300_2017",
+      "label": "Stripet pelamide, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034300_2017"
+      ]
+    },
+    {
+      "code": "03034400_2002",
+      "label": "Storøyet tunfisk (Thunnus obesus), fryst (2002-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034400_2002"
+      ]
+    },
+    {
+      "code": "03034400_2017",
+      "label": "Storøyet tunfisk (Thunnus obesus), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034400_2017"
+      ]
+    },
+    {
+      "code": "03034500_2002",
+      "label": "Makrellstørje (Thunnus thynnus), fryst (2002-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034500_2002"
+      ]
+    },
+    {
+      "code": "03034501_2012",
+      "label": "Atlanterhavsmakrellstørje (Thunnus thynnus), fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034501_2012"
+      ]
+    },
+    {
+      "code": "03034501_2017",
+      "label": "Atlanterhavsmakrellstørje (Thunnus thynnus), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034501_2017"
+      ]
+    },
+    {
+      "code": "03034502_2012",
+      "label": "Stillehavsmakrellstørje (Thunnus orientalis), fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034502_2012"
+      ]
+    },
+    {
+      "code": "03034502_2017",
+      "label": "Stillehavsmakrellstørje (Thunnus orientalis), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034502_2017"
+      ]
+    },
+    {
+      "code": "03034600_2002",
+      "label": "Sydlig blåfinnet tunfisk (Thunnus maccoyii), fryst (2002-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034600_2002"
+      ]
+    },
+    {
+      "code": "03034600_2017",
+      "label": "Sydlig blåfinnet tunfisk (Thunnus maccoyii), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034600_2017"
+      ]
+    },
+    {
+      "code": "03034900_1988",
+      "label": "Tunfisk, fryst, unnt albakor, langfinnet-, gulfinnet- eller stripet pelamide (1988-2001) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034900_1988"
+      ]
+    },
+    {
+      "code": "03034900_2012",
+      "label": "Tunfisk av slekten Thunnus,unnt albakor,stripet pelamide,lang-/gulfinnet-,storøyet-,sydlig blåfinnet tunfisk,atlanterhavs- og stillehavsmakrellstørje,fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034900_2012"
+      ]
+    },
+    {
+      "code": "03034900_2017",
+      "label": "Størje (tunfisk) av slekten Thunnus, unnt albakor, stripet pelamide, langfinnet-, gulfinnet-, storøyet-, sydlig blåfinnet tunfisk, atlanterhavs- og stillehavsmakrellstørje, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034900_2017"
+      ]
+    },
+    {
+      "code": "03034909_2002",
+      "label": "Størje (tunfisk) av slekten Thunnus, unnt albakor, stripet pelamide, langfinnet-, gulfinnet-, storøyet-, sydlig blåfinnet tunfisk og makrellstørje, fryst (2002-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03034909_2002"
+      ]
+    },
+    {
+      "code": "03035001_1988",
+      "label": "Vintersild, fryst (1988-2004) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035001_1988"
+      ]
+    },
+    {
+      "code": "03035002_1988",
+      "label": "Norsk vårgytende sild (herunder mussa, småsild), unnt vintersild, fryst (1988-2004) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035002_1988"
+      ]
+    },
+    {
+      "code": "03035003_1988",
+      "label": "Nordsjøsild, fryst (1988-2006) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035003_1988"
+      ]
+    },
+    {
+      "code": "03035004_2005",
+      "label": "Norsk vårgytende sild (NVG-sild), fryst (2005-2006) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035004_2005"
+      ]
+    },
+    {
+      "code": "03035009_1988",
+      "label": "Sild (Clupea harengus og Clupea pallasii), unnt norsk vårgytende sild og nordsjøsild, fryst (1988-2006) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035009_1988"
+      ]
+    },
+    {
+      "code": "03035101_2007",
+      "label": "Nordsjøsild, fryst (2007-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035101_2007"
+      ]
+    },
+    {
+      "code": "03035101_2017",
+      "label": "Nordsjøsild, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035101_2017"
+      ]
+    },
+    {
+      "code": "03035102_2007",
+      "label": "Norsk vårgytende sild (NVG-sild), fryst (2007-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035102_2007"
+      ]
+    },
+    {
+      "code": "03035102_2017",
+      "label": "Norsk vårgytende sild (NVG-sild), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035102_2017"
+      ]
+    },
+    {
+      "code": "03035109_2007",
+      "label": "Sild (Clupea harengus og Clupea pallasii), unnt norsk vårgytende sild og nordsjøsild, fryst (2007-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035109_2007"
+      ]
+    },
+    {
+      "code": "03035109_2017",
+      "label": "Sild (Clupea harengus og Clupea pallasii), unnt norsk vårgytende sild og nordsjøsild, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035109_2017"
+      ]
+    },
+    {
+      "code": "03035200_2007",
+      "label": "Torsk, fryst (2007-2008) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035200_2007"
+      ]
+    },
+    {
+      "code": "03035201_2009",
+      "label": "Atlanterhavstorsk, fryst (2009-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035201_2009"
+      ]
+    },
+    {
+      "code": "03035209_2009",
+      "label": "Torsk, unnt atlanterhavstorsk, fryst (2009-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035209_2009"
+      ]
+    },
+    {
+      "code": "03035300_2012",
+      "label": "Sardiner, sardinella eller brisling, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035300_2012"
+      ]
+    },
+    {
+      "code": "03035300_2017",
+      "label": "Sardiner (Sardina pilchardus, Sardinops spp), sardinella (Sardinella spp.), brisling (Sprattus sprattus), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035300_2017"
+      ]
+    },
+    {
+      "code": "03035401_2012",
+      "label": "Makrell, vekt under 600 gram, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035401_2012"
+      ]
+    },
+    {
+      "code": "03035401_2017",
+      "label": "Makrell (Scomber scombrus, Scomber australasicus, Scomber japonicus), vekt under 600 gram, fryst, ikke spiselige biprodukter (2017-2017) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035401_2017"
+      ]
+    },
+    {
+      "code": "03035401_2019",
+      "label": "Makrell (Scomber scombrus, Scomber australasicus, Scomber japonicus), vekt under 600 gram, fryst, ikke spiselige biprodukter (2019-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035401_2019"
+      ]
+    },
+    {
+      "code": "03035402_2012",
+      "label": "Makrell, vekt 600 gram og over, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035402_2012"
+      ]
+    },
+    {
+      "code": "03035402_2017",
+      "label": "Makrell (Scomber scombrus, Scomber australasicus, Scomber japonicus), vekt 600 gram og over, fryst, ikke spiselige biprodukter (2017-2017) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035402_2017"
+      ]
+    },
+    {
+      "code": "03035402_2019",
+      "label": "Makrell (Scomber scombrus, Scomber australasicus, Scomber japonicus), vekt 600 gram eller derover, fryst, ikke spiselige biprodukter (2019-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035402_2019"
+      ]
+    },
+    {
+      "code": "03035403_2018",
+      "label": "Makrell (Scomber scombrus, Scomber australasicus, Scomber japonicus), vekt under 450 gram, fryst, ikke spiselige biprodukter (2018-2018) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035403_2018"
+      ]
+    },
+    {
+      "code": "03035404_2018",
+      "label": "Makrell (Scomber scombrus, Scomber australasicus, Scomber japonicus), vekt 450 gram eller derover, fryst, ikke spiselige biprodukter (2018-2018) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035404_2018"
+      ]
+    },
+    {
+      "code": "03035500_2012",
+      "label": "Taggmakrell (hestemakrell), fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035500_2012"
+      ]
+    },
+    {
+      "code": "03035500_2017",
+      "label": "Taggmakrell (hestemakrell) (Trachurus spp.), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035500_2017"
+      ]
+    },
+    {
+      "code": "03035600_2012",
+      "label": "Cobia, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035600_2012"
+      ]
+    },
+    {
+      "code": "03035600_2017",
+      "label": "Cobia (Rachycentron canadum), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035600_2017"
+      ]
+    },
+    {
+      "code": "03035700_2012",
+      "label": "Sverdfisk, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035700_2012"
+      ]
+    },
+    {
+      "code": "03035700_2017",
+      "label": "Sverdfisk (Xiphias gladius), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035700_2017"
+      ]
+    },
+    {
+      "code": "03035901_2017",
+      "label": "Lodde (Mallotus villosus), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035901_2017"
+      ]
+    },
+    {
+      "code": "03035909_2017",
+      "label": "Indisk makrell, kongemakrell, smørfisk, stillehavsmakrellgjedde, alminnelig hestemakrell, lodde, kawakawa, pelamide, marlin, seilfisk, spydfisk, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03035909_2017"
+      ]
+    },
+    {
+      "code": "03036000_1988",
+      "label": "Torsk, fryst (1988-2006) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036000_1988"
+      ]
+    },
+    {
+      "code": "03036100_2007",
+      "label": "Sverdfisk, fryst (2007-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036100_2007"
+      ]
+    },
+    {
+      "code": "03036200_2007",
+      "label": "Tannfisk, fryst (2007-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036200_2007"
+      ]
+    },
+    {
+      "code": "03036301_2012",
+      "label": "Atlanterhavstorsk (Gadus morhua), fryst (2012-2012) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036301_2012"
+      ]
+    },
+    {
+      "code": "03036302_2013",
+      "label": "Spiselige biprodukter av torsk (Gadus morhua, Gadus ogac, Gadus macrocephalus), fryst (2013-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036302_2013"
+      ]
+    },
+    {
+      "code": "03036303_2013",
+      "label": "Atlanterhavstorsk (Gadus morhua), unntatt spiselige biprodukter, fryst (2013-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036303_2013"
+      ]
+    },
+    {
+      "code": "03036309_2012",
+      "label": "Torsk, unnt atlanterhavstorsk (Gadus morhua), fryst, ikke spiselige biprodukter (2012-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036309_2012"
+      ]
+    },
+    {
+      "code": "03036400_2012",
+      "label": "Hyse, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036400_2012"
+      ]
+    },
+    {
+      "code": "03036400_2017",
+      "label": "Hyse (Melanogrammus aeglefinus), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036400_2017"
+      ]
+    },
+    {
+      "code": "03036500_2012",
+      "label": "Sei, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036500_2012"
+      ]
+    },
+    {
+      "code": "03036500_2017",
+      "label": "Sei (Pollachius virens), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036500_2017"
+      ]
+    },
+    {
+      "code": "03036600_2012",
+      "label": "Lysing, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036600_2012"
+      ]
+    },
+    {
+      "code": "03036600_2017",
+      "label": "Lysing (Merluccius spp., Urophycis spp.), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036600_2017"
+      ]
+    },
+    {
+      "code": "03036700_2012",
+      "label": "Alaskatheragra (Alaska pollack), fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036700_2012"
+      ]
+    },
+    {
+      "code": "03036700_2017",
+      "label": "Alaskatheragra (Alaska pollack) (Theragra chalcogramma), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036700_2017"
+      ]
+    },
+    {
+      "code": "03036800_2012",
+      "label": "Kolmule, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036800_2012"
+      ]
+    },
+    {
+      "code": "03036800_2017",
+      "label": "Kolmule (Micromesistius poutassou, Micromesistius australis), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036800_2017"
+      ]
+    },
+    {
+      "code": "03036900_2012",
+      "label": "Fisk av familiene Bregmacerotidae,Euclichthyidae,Gadidae,Macroutidae,Melanonidae,Merlucciidae,Moridae og Muraenolepididae,fryst,i.e.n. (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036900_2012"
+      ]
+    },
+    {
+      "code": "03036900_2017",
+      "label": "Fisk av familiene Bregmacerotidae, Euclichthyidae, Gadidae, Macroutidae, Melanonidae, Merlucciidae, Moridae og Muraenolepididae, fryst, i.e.n., ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03036900_2017"
+      ]
+    },
+    {
+      "code": "03037100_1988",
+      "label": "Sardiner, sardinella eller brisling, fryst (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037100_1988"
+      ]
+    },
+    {
+      "code": "03037200_1988",
+      "label": "Hyse, fryst (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037200_1988"
+      ]
+    },
+    {
+      "code": "03037300_1988",
+      "label": "Sei, fryst (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037300_1988"
+      ]
+    },
+    {
+      "code": "03037400_1988",
+      "label": "Makrell, fryst (1988-1991) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037400_1988"
+      ]
+    },
+    {
+      "code": "03037401_1992",
+      "label": "Makrell, vekt under 600 gram, fryst (1992-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037401_1992"
+      ]
+    },
+    {
+      "code": "03037402_1992",
+      "label": "Makrell, vekt 600 gram og over, fryst (1992-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037402_1992"
+      ]
+    },
+    {
+      "code": "03037500_2006",
+      "label": "Pigghå og andre haifisker, fryst (2006-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037500_2006"
+      ]
+    },
+    {
+      "code": "03037501_1988",
+      "label": "Pigghå, fryst (1988-2005) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037501_1988"
+      ]
+    },
+    {
+      "code": "03037509_1988",
+      "label": "Haifisker, unnt pigghå, fryst (1988-2005) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037509_1988"
+      ]
+    },
+    {
+      "code": "03037600_1988",
+      "label": "Ål (Anguilla-arter), fryst (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037600_1988"
+      ]
+    },
+    {
+      "code": "03037700_1988",
+      "label": "Havabor, fryst (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037700_1988"
+      ]
+    },
+    {
+      "code": "03037800_1988",
+      "label": "Lysing, fryst (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037800_1988"
+      ]
+    },
+    {
+      "code": "03037901_1988",
+      "label": "Skate, fryst (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037901_1988"
+      ]
+    },
+    {
+      "code": "03037902_1988",
+      "label": "Uer, fryst (1988-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037902_1988"
+      ]
+    },
+    {
+      "code": "03037903_1997",
+      "label": "Taggmakrell (hestemakrell), fryst (1997-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037903_1997"
+      ]
+    },
+    {
+      "code": "03037904_1997",
+      "label": "Steinbit, fryst (1997-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037904_1997"
+      ]
+    },
+    {
+      "code": "03037905_1997",
+      "label": "Kolmule, fryst (1997-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037905_1997"
+      ]
+    },
+    {
+      "code": "03037906_1997",
+      "label": "Tobis, fryst (1997-2000) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037906_1997"
+      ]
+    },
+    {
+      "code": "03037906_2009",
+      "label": "Lodde, fryst (2009-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037906_2009"
+      ]
+    },
+    {
+      "code": "03037907_2001",
+      "label": "Tannfisk, herunder paragonisk, fryst (2001-2006) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037907_2001"
+      ]
+    },
+    {
+      "code": "03037908_2011",
+      "label": "Vassild, fryst (2011-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037908_2011"
+      ]
+    },
+    {
+      "code": "03037909_1988",
+      "label": "Fisk, fryst, i.e.n. (1988-1996) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037909_1988"
+      ]
+    },
+    {
+      "code": "03037909_1997",
+      "label": "Fisk, fryst, i.e.n. (1997-2000) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037909_1997"
+      ]
+    },
+    {
+      "code": "03037909_2001",
+      "label": "Fisk, fryst, i.e.n. (2001-2006) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037909_2001"
+      ]
+    },
+    {
+      "code": "03037909_2007",
+      "label": "Fisk, fryst, i.e.n. (2007-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03037909_2007"
+      ]
+    },
+    {
+      "code": "03038000_1988",
+      "label": "Lever, rogn og melke fra fisk, fryst (1988-2010) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038000_1988"
+      ]
+    },
+    {
+      "code": "03038001_2011",
+      "label": "Lever, rogn og melke av sild, fryst (2011-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038001_2011"
+      ]
+    },
+    {
+      "code": "03038002_2011",
+      "label": "Lever, rogn og melke av lodde, fryst (2011-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038002_2011"
+      ]
+    },
+    {
+      "code": "03038009_2011",
+      "label": "Lever, rogn og melke, unnt av sild og lodde, fryst (2011-2011) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038009_2011"
+      ]
+    },
+    {
+      "code": "03038100_2012",
+      "label": "Pigghå og andre haifisker, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038100_2012"
+      ]
+    },
+    {
+      "code": "03038100_2017",
+      "label": "Pigghå og andre haifisker, fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038100_2017"
+      ]
+    },
+    {
+      "code": "03038200_2012",
+      "label": "Skate, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038200_2012"
+      ]
+    },
+    {
+      "code": "03038200_2017",
+      "label": "Skate (Rajidae), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038200_2017"
+      ]
+    },
+    {
+      "code": "03038300_2012",
+      "label": "Tannfisk, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038300_2012"
+      ]
+    },
+    {
+      "code": "03038300_2017",
+      "label": "Tannfisk (Dissostichus spp.), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038300_2017"
+      ]
+    },
+    {
+      "code": "03038400_2012",
+      "label": "Havabbor, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038400_2012"
+      ]
+    },
+    {
+      "code": "03038400_2017",
+      "label": "Havabbor (Dicentrarchus labrax, Dicentrarchus punctatus), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038400_2017"
+      ]
+    },
+    {
+      "code": "03038901_2012",
+      "label": "Uer, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038901_2012"
+      ]
+    },
+    {
+      "code": "03038901_2017",
+      "label": "Uer (Sebastes spp.), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038901_2017"
+      ]
+    },
+    {
+      "code": "03038902_2012",
+      "label": "Steinbit, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038902_2012"
+      ]
+    },
+    {
+      "code": "03038902_2017",
+      "label": "Steinbit (Anarhichas spp.), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038902_2017"
+      ]
+    },
+    {
+      "code": "03038903_2012",
+      "label": "Lodde, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038903_2012"
+      ]
+    },
+    {
+      "code": "03038904_2012",
+      "label": "Vassild, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038904_2012"
+      ]
+    },
+    {
+      "code": "03038904_2017",
+      "label": "Vassild (Argentina silus), fryst, ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038904_2017"
+      ]
+    },
+    {
+      "code": "03038909_2012",
+      "label": "Fisk, fryst, i.e.n. (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038909_2012"
+      ]
+    },
+    {
+      "code": "03038909_2017",
+      "label": "Fisk, fryst, i.e.n., ikke spiselige biprodukter (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03038909_2017"
+      ]
+    },
+    {
+      "code": "03039001_2012",
+      "label": "Lever, rogn og melke av sild, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03039001_2012"
+      ]
+    },
+    {
+      "code": "03039002_2012",
+      "label": "Lever, rogn og melke av lodde, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03039002_2012"
+      ]
+    },
+    {
+      "code": "03039009_2012",
+      "label": "Lever, rogn og melke, unnt av sild og lodde, fryst (2012-2016) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03039009_2012"
+      ]
+    },
+    {
+      "code": "03039101_2017",
+      "label": "Lever, rogn og melke av sild, fryst (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03039101_2017"
+      ]
+    },
+    {
+      "code": "03039102_2017",
+      "label": "Lever, rogn og melke av lodde, fryst (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03039102_2017"
+      ]
+    },
+    {
+      "code": "03039109_2017",
+      "label": "Lever, rogn og melke, unnt av sild og lodde, fryst (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03039109_2017"
+      ]
+    },
+    {
+      "code": "03039200_2017",
+      "label": "Haifinner, fryst (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03039200_2017"
+      ]
+    },
+    {
+      "code": "03039901_2017",
+      "label": "Spiselige biprodukter av oppdrettet atlanterhavslaks og donaulaks, fryst (2017-) (M1=kg,  M2=nei)",
+      "valueMap": [
+        "03039901_2017"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "no",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_VareKoderKN8Siff?lang=no"
+    },
+    {
+      "rel": "alternate",
+      "hreflang": "en",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_VareKoderKN8Siff?lang=en"
+    }
+  ]
+}

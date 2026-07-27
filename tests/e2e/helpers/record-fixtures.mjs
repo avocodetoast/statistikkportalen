@@ -16,22 +16,32 @@
 
 import fs from 'node:fs';
 import { launchApp, waitForFrontPage } from './app-browser.mjs';
-import { runSearchFlow, runTopicFlow, runTableFlow, DEFAULT_TABLE, NB_TABLE, FHI_TABLE } from './flows.mjs';
+import {
+  runSearchFlow, runTopicFlow, runTableFlow,
+  BUILDER_TABLES, BUILDER_FLOWS,
+  TOPIC_ROUTES, TOPIC_KEEP_TABLES, runTopicRouteFlow,
+  DEFAULT_TABLE, NB_TABLE, FHI_TABLE
+} from './flows.mjs';
 import { FIXTURE_DIR } from './stub-routes.mjs';
 
 function parseArgs(argv) {
-  const args = { table: DEFAULT_TABLE };
+  const args = { table: DEFAULT_TABLE, clean: true };
   for (let i = 2; i < argv.length; i++) {
     if (argv[i] === '--table') args.table = argv[++i];
+    else if (argv[i] === '--no-clean') args.clean = false;
   }
   return args;
 }
 
-const { table } = parseArgs(process.argv);
+const { table, clean } = parseArgs(process.argv);
 
-console.log(`Spiller inn fixtures mot ekte API-er (tabell ${table})...\n`);
+console.log(`Spiller inn fixtures mot ekte API-er (tabell ${table})...`);
+console.log('Kallene bremses til ~1 per 2,2 s for å holde oss under SSBs 30/min.\n');
 
-if (fs.existsSync(FIXTURE_DIR)) {
+// Standard er å tømme katalogen: da kan ingen foreldreløse fixtures bli
+// liggende igjen etter at en flyt er endret. --no-clean spiller inn oppå de
+// eksisterende, nyttig når bare én tabell skal friskes opp.
+if (clean && fs.existsSync(FIXTURE_DIR)) {
   for (const file of fs.readdirSync(FIXTURE_DIR)) {
     if (file.endsWith('.json')) fs.unlinkSync(`${FIXTURE_DIR}/${file}`);
   }
@@ -40,7 +50,7 @@ if (fs.existsSync(FIXTURE_DIR)) {
 const app = await launchApp({
   mode: 'http',
   network: 'record',
-  keepTables: [table]
+  keepTables: [table, ...BUILDER_TABLES, ...TOPIC_KEEP_TABLES]
 });
 
 try {
@@ -62,6 +72,23 @@ try {
     await app.page.goto(app.baseUrl, { waitUntil: 'domcontentloaded' });
     await waitForFrontPage(app.page);
     await runTableFlow(app.page, id);
+  }
+
+  // Variabelvalg- og API-byggerflytene. Nøyaktig de samme funksjonene som
+  // variable-select.e2e.mjs kjører, i nøyaktig samme rekkefølge — se
+  // kommentaren over BUILDER_TABLES om hvorfor rekkefølgen betyr noe.
+  for (const id of BUILDER_TABLES) {
+    console.log(`  … byggerflyt for ${id}`);
+    await BUILDER_FLOWS[id](app.page);
+  }
+
+  // Emnehierarkiet. Ingen NYE endepunkter treffes — treet bygges av /tables,
+  // som allerede er spilt inn — men flyten kjøres her likevel, både for at
+  // rekkefølgen skal stemme med testen, og for at et framtidig steg som FAKTISK
+  // gjør et kall skal bli fanget opp av innspillingen.
+  for (const route of TOPIC_ROUTES) {
+    console.log(`  … emneflyt for ${route.path.join('/')}`);
+    await runTopicRouteFlow(app.page, route);
   }
 } finally {
   const problems = app.problems();

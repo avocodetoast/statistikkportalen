@@ -1,0 +1,609 @@
+{
+  "version": "2.0",
+  "class": "dataset",
+  "label": "12850: Sysselsatte, etter bosted, arbeidssted, næring (17 grupper, SN2007), fagfelt, utdanningsnivå og alder. 4. kvartal (F) 2008-2024",
+  "source": "Statistisk sentralbyrå",
+  "updated": "2025-08-13T06:00:00Z",
+  "link": {
+    "related": [
+      {
+        "extension": {
+          "relation": "statistics-homepage",
+          "metaid": "KORTNAVN:regsys"
+        },
+        "href": "https://www.ssb.no/regsys",
+        "label": "Statistikkside",
+        "type": "text/html"
+      },
+      {
+        "extension": {
+          "relation": "about-statistics",
+          "metaid": "KORTNAVN:regsys"
+        },
+        "href": "https://www.ssb.no/regsys#om-statistikken",
+        "label": "Definisjoner og forklaringer",
+        "type": "text/html"
+      }
+    ]
+  },
+  "note": [
+    "Alle ett-tall og to-tall i tabellen er endret til '0' eller '3' for å ivareta personvernet.",
+    "Fra og med 2015 bygger statistikken på nye datakilder (a-ordningen), se nærmere omtale i «Om statistikken». Totalt antall sysselsatte blir heller ikke samordnet med Arbeidskraftundersøkelsene (AKU) slik det ble før 2015, og det samsvarer dermed ikke lenger med AKUs totaltall. Årgangene fra og med 2015 blir følgelig ikke sammenlignbare med tidligere årganger. Se nærmere omtale i [artikkelen tilknyttet 2015-tallene](https://www.ssb.no/arbeid-og-lonn/statistikker/regsys/aar/2016-05-27).",
+    "Bedrifter i næring 09.1 Tjenester tilknyttet utvinning av råolje og naturgass får landkode av Enhetsregisteret, selv om arbeidet kan foregå på sokkelen. Det samme kan også forekomme innenfor andre næringer. Tidligere ble bedrifter SSB anså at tilhørte sokkelen omkodet, noe SSB fra og med publiseringen i 2018 sluttet med. Dette har resultert i en justering som medfører at en rekke arbeidsforhold som tidligere var registrert på sokkelen er blitt plassert på fastlandet fra og med 4. kvartal 2018 (hovedsakelig næring 09.1). I 4. kvartal 2019 gir dette hovedsakelig utslag i næringene 09.1 og næringer knyttet til cateringvirksomhet. Dette har gitt en ikke-reell nedgang i antall sysselsatte på sokkelen og en tilsvarende ikke-reell økning i andre fylker, i hovedsak Rogaland. Endringen omfatter om lag 6500 lønnstakere 4. kv. 2018 og 2000 lønnstakere 4. kv. 2019."
+  ],
+  "role": {
+    "time": [
+      "Tid"
+    ],
+    "geo": [
+      "Region"
+    ],
+    "metric": [
+      "ContentsCode"
+    ]
+  },
+  "id": [
+    "Region",
+    "UtdNivaa",
+    "Fagfelt",
+    "NACE2007",
+    "Alder",
+    "ContentsCode",
+    "Tid"
+  ],
+  "size": [
+    42,
+    6,
+    11,
+    18,
+    2,
+    2,
+    17
+  ],
+  "dimension": {
+    "Region": {
+      "label": "region",
+      "note": [
+        "[Se liste over endringer i de regionale inndelingene](https://www.ssb.no/offentlig-sektor/kommunekatalog/endringer-i-de-regionale-inndelingene)."
+      ],
+      "category": {
+        "index": {
+          "0": 0,
+          "10": 19,
+          "11": 20,
+          "12": 22,
+          "13": 23,
+          "14": 24,
+          "15": 25,
+          "16": 27,
+          "17": 28,
+          "18": 29,
+          "19": 33,
+          "20": 34,
+          "21": 35,
+          "22": 36,
+          "23": 37,
+          "25": 38,
+          "26": 39,
+          "30": 3,
+          "31": 1,
+          "32": 2,
+          "33": 10,
+          "34": 7,
+          "38": 12,
+          "39": 13,
+          "40": 14,
+          "42": 17,
+          "46": 21,
+          "50": 26,
+          "54": 32,
+          "55": 30,
+          "56": 31,
+          "88": 40,
+          "99": 41,
+          "01": 4,
+          "02": 5,
+          "03": 6,
+          "04": 8,
+          "05": 9,
+          "06": 11,
+          "07": 15,
+          "08": 16,
+          "09": 18
+        },
+        "label": {
+          "0": "Hele landet",
+          "10": "Vest-Agder (-2019)",
+          "11": "Rogaland",
+          "12": "Hordaland (-2019)",
+          "13": "Bergen (-1971)",
+          "14": "Sogn og Fjordane (-2019)",
+          "15": "Møre og Romsdal",
+          "16": "Sør-Trøndelag (-2017)",
+          "17": "Nord-Trøndelag (-2017)",
+          "18": "Nordland - Nordlánnda",
+          "19": "Troms - Romsa (-2019)",
+          "20": "Finnmark - Finnmárku (-2019)",
+          "21": "Svalbard",
+          "22": "Jan Mayen",
+          "23": "Kontinentalsokkelen",
+          "25": "Utlandet",
+          "26": "Havområder",
+          "30": "Viken (2020-2023)",
+          "31": "Østfold",
+          "32": "Akershus",
+          "33": "Buskerud",
+          "34": "Innlandet",
+          "38": "Vestfold og Telemark (2020-2023)",
+          "39": "Vestfold",
+          "40": "Telemark",
+          "42": "Agder",
+          "46": "Vestland",
+          "50": "Trøndelag - Trööndelage",
+          "54": "Troms og Finnmark - Romsa ja Finnmárku (2020-2023)",
+          "55": "Troms - Romsa - Tromssa",
+          "56": "Finnmark - Finnmárku - Finmarkku",
+          "88": "Ikke bosatt i Norge",
+          "99": "Uoppgitt fylke",
+          "01": "Østfold (-2019)",
+          "02": "Akershus (-2019)",
+          "03": "Oslo - Oslove",
+          "04": "Hedmark (-2019)",
+          "05": "Oppland (-2019)",
+          "06": "Buskerud (-2019)",
+          "07": "Vestfold (-2019)",
+          "08": "Telemark (-2019)",
+          "09": "Aust-Agder (-2019)"
+        },
+        "note": {
+          "15": [
+            "1.1.2019 ble kommunen 1567 Rindal flyttet fra Møre og Romsdal til Trøndelag. 1.1.2020 ble kommunen 1571 Halsa flyttet fra Møre og Romsdal til Trøndelag. 1.1.2020 ble kommunen 1444 Hornindal flyttet fra Sogn og Fjordane til Møre og Romsdal."
+          ],
+          "18": [
+            "1.1.2020 ble kommunen 1852 Tjeldsund flyttet fra Nordland til Troms og Finnmark."
+          ],
+          "21": [
+            "Svalbard er ikke definert som fylke i lovens forstand, men i offisiell statistikk behandles Svalbard på lik linje med de andre fylkene i Norge."
+          ],
+          "50": [
+            "1.1.2019 ble kommunen 1567 Rindal flyttet fra Møre og Romsdal til Trøndelag. 1.1.2020 ble kommunen 1571 Halsa flyttet fra Møre og Romsdal til Trøndelag."
+          ]
+        }
+      },
+      "extension": {
+        "elimination": true,
+        "show": "code_value",
+        "codelists": [
+          {
+            "id": "agg_Fylker2024",
+            "label": "Fylker 2024-",
+            "type": "Aggregation",
+            "links": [
+              {
+                "rel": "metadata",
+                "hreflang": "no",
+                "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/agg_Fylker2024?lang=no"
+              }
+            ]
+          },
+          {
+            "id": "agg_Fylker2020",
+            "label": "Fylker 2020-2023",
+            "type": "Aggregation",
+            "links": [
+              {
+                "rel": "metadata",
+                "hreflang": "no",
+                "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/agg_Fylker2020?lang=no"
+              }
+            ]
+          },
+          {
+            "id": "vs_Landet",
+            "label": "Hele landet",
+            "type": "Valueset",
+            "links": [
+              {
+                "rel": "metadata",
+                "hreflang": "no",
+                "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_Landet?lang=no"
+              }
+            ]
+          },
+          {
+            "id": "vs_Fylker",
+            "label": "Alle fylker ",
+            "type": "Valueset",
+            "links": [
+              {
+                "rel": "metadata",
+                "hreflang": "no",
+                "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_Fylker?lang=no"
+              }
+            ]
+          }
+        ]
+      },
+      "link": {
+        "describedby": [
+          {
+            "extension": {
+              "Region": "urn:ssb:classification:klass:104"
+            }
+          }
+        ],
+        "related": [
+          {
+            "extension": {
+              "relation": "definitions",
+              "metaid": "urn:ssb:classification:klass:104"
+            },
+            "href": "https://www.ssb.no/klass/klassifikasjoner/104",
+            "label": "Standard for fylkesinndeling",
+            "type": "text/html"
+          }
+        ]
+      }
+    },
+    "UtdNivaa": {
+      "label": "utdanningsnivå",
+      "category": {
+        "index": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "5": 5
+        },
+        "label": {
+          "0": "Alle utdanningsnivå",
+          "1": "Grunnskole (nivå 1-2)",
+          "2": "Videregående skole (nivå 3-5)",
+          "3": "Universitets- og høgskoleutdanning, 1-4 år (nivå 6)",
+          "4": "Universitets- og høgskoleutdanning, over 4 år (nivå 7-8)",
+          "5": "Uoppgitt utdanning (9)"
+        },
+        "note": {
+          "2": [
+            "Videregående skolenivå inkluderer 'Påbygging til videregående utdanning' som omfatter utdanninger som bygger på videregående skole, men som ikke er godkjent som høyere utdanning."
+          ],
+          "3": [
+            "Universitets- og høgskolenivå kort, omfatter høyere utdanning t.o.m. 4 år."
+          ],
+          "4": [
+            "Universitets- og høgskolenivå lang, omfatter utdanninger på mer enn 4 år, samt forskerutdanning."
+          ]
+        }
+      },
+      "extension": {
+        "elimination": true,
+        "show": "value",
+        "codelists": []
+      },
+      "link": {
+        "describedby": [
+          {
+            "extension": {
+              "UtdNivaa": "urn:ssb:classification:klass:225"
+            }
+          }
+        ],
+        "related": [
+          {
+            "extension": {
+              "relation": "definitions",
+              "metaid": "urn:ssb:classification:klass:225"
+            },
+            "href": "https://www.ssb.no/klass/klassifikasjoner/225",
+            "label": "Kodeliste for Gruppering av befolkningens utdanningsnivå",
+            "type": "text/html"
+          }
+        ]
+      }
+    },
+    "Fagfelt": {
+      "label": "fagfelt",
+      "category": {
+        "index": {
+          "0": 1,
+          "1": 2,
+          "2": 3,
+          "3": 4,
+          "4": 5,
+          "5": 6,
+          "6": 7,
+          "7": 8,
+          "8": 9,
+          "9": 10,
+          "00": 0
+        },
+        "label": {
+          "0": "Allmenne fag",
+          "1": "Humanistiske og estetiske fag",
+          "2": "Lærerutdanninger og utdanninger i pedagogikk",
+          "3": "Samfunnsfag og juridiske fag",
+          "4": "Økonomiske og administrative fag",
+          "5": "Naturvitenskapelige fag, håndverksfag og tekniske fag",
+          "6": "Helse-, sosial- og idrettsfag",
+          "7": "Primærnæringsfag",
+          "8": "Samferdsels- og sikkerhetsfag og andre servicefag",
+          "9": "Uoppgitt fagfelt",
+          "00": "Fagfelt i alt"
+        }
+      },
+      "extension": {
+        "elimination": true,
+        "show": "value",
+        "codelists": []
+      }
+    },
+    "NACE2007": {
+      "label": "næring (SN2007)",
+      "category": {
+        "index": {
+          "84": 13,
+          "85": 14,
+          "00-99": 0,
+          "01-03": 1,
+          "05-09": 2,
+          "10-33": 3,
+          "35-39": 4,
+          "41-43": 5,
+          "45-47": 6,
+          "49-53": 7,
+          "55-56": 8,
+          "58-63": 9,
+          "64-66": 10,
+          "68-75": 11,
+          "77-82": 12,
+          "86-88": 15,
+          "90-99": 16,
+          "00": 17
+        },
+        "label": {
+          "84": "Off.adm., forsvar, sosialforsikring",
+          "85": "Undervisning",
+          "00-99": "Alle næringer",
+          "01-03": "Jordbruk, skogbruk og fiske",
+          "05-09": "Bergverksdrift og utvinning",
+          "10-33": "Industri",
+          "35-39": "Elektrisitet, vann og renovasjon",
+          "41-43": "Bygge- og anleggsvirksomhet",
+          "45-47": "Varehandel, reparasjon av motorvogner",
+          "49-53": "Transport og lagring",
+          "55-56": "Overnattings- og serveringsvirksomhet",
+          "58-63": "Informasjon og kommunikasjon",
+          "64-66": "Finansiering og forsikring",
+          "68-75": "Teknisk tjenesteyting, eiendomsdrift",
+          "77-82": "Forretningsmessig tjenesteyting",
+          "86-88": "Helse- og sosialtjenester",
+          "90-99": "Personlig tjenesteyting",
+          "00": "Uoppgitt"
+        }
+      },
+      "extension": {
+        "elimination": true,
+        "show": "code_value",
+        "codelists": []
+      },
+      "link": {
+        "describedby": [
+          {
+            "extension": {
+              "NACE2007": "urn:ssb:classification:klass:6"
+            }
+          }
+        ],
+        "related": [
+          {
+            "extension": {
+              "relation": "definitions",
+              "metaid": "urn:ssb:classification:klass:6"
+            },
+            "href": "https://www.ssb.no/klass/klassifikasjoner/6",
+            "label": "Standard for næringsgruppering (SN)",
+            "type": "text/html"
+          }
+        ]
+      }
+    },
+    "Alder": {
+      "label": "alder",
+      "category": {
+        "index": {
+          "15-74": 0,
+          "20-66": 1
+        },
+        "label": {
+          "15-74": "15-74 år",
+          "20-66": "20-66 år"
+        }
+      },
+      "extension": {
+        "elimination": true,
+        "show": "value",
+        "codelists": []
+      }
+    },
+    "ContentsCode": {
+      "label": "statistikkvariabel",
+      "category": {
+        "index": {
+          "SysselsatteBosted": 0,
+          "SysselsatteArbSted": 1
+        },
+        "label": {
+          "SysselsatteBosted": "Sysselsatte etter bosted",
+          "SysselsatteArbSted": "Sysselsatte etter arbeidssted"
+        },
+        "unit": {
+          "SysselsatteBosted": {
+            "base": "personer",
+            "decimals": 0
+          },
+          "SysselsatteArbSted": {
+            "base": "personer",
+            "decimals": 0
+          }
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "refperiod": {
+          "SysselsatteBosted": "4. kvartal",
+          "SysselsatteArbSted": "4. kvartal"
+        },
+        "show": "value",
+        "codelists": [],
+        "measuringType": {
+          "SysselsatteBosted": "Stock",
+          "SysselsatteArbSted": "Stock"
+        },
+        "priceType": {
+          "SysselsatteBosted": "NotApplicable",
+          "SysselsatteArbSted": "NotApplicable"
+        },
+        "adjustment": {
+          "SysselsatteBosted": "None",
+          "SysselsatteArbSted": "None"
+        },
+        "alternativeText": {
+          "SysselsatteBosted": "Sysselsatte etter bosted",
+          "SysselsatteArbSted": "Sysselsatte etter arbeidssted"
+        }
+      },
+      "link": {
+        "describedby": [
+          {
+            "extension": {
+              "SysselsatteBosted": "urn:ssb:conceptvariable:vardok:1116",
+              "SysselsatteArbSted": "urn:ssb:conceptvariable:vardok:1116"
+            }
+          }
+        ],
+        "related": [
+          {
+            "extension": {
+              "relation": "definitions",
+              "category": "SysselsatteBosted",
+              "metaid": "urn:ssb:conceptvariable:vardok:1116"
+            },
+            "href": "https://www.ssb.no/a/metadata/conceptvariable/vardok/1116/nb",
+            "label": "Variabeldefinisjon av Sysselsatte etter bosted",
+            "type": "text/html"
+          },
+          {
+            "extension": {
+              "relation": "definitions",
+              "category": "SysselsatteArbSted",
+              "metaid": "urn:ssb:conceptvariable:vardok:1116"
+            },
+            "href": "https://www.ssb.no/a/metadata/conceptvariable/vardok/1116/nb",
+            "label": "Variabeldefinisjon av Sysselsatte etter arbeidssted",
+            "type": "text/html"
+          }
+        ]
+      }
+    },
+    "Tid": {
+      "label": "år",
+      "category": {
+        "index": {
+          "2008": 0,
+          "2009": 1,
+          "2010": 2,
+          "2011": 3,
+          "2012": 4,
+          "2013": 5,
+          "2014": 6,
+          "2015": 7,
+          "2016": 8,
+          "2017": 9,
+          "2018": 10,
+          "2019": 11,
+          "2020": 12,
+          "2021": 13,
+          "2022": 14,
+          "2023": 15,
+          "2024": 16
+        },
+        "label": {
+          "2008": "2008",
+          "2009": "2009",
+          "2010": "2010",
+          "2011": "2011",
+          "2012": "2012",
+          "2013": "2013",
+          "2014": "2014",
+          "2015": "2015",
+          "2016": "2016",
+          "2017": "2017",
+          "2018": "2018",
+          "2019": "2019",
+          "2020": "2020",
+          "2021": "2021",
+          "2022": "2022",
+          "2023": "2023",
+          "2024": "2024"
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "show": "code",
+        "codelists": []
+      }
+    }
+  },
+  "extension": {
+    "px": {
+      "infofile": "None",
+      "tableid": "12850",
+      "decimals": 0,
+      "official-statistics": true,
+      "aggregallowed": true,
+      "copyright": false,
+      "language": "no",
+      "contents": "12850: Sysselsatte per 4. kvartal,",
+      "descriptiondefault": false,
+      "heading": [
+        "ContentsCode",
+        "Tid"
+      ],
+      "stub": [
+        "Region",
+        "UtdNivaa",
+        "Fagfelt",
+        "NACE2007",
+        "Alder"
+      ],
+      "matrix": "12850",
+      "subject-code": "al",
+      "subject-area": "Arbeid og lønn"
+    },
+    "contact": [
+      {
+        "name": "Pål Nordby",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "40 90 23 78",
+        "mail": "rby@ssb.no",
+        "raw": "Pål Nordby, Statistisk sentralbyrå# +47 40 90 23 78#rby@ssb.no"
+      },
+      {
+        "name": "Arbeidsmarked",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "62 88 50 00",
+        "mail": "arbeidsmarked@ssb.no",
+        "raw": " Arbeidsmarked, Statistisk sentralbyrå# +47 62 88 50 00#arbeidsmarked@ssb.no"
+      },
+      {
+        "name": "Malin Pettersen",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "40 90 25 63",
+        "mail": "inp@ssb.no",
+        "raw": "Malin Pettersen, Statistisk sentralbyrå# +47 40 90 25 63#inp@ssb.no"
+      }
+    ]
+  },
+  "value": []
+}

@@ -442,6 +442,184 @@
       ]
     },
     {
+      "id": "13472",
+      "label": "13472: Sektor- (5 grupper) og næringsfordeling (8 grupper) for sysselsatte (15-74 år). 4. kvartal (K) 2008-2025",
+      "description": "",
+      "sortCode": "0000000070",
+      "updated": "2026-02-26T07:00:00Z",
+      "firstPeriod": "2008",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "næring (SN2007)",
+        "sektor",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "al",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "al",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al06",
+            "label": "Sysselsetting",
+            "sortCode": "0000005"
+          },
+          {
+            "id": "regsys",
+            "label": "Sysselsetting, registerbasert",
+            "sortCode": "0000006"
+          },
+          {
+            "id": "SBMENU9641",
+            "label": "Sysselsatte, 15-74 år, etter næring og sektor",
+            "sortCode": "0000000050"
+          }
+        ],
+        [
+          {
+            "id": "sv",
+            "label": "Svalbard",
+            "sortCode": "0000092"
+          },
+          {
+            "id": "sv01",
+            "label": "Arbeid, lønn og utdanning",
+            "sortCode": "0000093"
+          },
+          {
+            "id": "regsys",
+            "label": "Sysselsetting, registerbasert",
+            "sortCode": "0000094"
+          },
+          {
+            "id": "SBMENU9641",
+            "label": "Sysselsatte, 15-74 år, etter næring og sektor",
+            "sortCode": "0000000050"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13472?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13472?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13472/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13472/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "12850",
+      "label": "12850: Sysselsatte, etter bosted, arbeidssted, næring (17 grupper, SN2007), fagfelt, utdanningsnivå og alder. 4. kvartal (F) 2008-2024",
+      "description": "",
+      "sortCode": "0000000205",
+      "updated": "2025-08-13T06:00:00Z",
+      "firstPeriod": "2008",
+      "lastPeriod": "2024",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "utdanningsnivå",
+        "fagfelt",
+        "næring (SN2007)",
+        "alder",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "al",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "al",
+            "label": "Arbeid og lønn",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al06",
+            "label": "Sysselsetting",
+            "sortCode": "0000005"
+          },
+          {
+            "id": "regsys",
+            "label": "Sysselsetting, registerbasert",
+            "sortCode": "0000006"
+          },
+          {
+            "id": "SBMENU4262",
+            "label": "Sysselsatte, 15-74 år, etter bosted, arbeidssted, næring og utdanning",
+            "sortCode": "0000000200"
+          }
+        ],
+        [
+          {
+            "id": "sv",
+            "label": "Svalbard",
+            "sortCode": "0000092"
+          },
+          {
+            "id": "sv01",
+            "label": "Arbeid, lønn og utdanning",
+            "sortCode": "0000093"
+          },
+          {
+            "id": "regsys",
+            "label": "Sysselsetting, registerbasert",
+            "sortCode": "0000094"
+          },
+          {
+            "id": "SBMENU4262",
+            "label": "Sysselsatte, 15-74 år, etter bosted, arbeidssted, næring og utdanning",
+            "sortCode": "0000000200"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12850?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12850?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12850/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12850/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
       "id": "10706",
       "label": "10706: Finansielle sektorregnskaper, kvartalstall, etter sektor, finanspost og motsektor (mill. kr) 1995K4-2026K1",
       "description": "",
@@ -1544,6 +1722,429 @@
       ]
     },
     {
+      "id": "12362",
+      "label": "12362: Utgifter til tjenesteområdene, kommunekonsern, etter funksjon og art (K) 2015-2025",
+      "description": "",
+      "sortCode": "0000000530",
+      "updated": "2026-06-15T06:00:00Z",
+      "firstPeriod": "2015",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "region",
+        "funksjon",
+        "art",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "os",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "bb",
+            "label": "Bygg, bolig og eiendom",
+            "sortCode": "0000026"
+          },
+          {
+            "id": "bb01",
+            "label": "Bolig og boforhold",
+            "sortCode": "0000027"
+          },
+          {
+            "id": "brann_kostra",
+            "label": "Brann- og ulukkesvern",
+            "sortCode": "0000028"
+          },
+          {
+            "id": "SBMENU6320",
+            "label": "KOSTRA",
+            "sortCode": "0000000500"
+          }
+        ],
+        [
+          {
+            "id": "bb",
+            "label": "Bygg, bolig og eiendom",
+            "sortCode": "0000026"
+          },
+          {
+            "id": "bb01",
+            "label": "Bolig og boforhold",
+            "sortCode": "0000027"
+          },
+          {
+            "id": "kombolig_kostra",
+            "label": "Kommunale boliger",
+            "sortCode": "0000028"
+          },
+          {
+            "id": "SBMENU6300",
+            "label": "KOSTRA - Økonomi",
+            "sortCode": "0000000600"
+          }
+        ],
+        [
+          {
+            "id": "he",
+            "label": "Helse",
+            "sortCode": "0000034"
+          },
+          {
+            "id": "he04",
+            "label": "Helsetjenester",
+            "sortCode": "0000037"
+          },
+          {
+            "id": "helsetjko",
+            "label": "Kommunehelsetenesta",
+            "sortCode": "0000038"
+          },
+          {
+            "id": "SBMENU9004",
+            "label": "KOSTRA – Økonomi",
+            "sortCode": "0000000700"
+          }
+        ],
+        [
+          {
+            "id": "he",
+            "label": "Helse",
+            "sortCode": "0000034"
+          },
+          {
+            "id": "he04",
+            "label": "Helsetjenester",
+            "sortCode": "0000037"
+          },
+          {
+            "id": "kombolig_kostra",
+            "label": "Kommunale boliger",
+            "sortCode": "0000038"
+          },
+          {
+            "id": "SBMENU6300",
+            "label": "KOSTRA - Økonomi",
+            "sortCode": "0000000600"
+          }
+        ],
+        [
+          {
+            "id": "he",
+            "label": "Helse",
+            "sortCode": "0000034"
+          },
+          {
+            "id": "he04",
+            "label": "Helsetjenester",
+            "sortCode": "0000037"
+          },
+          {
+            "id": "pleie",
+            "label": "Sjukeheimar, heimetenester og andre omsorgstenester",
+            "sortCode": "0000038"
+          },
+          {
+            "id": "SBMENU5942",
+            "label": "KOSTRA",
+            "sortCode": "0000000700"
+          }
+        ],
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in10",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000050"
+          },
+          {
+            "id": "barneverng",
+            "label": "Barnevern",
+            "sortCode": "0000051"
+          },
+          {
+            "id": "SBMENU6240",
+            "label": "KOSTRA ",
+            "sortCode": "0000008000"
+          }
+        ],
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in10",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000050"
+          },
+          {
+            "id": "soshjelpk",
+            "label": "Økonomisk sosialhjelp",
+            "sortCode": "0000051"
+          },
+          {
+            "id": "SBMENU10857",
+            "label": "KOSTRA - Økonomi",
+            "sortCode": "0000000750"
+          }
+        ],
+        [
+          {
+            "id": "in",
+            "label": "Innvandring og innvandrere",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in12",
+            "label": "Utdanning",
+            "sortCode": "0000051"
+          },
+          {
+            "id": "barnehager",
+            "label": "Barnehager",
+            "sortCode": "0000052"
+          },
+          {
+            "id": "SBMENU6740",
+            "label": "KOSTRA - Økonomi",
+            "sortCode": "0000000520"
+          }
+        ],
+        [
+          {
+            "id": "kf",
+            "label": "Kultur og fritid",
+            "sortCode": "0000060"
+          },
+          {
+            "id": "kf02",
+            "label": "Kultur",
+            "sortCode": "0000062"
+          },
+          {
+            "id": "kultur_kostra",
+            "label": "Kulturtilbod",
+            "sortCode": "0000063"
+          },
+          {
+            "id": "SBMENU9007",
+            "label": "KOSTRA – Økonomi",
+            "sortCode": "0000000100"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "kommregnko",
+            "label": "Kommuneregnskap",
+            "sortCode": "0000078"
+          },
+          {
+            "id": "SBMENU7689",
+            "label": "Tall for kommunale tjenesteområder ",
+            "sortCode": "0000000200"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os01",
+            "label": "KOSTRA",
+            "sortCode": "0000078"
+          },
+          {
+            "id": "kostrahoved",
+            "label": "KOSTRA",
+            "sortCode": "0000079"
+          },
+          {
+            "id": "SBMENU10423",
+            "label": "Kommuneregnskap",
+            "sortCode": "0000816000"
+          },
+          {
+            "id": "SBMENU10474",
+            "label": "Tall for kommunale tjenesteområder ",
+            "sortCode": "0000019000"
+          }
+        ],
+        [
+          {
+            "id": "sk",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000087"
+          },
+          {
+            "id": "sk01",
+            "label": "Barne- og familievern",
+            "sortCode": "0000088"
+          },
+          {
+            "id": "barneverng",
+            "label": "Barnevern",
+            "sortCode": "0000089"
+          },
+          {
+            "id": "SBMENU6240",
+            "label": "KOSTRA ",
+            "sortCode": "0000008000"
+          }
+        ],
+        [
+          {
+            "id": "sk",
+            "label": "Sosiale forhold og kriminalitet",
+            "sortCode": "0000087"
+          },
+          {
+            "id": "sk04",
+            "label": "Trygd og stønad",
+            "sortCode": "0000091"
+          },
+          {
+            "id": "soshjelpk",
+            "label": "Økonomisk sosialhjelp",
+            "sortCode": "0000092"
+          },
+          {
+            "id": "SBMENU10857",
+            "label": "KOSTRA - Økonomi",
+            "sortCode": "0000000750"
+          }
+        ],
+        [
+          {
+            "id": "sv",
+            "label": "Svalbard",
+            "sortCode": "0000092"
+          },
+          {
+            "id": "sv01",
+            "label": "Arbeid, lønn og utdanning",
+            "sortCode": "0000093"
+          },
+          {
+            "id": "barnehager",
+            "label": "Barnehager",
+            "sortCode": "0000094"
+          },
+          {
+            "id": "SBMENU6740",
+            "label": "KOSTRA - Økonomi",
+            "sortCode": "0000000520"
+          }
+        ],
+        [
+          {
+            "id": "tr",
+            "label": "Transport og reiseliv",
+            "sortCode": "0000102"
+          },
+          {
+            "id": "tr01",
+            "label": "Landtransport",
+            "sortCode": "0000103"
+          },
+          {
+            "id": "samf_kostra",
+            "label": "Samferdsel i kommuner og fylkeskommuner",
+            "sortCode": "0000104"
+          },
+          {
+            "id": "SBMENU9013",
+            "label": "KOSTRA – Kommuner – Økonomi",
+            "sortCode": "0000000400"
+          }
+        ],
+        [
+          {
+            "id": "tr",
+            "label": "Transport og reiseliv",
+            "sortCode": "0000102"
+          },
+          {
+            "id": "tr05",
+            "label": "Sjøtransport",
+            "sortCode": "0000106"
+          },
+          {
+            "id": "samf_kostra",
+            "label": "Samferdsel i kommuner og fylkeskommuner",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "SBMENU9013",
+            "label": "KOSTRA – Kommuner – Økonomi",
+            "sortCode": "0000000400"
+          }
+        ],
+        [
+          {
+            "id": "ud",
+            "label": "Utdanning",
+            "sortCode": "0000107"
+          },
+          {
+            "id": "ud01",
+            "label": "Barnehager",
+            "sortCode": "0000108"
+          },
+          {
+            "id": "barnehager",
+            "label": "Barnehager",
+            "sortCode": "0000109"
+          },
+          {
+            "id": "SBMENU6740",
+            "label": "KOSTRA - Økonomi",
+            "sortCode": "0000000520"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12362?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12362?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12362/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/12362/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
       "id": "14091",
       "label": "14091: Elektrisitetsbalanse (MWh) 1993M01-2026M06",
       "description": "",
@@ -2039,6 +2640,138 @@
           "rel": "data",
           "hreflang": "no",
           "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13654/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07456",
+      "label": "07456: Fastleger, etter kjønn, innvandringskategori og alder 2002-2025",
+      "description": "",
+      "sortCode": "0000000410",
+      "updated": "2026-03-16T07:00:00Z",
+      "firstPeriod": "2002",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "kjønn",
+        "innvandringskategori",
+        "alder",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "he",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "he",
+            "label": "Helse",
+            "sortCode": "0000034"
+          },
+          {
+            "id": "he04",
+            "label": "Helsetjenester",
+            "sortCode": "0000037"
+          },
+          {
+            "id": "helsetjko",
+            "label": "Kommunehelsetenesta",
+            "sortCode": "0000038"
+          },
+          {
+            "id": "SBMENU4034",
+            "label": "Fastleger",
+            "sortCode": "0000000400"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07456?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07456?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07456/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07456/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "06358",
+      "label": "06358: Estimat av gjennomsnittlig antall kontakter og konsultasjoner i løpet av året, etter kjønn og alder (avslutta serie) 2005",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2007-10-10T08:00:00Z",
+      "firstPeriod": "2005",
+      "lastPeriod": "2005",
+      "category": "public",
+      "variableNames": [
+        "kjønn",
+        "alder",
+        "statistikkvariabel",
+        "år"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "he",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "he",
+            "label": "Helse",
+            "sortCode": "0000034"
+          },
+          {
+            "id": "he04",
+            "label": "Helsetjenester",
+            "sortCode": "0000037"
+          },
+          {
+            "id": "helsetjko",
+            "label": "Kommunehelsetenesta",
+            "sortCode": "0000038"
+          },
+          {
+            "id": "FRA_GAMMEL_00071",
+            "label": "Avslutta tidsserier",
+            "sortCode": "0000900070"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06358?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06358?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06358/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/06358/data?lang=no&outputFormat=json-stat2"
         }
       ]
     },
@@ -3154,6 +3887,71 @@
       ]
     },
     {
+      "id": "11189",
+      "label": "11189: Investeringer og kapitalbeholdninger, etter investeringsart og næring 1970-2023",
+      "description": "",
+      "sortCode": "0000000533",
+      "updated": "2026-06-02T06:00:00Z",
+      "firstPeriod": "1970",
+      "lastPeriod": "2023",
+      "category": "public",
+      "variableNames": [
+        "investeringsart",
+        "næring",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "nk",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "nk",
+            "label": "Nasjonalregnskap og konjunkturer",
+            "sortCode": "0000066"
+          },
+          {
+            "id": "nk03",
+            "label": "Nasjonalregnskap",
+            "sortCode": "0000069"
+          },
+          {
+            "id": "knr",
+            "label": "Nasjonalregnskap",
+            "sortCode": "0000070"
+          },
+          {
+            "id": "SBMENU5140",
+            "label": "Årlige tall",
+            "sortCode": "0000000500"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11189?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11189?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11189/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11189/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
       "id": "11016",
       "label": "11016: Arealbruk i tettsteder, per kommune (km²) (K) 2013-2025",
       "description": "",
@@ -3603,6 +4401,659 @@
           "rel": "data",
           "hreflang": "no",
           "href": "https://data.ssb.no/api/pxwebapi/v2/tables/14155/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "11560",
+      "label": "11560: Offentlig forvaltnings fordringer og gjeld. Kvartalsvise tall (mill. kr) 1995K4-2026K1",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2026-06-09T06:00:00Z",
+      "firstPeriod": "1995K4",
+      "lastPeriod": "2026K1",
+      "category": "public",
+      "variableNames": [
+        "sektor",
+        "finansobjekt",
+        "statistikkvariabel",
+        "kvartal"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "os",
+      "timeUnit": "Quarterly",
+      "paths": [
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000078"
+          },
+          {
+            "id": "SBMENU5262",
+            "label": "Kvartalsvise tall",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os04",
+            "label": "Offentlig forvaltning",
+            "sortCode": "0000079"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000080"
+          },
+          {
+            "id": "SBMENU5262",
+            "label": "Kvartalsvise tall",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os07",
+            "label": "Statlige finanser",
+            "sortCode": "0000081"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "SBMENU5262",
+            "label": "Kvartalsvise tall",
+            "sortCode": "0000000005"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11560?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11560?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11560/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11560/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "11559",
+      "label": "11559: Offentlig bruttogjeld, pålydende verdier. Kvartalsvise tall (mill. kr) 1995K4-2026K1",
+      "description": "",
+      "sortCode": "0000000015",
+      "updated": "2026-06-09T06:00:00Z",
+      "firstPeriod": "1995K4",
+      "lastPeriod": "2026K1",
+      "category": "public",
+      "variableNames": [
+        "sektor",
+        "finansobjekt",
+        "statistikkvariabel",
+        "kvartal"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "os",
+      "timeUnit": "Quarterly",
+      "paths": [
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000078"
+          },
+          {
+            "id": "SBMENU5262",
+            "label": "Kvartalsvise tall",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os04",
+            "label": "Offentlig forvaltning",
+            "sortCode": "0000079"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000080"
+          },
+          {
+            "id": "SBMENU5262",
+            "label": "Kvartalsvise tall",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os07",
+            "label": "Statlige finanser",
+            "sortCode": "0000081"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "SBMENU5262",
+            "label": "Kvartalsvise tall",
+            "sortCode": "0000000005"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11559?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11559?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11559/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/11559/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "05830",
+      "label": "05830: Statsgjelden. Kvartalsvise tall (mill. kr) 1965K4-2026K1",
+      "description": "",
+      "sortCode": "0000000017",
+      "updated": "2026-06-09T06:00:00Z",
+      "firstPeriod": "1965K4",
+      "lastPeriod": "2026K1",
+      "category": "public",
+      "variableNames": [
+        "finansobjekt",
+        "statistikkvariabel",
+        "kvartal"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "os",
+      "timeUnit": "Quarterly",
+      "paths": [
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000078"
+          },
+          {
+            "id": "SBMENU5262",
+            "label": "Kvartalsvise tall",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os04",
+            "label": "Offentlig forvaltning",
+            "sortCode": "0000079"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000080"
+          },
+          {
+            "id": "SBMENU5262",
+            "label": "Kvartalsvise tall",
+            "sortCode": "0000000005"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os07",
+            "label": "Statlige finanser",
+            "sortCode": "0000081"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "SBMENU5262",
+            "label": "Kvartalsvise tall",
+            "sortCode": "0000000005"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05830?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05830?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05830/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/05830/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "07511",
+      "label": "07511: Offentlig forvaltnings fordringer og gjeld. Årlige tall (mill. kr) 1995-2025",
+      "description": "",
+      "sortCode": "0000000110",
+      "updated": "2026-06-09T06:00:00Z",
+      "firstPeriod": "1995",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "sektor",
+        "finansobjekt",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "os",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000078"
+          },
+          {
+            "id": "SBMENU5263",
+            "label": "Årlige tall",
+            "sortCode": "0000000100"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os04",
+            "label": "Offentlig forvaltning",
+            "sortCode": "0000079"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000080"
+          },
+          {
+            "id": "SBMENU5263",
+            "label": "Årlige tall",
+            "sortCode": "0000000100"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os07",
+            "label": "Statlige finanser",
+            "sortCode": "0000081"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "SBMENU5263",
+            "label": "Årlige tall",
+            "sortCode": "0000000100"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07511?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07511?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07511/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07511/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "08753",
+      "label": "08753: Offentlig bruttogjeld, pålydende verdier. Årlige tall (mill. kr) 1995-2025",
+      "description": "",
+      "sortCode": "0000000120",
+      "updated": "2026-06-09T06:00:00Z",
+      "firstPeriod": "1995",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "sektor",
+        "finansobjekt",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "os",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000078"
+          },
+          {
+            "id": "SBMENU5263",
+            "label": "Årlige tall",
+            "sortCode": "0000000100"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os04",
+            "label": "Offentlig forvaltning",
+            "sortCode": "0000079"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000080"
+          },
+          {
+            "id": "SBMENU5263",
+            "label": "Årlige tall",
+            "sortCode": "0000000100"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os07",
+            "label": "Statlige finanser",
+            "sortCode": "0000081"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "SBMENU5263",
+            "label": "Årlige tall",
+            "sortCode": "0000000100"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08753?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08753?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08753/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08753/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "04423",
+      "label": "04423: Offentlig forvaltning med undersektorer. Finansiell balanse pr. 31.12. til pålydende verdi, etter finansobjekt (mill. kr) (avslutta serie) 1990-2007",
+      "description": "",
+      "sortCode": "0000000010",
+      "updated": "2008-09-26T08:00:00Z",
+      "firstPeriod": "1990",
+      "lastPeriod": "2007",
+      "category": "public",
+      "variableNames": [
+        "finansobjekt",
+        "statistikkvariabel",
+        "år"
+      ],
+      "discontinued": true,
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "os",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os02",
+            "label": "Kommunale finanser",
+            "sortCode": "0000077"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000078"
+          },
+          {
+            "id": "FRA_GAMMEL_00478",
+            "label": "Avslutta tidsserier",
+            "sortCode": "0000900010"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os04",
+            "label": "Offentlig forvaltning",
+            "sortCode": "0000079"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000080"
+          },
+          {
+            "id": "FRA_GAMMEL_00478",
+            "label": "Avslutta tidsserier",
+            "sortCode": "0000900010"
+          }
+        ],
+        [
+          {
+            "id": "os",
+            "label": "Offentlig sektor",
+            "sortCode": "0000076"
+          },
+          {
+            "id": "os07",
+            "label": "Statlige finanser",
+            "sortCode": "0000081"
+          },
+          {
+            "id": "offogjeld",
+            "label": "Offentlig forvaltnings fordringer og gjeld",
+            "sortCode": "0000082"
+          },
+          {
+            "id": "FRA_GAMMEL_00478",
+            "label": "Avslutta tidsserier",
+            "sortCode": "0000900010"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04423?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04423?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04423/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/04423/data?lang=no&outputFormat=json-stat2"
         }
       ]
     },
@@ -5112,6 +6563,72 @@
           "rel": "data",
           "hreflang": "no",
           "href": "https://data.ssb.no/api/pxwebapi/v2/tables/07478/data?lang=no&outputFormat=json-stat2"
+        }
+      ]
+    },
+    {
+      "id": "08801",
+      "label": "08801: Utenrikshandel med varer, etter varenummer (HS) og land 1988-2025",
+      "description": "",
+      "sortCode": "0000000070",
+      "updated": "2026-05-15T06:00:00Z",
+      "firstPeriod": "1988",
+      "lastPeriod": "2025",
+      "category": "public",
+      "variableNames": [
+        "varenummer",
+        "import/eksport",
+        "land",
+        "statistikkvariabel",
+        "år"
+      ],
+      "source": "Statistisk sentralbyrå",
+      "subjectCode": "ut",
+      "timeUnit": "Annual",
+      "paths": [
+        [
+          {
+            "id": "ut",
+            "label": "Utenriksøkonomi",
+            "sortCode": "0000115"
+          },
+          {
+            "id": "ut02",
+            "label": "Utenrikshandel",
+            "sortCode": "0000117"
+          },
+          {
+            "id": "muh",
+            "label": "Utenrikshandel med varer",
+            "sortCode": "0000118"
+          },
+          {
+            "id": "SBMENU4159",
+            "label": "Gruppering etter Tolltariffen/HS-nomenklaturen",
+            "sortCode": "0000000055"
+          }
+        ]
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08801?lang=no"
+        },
+        {
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08801?lang=en"
+        },
+        {
+          "rel": "metadata",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08801/metadata?lang=no"
+        },
+        {
+          "rel": "data",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/08801/data?lang=no&outputFormat=json-stat2"
         }
       ]
     },

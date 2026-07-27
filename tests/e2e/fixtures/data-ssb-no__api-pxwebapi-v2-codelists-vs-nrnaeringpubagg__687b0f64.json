@@ -1,0 +1,383 @@
+{
+  "id": "vs_NRNaeringPubAgg",
+  "label": "Hovednæring",
+  "language": "no",
+  "languages": [
+    "en",
+    "no"
+  ],
+  "elimination": true,
+  "eliminationValueCode": "nr23_6",
+  "type": "Valueset",
+  "values": [
+    {
+      "code": "nr23_6",
+      "label": "Totalt for næringer",
+      "valueMap": [
+        "nr23_6"
+      ]
+    },
+    {
+      "code": "pub2X01_02",
+      "label": "Jordbruk og skogbruk",
+      "valueMap": [
+        "pub2X01_02"
+      ]
+    },
+    {
+      "code": "pub2X03",
+      "label": "Fiske, fangst og akvakultur",
+      "valueMap": [
+        "pub2X03"
+      ]
+    },
+    {
+      "code": "pub2X05",
+      "label": "Bergverksdrift",
+      "valueMap": [
+        "pub2X05"
+      ]
+    },
+    {
+      "code": "nr2X06_09",
+      "label": "Utvinning av råolje og naturgass, inkl. tjenester",
+      "valueMap": [
+        "nr2X06_09"
+      ]
+    },
+    {
+      "code": "pub2X06",
+      "label": "¬ Utvinning av råolje og naturgass",
+      "valueMap": [
+        "pub2X06"
+      ]
+    },
+    {
+      "code": "pub2X09",
+      "label": "¬ Tjenester tilknyttet utvinning av råolje og naturgass",
+      "valueMap": [
+        "pub2X09"
+      ]
+    },
+    {
+      "code": "nr23ind",
+      "label": "Industri",
+      "valueMap": [
+        "nr23ind"
+      ]
+    },
+    {
+      "code": "pub2X10_12",
+      "label": "¬ Nærings-, drikkevare- og tobakksindustri",
+      "valueMap": [
+        "pub2X10_12"
+      ]
+    },
+    {
+      "code": "nr2310",
+      "label": "¬¬ Næringsmidler u/fiskeforedling  inkl. drikkevarer og tobakk",
+      "valueMap": [
+        "nr2310"
+      ]
+    },
+    {
+      "code": "nr2312",
+      "label": "¬¬ Bearbeiding og konservering av fisk mv",
+      "valueMap": [
+        "nr2312"
+      ]
+    },
+    {
+      "code": "pub2X13_15",
+      "label": "¬ Tekstil-, beklednings- og lærvareindustri",
+      "valueMap": [
+        "pub2X13_15"
+      ]
+    },
+    {
+      "code": "nr2315",
+      "label": "¬ Trelast- og trevareindustri, unntatt møbler",
+      "valueMap": [
+        "nr2315"
+      ]
+    },
+    {
+      "code": "nr2316",
+      "label": "¬ Produksjon av papir og papirvarer",
+      "valueMap": [
+        "nr2316"
+      ]
+    },
+    {
+      "code": "pub2X18",
+      "label": "¬ Trykking og reproduksjon av innspilte opptak",
+      "valueMap": [
+        "pub2X18"
+      ]
+    },
+    {
+      "code": "pub2X19_21",
+      "label": "¬ Oljeraffinering, kjemisk og farmasøytisk industri",
+      "valueMap": [
+        "pub2X19_21"
+      ]
+    },
+    {
+      "code": "nr2319",
+      "label": "¬¬ Produksjon av kjemiske råvarer",
+      "valueMap": [
+        "nr2319"
+      ]
+    },
+    {
+      "code": "pub2X22_23",
+      "label": "¬ Gummivare- og plastindustri, mineralproduktindustri",
+      "valueMap": [
+        "pub2X22_23"
+      ]
+    },
+    {
+      "code": "pub2X24",
+      "label": "¬ Produksjon av metaller",
+      "valueMap": [
+        "pub2X24"
+      ]
+    },
+    {
+      "code": "pub2X25_28",
+      "label": "¬ Produksjon av metallvarer, elektrisk utstyr og maskiner",
+      "valueMap": [
+        "pub2X25_28"
+      ]
+    },
+    {
+      "code": "pub2X29_30",
+      "label": "¬ Verftsindustri og annen transportmiddelindustri",
+      "valueMap": [
+        "pub2X29_30"
+      ]
+    },
+    {
+      "code": "pub2X31_32",
+      "label": "¬ Produksjon av møbler og annen industriproduksjon",
+      "valueMap": [
+        "pub2X31_32"
+      ]
+    },
+    {
+      "code": "pub2X33",
+      "label": "¬ Reparasjon og installasjon av maskiner og utstyr",
+      "valueMap": [
+        "pub2X33"
+      ]
+    },
+    {
+      "code": "pub2X35",
+      "label": "Elektrisitets-, gass- og varmtvannsforsyning",
+      "valueMap": [
+        "pub2X35"
+      ]
+    },
+    {
+      "code": "pub2X36_39",
+      "label": "Vannforsyning, avløp og renovasjon",
+      "valueMap": [
+        "pub2X36_39"
+      ]
+    },
+    {
+      "code": "pub2X41_43",
+      "label": "Bygge- og anleggsvirksomhet",
+      "valueMap": [
+        "pub2X41_43"
+      ]
+    },
+    {
+      "code": "pub2X45_47",
+      "label": "Varehandel og reparasjon av motorvogner",
+      "valueMap": [
+        "pub2X45_47"
+      ]
+    },
+    {
+      "code": "pub2X49B",
+      "label": "Rørtransport",
+      "valueMap": [
+        "pub2X49B"
+      ]
+    },
+    {
+      "code": "pub2X50A",
+      "label": "Utenriks sjøfart",
+      "valueMap": [
+        "pub2X50A"
+      ]
+    },
+    {
+      "code": "pub2X49A_52",
+      "label": "Transport utenom utenriks sjøfart",
+      "valueMap": [
+        "pub2X49A_52"
+      ]
+    },
+    {
+      "code": "pub2X53",
+      "label": "Post og distribusjonsvirksomhet",
+      "valueMap": [
+        "pub2X53"
+      ]
+    },
+    {
+      "code": "pub2X55_56",
+      "label": "Overnattings- og serveringsvirksomhet",
+      "valueMap": [
+        "pub2X55_56"
+      ]
+    },
+    {
+      "code": "pub2X58_63",
+      "label": "Informasjon og kommunikasjon",
+      "valueMap": [
+        "pub2X58_63"
+      ]
+    },
+    {
+      "code": "pub2X64_66",
+      "label": "Finansierings- og forsikringsvirksomhet",
+      "valueMap": [
+        "pub2X64_66"
+      ]
+    },
+    {
+      "code": "pub2X68A",
+      "label": "Omsetning og drift av fast eiendom",
+      "valueMap": [
+        "pub2X68A"
+      ]
+    },
+    {
+      "code": "pub2X68B",
+      "label": "Boligtjenester, egen bolig",
+      "valueMap": [
+        "pub2X68B"
+      ]
+    },
+    {
+      "code": "pub2X69_75",
+      "label": "Faglig, vitenskapelig og teknisk tjenesteyting",
+      "valueMap": [
+        "pub2X69_75"
+      ]
+    },
+    {
+      "code": "pub2X77_82",
+      "label": "Forretningsmessig tjenesteyting",
+      "valueMap": [
+        "pub2X77_82"
+      ]
+    },
+    {
+      "code": "pub2X84",
+      "label": "Offentlig administrasjon og forsvar",
+      "valueMap": [
+        "pub2X84"
+      ]
+    },
+    {
+      "code": "pub2X85",
+      "label": "Undervisning",
+      "valueMap": [
+        "pub2X85"
+      ]
+    },
+    {
+      "code": "pub2X86_88",
+      "label": "Helse- og omsorgstjenester",
+      "valueMap": [
+        "pub2X86_88"
+      ]
+    },
+    {
+      "code": "pub2X90_97",
+      "label": "Kultur, underholdning og annen tjenesteyting",
+      "valueMap": [
+        "pub2X90_97"
+      ]
+    },
+    {
+      "code": "nr24_5",
+      "label": "¬ Offentlig forvaltning",
+      "valueMap": [
+        "nr24_5"
+      ]
+    },
+    {
+      "code": "nr24_",
+      "label": "¬¬ Statsforvaltning",
+      "valueMap": [
+        "nr24_"
+      ]
+    },
+    {
+      "code": "nr24sivil",
+      "label": "¬¬¬ Sivil forvaltning",
+      "valueMap": [
+        "nr24sivil"
+      ]
+    },
+    {
+      "code": "nr2482",
+      "label": "¬¬¬ Forsvar",
+      "valueMap": [
+        "nr2482"
+      ]
+    },
+    {
+      "code": "nr25_",
+      "label": "¬¬ Kommuneforvaltning",
+      "valueMap": [
+        "nr25_"
+      ]
+    },
+    {
+      "code": "nr23_6fn",
+      "label": "Fastlands-Norge",
+      "valueMap": [
+        "nr23_6fn"
+      ]
+    },
+    {
+      "code": "nr23fn",
+      "label": "¬ Markedsrettet virksomhet Fastlands-Norge",
+      "valueMap": [
+        "nr23fn"
+      ]
+    },
+    {
+      "code": "nr23mark",
+      "label": "Markedsrettet virksomhet",
+      "valueMap": [
+        "nr23mark"
+      ]
+    },
+    {
+      "code": "nrimark",
+      "label": "Ikke-markedsrettet virksomhet",
+      "valueMap": [
+        "nrimark"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "no",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_NRNaeringPubAgg?lang=no"
+    },
+    {
+      "rel": "alternate",
+      "hreflang": "en",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_NRNaeringPubAgg?lang=en"
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "version": "2.0",
+  "class": "dataset",
+  "label": "11189: Investeringer og kapitalbeholdninger, etter år",
+  "source": "Statistisk sentralbyrå",
+  "updated": "2026-06-02T06:00:00Z",
+  "note": [
+    "De enkelte tallene i faste priser summerer seg ikke opp til del- og totalsummene på grunn av kjedingsavvik."
+  ],
+  "role": {
+    "time": [
+      "Tid"
+    ],
+    "metric": [
+      "ContentsCode"
+    ]
+  },
+  "id": [
+    "ContentsCode",
+    "Tid"
+  ],
+  "size": [
+    3,
+    3
+  ],
+  "dimension": {
+    "ContentsCode": {
+      "label": "statistikkvariabel",
+      "category": {
+        "index": {
+          "DEP": 0,
+          "DEP3": 1,
+          "DEP2": 2
+        },
+        "label": {
+          "DEP": "Kapitalslit. Løpende priser (mill. kr)",
+          "DEP3": "Kapitalslit. Faste 2023-priser (mill. kr)",
+          "DEP2": "Kapitalslit. Volumendring, årlig (prosent)"
+        },
+        "unit": {
+          "DEP": {
+            "base": "mill. kr",
+            "decimals": 0
+          },
+          "DEP3": {
+            "base": "mill. kr",
+            "decimals": 0
+          },
+          "DEP2": {
+            "base": "prosent",
+            "decimals": 1
+          }
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "refperiod": {
+          "DEP": "31.12.",
+          "DEP3": "31.12.",
+          "DEP2": "31.12."
+        },
+        "show": "value",
+        "measuringType": {
+          "DEP": "Flow",
+          "DEP3": "Flow",
+          "DEP2": "Average"
+        },
+        "priceType": {
+          "DEP": "Fixed",
+          "DEP3": "Fixed",
+          "DEP2": "Fixed"
+        },
+        "adjustment": {
+          "DEP": "None",
+          "DEP3": "None",
+          "DEP2": "None"
+        },
+        "alternativeText": {
+          "DEP": "Kapitalslit. Løpende priser (mill. kr)",
+          "DEP3": "Kapitalslit. Faste 2023-priser (mill. kr)",
+          "DEP2": "Kapitalslit. Volumendring, årlig (prosent)"
+        }
+      },
+      "link": {
+        "describedby": [
+          {
+            "extension": {
+              "DEP": "urn:ssb:conceptvariable:vardok:1768"
+            }
+          }
+        ]
+      }
+    },
+    "Tid": {
+      "label": "år",
+      "category": {
+        "index": {
+          "2021": 0,
+          "2022": 1,
+          "2023": 2
+        },
+        "label": {
+          "2021": "2021",
+          "2022": "2022",
+          "2023": "2023"
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "show": "code"
+      }
+    }
+  },
+  "extension": {
+    "px": {
+      "infofile": "None",
+      "tableid": "11189",
+      "decimals": 0,
+      "official-statistics": true,
+      "aggregallowed": false,
+      "copyright": false,
+      "language": "no",
+      "contents": "11189: Investeringer og kapitalbeholdninger,",
+      "descriptiondefault": false,
+      "heading": [
+        "ContentsCode",
+        "Tid"
+      ],
+      "stub": [],
+      "matrix": "11189",
+      "subject-code": "nk",
+      "subject-area": "Nasjonalregnskap og konjunkturer"
+    },
+    "discontinued": null,
+    "contact": [
+      {
+        "name": "Johan Nitter-Hauge",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "40 90 26 83",
+        "mail": "jni@ssb.no",
+        "raw": "Johan Nitter-Hauge, Statistisk sentralbyrå# +47 40 90 26 83#jni@ssb.no"
+      },
+      {
+        "name": "Ingunn Sagelvmo",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "40 90 26 32",
+        "mail": "isa@ssb.no",
+        "raw": "Ingunn Sagelvmo, Statistisk sentralbyrå# +47 40 90 26 32#isa@ssb.no"
+      },
+      {
+        "name": "Steinar Todsen",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "95 91 00 74",
+        "mail": "sto@ssb.no",
+        "raw": "Steinar Todsen, Statistisk sentralbyrå# +47 95 91 00 74#sto@ssb.no"
+      }
+    ]
+  },
+  "value": [
+    793086,
+    854746,
+    924765,
+    891645,
+    907000,
+    924765,
+    3.7,
+    1.7,
+    2
+  ]
+}

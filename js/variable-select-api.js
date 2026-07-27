@@ -20,6 +20,81 @@ function getApiRadioValue(name) {
 }
 
 /**
+ * Assemble the SSB GET and POST data URLs from a selection — pure string work,
+ * no DOM. Split out of updateQueryPreview() so the whole parameter matrix
+ * (valueCodes, codelist, outputValues, outputFormatParams, pivot stub) can be
+ * unit-tested; the caller stays responsible for reading the form controls.
+ *
+ * Selections are arrays of explicit codes (specific mode) or the strings
+ * '*' (star mode) / 'top(N)' (Siste N mode) / 'range(from,to)' — listed verbatim.
+ *
+ * @param {object} opts
+ * @param {string} opts.apiBaseUrl - AppConfig.apiBaseUrl
+ * @param {string} opts.tableId - Table id
+ * @param {object} opts.selection - getVariableSelection() output
+ * @param {object} [opts.codelistIds] - dimCode → active codelist id
+ * @param {string} opts.lang - API language code
+ * @param {string} [opts.format] - outputFormat (json-stat2, csv, xlsx, …)
+ * @param {string} [opts.displayFormat] - UseCodes/UseTexts/UseCodesAndTexts
+ * @param {boolean} [opts.includeTitle] - Add the IncludeTitle format param
+ * @param {string} [opts.separator] - CSV separator param (csv only)
+ * @param {boolean} [opts.pivot] - Put every selected dimension in `stub`
+ * @returns {{getUrl: string, postUrl: string, fmtParams: string[], stubDims: string[]|undefined}}
+ */
+function buildSsbPreviewUrls(opts) {
+  const { apiBaseUrl, tableId, selection, lang, format, displayFormat,
+    includeTitle, separator, pivot } = opts;
+  const codelistIds = opts.codelistIds || {};
+
+  // Format params are only honoured by the formats that render a document.
+  const formatsSupportingParams = ['csv', 'html', 'xlsx'];
+  const fmtParams = [];
+  let stubDims = undefined;
+
+  if (formatsSupportingParams.includes(format)) {
+    if (displayFormat) fmtParams.push(displayFormat);
+    if (includeTitle) fmtParams.push('IncludeTitle');
+    if (format === 'csv' && separator) fmtParams.push(separator);
+
+    if (pivot) {
+      const allDims = Object.keys(selection);
+      if (allDims.length > 0) stubDims = allDims;
+    }
+  }
+
+  // POST URL params (format params only — valueCodes go in the body)
+  const postParams = new URLSearchParams({ lang: lang });
+  if (format) postParams.append('outputFormat', format);
+  if (fmtParams.length > 0) postParams.append('outputFormatParams', fmtParams.join(','));
+  if (stubDims) postParams.append('stub', stubDims.join(','));
+
+  // GET URL params = POST params + valueCodes + active codelists
+  const params = new URLSearchParams(postParams);
+  Object.keys(selection).forEach(dimension => {
+    const values = selection[dimension];
+    const valueStr = Array.isArray(values) ? values.join(',') : values;
+    params.append('valueCodes[' + dimension + ']', valueStr);
+  });
+  Object.keys(codelistIds).forEach(dimension => {
+    const codelistId = codelistIds[dimension];
+    if (codelistId) {
+      params.append('codelist[' + dimension + ']', codelistId);
+      // Aggregation codelists need outputValues=aggregated to return summed values
+      if (isAggregationCodelistId(codelistId)) {
+        params.append('outputValues[' + dimension + ']', 'aggregated');
+      }
+    }
+  });
+
+  return {
+    getUrl: apiBaseUrl + '/tables/' + tableId + '/data?' + params.toString(),
+    postUrl: apiBaseUrl + '/tables/' + tableId + '/data?' + postParams.toString(),
+    fmtParams,
+    stubDims
+  };
+}
+
+/**
  * Update the real-time API query preview box.
  *
  * SSB (capabilities.supportsGetUrlBuilder): full builder — GET/POST data URL
@@ -44,60 +119,21 @@ function updateQueryPreview() {
   const mode = getApiRadioValue('api-method') || 'get';
   const urlDecoded = document.getElementById('api-decode-url-cb')?.checked || false;
 
-  // Collect format-specific params (valid for both GET and POST URLs)
+  // Read the form controls; the URL assembly itself lives in the pure builder.
   const format = getApiRadioValue('api-output-format');
-  const formatsSupportingParams = ['csv', 'html', 'xlsx'];
-  const fmtParams = [];
-  let stubDims = undefined;
-
-  if (formatsSupportingParams.includes(format)) {
-    const displayFormat = getApiRadioValue('api-display-format');
-    if (displayFormat) fmtParams.push(displayFormat);
-
-    if (document.getElementById('api-include-title-cb')?.checked) {
-      fmtParams.push('IncludeTitle');
-    }
-
-    if (format === 'csv') {
-      const separator = getApiRadioValue('api-csv-separator');
-      if (separator) fmtParams.push(separator);
-    }
-
-    if (document.getElementById('api-layout-pivot-cb')?.checked) {
-      const allDims = Object.keys(selection);
-      if (allDims.length > 0) stubDims = allDims;
-    }
-  }
-
-  // Build POST URL params (format params only — valueCodes go in the body)
-  const postParams = new URLSearchParams({ lang: getCurrentApiLang() });
-  if (format) postParams.append('outputFormat', format);
-  if (fmtParams.length > 0) postParams.append('outputFormatParams', fmtParams.join(','));
-  if (stubDims) postParams.append('stub', stubDims.join(','));
-
-  // Build GET URL params (POST params + valueCodes + active codelists).
-  // Selections are arrays of explicit codes (specific mode) or the strings
-  // '*' (star mode) / 'top(N)' (Siste N mode) — all listed verbatim.
-  const params = new URLSearchParams(postParams);
-  Object.keys(selection).forEach(dimension => {
-    const values = selection[dimension];
-    const valueStr = Array.isArray(values) ? values.join(',') : values;
-    params.append('valueCodes[' + dimension + ']', valueStr);
-  });
-  const activeCodelistIds = AppState.activeCodelistIds || {};
-  Object.keys(activeCodelistIds).forEach(dimension => {
-    const codelistId = activeCodelistIds[dimension];
-    if (codelistId) {
-      params.append('codelist[' + dimension + ']', codelistId);
-      // Aggregation codelists need outputValues=aggregated to return summed values
-      if (isAggregationCodelistId(codelistId)) {
-        params.append('outputValues[' + dimension + ']', 'aggregated');
-      }
-    }
+  const { getUrl: fullGetUrl, postUrl: fullPostUrl, stubDims } = buildSsbPreviewUrls({
+    apiBaseUrl: AppConfig.apiBaseUrl,
+    tableId: tableId,
+    selection: selection,
+    codelistIds: AppState.activeCodelistIds || {},
+    lang: getCurrentApiLang(),
+    format: format,
+    displayFormat: getApiRadioValue('api-display-format'),
+    includeTitle: document.getElementById('api-include-title-cb')?.checked || false,
+    separator: getApiRadioValue('api-csv-separator'),
+    pivot: document.getElementById('api-layout-pivot-cb')?.checked || false
   });
 
-  const fullGetUrl = AppConfig.apiBaseUrl + '/tables/' + tableId + '/data?' + params.toString();
-  const fullPostUrl = AppConfig.apiBaseUrl + '/tables/' + tableId + '/data?' + postParams.toString();
   const urlWarning = document.getElementById('api-url-warning');
   const postBodySection = document.getElementById('api-post-body-section');
   const openBtn = document.getElementById('api-open-btn');

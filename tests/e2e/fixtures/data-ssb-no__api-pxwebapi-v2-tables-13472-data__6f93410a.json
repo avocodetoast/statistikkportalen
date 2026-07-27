@@ -1,0 +1,238 @@
+{
+  "version": "2.0",
+  "class": "dataset",
+  "label": "13472: Sysselsatte per 4. kvartal, etter region og år",
+  "source": "Statistisk sentralbyrå",
+  "updated": "2026-02-26T07:00:00Z",
+  "note": [
+    "Fra og med 2015 bygger statistikken på nye datakilder (a-ordningen), se nærmere omtale i «Om statistikken». Totalt antall sysselsatte blir heller ikke samordnet med Arbeidskraftundersøkelsene (AKU) slik det ble før 2015, og det samsvarer dermed ikke lenger med AKUs totaltall. Årgangene fra og med 2015 blir følgelig ikke sammenlignbare med tidligere årganger. Se nærmere omtale i [artikkelen tilknyttet 2015-tallene](https://www.ssb.no/arbeid-og-lonn/statistikker/regsys/aar/2016-05-27).",
+    "Bedrifter i næring 09.1 Tjenester tilknyttet utvinning av råolje og naturgass får landkode av Enhetsregisteret, selv om arbeidet kan foregå på sokkelen. Det samme kan også forekomme innenfor andre næringer. Tidligere ble bedrifter SSB anså at tilhørte sokkelen omkodet, noe SSB fra og med publiseringen i 2018 sluttet med. Dette har resultert i en justering som medfører at en rekke arbeidsforhold som tidligere var registrert på sokkelen er blitt plassert på fastlandet fra og med 4. kvartal 2018 (hovedsakelig næring 09.1). I 4. kvartal 2019 gir dette hovedsakelig utslag i næringene 09.1 og næringer knyttet til cateringvirksomhet. Dette har gitt en ikke-reell nedgang i antall sysselsatte på sokkelen og en tilsvarende ikke-reell økning i andre fylker, i hovedsak Rogaland. Endringen omfatter om lag 6500 lønnstakere 4. kv. 2018 og 2000 lønnstakere 4. kv. 2019.",
+    "Alle ett-tall og to-tall i tabellen er endret til '0' eller '3' for å ivareta personvernet. Når tallene aggregeres til høyere regionalt nivå, vil summen kunne avvike noe fra det faktiske tallet. Denne tabellen er uten anonymisering av bedrifter (underenheter) eller foretak, etter unntak i statistikkloven §7(3) om «åpne tilgjengelige opplysninger».",
+    "Statlig forvaltning (statsforvaltningen) omfatter stats- og trygdeforvaltningen. Helseforetakene er inkludert.",
+    "Kommunal- og fylkeskommunal forvaltning (kommuneforvaltningen) omfatter kommunal- og fylkeskommunal forvaltning. Består av virksomheter som ikke er næringsrettet, dvs. vei, skole, kultur mv.",
+    "Privat sektor omfatter det som ikke er med i stats- eller kommuneforvaltningen, dvs. privat næringsvirksomhet unntatt offentlig kontrollerte foretak.",
+    "Offentlig foretak omfatter foretak som ikke er med i stats- eller kommuneforvaltningen, men som er offentlig kontrollerte foretak. Det gjelder statens forretningsdrift samt foretak hvor det offentlige kontrollerer mer enn 50 prosent av aksjekapitalen.",
+    "[Se liste over endringer i de regionale inndelingene](https://www.ssb.no/offentlig-sektor/kommunekatalog/endringer-i-de-regionale-inndelingene)."
+  ],
+  "role": {
+    "time": [
+      "Tid"
+    ],
+    "geo": [
+      "Region"
+    ],
+    "metric": [
+      "ContentsCode"
+    ]
+  },
+  "id": [
+    "Region",
+    "ContentsCode",
+    "Tid"
+  ],
+  "size": [
+    12,
+    1,
+    2
+  ],
+  "dimension": {
+    "Region": {
+      "label": "region",
+      "category": {
+        "index": {
+          "F-31": 0,
+          "F-32": 1,
+          "F-03": 2,
+          "F-34": 3,
+          "F-33": 4,
+          "F-39": 5,
+          "F-40": 6,
+          "F-42": 7,
+          "F-11": 8,
+          "F-46": 9,
+          "F-15": 10,
+          "F-50": 11
+        },
+        "label": {
+          "F-31": "Østfold",
+          "F-32": "Akershus",
+          "F-03": "Oslo - Oslove",
+          "F-34": "Innlandet",
+          "F-33": "Buskerud",
+          "F-39": "Vestfold",
+          "F-40": "Telemark",
+          "F-42": "Agder",
+          "F-11": "Rogaland",
+          "F-46": "Vestland",
+          "F-15": "Møre og Romsdal",
+          "F-50": "Trøndelag - Trööndelage"
+        },
+        "note": {
+          "F-32": [
+            "Hele tidsserien er beregnet ut fra fylkesgrensene fra 2024. Utgåtte kommuner 0121 Rømskog (-2019), 0532 Jevnaker (-2019), 0533 Lunner (-2019), 0628 Røyken (-2019) og 0628 Hurum (-2019) er derfor medregnet i F-32 Akershus."
+          ],
+          "F-33": [
+            "Hele tidsserien er beregnet ut fra fylkesgrensene fra 2024. Utgått kommune 0711 Svelvik (-2019) er derfor medregnet i F-33 Buskerud. Utgåtte kommuner 0628 Røyken (-2019) og 0628 Hurum (-2019) er ikke regnet med i F-33 Buskerud, men i F-32 Akershus."
+          ],
+          "F-39": [
+            "Hele tidsserien er beregnet ut fra fylkesgrensene fra 2024. Utgått kommune 0711 Svelvik (-2019) er derfor ikke regnet med i F-39 Vestfold, men i F-33 Buskerud."
+          ],
+          "F-15": [
+            "Hele tidsserien er beregnet ut fra fylkesgrensene fra 2020. Utgått kommune 1444 Hornindal (-2019) er derfor medregnet i F-15 Møre og Romsdal. Utgåtte kommuner 1567 Rindal (-2018) og 1571 Halsa (-2019) er ikke regnet med i F-15 Møre og Romsdal, men i F-50 Trøndelag."
+          ],
+          "F-50": [
+            "Hele tidsserien er beregnet ut fra fylkesgrensene fra 2020. Utgåtte kommuner 1567 Rindal (-2018) og 1571 Halsa (-2019) er derfor medregnet i F-50 Trøndelag."
+          ]
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "show": "code_value"
+      },
+      "link": {
+        "describedby": [
+          {
+            "extension": {
+              "Region": "urn:ssb:classification:klass:104 urn:ssb:classification:klass:131"
+            }
+          }
+        ]
+      }
+    },
+    "ContentsCode": {
+      "label": "statistikkvariabel",
+      "category": {
+        "index": {
+          "SysselEtterBoste": 0
+        },
+        "label": {
+          "SysselEtterBoste": "Sysselsatte personer etter bosted"
+        },
+        "unit": {
+          "SysselEtterBoste": {
+            "base": "personer",
+            "decimals": 0
+          }
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "refperiod": {
+          "SysselEtterBoste": "4. kvartal"
+        },
+        "show": "value",
+        "measuringType": {
+          "SysselEtterBoste": "Stock"
+        },
+        "priceType": {
+          "SysselEtterBoste": "NotApplicable"
+        },
+        "adjustment": {
+          "SysselEtterBoste": "None"
+        },
+        "alternativeText": {
+          "SysselEtterBoste": "Sysselsatte personer etter bosted"
+        }
+      },
+      "link": {
+        "describedby": [
+          {
+            "extension": {
+              "SysselEtterBoste": "urn:ssb:conceptvariable:vardok:1116"
+            }
+          }
+        ]
+      }
+    },
+    "Tid": {
+      "label": "år",
+      "category": {
+        "index": {
+          "2024": 0,
+          "2025": 1
+        },
+        "label": {
+          "2024": "2024",
+          "2025": "2025"
+        }
+      },
+      "extension": {
+        "elimination": false,
+        "show": "code"
+      }
+    }
+  },
+  "extension": {
+    "px": {
+      "infofile": "None",
+      "tableid": "13472",
+      "decimals": 0,
+      "official-statistics": true,
+      "aggregallowed": true,
+      "copyright": false,
+      "language": "no",
+      "contents": "13472: Sysselsatte per 4. kvartal,",
+      "descriptiondefault": false,
+      "heading": [
+        "ContentsCode",
+        "Tid"
+      ],
+      "stub": [
+        "Region"
+      ],
+      "matrix": "13472",
+      "subject-code": "al",
+      "subject-area": "Arbeid og lønn"
+    },
+    "discontinued": null,
+    "contact": [
+      {
+        "name": "Pål Nordby",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "40 90 23 78",
+        "mail": "rby@ssb.no",
+        "raw": "Pål Nordby, Statistisk sentralbyrå# +47 40 90 23 78#rby@ssb.no"
+      },
+      {
+        "name": "Arbeidsmarked",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "62 88 50 00",
+        "mail": "arbeidsmarked@ssb.no",
+        "raw": " Arbeidsmarked, Statistisk sentralbyrå# +47 62 88 50 00#arbeidsmarked@ssb.no"
+      },
+      {
+        "name": "Malin Pettersen",
+        "organization": "Statistisk sentralbyrå",
+        "phone": "40 90 25 63",
+        "mail": "inp@ssb.no",
+        "raw": "Malin Pettersen, Statistisk sentralbyrå# +47 40 90 25 63#inp@ssb.no"
+      }
+    ]
+  },
+  "value": [
+    147631,
+    147297,
+    382495,
+    385136,
+    404239,
+    404396,
+    184167,
+    183949,
+    136156,
+    136053,
+    124937,
+    125028,
+    84770,
+    84656,
+    155707,
+    156697,
+    262816,
+    264797,
+    341409,
+    344019,
+    138139,
+    138282,
+    250283,
+    250833
+  ]
+}

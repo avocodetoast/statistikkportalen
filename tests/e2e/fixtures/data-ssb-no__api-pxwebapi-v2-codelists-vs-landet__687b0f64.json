@@ -1,0 +1,33 @@
+{
+  "id": "vs_Landet",
+  "label": "Hele landet",
+  "language": "no",
+  "languages": [
+    "en",
+    "no"
+  ],
+  "elimination": true,
+  "eliminationValueCode": "0",
+  "type": "Valueset",
+  "values": [
+    {
+      "code": "0",
+      "label": "Hele landet",
+      "valueMap": [
+        "0"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "no",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_Landet?lang=no"
+    },
+    {
+      "rel": "alternate",
+      "hreflang": "en",
+      "href": "https://data.ssb.no/api/pxwebapi/v2/codeLists/vs_Landet?lang=en"
+    }
+  ]
+}

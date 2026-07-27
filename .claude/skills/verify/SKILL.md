@@ -142,7 +142,9 @@ finnes. Avhengigheten er derfor `playwright-core`, ikke `playwright`.
 scripts/check-static.mjs        statiske sjekker
 tests/e2e/
   smoke.e2e.mjs                 røyktesten (.e2e.mjs, ikke .test.js — se under)
-  fixtures/*.json               innspilte API-svar (18 filer, ~870 KB, committes)
+  variable-select.e2e.mjs       variabelvalg + API-bygger (08801/13472/11189/12850)
+  topic-hierarchy.e2e.mjs       emnetre + kuraterte navn (os/os07/offogjeld, he/he04/helsetjko)
+  fixtures/*.json               innspilte API-svar (32 filer, ~1,4 MB, committes)
   helpers/
     app-browser.mjs             launchApp(): Chrome + konsollfangst + skjermbilder
     flows.mjs                   de delte brukerflytene
@@ -159,8 +161,8 @@ ikke matche det mønsteret. Døp en ny E2E-fil `*.e2e.mjs`.
 
 `stub-routes.mjs` bruker Playwrights `page.route()`. **Ikke foreslå MSW** — det ville
 krevd en ekte npm-avhengighet, en innsjekket service worker og oppkobling i
-`index.html`, i en app uten byggesteg. Hele røyktesten treffer 18 unike endepunkter
-(6 SSB, 7 Norges Bank, 5 FHI — tell `tests/e2e/fixtures/`), og tre av dem ved kaldstart.
+`index.html`, i en app uten byggesteg. Hele suiten treffer 32 unike endepunkter
+(20 SSB, 7 Norges Bank, 5 FHI — tell `tests/e2e/fixtures/`), og tre av dem ved kaldstart.
 `page.route()` dekker det med god margin.
 
 Tre modi:
@@ -173,11 +175,31 @@ record og replay deler `requestKey()`, så en innspilt fixture treffer alltid i 
 Derfor skal fixtures **aldri skrives for hånd**:
 
 ```bash
-node tests/e2e/helpers/record-fixtures.mjs [--table 13760]
+node tests/e2e/helpers/record-fixtures.mjs [--table 13760] [--no-clean]
 ```
 
-Fixtures committes. `/tables` trimmes fra ~10 000 til 70 rader som fortsatt dekker alle
-23 emner.
+Innspillingen tar ~2,5 minutter, og det er med vilje: kallene serialiseres til ~1 per
+2,2 s (`E2E_RECORD_DELAY_MS`) fordi SSB tåler 30/min og `SSBApi._throttledFetch` bare
+sperrer på 100 ms. Bremsen må serialisere — appen sender kall parallelt, så en ren
+`sleep` i hver rute-handler ville bare fått dem til å sove samtidig.
+
+**Et ikke-2xx-svar lagres aldri.** Uten den vakten ville en 429-kropp blitt en permanent
+fixture som replay serverer med status 200 i all framtid, og suiten stått grønn mot søppel.
+Innspillingen rapporterer i stedet kallet som et problem.
+
+Fixtures committes, og tre ting trimmes ved innspilling (kun i record-modus):
+
+| Svar | Trimming |
+|---|---|
+| `/tables` | ~10 000 → 70 rader, dekker fortsatt alle 23 emner + `keepTables` |
+| `/tables/{id}/metadata` | dimensjoner over `MAX_DIM_VALUES` (700) kappes; `size[]`, `category.index` og alle kodenøklede sidemapper holdes i synk |
+| `/codeLists/{id}` | `valueMap` filtreres mot kodene som overlevde, tomme grupper droppes, så `originalCodes ⊆ metadatakodene` |
+
+Uten metadata-/kodelistetrimmingen ville 08801 alene lagt ~5 MB i git-historikken per
+innspilling (2,3 MB metadata + 3,0 MB `vs_VareKoderKN8Siff`, som hentes automatisk av
+`preloadCodelistOrdering`). Grensa ligger **over** stjerneterskelen på 500, slik at
+Ctrl+A→stjerne fortsatt testes ekte — og ingen assertion hardkoder 13 429: testene leser
+både terskelen og det faktiske antallet fra appen og asserterer forholdet.
 
 **Ustubbede kall feiler testen.** Legger du til et steg som gjør et nytt API-kall, får du
 `mangler fixture: …` — svaret er å kjøre innspillingen på nytt, ikke å myke opp
@@ -193,7 +215,8 @@ nytt — ikke testen som skal mykes opp.
 ## Å legge til en ny flyt
 
 1. Skriv steget i `flows.mjs` (driver appen, asserter ikke).
-2. Kall det fra `record-fixtures.mjs` **og** `smoke.e2e.mjs`.
+2. Kall det fra `record-fixtures.mjs` **og** testfila (`smoke.e2e.mjs` eller
+   `variable-select.e2e.mjs`).
 3. `node tests/e2e/helpers/record-fixtures.mjs`
 4. `npm run test:e2e`
 5. **Negativ kontroll: brekk det du nettopp asserterte, og se testen bli rød.** Kommenter
@@ -217,6 +240,7 @@ Verifisert mot appen slik den faktisk rendrer. Bruk disse — **ikke legg til
 | Alltid | `#content`, `#error-display`, `#api-status-badge` («3/3 datakilder lastet inn») |
 | Forside | `#front-search` (søk utløses av **Enter**, ikke debounce), `[data-subject]`, `.front-subject-link` |
 | Emnevy | `.subtopic-card`, `.category-card`, `a[href*="#variables/"]` |
+| Emnetre (løvnode) | `#topic-table-area`, `details.hierarchy-group > summary`, `.hierarchy-count`, `tr.table-row[data-table-id]`, `a.table-link`, `.source-badge--nb`/`--fhi`, `.discontinued-badge`, `#topic-include-discontinued`, `a.breadcrumb-link[data-path]` (komma-joinet!) |
 | Variabelvalg | `[data-dimension]`, `#load-default-selection`, `#fetch-data-btn`, `#cell-count-display`, `#selection-status`, `.select-all-btn`, `.dim-pill-group label.api-pill` |
 | Tabellvisning | `#data-container table`, `#export-csv-btn`, `#export-quick-btn`, `#export-btn`, `#export-dialog`, `#rotate-table-btn`, `#save-query-btn` |
 | Ruter | `#home`, `#search?q=…`, `#topic/al/al03/aku`, `#variables/{id}`, `#table/{id}` |
