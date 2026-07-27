@@ -1,7 +1,8 @@
 /**
  * js/sources/source-common.js — pickLabel/uiLabelLang/fetchWithTimeout, the
  * helpers shared by norges-bank-adapter.js and fhi-adapter.js (extracted
- * from two near-identical copies — see CLAUDE.md's source-common.js row).
+ * from two near-identical copies — see the source-common.js row in the
+ * repo-map skill's File Guide).
  */
 'use strict';
 

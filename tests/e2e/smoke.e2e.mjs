@@ -156,8 +156,8 @@ describe('E2E røyktest (http)', { skip: availability.ok ? false : availability.
 });
 
 /**
- * file:// er en dokumentert støttet modus (CLAUDE.md: «Open index.html in a
- * browser»). Den ryker stille når en ny lokal datafil hentes med fetch() i
+ * file:// er en dokumentert støttet modus (CLAUDE.md: «Åpnes direkte som
+ * index.html»). Den ryker stille når en ny lokal datafil hentes med fetch() i
  * stedet for å lastes som <script> — nettleseren blokkerer fetch() av lokale
  * filer, og da degraderer NB/FHI uten at noe annet varsler.
  */

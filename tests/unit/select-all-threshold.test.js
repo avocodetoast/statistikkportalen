@@ -8,7 +8,7 @@
  * O(1) og kompakt API-forespørsel.
  *
  * Predikatet er rent (ingen DOM), så det testes direkte. Selve event-wiringen
- * (view-modul) er unntatt test-først per CLAUDE.md.
+ * (view-modul) er unntatt test-først, se «What to test where» i tests/README.md.
  */
 'use strict';
 

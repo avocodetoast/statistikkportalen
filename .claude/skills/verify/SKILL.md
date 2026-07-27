@@ -388,7 +388,7 @@ mobil-layout, tilgjengelighet. Ikke påstå at noe av dette er verifisert.
 
 - **`js/router.js` har null funksjonsdekning** (0/15) — `encode`, `decode`,
   `parseHash`, `buildHash` og rutehåndtererne er alle utestet, selv om CLAUDE.md
-  nevner «router.js encode/decode» som en av de beste TDD-kandidatene.
+  nevner «URL-koding» som en av de beste TDD-kandidatene.
   `tests/unit/router-utils.test.js` tester bare `detectSavedQueryId` og gjør en
   `typeof`-sjekk på `SSBURLMapper.fromSSB` uten å kalle den. Basislinjen fastholder
   dagens nivå, så det blir ikke verre — men det er en åpenbar plass å begynne hvis
