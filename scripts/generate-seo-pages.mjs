@@ -42,17 +42,18 @@
  * js/config.js og js/subjects.js (via node:vm) — én kilde til sannhet, og
  * scriptet fungerer uendret for andre PxWebApi-instanser.
  *
- * FLERKILDE (Statistikkportalen 2.0): i tillegg til SSB enumereres alle
- * aktiverte kilder i AppConfig.sources via providere i
- * scripts/lib/seo-sources.mjs — Norges Bank nettverksfritt fra config
- * (tidsperioder fra den innsjekkede data/sources/nb-periods.json) og
- * FHI fra den innsjekkede data/sources/fhi-catalog.json. Tabeller med
+ * FLERKILDE (Statistikkportalen 2.0): alle aktiverte kilder (SSB, Norges Bank,
+ * FHI) kommer fra ÉN katalogindeks — {webroot}/data/index/, bygget av
+ * scripts/build-catalog-index.mjs og lest her via scripts/lib/seo-enumerate.mjs
+ * (se den fila for garantiene: SSB er hard — mangler/ugyldig indeks eller for
+ * få dekodede SSB-rader avbryter uten å røre webroot; en fremmed kildes shard
+ * som mangler eller ikke dekoder logges og hoppes over). Tabeller med
  * nb-/fhi-prefiks får dermed egne /table/{id}/-sider og inngår i emnesider,
- * sitemap og
- * seo-map.json. Kildeattribusjon (JSON-LD creator/license, «Kilde:»-linjer)
- * slås opp per tabell-id via AppConfig.sources.<kilde>.branding med det
- * globale AppConfig.source som fallback. En feilende fremmed kilde logges og
- * hoppes over; SSB-feil avbryter fortsatt hele kjøringen.
+ * sitemap og seo-map.json som før. Kildeattribusjon (JSON-LD creator/license,
+ * «Kilde:»-linjer) slås opp per tabell-id via AppConfig.sources.<kilde>.branding
+ * (scripts/lib/seo-sources.mjs sin sourceBrandingFor/sourceBadgeHtml) med det
+ * globale AppConfig.source som fallback — lest direkte fra config.js, uten
+ * omvei om indeksen.
  *
  * Kjøres periodisk på serveren (cron), f.eks. ukentlig:
  *   15 4 * * 0 cd /sti/til/repo && node scripts/generate-seo-pages.mjs \
@@ -74,11 +75,14 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import {
-  isoPeriod, sourceBrandingFor, sourceBadgeHtml, buildNbCatalogue, buildFhiCatalogue,
+  isoPeriod, sourceBrandingFor, sourceBadgeHtml,
   enabledSourceNames, joinNamesNo,
 } from './lib/seo-sources.mjs';
+import { loadAppConfig, loadSubjectConfig } from './lib/catalog-sources.mjs';
+import { enumerateAllTables as enumerateFromIndex } from './lib/seo-enumerate.mjs';
+import { atomicWrite } from './lib/atomic-write.mjs';
 
-const MIN_TABLE_COUNT = 5000; // sanity-terskel for SSB-katalogen: færre tabeller = trolig API-feil (overstyres med --min-tables)
+const MIN_TABLE_COUNT = 5000; // sanity-terskel for SSB-shardet i katalogindeksen: færre DEKODEDE rader = trolig en ubrukelig/gammel indeks (overstyres med --min-tables)
 
 // Navn som aldri kan brukes som mappe på toppnivå i webroot
 const RESERVED_TOP_LEVEL = new Set([
@@ -127,175 +131,24 @@ function parseArgs(argv) {
 
 // ---------------------------------------------------------------------------
 // Datainnhenting
+//
+// Katalogen bygges IKKE lenger her (P6) — den leses ferdigbygget fra
+// {webroot}/data/index/ (scripts/build-catalog-index.mjs), som må ha kjørt
+// minst én gang mot samme webroot før denne generatoren kan kjøre (se
+// README.md for cron-rekkefølgen). Selve lesingen/dekodingen og garantiene
+// (SSB hard, fremmede kilder feilisolert) ligger i scripts/lib/seo-enumerate.mjs
+// — denne fila beholder bare en tynn wrapper med samme signatur som før P6.
 // ---------------------------------------------------------------------------
 
-async function fetchTablesPage(appConfig, pageNumber) {
-  const params = new URLSearchParams({
-    lang: apiLang(appConfig),
-    pageSize: String(appConfig.limits?.tablePageBatchSize || 10000),
-    includeDiscontinued: 'true',
-  });
-  if (pageNumber > 1) params.set('pageNumber', String(pageNumber));
-  const url = `${appConfig.apiBaseUrl}/tables?${params}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`API-feil ${res.status} for ${url}`);
-  return res.json();
-}
-
-async function fetchAllTables(appConfig, minTables) {
-  const first = await fetchTablesPage(appConfig, 1);
-  const tables = first.tables ? [...first.tables] : [];
-  const totalPages = first.page ? first.page.totalPages : 1;
-  console.log(`[SEO] Hentet side 1/${totalPages} (${tables.length} tabeller)`);
-  for (let p = 2; p <= totalPages; p++) {
-    const page = await fetchTablesPage(appConfig, p);
-    tables.push(...(page.tables || []));
-    console.log(`[SEO] Hentet side ${p}/${totalPages} (totalt ${tables.length} tabeller)`);
-  }
-  if (tables.length < minTables) {
-    throw new Error(`Bare ${tables.length} tabeller fra API-et (forventet minst ${minTables}) — avbryter uten å røre webroot.`);
-  }
-  return tables;
-}
-
 /**
- * Tidsperiode/oppdatert-dato for Norges Bank-katalogen fra den innsjekkede
- * data/sources/nb-periods.json (skrevet av scripts/update-nb-periods.mjs) —
- * samme fil appen selv leser, så SEO-sidene og portalen viser samme vindu.
- * Nettverksfritt, som FHI-katalogen. Mangler fila eller en rad, bygges siden
- * uten tidsperiode (temporalCoverage utelates) — aldri abort.
- */
-function applyNbPeriods(entries) {
-  const file = path.join(REPO_ROOT, 'data', 'sources', 'nb-periods.json');
-  if (!fs.existsSync(file)) {
-    console.warn(`[SEO] Fant ikke ${path.relative(REPO_ROOT, file)} — Norges Bank-sidene bygges ` +
-                 'uten tidsperiode. Kjør «node scripts/update-nb-periods.mjs».');
-    return;
-  }
-  const baked = JSON.parse(fs.readFileSync(file, 'utf8'));
-  const byId = baked.tables || {};
-  const missing = [];
-  for (const entry of entries) {
-    const period = byId[entry.id];
-    if (!period) { missing.push(entry.id); continue; }
-    entry.firstPeriod = period.firstPeriod || '';
-    entry.lastPeriod = period.lastPeriod || '';
-    entry.updated = period.updated || '';
-  }
-  if (missing.length) {
-    console.warn(`[SEO] Uten tidsperiode i nb-periods.json: ${missing.join(', ')} — ` +
-                 'kjør «node scripts/update-nb-periods.mjs» på nytt.');
-  }
-}
-
-/**
- * Alle tabeller fra alle aktiverte kilder i AppConfig.sources, dispatchet på
- * adapter-feltet (utvidelsespunktet for nye kilder — providere i
- * scripts/lib/seo-sources.mjs). SSB hentes først og beholder de harde
- * feilgarantiene (API-feil eller < --min-tables avbryter uten å røre webroot);
- * fremmede kilder er feilisolerte som i source-registry.js — en kilde som
- * feiler logges og hoppes over, resten av kjøringen fortsetter.
+ * Alle tabeller fra alle kilder, lest fra katalogindeksen i stedet for bygget
+ * her. subjectConfig brukes ikke lenger av denne funksjonen — sti-segmentenes
+ * labels er allerede bakt inn i de dekodede radene av
+ * scripts/build-catalog-index.mjs — men beholdes i signaturen siden resten av
+ * main() fortsatt trenger subjectConfig til buildPages().
  */
 async function enumerateAllTables(appConfig, subjectConfig, args) {
-  const tables = await fetchAllTables(appConfig, args.minTables);
-  const lang = uiLang(appConfig);
-
-  for (const [key, src] of Object.entries(appConfig.sources || {})) {
-    if (src?.enabled === false || !src?.adapter || src.adapter === 'ssb') continue;
-    try {
-      let sourceTables = [];
-      if (src.adapter === 'norges-bank') {
-        sourceTables = buildNbCatalogue(appConfig, subjectConfig.subjectNames, lang);
-        applyNbPeriods(sourceTables);
-      } else if (src.adapter === 'fhi') {
-        const catalogPath = path.join(REPO_ROOT, 'data', 'sources', 'fhi-catalog.json');
-        const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
-        sourceTables = buildFhiCatalogue(catalog, appConfig, subjectConfig.subjectNames, lang);
-      } else {
-        console.warn(`[SEO] Kilden «${key}» har ukjent adapter «${src.adapter}» — hopper over (legg til en provider i scripts/lib/seo-sources.mjs).`);
-        continue;
-      }
-      console.log(`[SEO] Kilde «${key}»: ${sourceTables.length} tabeller.`);
-      tables.push(...sourceTables);
-    } catch (err) {
-      console.warn(`[SEO] Kilden «${key}» feilet (${err.message}) — hopper over.`);
-    }
-  }
-  return tables;
-}
-
-// ---------------------------------------------------------------------------
-// App-konfigurasjon (gjenbrukt fra appens egne filer via node:vm)
-// ---------------------------------------------------------------------------
-
-/** Kjør en browser-global appfil i en sandkasse og les ut window.{key}. */
-function loadBrowserGlobal(file, key) {
-  const src = fs.readFileSync(path.join(REPO_ROOT, 'js', file), 'utf8');
-  const sandbox = { window: {} };
-  vm.runInNewContext(src, sandbox);
-  const value = sandbox.window[key];
-  if (!value) throw new Error(`Klarte ikke å lese ${key} fra js/${file}`);
-  return value;
-}
-
-function loadAppConfig() {
-  // config.js refererer window.NbCatalog (js/sources/nb-catalog.js) og
-  // window.SourceTopology (js/sources/source-topology.js) for kildekatalogen og
-  // emnetre-topologien. Kjør dem i SAMME sandkasse før config.js, slik at
-  // referansene resolver (speiler <script>-rekkefølgen i index.html). AppConfig
-  // kommer da ut ferdig utfylt med sources.nb.dataflows/variableNames,
-  // sources.fhi.sourceIds/paths og sourceNodes — som før.
-  const sandbox = { window: {} };
-  for (const file of ['sources/nb-catalog.js', 'sources/source-topology.js', 'config.js']) {
-    vm.runInNewContext(fs.readFileSync(path.join(REPO_ROOT, 'js', file), 'utf8'), sandbox);
-  }
-  const cfg = sandbox.window.AppConfig;
-  if (!cfg || !cfg.apiBaseUrl || !cfg.app?.name || !cfg.source) {
-    throw new Error('AppConfig fra js/config.js mangler apiBaseUrl, app.name eller source');
-  }
-  return cfg;
-}
-
-/** Velg riktig språk fra en flerspråklig {språk: tekst}-label (js/subjects.js).
- *  Tåler også en ren streng for bakoverkompatibilitet. */
-function pickLabel(value, uiLang) {
-  if (value && typeof value === 'object') {
-    return value[uiLang] || value.nb || Object.values(value)[0] || '';
-  }
-  return value;
-}
-
-/** UI-språkkoden for standardspråket (SSB: 'nb'). */
-function uiLang(appConfig) {
-  return appConfig.defaultLanguage || appConfig.languages?.[0]?.code || 'nb';
-}
-
-/**
- * Leser SubjectConfig fra js/subjects.js og løser de flerspråklige
- * meny-labelene (group.label / subjectNames) ned til standardspråkets streng,
- * slik at resten av scriptet kan behandle dem som rene strenger.
- */
-function loadSubjectConfig(appConfig) {
-  const cfg = loadBrowserGlobal('subjects.js', 'SubjectConfig');
-  if (!cfg.subjectGroups || !cfg.subjectNames) {
-    throw new Error('SubjectConfig fra js/subjects.js mangler subjectGroups/subjectNames');
-  }
-  const lang = uiLang(appConfig);
-  const subjectGroups = {};
-  for (const [id, group] of Object.entries(cfg.subjectGroups)) {
-    subjectGroups[id] = { ...group, label: pickLabel(group.label, lang) };
-  }
-  const subjectNames = {};
-  for (const [code, name] of Object.entries(cfg.subjectNames)) {
-    subjectNames[code] = pickLabel(name, lang);
-  }
-  return { ...cfg, subjectGroups, subjectNames };
-}
-
-/** API-språkkoden for standardspråket (SSB: 'no'). */
-function apiLang(appConfig) {
-  const langs = appConfig.languages || [];
-  return (langs.find(l => l.code === appConfig.defaultLanguage) || langs[0])?.apiLang || 'no';
+  return enumerateFromIndex(appConfig, args.minTables, { webroot: args.webroot });
 }
 
 // ---------------------------------------------------------------------------
@@ -872,11 +725,7 @@ function renderPage(template, page, site, appConfig) {
 
   // Relative asset-stier → absolutte (sidene ligger 1–4 mapper dypt)
   html = html.replace(/href="css\//g, 'href="/css/')
-    .replace(/src="js\//g, 'src="/js/')
-    // data/ må også absoluttiseres: FHI-katalogen lastes som <script
-    // src="data/sources/fhi-catalog.js"> og ville ellers gitt 404 herfra,
-    // slik at alle FHI-tabeller falt tilbake til interne kodenavn.
-    .replace(/src="data\//g, 'src="/data/');
+    .replace(/src="js\//g, 'src="/js/');
 
   // JSON-LD strukturerte data ("<" escapes så "</script>" i labels ikke kan bryte ut).
   // id="seo-jsonld" lar appen (js/seo-head.js) fjerne den ved navigering bort.
@@ -1285,11 +1134,7 @@ function renderTablePage(template, entry, site, appConfig, meta = null) {
 
   // Relative asset-stier → absolutte (sidene ligger under /table/{id}/)
   html = html.replace(/href="css\//g, 'href="/css/')
-    .replace(/src="js\//g, 'src="/js/')
-    // data/ må også absoluttiseres: FHI-katalogen lastes som <script
-    // src="data/sources/fhi-catalog.js"> og ville ellers gitt 404 herfra,
-    // slik at alle FHI-tabeller falt tilbake til interne kodenavn.
-    .replace(/src="data\//g, 'src="/data/');
+    .replace(/src="js\//g, 'src="/js/');
 
   const jsonLd = JSON.stringify(buildTableJsonLd(entry, site, appConfig, meta)).replace(/</g, '\\u003c');
   html = mustReplace(
@@ -1506,12 +1351,6 @@ function loadManifest(webroot) {
     console.warn('[SEO] Klarte ikke å lese eksisterende manifest — hopper over opprydding.');
     return null;
   }
-}
-
-function atomicWrite(filePath, content) {
-  const tmp = `${filePath}.tmp`;
-  fs.writeFileSync(tmp, content, 'utf8');
-  fs.renameSync(tmp, filePath);
 }
 
 function main_write(webroot, site, appConfig, pages, tableEntries, totalTables, oldManifest, dryRun, metadataDir) {

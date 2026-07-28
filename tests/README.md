@@ -175,9 +175,12 @@ place as the deep link.
 Division of labour with the unit layer: `/tables` is trimmed, so the E2E suite
 asserts *"these ids are in this section"* and never SSB totals. Totals and tree
 structure are asserted against the real, full catalogue in
-`tests/unit/hierarchy-real-catalog.test.js`, which loads the checked-in
-`data/sources/fhi-catalog.js` + `nb-periods.js` and builds all 31 NB + 370 FHI
-rows with **zero network calls** — the throwing default `fetch` is the proof.
+`tests/unit/hierarchy-real-catalog.test.js`, which decodes the checked-in
+snapshot shards in `data/index/` (`nb-no-*.json` + `fhi-no-*.json`, same format
+the browser loads via `js/catalog-index.js`) with `CatalogIndex.decode()` and
+builds all 31 NB + 370 FHI rows with **zero network calls** — `decode()` is a
+pure, synchronous function that never touches `fetch` at all, which is a
+stronger proof than the throwing default `fetch` alone.
 Tables the topic tests need are pinned via `TOPIC_KEEP_TABLES` so `trimTableList`
 can't drop them.
 

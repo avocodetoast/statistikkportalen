@@ -1,0 +1,566 @@
+[
+  {
+    "tableId": 448,
+    "title": "Is3d: Fødsler ved institusjon per år, fødeinstitusjon og anestesi/analgesi brukt under fødselen",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.58454Z"
+  },
+  {
+    "tableId": 449,
+    "title": "Is4a-1: Vaginalt fødte ved institusjon per år, fødeinstitusjon og inngrep og tiltak under fødselen",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.542057Z"
+  },
+  {
+    "tableId": 450,
+    "title": "Is4a-2: Fødsler ved institusjon per år, fødeinstitusjon og forløsningstype",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.54308Z"
+  },
+  {
+    "tableId": 458,
+    "title": "Is5a: Vaginale fødsler ved institusjon per år, fødeinstitusjon, inngrep og tiltak under fødselen og sphincterruptur (grad 3-4)",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.587387Z"
+  },
+  {
+    "tableId": 459,
+    "title": "Is6: Fødte ved institusjon per år, fødeinstitusjon og barnets tilstand ved fødsel",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.588547Z"
+  },
+  {
+    "tableId": 493,
+    "title": "Is7a: Fødsler ved institusjon per år, fødeinstitusjon og om det finnes opplysninger om mors røykevaner",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.59028Z"
+  },
+  {
+    "tableId": 494,
+    "title": "Is7b: Fødsler ved institusjon med opplysning om mors røykevaner i 1. trimester per år, fødeinstitusjon og mors røykevaner i 1. trimester",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.544473Z"
+  },
+  {
+    "tableId": 495,
+    "title": "Is7c: Fødsler ved institusjon med opplysning om mors røykevaner i siste trimester per år, fødeinstitusjon og mors røykevaner i siste trimester",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.591335Z"
+  },
+  {
+    "tableId": 496,
+    "title": "Is8: Fødsler ved institusjon per år, fødeinstitusjon og om det finnes opplysninger om mors kroppsmasseindeks (KMI)",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.545572Z"
+  },
+  {
+    "tableId": 497,
+    "title": "Is9a: Fødte per år, fødehelseregion, mors fødeland og perinatal/neonatal levestatus",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.585993Z"
+  },
+  {
+    "tableId": 500,
+    "title": "P3b: Forløsningstype per måned og fødeinstitusjon ",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:39:40.000722Z"
+  },
+  {
+    "tableId": 512,
+    "title": "P4a: Komplikasjoner under fødselen per måned og mors bosted",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:39:59.801112Z"
+  },
+  {
+    "tableId": 513,
+    "title": "P4b: Komplikasjoner under fødselen per måned og fødeinstitusjon",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:40:15.943993Z"
+  },
+  {
+    "tableId": 514,
+    "title": "P5a: Vaginalt fødte: Inngrep og tiltak under fødselen per måned og mors bosted",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:40:30.703471Z"
+  },
+  {
+    "tableId": 515,
+    "title": "P5b: Vaginalt fødte: Inngrep og tiltak under fødselen per måned og fødeinstitusjon",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:40:46.381016Z"
+  },
+  {
+    "tableId": 502,
+    "title": "P6a: Barnets tilstand ved fødsel per måned og mors bosted",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:41:00.725104Z"
+  },
+  {
+    "tableId": 492,
+    "title": "F10c-2: Keisersnittfødsler per år, mors bosted og fødselsstart",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.786712Z"
+  },
+  {
+    "tableId": 503,
+    "title": "P6b: Barnets tilstand ved fødsel per måned og fødeinstitusjon",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:41:32.208543Z"
+  },
+  {
+    "tableId": 443,
+    "title": "F10c-3: Keisersnittfødsler per år, mors bosted og keisersnittype",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.653717Z"
+  },
+  {
+    "tableId": 837,
+    "title": "F5b: Gjennomsnittlig fødselsvekt per år, kjønn og mors bosted",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-14T09:22:41.572104Z"
+  },
+  {
+    "tableId": 411,
+    "title": "F0: Fødte og fødsler per år og måned",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.655082Z"
+  },
+  {
+    "tableId": 412,
+    "title": "F1a: Fødte per år, mors bosted og kjønn",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-14T09:22:02.955437Z"
+  },
+  {
+    "tableId": 413,
+    "title": "F1b: Fødsler per år, mors bosted og enkelt-/flerfødsel",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.705897Z"
+  },
+  {
+    "tableId": 414,
+    "title": "F2b-5: Fødte iht. MFR per år, mors bosted og perinatal levestatus",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.731839Z"
+  },
+  {
+    "tableId": 415,
+    "title": "F2b-6: Fødte iht. Euro-Peristat (f.o.m. 22 uker) per år og perinatal levestatus ",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.668515Z"
+  },
+  {
+    "tableId": 416,
+    "title": "F2b-7: Fødte iht. WHO (f.o.m. 500 g) per år og perinatal levestatus ",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.806916Z"
+  },
+  {
+    "tableId": 417,
+    "title": "F2b-8: Fødte iht. WHO (f.o.m. 1000 g) per år og perinatal levestatus",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.807923Z"
+  },
+  {
+    "tableId": 444,
+    "title": "F10d: Fødsler per år, mors bosted, forløsningstype og anestesi/analgesi brukt under fødselen",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.790922Z"
+  },
+  {
+    "tableId": 451,
+    "title": "F11: Fødte per år, mors bosted og fødestedtype",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-14T14:56:00.890131Z"
+  },
+  {
+    "tableId": 418,
+    "title": "F2c: Levendefødte per år, mors bosted og levestatus i spedbarnsperioden",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.671027Z"
+  },
+  {
+    "tableId": 452,
+    "title": "F12a: Fødte per år, mors bosted og neonatale tilstander",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:49:45.806684Z"
+  },
+  {
+    "tableId": 453,
+    "title": "F12b: Fødte per år, mors bosted og behandling av barnet",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:49:45.7999Z"
+  },
+  {
+    "tableId": 454,
+    "title": "F13: Fødsler per år, mors bosted og spesielle forhold ved fostervann",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.795738Z"
+  },
+  {
+    "tableId": 431,
+    "title": "F6b: Gjennomsnittlig svangerskapsvarighet per år og mors bosted",
+    "publishedAt": "2025-11-11T06:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.793306Z"
+  },
+  {
+    "tableId": 472,
+    "title": "F16a-1: Fødsler per år, mors bosted og om det finnes opplysninger om mors røykevaner",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.804438Z"
+  },
+  {
+    "tableId": 468,
+    "title": "F16a-2: Fødsler med opplysning om mors røykevaner i 1. trimester per år, mors bosted og mors røykevaner i 1. trimester",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.661213Z"
+  },
+  {
+    "tableId": 469,
+    "title": "F16a-3: Fødsler med opplysning om mors røykevaner i siste trimester per år, mors bosted og mors røykevaner i siste trimester",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.723555Z"
+  },
+  {
+    "tableId": 473,
+    "title": "F16b-1: Fødsler per år, mors alder og om det finnes opplysninger om mors røykevaner",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.805548Z"
+  },
+  {
+    "tableId": 420,
+    "title": "F3a: Fødsler per år, mors bosted og mors alder",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.809272Z"
+  },
+  {
+    "tableId": 421,
+    "title": "F3b: Mors gjennomsnittsalder per år, mors bosted og tidligere fødte",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-15T08:25:21.688074Z"
+  },
+  {
+    "tableId": 422,
+    "title": "F3c: Fødsler per år, mors bosted og fars alder",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.672434Z"
+  },
+  {
+    "tableId": 423,
+    "title": "F3d: Fars gjennomsnittsalder per år og mors bosted",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.812255Z"
+  },
+  {
+    "tableId": 424,
+    "title": "F4a: Fødsler per år, mors bosted og tidligere fødte",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-15T08:30:02.114672Z"
+  },
+  {
+    "tableId": 425,
+    "title": "F4b: Fødsler per år, mors bosted og mors sivilstatus",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.673454Z"
+  },
+  {
+    "tableId": 817,
+    "title": "R9: Robsongruppe 5: Fødselsstart og inngrep under fødselen",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-15T08:19:37.372533Z"
+  },
+  {
+    "tableId": 470,
+    "title": "F16b-2: Fødsler med opplysning om mors røykevaner i 1. trimester per år, mors alder og mors røykevaner i 1. trimester",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.662642Z"
+  },
+  {
+    "tableId": 471,
+    "title": "F16b-3: Fødsler med opplysning om mors røykevaner i siste trimester per år, mors alder og mors røykevaner i siste trimester",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.663672Z"
+  },
+  {
+    "tableId": 474,
+    "title": "F16e-1: Elektronisk (f.o.m. versjon 1.2) meldte fødsler per år, mors alder og om det finnes opplysninger om mors snusvaner",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.66014Z"
+  },
+  {
+    "tableId": 475,
+    "title": "F16e-2: Fødsler med opplysning om mors snusvaner i 1. trimester per år, mors alder og mors snusvaner i 1. trimester",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.71648Z"
+  },
+  {
+    "tableId": 476,
+    "title": "F16e-3: Fødsler med opplysning om mors snusvaner i siste trimester per år, mors alder og mors snusvaner i siste trimester",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.803021Z"
+  },
+  {
+    "tableId": 477,
+    "title": "F17a: Fødsler per år, mors bosted og mors bruk av kosttilskudd",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:55.524655Z"
+  },
+  {
+    "tableId": 478,
+    "title": "F17b: Fødsler per år, mors alder og mors bruk av folsyre før svangerskapet",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:55.525849Z"
+  },
+  {
+    "tableId": 479,
+    "title": "F17c: Fødsler per år, mors alder og mors bruk av folsyre i svangerskapet",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:55.535991Z"
+  },
+  {
+    "tableId": 480,
+    "title": "F18a-1: Fødsler per år, mors bosted og om det finnes opplysning om mors kroppsmasseindeks (KMI) før svangerskapet",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.798188Z"
+  },
+  {
+    "tableId": 481,
+    "title": "F18a-2: Fødsler med opplysning om mors kroppsmasseindeks (KMI) før svangerskapet per år, mors bosted og mors KMI før svangerskapet",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.656143Z"
+  },
+  {
+    "tableId": 482,
+    "title": "F18a-3: Gjennomsnittlig kroppsmasseindeks (KMI) for mor før svangerskapet per år og mors bosted",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.711335Z"
+  },
+  {
+    "tableId": 456,
+    "title": "A1: Fødte etter assistert befruktning i Norge per år, institusjon og enkelt-/flerfødt",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:48:26.909883Z"
+  },
+  {
+    "tableId": 457,
+    "title": "A2: Fødte etter assistert befruktning i Norge per år, metode og enkelt-/flerfødt",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:48:26.904022Z"
+  },
+  {
+    "tableId": 455,
+    "title": "M1: Fødte og aborterte per år, dødstidspunkt og medfødte misdannelser",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:46:55.864214Z"
+  },
+  {
+    "tableId": 428,
+    "title": "Is1: Fødsler per år, fødeinstitusjon, fødestedtype og enkelt-/flerfødsel",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-14T14:57:38.801601Z"
+  },
+  {
+    "tableId": 498,
+    "title": "Is9b: Fødsler per år, fødehelseregion, mors fødeland og forhold ved mor og svangerskap",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:52:12.956103Z"
+  },
+  {
+    "tableId": 499,
+    "title": "Is10: Fødsler ved institusjon per år, fødeinstitusjon, forløsningstype og mors liggetid etter fødsel",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.592687Z"
+  },
+  {
+    "tableId": 748,
+    "title": "Is13: Levendefødte ved institusjon per år, fødeinstitusjon og pH navlesnorarterie",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.593722Z"
+  },
+  {
+    "tableId": 696,
+    "title": "R1: Keisersnitt per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-15T08:19:37.376551Z"
+  },
+  {
+    "tableId": 757,
+    "title": "R2: Tang eller vakuumekstraksjon per Robsongruppe og fødeinstitusjon (alle institusjoner) ",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-15T08:19:37.380789Z"
+  },
+  {
+    "tableId": 758,
+    "title": "R3: Tang per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-15T08:19:37.381922Z"
+  },
+  {
+    "tableId": 759,
+    "title": "R4: Vakuumekstraksjon per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-15T08:19:37.311862Z"
+  },
+  {
+    "tableId": 760,
+    "title": "R5: Episiotomi per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-15T08:19:37.352531Z"
+  },
+  {
+    "tableId": 761,
+    "title": "R6: Blødning under/etter fødsel per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-15T08:19:37.383353Z"
+  },
+  {
+    "tableId": 426,
+    "title": "F5a: Fødte med fødselsvekt per år, mors bosted og fødselsvekt",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.815394Z"
+  },
+  {
+    "tableId": 430,
+    "title": "F6a: Fødsler med svangerskapsvarighet per år, mors bosted og svangerskapsvarighet",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.674785Z"
+  },
+  {
+    "tableId": 432,
+    "title": "F7a: Fødsler per år, mors bosted og sykdom hos mor før svangerskapet",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:55.527297Z"
+  },
+  {
+    "tableId": 433,
+    "title": "F7c: Fødsler per år, mors bosted og hypertensive tilstander hos mor i svangerskapet",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:55.547151Z"
+  },
+  {
+    "tableId": 434,
+    "title": "F7d: Fødsler per år, mors bosted og diabetes hos mor",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:55.52845Z"
+  },
+  {
+    "tableId": 435,
+    "title": "F8a: Fødsler per år, mors bosted og fødselsstart",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.817878Z"
+  },
+  {
+    "tableId": 436,
+    "title": "F8b: Induserte fødsler per år, mors bosted og induksjonsmetode",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.675785Z"
+  },
+  {
+    "tableId": 437,
+    "title": "F9a: Fødsler per år, mors bosted og komplikasjoner under fødselen",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.677666Z"
+  },
+  {
+    "tableId": 438,
+    "title": "F9b: Fødte per år, mors bosted og leie ved fødsel",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.818937Z"
+  },
+  {
+    "tableId": 440,
+    "title": "F10a: Vaginalt fødte per år, mors bosted og inngrep og tiltak under fødselen",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.678712Z"
+  },
+  {
+    "tableId": 429,
+    "title": "Is2: Fødte ved institusjon per år, fødeinstitusjon og levestatus ved fødsel",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.58321Z"
+  },
+  {
+    "tableId": 445,
+    "title": "Is3a: Fødsler ved institusjon per år, fødeinstitusjon og sykdom hos mor i svangerskapet",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:52:12.955066Z"
+  },
+  {
+    "tableId": 762,
+    "title": "R7: Lav apgar score per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-15T08:19:37.313901Z"
+  },
+  {
+    "tableId": 763,
+    "title": "R8: Overflyttet barneavdeling per Robsongruppe og fødeinstitusjon (alle institusjoner)",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-15T08:19:37.354025Z"
+  },
+  {
+    "tableId": 487,
+    "title": "P1a: Fødte per måned og mors bosted",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:38:23.3897Z"
+  },
+  {
+    "tableId": 797,
+    "title": "P0a: Fødte per måned og mors bosted (med og uten fødselsmelding i MFR)",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:37:17.78135Z"
+  },
+  {
+    "tableId": 796,
+    "title": "P0b: Fødte per måned og fødeinstitusjon (med og uten fødselsmelding i MFR)",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:38:00.803955Z"
+  },
+  {
+    "tableId": 491,
+    "title": "P1b: Fødte per måned og fødeinstitusjon",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:38:42.218649Z"
+  },
+  {
+    "tableId": 505,
+    "title": "P2a: Fødselsstart per måned og mors bosted",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:38:58.163141Z"
+  },
+  {
+    "tableId": 506,
+    "title": "P2b: Fødselsstart per måned og fødeinstitusjon",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:39:10.608098Z"
+  },
+  {
+    "tableId": 490,
+    "title": "P3a: Forløsningstype per måned og mors bosted",
+    "publishedAt": "2026-05-21T05:00:00Z",
+    "modifiedAt": "2026-05-20T11:39:26.357828Z"
+  },
+  {
+    "tableId": 441,
+    "title": "F10b: Fødte i seteleie per år, mors bosted og inngrep og tiltak under fødselen",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.820276Z"
+  },
+  {
+    "tableId": 442,
+    "title": "F10c-1: Fødsler per år, mors bosted og forløsningstype",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:50:04.652646Z"
+  },
+  {
+    "tableId": 446,
+    "title": "Is3b: Fødsler ved institusjon per år, fødeinstitusjon og komplikasjoner under fødselen",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.576745Z"
+  },
+  {
+    "tableId": 447,
+    "title": "Is3c: Fødsler ved institusjon per år, fødeinstitusjon og fødselsstart",
+    "publishedAt": "2026-04-16T05:00:00Z",
+    "modifiedAt": "2026-04-13T17:51:23.540684Z"
+  }
+]

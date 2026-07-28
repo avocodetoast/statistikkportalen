@@ -10,8 +10,10 @@
  *     data.ssb.no/api/pxwebapi/v2/config
  *     data.ssb.no/api/pxwebapi/v2/tables?...
  *
- * Norges Bank og FHI gjør NULL — katalogene deres er bakt inn i
- * data/sources/*.js ved byggetid. page.route() dekker dette helt.
+ * Norges Bank og FHI gjør NULL i http-modus (katalogindeksen dekker dem, se
+ * data/index/) — over file:// faller de tilbake til direkte kildehenting i
+ * stedet, deriblant FHIs live /{kilde}/table-fallback. page.route() dekker
+ * begge tilfellene.
  *
  * TRE MODI:
  *   replay (standard) — svarer fra tests/e2e/fixtures/. Deterministisk.
@@ -257,7 +259,7 @@ export function trimCodelist(body, { maxValues = MAX_DIM_VALUES, keptCodes = nul
  * @returns {{ missing: string[], recorded: string[], blocked: string[] }}
  */
 export async function installRoutes(page, options = {}) {
-  const { mode = 'replay', keepTables = [], blockHosts = [] } = options;
+  const { mode = 'replay', keepTables = [], blockHosts = [], blockPaths = [] } = options;
 
   // SSB tåler 30 kall/minutt, og SSBApi._throttledFetch sperrer bare på 100 ms
   // (600/min). Under innspilling av fem tabeller går det ~40 kall, så uten en
@@ -286,8 +288,16 @@ export async function installRoutes(page, options = {}) {
     const request = route.request();
     const url = request.url();
 
-    // Lokale filer (file:// og vår egen node:http-server) går rett gjennom.
+    // Lokale filer (file:// og vår egen node:http-server) går rett gjennom —
+    // med mindre testen bevisst har blokkert stien. blockPaths brukes til å ta
+    // bort katalogindeksen (data/index/) og se at appen faller tilbake til
+    // direkte kildehenting; den må sjekkes HER, før gjennomslippet, siden
+    // indeksen serveres av vår egen lokale server.
     if (url.startsWith('file://') || url.includes('127.0.0.1') || url.includes('localhost')) {
+      if (blockPaths.some(p => new URL(url).pathname.includes(p))) {
+        blocked.push(url);
+        return route.fulfill({ status: 404, body: 'blokkert av testen' });
+      }
       return route.continue();
     }
 

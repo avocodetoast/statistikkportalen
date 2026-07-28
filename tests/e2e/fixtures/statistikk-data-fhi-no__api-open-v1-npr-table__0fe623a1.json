@@ -1,0 +1,356 @@
+[
+  {
+    "tableId": 785,
+    "title": "Pakkeforløp hjem for pasienter med kreft",
+    "publishedAt": "2026-03-27T09:00:00Z",
+    "modifiedAt": "2026-03-27T08:42:12.990113Z"
+  },
+  {
+    "tableId": 636,
+    "title": "NPR alkohol og rus-tilstandsgrupper",
+    "publishedAt": "2026-04-15T08:00:00Z",
+    "modifiedAt": "2026-04-14T11:33:34.144432Z"
+  },
+  {
+    "tableId": 637,
+    "title": "NPR alkohol og rus-alder og kjønn",
+    "publishedAt": "2026-04-15T08:00:00Z",
+    "modifiedAt": "2026-04-14T11:33:54.510725Z"
+  },
+  {
+    "tableId": 638,
+    "title": "NPR alkohol og rus-tjenesteområder",
+    "publishedAt": "2026-04-15T08:00:00Z",
+    "modifiedAt": "2026-04-14T11:33:01.127766Z"
+  },
+  {
+    "tableId": 771,
+    "title": "Personskader-aktivitet",
+    "publishedAt": "2026-04-24T08:00:00Z",
+    "modifiedAt": "2026-04-24T12:07:23.04937Z"
+  },
+  {
+    "tableId": 770,
+    "title": "Personskader-skadested",
+    "publishedAt": "2026-04-24T08:00:00Z",
+    "modifiedAt": "2026-04-24T12:07:23.039695Z"
+  },
+  {
+    "tableId": 775,
+    "title": "Personskader-skademekanisme",
+    "publishedAt": "2026-04-24T08:00:00Z",
+    "modifiedAt": "2026-04-24T12:07:23.038227Z"
+  },
+  {
+    "tableId": 778,
+    "title": "Personskader-alvorlighetsgrad",
+    "publishedAt": "2026-04-24T08:00:00Z",
+    "modifiedAt": "2026-04-24T12:07:23.048024Z"
+  },
+  {
+    "tableId": 779,
+    "title": "Personskader-kontaktårsak",
+    "publishedAt": "2026-04-24T08:00:00Z",
+    "modifiedAt": "2026-04-24T12:07:23.037142Z"
+  },
+  {
+    "tableId": 784,
+    "title": "Personskader-totalt",
+    "publishedAt": "2026-04-24T08:00:00Z",
+    "modifiedAt": "2026-04-24T12:07:23.04077Z"
+  },
+  {
+    "tableId": 517,
+    "title": "NPR SOM nøkkeltall ",
+    "publishedAt": "2026-06-23T08:00:00Z",
+    "modifiedAt": "2026-06-22T12:58:33.361695Z"
+  },
+  {
+    "tableId": 464,
+    "title": "NPR PHBU nøkkeltall",
+    "publishedAt": "2026-06-23T08:00:00Z",
+    "modifiedAt": "2026-06-23T12:08:46.349055Z"
+  },
+  {
+    "tableId": 518,
+    "title": "NPR PHV nøkkeltall ",
+    "publishedAt": "2026-06-23T08:00:00Z",
+    "modifiedAt": "2026-06-25T06:29:33.824911Z"
+  },
+  {
+    "tableId": 520,
+    "title": "NPR TSB nøkkeltall",
+    "publishedAt": "2026-06-23T08:00:00Z",
+    "modifiedAt": "2026-06-23T12:05:38.105256Z"
+  },
+  {
+    "tableId": 534,
+    "title": "NPR ALLETJEN 01 tilstandskoder I A00-B99",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:11:22.565618Z"
+  },
+  {
+    "tableId": 535,
+    "title": "NPR ALLETJEN 02 tilstandskoder II C00-D48",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:23:24.828087Z"
+  },
+  {
+    "tableId": 533,
+    "title": "NPR ALLETJEN 03 tilstandskoder III D50-D89",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:26:00.974895Z"
+  },
+  {
+    "tableId": 524,
+    "title": "NPR ALLETJEN 04 tilstandskoder IV (E00-E90) ",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T12:14:48.555805Z"
+  },
+  {
+    "tableId": 537,
+    "title": "NPR ALLETJEN 05 tilstandskoder V (F00-F99)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:36:21.546185Z"
+  },
+  {
+    "tableId": 538,
+    "title": " NPR ALLETJEN 06 tilstandskoder VI (G00-G99) ",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:37:44.480535Z"
+  },
+  {
+    "tableId": 521,
+    "title": "NPR ALLETJEN 07 tilstandskoder VII (H00-H59) ",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:17:06.785772Z"
+  },
+  {
+    "tableId": 539,
+    "title": "NPR ALLETJEN 08 tilstandskoder VIII (H60-H95)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:41:33.970829Z"
+  },
+  {
+    "tableId": 540,
+    "title": "NPR ALLETJEN 09 tilstandskoder IX (I00-I99)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:49:12.468381Z"
+  },
+  {
+    "tableId": 541,
+    "title": "NPR ALLETJEN 10 tilstandskoder X (J00-J99)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:50:56.74543Z"
+  },
+  {
+    "tableId": 542,
+    "title": "NPR ALLETJEN 11 tilstandskoder XI (K00-K93)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:19:02.263747Z"
+  },
+  {
+    "tableId": 543,
+    "title": "NPR ALLETJEN 12 tilstandskoder XII (L00-L99)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:54:41.60982Z"
+  },
+  {
+    "tableId": 544,
+    "title": "NPR ALLETJEN 13 tilstandskoder XIII (M00-M99)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:56:21.257577Z"
+  },
+  {
+    "tableId": 545,
+    "title": " NPR ALLETJEN 14 tilstandskoder XIV (N00-N99)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:54:32.508107Z"
+  },
+  {
+    "tableId": 546,
+    "title": "NPR ALLETJEN 15 tilstandskoder XV (O00-O99) ",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:51:49.398606Z"
+  },
+  {
+    "tableId": 547,
+    "title": "NPR ALLETJEN 16 tilstandskoder XVI (P00-P96)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:50:14.65864Z"
+  },
+  {
+    "tableId": 548,
+    "title": "NPR ALLETJEN 17 tilstandskoder XVII (Q00-Q99)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:21:51.297155Z"
+  },
+  {
+    "tableId": 549,
+    "title": "NPR ALLETJEN 18 tilstandskoder XVIII (R00-R99) ",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:37:11.46847Z"
+  },
+  {
+    "tableId": 550,
+    "title": "NPR ALLETJEN 19 tilstandskoder XIX (S00-T98)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:30:33.5769Z"
+  },
+  {
+    "tableId": 551,
+    "title": "NPR ALLETJEN 20 tilstandskoder XX (V0n-Y98) ",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:22:48.42417Z"
+  },
+  {
+    "tableId": 552,
+    "title": "NPR ALLETJEN 21 tilstandskoder XXI (Z00-Z99) ",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T09:15:23.226682Z"
+  },
+  {
+    "tableId": 553,
+    "title": "\t NPR ALLETJEN 22 tilstandskoder  XXII (U00-U85)",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:24:36.386737Z"
+  },
+  {
+    "tableId": 555,
+    "title": "\t NPR ALLETJEN kap A Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:38:20.621602Z"
+  },
+  {
+    "tableId": 556,
+    "title": "NPR ALLETJEN kap B Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-19T10:07:55.368874Z"
+  },
+  {
+    "tableId": 557,
+    "title": "NPR ALLETJEN kap C Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:39:15.741629Z"
+  },
+  {
+    "tableId": 558,
+    "title": "NPR ALLETJEN kap D Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:39:52.423005Z"
+  },
+  {
+    "tableId": 559,
+    "title": "NPR ALLETJEN kap E Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:40:30.931756Z"
+  },
+  {
+    "tableId": 560,
+    "title": "NPR ALLETJEN kap F Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:41:18.625933Z"
+  },
+  {
+    "tableId": 561,
+    "title": "NPR ALLETJEN kap G Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:42:34.946892Z"
+  },
+  {
+    "tableId": 562,
+    "title": "\t NPR ALLETJEN kap H Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:43:47.950209Z"
+  },
+  {
+    "tableId": 563,
+    "title": "NPR ALLETJEN kap I Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:44:34.83445Z"
+  },
+  {
+    "tableId": 564,
+    "title": "NPR ALLETJEN kap J Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T10:47:16.518785Z"
+  },
+  {
+    "tableId": 566,
+    "title": "NPR ALLETJEN kap K Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T11:06:24.97039Z"
+  },
+  {
+    "tableId": 567,
+    "title": "NPR ALLETJEN kap L Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T11:07:20.521364Z"
+  },
+  {
+    "tableId": 568,
+    "title": "NPR ALLETJEN kap M Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T12:16:47.177328Z"
+  },
+  {
+    "tableId": 569,
+    "title": "NPR ALLETJEN kap N Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T11:09:06.284054Z"
+  },
+  {
+    "tableId": 571,
+    "title": "NPR ALLETJEN kap O Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T11:10:18.507337Z"
+  },
+  {
+    "tableId": 572,
+    "title": "\t NPR ALLETJEN kap P Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T11:11:02.080904Z"
+  },
+  {
+    "tableId": 573,
+    "title": "\t NPR ALLETJEN kap Q Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T11:11:52.592573Z"
+  },
+  {
+    "tableId": 574,
+    "title": "\t NPR ALLETJEN kap R Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T11:12:30.115317Z"
+  },
+  {
+    "tableId": 575,
+    "title": "\t NPR ALLETJEN kap S Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T11:13:13.071808Z"
+  },
+  {
+    "tableId": 576,
+    "title": "\t NPR ALLETJEN kap T Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-03-20T11:13:48.660959Z"
+  },
+  {
+    "tableId": 577,
+    "title": "NPR ALLETJEN kap W Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-06-15T13:34:32.062051Z"
+  },
+  {
+    "tableId": 578,
+    "title": "NPR ALLETJEN kap Y Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-06-15T13:34:16.915476Z"
+  },
+  {
+    "tableId": 579,
+    "title": "NPR ALLETJEN kap Z Prosedyrekoder",
+    "publishedAt": "2026-03-24T09:00:00Z",
+    "modifiedAt": "2026-06-15T13:34:52.730675Z"
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "id": "abr",
+    "title": "Abortregisteret (ABR)",
+    "description": "Om svangerskapsbrudd i Norge fra 1979 til i dag.",
+    "aboutUrl": "https://www.fhi.no/op/abortregisteret",
+    "publishedBy": "Folkehelseinstituttet"
+  },
+  {
+    "id": "daar",
+    "title": "Dødsårsaksregisteret (DÅR)",
+    "description": "Om dødsfall og dødsårsaker i Norge fra 1951 til i dag.",
+    "aboutUrl": "https://www.fhi.no/op/dodsarsaksregisteret/",
+    "publishedBy": "Folkehelseinstituttet"
+  },
+  {
+    "id": "nokkel",
+    "title": "Folkehelsestatistikk",
+    "description": "Statistikk om befolkning, oppvekst og levekår, miljø, skader, helserelatert atferd og helsetilstand.",
+    "aboutUrl": "https://www.helsedirektoratet.no/forebygging-diagnose-og-behandling/forebygging-og-levevaner/folkehelsestatistikk-og-profiler",
+    "publishedBy": "Helsedirektoratet"
+  },
+  {
+    "id": "gs",
+    "title": "Grossistbasert legemiddelstatistikk",
+    "description": "Salg av reseptbelagte og reseptfrie legemidler fra grossister til blant annet apotek, institusjoner og dagligvare.",
+    "aboutUrl": "https://www.fhi.no/he/legemiddelbruk/om-den-grossistbaserte-legemiddelfo/#statistikkbanker-med-data-om-legemiddelforbruk",
+    "publishedBy": "Folkehelseinstituttet"
+  },
+  {
+    "id": "hkr",
+    "title": "Hjerte- og karregisteret (HKR)",
+    "description": "Opplysninger fra 2012 til i dag om personer med sykdommer i hjertet og blodårene, og om behandlingen av disse sykdommene.",
+    "aboutUrl": "https://www.fhi.no/is/hjertekar2/",
+    "publishedBy": "Folkehelseinstituttet"
+  },
+  {
+    "id": "kpr",
+    "title": "Kommunalt pasient- og brukerregister (KPR)",
+    "description": "Statistikk om bruk av helse- og omsorgstjenester i kommunene.",
+    "aboutUrl": "https://www.fhi.no/he/kpr/statistikk-og-rapporter",
+    "publishedBy": "Folkehelseinstituttet"
+  },
+  {
+    "id": "lmr",
+    "title": "Legemiddelregisteret (LMR)",
+    "description": "Her finner du oversikt over legemidler som er utlevert på resept i Norge (fra og med 2004).",
+    "aboutUrl": "https://www.fhi.no/he/legemiddelregisteret/",
+    "publishedBy": "Folkehelseinstituttet"
+  },
+  {
+    "id": "mfr",
+    "title": "Medisinsk fødselsregister (MFR)",
+    "description": "Om svangerskap, fødsler og nyfødte i Norge fra 1967 til i dag.",
+    "aboutUrl": "https://www.fhi.no/op/mfr",
+    "publishedBy": "Folkehelseinstituttet"
+  },
+  {
+    "id": "msis",
+    "title": "Meldingssystem for smittsomme sykdommer (MSIS)",
+    "description": "Oversikt over meldingspliktige sykdommer fra 1977 til i dag.",
+    "aboutUrl": "https://allvis.fhi.no/msis",
+    "publishedBy": "Folkehelseinstituttet"
+  },
+  {
+    "id": "ngs",
+    "title": "Mikrobiologisk genomovervåkning",
+    "description": "Data fra helgenomsekvesering og andre genetiske analyser av bakterier og virus utført ved FHIs referanselaboratorier.",
+    "aboutUrl": "https://www.fhi.no/hd/laboratorie-analyser",
+    "publishedBy": "Folkehelseinstituttet"
+  },
+  {
+    "id": "sysvak",
+    "title": "Nasjonalt vaksinasjonsregister (SYSVAK)",
+    "description": "Data for influensa- og koronavaksinasjoner og for Barnevaksinasjonsprogrammet  (dekningsstatistikk).",
+    "aboutUrl": "https://www.fhi.no/va/sysvak/",
+    "publishedBy": "Folkehelseinstituttet"
+  },
+  {
+    "id": "npr",
+    "title": "Norsk pasientregister (NPR)",
+    "description": "Statistikk fra somatiske fagområder, psykisk helsevern og tverrfaglig spesialisert rusbehandling.",
+    "aboutUrl": "https://www.fhi.no/he/npr",
+    "publishedBy": "Folkehelseinstituttet"
+  },
+  {
+    "id": "skast",
+    "title": "Skadedyrstatistikken",
+    "description": "Skadedyrstatistikken gir oversikt over hvor ofte utvalgte skadedyr bekjempes i Norge. Statistikken bygger på månedlige rapporter fra skadedyrfirmaer og viser utvikling mellom år og sesongvariasjoner.",
+    "aboutUrl": "https://www.fhi.no/sk/skadedyrbekjempelse/statistikk-om-skadedyr",
+    "publishedBy": "Folkehelseinstituttet"
+  }
+]

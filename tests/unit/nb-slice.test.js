@@ -654,7 +654,8 @@ describe('NBAdapter — katalog for snittede rader', () => {
 
   it('rader som deler flow, men har ulik probeKey, deler ikke periodecache', async () => {
     // Katalogen probes ikke lenger ved oppstart (periodene kommer fra
-    // data/sources/nb-periods.js) — probene kjøres når en tabell ÅPNES og
+    // katalogindeksen, bygget bl.a. fra nb-periods.json) — probene kjøres når
+    // en tabell ÅPNES og
     // skrives til cachen, som getTables leser. Samme egenskap som før: hver
     // rad må få SITT tidsvindu, ikke naboens.
     await adapter.getTableMetadata('nb-REG-PROD', false, 'no');

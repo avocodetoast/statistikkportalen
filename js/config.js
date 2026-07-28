@@ -107,6 +107,45 @@ const AppConfig = {
   },
 
   /**
+   * Forhåndsbygget katalogindeks (data/index/, bygget av
+   * scripts/build-catalog-index.mjs).
+   *
+   * Slås den PÅ, henter BrowserState._doInit hele katalogen fra de
+   * innsjekkede shard-filene i stedet for å spørre SSB/NB/FHI ved oppstart —
+   * ett lite kall per kilde mot vår egen server i stedet for full
+   * katalogaggregering. Kilder som mangler et brukbart shard hentes direkte
+   * som før (api.getAllTables med options.onlySources), så en delvis indeks
+   * degraderer per kilde og aldri for hele appen.
+   */
+  catalogIndex: {
+    // AV = appen oppfører seg nøyaktig som før (indeksen lastes ikke i det
+    // hele tatt). PÅ = indeksen forsøkes først, med fallback til direkte
+    // kildehenting når manifestet eller alle shards er ubrukelige.
+    //
+    // PÅ betyr null eksterne API-kall ved sidelasting: hele katalogen kommer
+    // fra data/index/, bygget av scripts/build-catalog-index.mjs (cron).
+    // Over file:// er indeksen utilgjengelig, og appen faller tilbake til
+    // direkte kildehenting — tregere, men fungerer.
+    enabled: true,
+
+    // Sti til manifestet, relativt til index.html. Shard-URL-ene løses
+    // relativt til denne filens katalog — flytter du data/index/, er dette
+    // det eneste stedet stien står.
+    manifestPath: 'data/index/catalog-manifest.json',
+
+    // Eldre enn dette regnes et shard som «stale»: katalogen serveres
+    // fortsatt, men API-statusbadgen (js/source-status.js) blir gul og
+    // panelet skriver «Data kan være utdatert». Hev verdien hvis indeksen
+    // bygges sjeldnere enn hvert annet døgn. (48 timer)
+    staleAfterMs: 48 * 60 * 60 * 1000,
+
+    // Tidsavbrudd per manifest-/shard-hent. Løper det ut, degraderer den
+    // kilden (eller hele indeksen, hvis det var manifestet) til direkte
+    // kildehenting — appen henger aldri på indeksen.
+    timeoutMs: 15000
+  },
+
+  /**
    * API request limits
    */
   limits: {

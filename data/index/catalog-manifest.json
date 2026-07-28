@@ -1,0 +1,30 @@
+{
+  "format": 1,
+  "generatedAt": "2026-07-25T07:53:03.000Z",
+  "shards": [
+    {
+      "source": "ssb",
+      "lang": "no",
+      "file": "ssb-no-24c87da3.json",
+      "count": 83,
+      "bytes": 26568,
+      "generatedAt": "2026-07-21T06:00:00.000Z"
+    },
+    {
+      "source": "nb",
+      "lang": "no",
+      "file": "nb-no-f9bdd413.json",
+      "count": 31,
+      "bytes": 9753,
+      "generatedAt": "2026-07-25T07:53:03.000Z"
+    },
+    {
+      "source": "fhi",
+      "lang": "no",
+      "file": "fhi-no-49b8d7be.json",
+      "count": 370,
+      "bytes": 139617,
+      "generatedAt": "2026-07-25T04:07:04.234Z"
+    }
+  ]
+}

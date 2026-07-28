@@ -1,0 +1,722 @@
+[
+  {
+    "tableId": 670,
+    "title": "Leseferdighet_utdann_3",
+    "publishedAt": "2026-02-10T10:42:04.095025Z",
+    "modifiedAt": "2026-07-27T08:42:51.964641Z"
+  },
+  {
+    "tableId": 714,
+    "title": "NPR_3",
+    "publishedAt": "2025-10-21T10:06:51.087779Z",
+    "modifiedAt": "2026-07-27T10:28:21.454066Z"
+  },
+  {
+    "tableId": 344,
+    "title": "Selvmord femårig",
+    "publishedAt": "2026-01-12T09:39:58.096599Z",
+    "modifiedAt": "2026-07-27T11:42:36.77717Z"
+  },
+  {
+    "tableId": 342,
+    "title": "Dødsårsaker tiårig",
+    "publishedAt": "2026-01-12T09:40:25.065037Z",
+    "modifiedAt": "2026-07-27T11:57:42.897635Z"
+  },
+  {
+    "tableId": 351,
+    "title": "Forsvaret_Svomming_1",
+    "publishedAt": "2026-02-16T13:58:22.362566Z",
+    "modifiedAt": "2026-07-27T10:10:35.68376Z"
+  },
+  {
+    "tableId": 364,
+    "title": "Hjerte- og karregisteret_3aarigLFKB",
+    "publishedAt": "2024-10-29T12:57:13.733322Z",
+    "modifiedAt": "2024-10-29T12:57:13.733322Z"
+  },
+  {
+    "tableId": 365,
+    "title": "Hjerte- og karregisteret_1aarigLHF",
+    "publishedAt": "2024-12-18T12:13:02.962319Z",
+    "modifiedAt": "2025-01-09T06:58:42.47032Z"
+  },
+  {
+    "tableId": 641,
+    "title": "Regneferd_INNVKAT_3",
+    "publishedAt": "2026-02-10T11:25:22.449729Z",
+    "modifiedAt": "2026-07-27T08:54:32.820482Z"
+  },
+  {
+    "tableId": 608,
+    "title": "Venner_ute_Ungdata",
+    "publishedAt": "2026-02-10T20:26:35.178965Z",
+    "modifiedAt": "2026-05-06T12:50:06.952942Z"
+  },
+  {
+    "tableId": 349,
+    "title": "Fornoyd_helsa_Ungdata_KH",
+    "publishedAt": "2026-01-20T21:47:33.009601Z",
+    "modifiedAt": "2026-05-06T12:44:24.20775Z"
+  },
+  {
+    "tableId": 334,
+    "title": "Antibiotikaresepter",
+    "publishedAt": "2024-11-04T19:48:29.225776Z",
+    "modifiedAt": "2026-07-27T12:05:18.864446Z"
+  },
+  {
+    "tableId": 391,
+    "title": "Søvnproblemer_Ungdata_KH",
+    "publishedAt": "2026-03-11T11:11:19.625366Z",
+    "modifiedAt": "2026-05-06T12:49:27.137092Z"
+  },
+  {
+    "tableId": 354,
+    "title": "FORTROLIGVENN_Ungdata_KH",
+    "publishedAt": "2026-01-20T21:50:04.241821Z",
+    "modifiedAt": "2026-05-06T12:44:44.866389Z"
+  },
+  {
+    "tableId": 356,
+    "title": "Fritidsorg_deltak_ungdata",
+    "publishedAt": "2026-01-21T13:20:34.839291Z",
+    "modifiedAt": "2026-05-06T12:46:17.597104Z"
+  },
+  {
+    "tableId": 350,
+    "title": "Forsvaret_Svomming_3",
+    "publishedAt": "2026-02-12T13:26:54.37389Z",
+    "modifiedAt": "2026-07-27T10:15:04.730491Z"
+  },
+  {
+    "tableId": 357,
+    "title": "Fysisk_inakt_Ungdata_KH",
+    "publishedAt": "2026-01-21T14:31:57.063384Z",
+    "modifiedAt": "2026-05-06T12:45:03.469948Z"
+  },
+  {
+    "tableId": 790,
+    "title": "AAP_UTDANN_1",
+    "publishedAt": "2026-01-27T14:44:59.329574Z",
+    "modifiedAt": "2026-07-27T07:59:54.363922Z"
+  },
+  {
+    "tableId": 507,
+    "title": "Forventet_levealder_TOT_og_utdn_7aarigLF",
+    "publishedAt": "2025-12-02T21:06:52.621887Z",
+    "modifiedAt": "2026-07-27T10:57:27.302513Z"
+  },
+  {
+    "tableId": 336,
+    "title": "Barnehagekvalitet_bemanning",
+    "publishedAt": "2026-06-09T08:26:08.061722Z",
+    "modifiedAt": "2026-07-27T08:24:33.687013Z"
+  },
+  {
+    "tableId": 370,
+    "title": "KPR_1",
+    "publishedAt": "2025-11-05T12:46:34.40957Z",
+    "modifiedAt": "2026-07-27T11:17:47.321289Z"
+  },
+  {
+    "tableId": 787,
+    "title": "Uføre_UTDANN_1",
+    "publishedAt": "2026-01-27T14:35:55.553669Z",
+    "modifiedAt": "2026-07-27T08:05:05.497958Z"
+  },
+  {
+    "tableId": 606,
+    "title": "Tannhelse_DMFT=0_MED_DEKNING",
+    "publishedAt": "2026-06-23T07:29:38.735049Z",
+    "modifiedAt": "2026-07-27T12:07:11.157606Z"
+  },
+  {
+    "tableId": 791,
+    "title": "AAP_UTDANN_3",
+    "publishedAt": "2026-01-27T14:47:49.169494Z",
+    "modifiedAt": "2026-07-27T08:03:01.450233Z"
+  },
+  {
+    "tableId": 607,
+    "title": "Venner_inne_Ungdata",
+    "publishedAt": "2026-02-10T20:23:12.81944Z",
+    "modifiedAt": "2026-05-06T12:50:25.932794Z"
+  },
+  {
+    "tableId": 508,
+    "title": "Forventet levealder etter utdn_15aarigLFKB",
+    "publishedAt": "2025-12-02T21:13:26.471895Z",
+    "modifiedAt": "2026-07-27T10:58:32.606196Z"
+  },
+  {
+    "tableId": 375,
+    "title": "Treffsteder for unge_Ungdata_KH",
+    "publishedAt": "2026-02-09T11:26:27.884848Z",
+    "modifiedAt": "2026-05-06T12:47:19.629118Z"
+  },
+  {
+    "tableId": 390,
+    "title": "Smertestillende_ungdata",
+    "publishedAt": "2026-02-09T12:42:44.0123Z",
+    "modifiedAt": "2026-05-06T12:48:02.560156Z"
+  },
+  {
+    "tableId": 810,
+    "title": "Andrenarko_Ungdata",
+    "publishedAt": "2026-03-09T15:21:38.643178Z",
+    "modifiedAt": "2026-05-06T12:52:10.965956Z"
+  },
+  {
+    "tableId": 395,
+    "title": "Vaksinasjonsdekning_5aar",
+    "publishedAt": "2026-07-03T09:54:42.4716Z",
+    "modifiedAt": "2026-07-03T09:54:42.471601Z"
+  },
+  {
+    "tableId": 369,
+    "title": "KPR_3",
+    "publishedAt": "2025-11-05T12:47:10.174154Z",
+    "modifiedAt": "2026-07-27T11:21:04.305565Z"
+  },
+  {
+    "tableId": 660,
+    "title": "Forventet levealder totalt og etter utdanning, 25-årig",
+    "publishedAt": "2025-12-02T21:17:47.139173Z",
+    "modifiedAt": "2026-07-27T11:00:05.616716Z"
+  },
+  {
+    "tableId": 399,
+    "title": "Trygghet_ungdata",
+    "publishedAt": "2026-02-09T12:47:30.435923Z",
+    "modifiedAt": "2026-05-06T12:48:19.750235Z"
+  },
+  {
+    "tableId": 650,
+    "title": "INNVAND_INNVKAT",
+    "publishedAt": "2026-02-10T09:09:07.520257Z",
+    "modifiedAt": "2026-07-27T07:09:07.69105Z"
+  },
+  {
+    "tableId": 385,
+    "title": "Legemidler til behandling av type-2 diabetes_3aarigLFK",
+    "publishedAt": "2024-10-29T13:09:17.201712Z",
+    "modifiedAt": "2026-07-27T11:34:35.385306Z"
+  },
+  {
+    "tableId": 335,
+    "title": "Barn av sosialhjelpsmottakere",
+    "publishedAt": "2026-02-10T09:44:35.054662Z",
+    "modifiedAt": "2026-07-27T07:53:52.229102Z"
+  },
+  {
+    "tableId": 371,
+    "title": "Leseferdighet_UTDANN_1",
+    "publishedAt": "2026-02-10T10:35:48.263727Z",
+    "modifiedAt": "2026-07-27T08:41:05.759158Z"
+  },
+  {
+    "tableId": 685,
+    "title": "Regneferd_UTDANN_3",
+    "publishedAt": "2026-02-12T14:31:30.453553Z",
+    "modifiedAt": "2026-07-27T08:52:01.366212Z"
+  },
+  {
+    "tableId": 343,
+    "title": "Dødsårsaker-nøkkeltall-1990-ettårig",
+    "publishedAt": "2026-01-12T09:40:55.35502Z",
+    "modifiedAt": "2026-07-27T11:31:38.594806Z"
+  },
+  {
+    "tableId": 186,
+    "title": "Eierstatus",
+    "publishedAt": "2025-12-08T09:24:12.660856Z",
+    "modifiedAt": "2026-07-27T08:07:15.833343Z"
+  },
+  {
+    "tableId": 397,
+    "title": "TRIVSEL_1",
+    "publishedAt": "2026-02-03T14:50:45.287376Z",
+    "modifiedAt": "2026-07-27T08:36:41.563254Z"
+  },
+  {
+    "tableId": 392,
+    "title": "Stønad_livsopphold",
+    "publishedAt": "2025-05-09T12:50:19.326568Z",
+    "modifiedAt": "2026-07-27T07:58:29.491032Z"
+  },
+  {
+    "tableId": 363,
+    "title": "Hasjbruk_Ungdata_KH",
+    "publishedAt": "2026-01-21T14:44:06.197311Z",
+    "modifiedAt": "2026-05-06T12:48:42.664626Z"
+  },
+  {
+    "tableId": 187,
+    "title": "Personer som bor alene",
+    "publishedAt": "2025-11-18T09:20:23.692617Z",
+    "modifiedAt": "2026-07-27T07:13:28.169331Z"
+  },
+  {
+    "tableId": 403,
+    "title": "Vedvarende_lavinntekt_kommunegrense",
+    "publishedAt": "2025-04-24T12:16:59.538284Z",
+    "modifiedAt": "2026-07-27T07:22:19.168642Z"
+  },
+  {
+    "tableId": 352,
+    "title": "Trening_forsvaret_sesjon1_3",
+    "publishedAt": "2026-01-20T09:18:53.707281Z",
+    "modifiedAt": "2026-07-27T10:36:55.883577Z"
+  },
+  {
+    "tableId": 804,
+    "title": "Sysselsatte_UTDANN_ettårig",
+    "publishedAt": "2026-02-06T10:22:45.587531Z",
+    "modifiedAt": "2026-07-27T07:33:34.783873Z"
+  },
+  {
+    "tableId": 664,
+    "title": "Sosialhjelpsmottakere",
+    "publishedAt": "2025-06-06T06:36:12.451102Z",
+    "modifiedAt": "2025-06-06T06:36:12.451103Z"
+  },
+  {
+    "tableId": 372,
+    "title": "Leseferdighet_INNVKAT_3",
+    "publishedAt": "2026-02-17T12:15:42.934827Z",
+    "modifiedAt": "2026-07-27T08:47:44.469133Z"
+  },
+  {
+    "tableId": 672,
+    "title": "Regneferd_UTDANN_1",
+    "publishedAt": "2026-02-12T14:28:00.419856Z",
+    "modifiedAt": "2026-07-27T08:50:42.207546Z"
+  },
+  {
+    "tableId": 803,
+    "title": "Luftforurensning, PWC (ny)",
+    "publishedAt": "2026-02-05T07:45:49.979013Z",
+    "modifiedAt": "2026-07-27T09:24:28.226553Z"
+  },
+  {
+    "tableId": 677,
+    "title": "Gjennomforing i videregående skole_innvand_1",
+    "publishedAt": "2025-12-15T10:20:14.864234Z",
+    "modifiedAt": "2026-07-27T09:07:40.278141Z"
+  },
+  {
+    "tableId": 378,
+    "title": "Mobbing, 7. og 10. klasse_1",
+    "publishedAt": "2026-02-03T15:08:19.411738Z",
+    "modifiedAt": "2026-07-27T08:32:48.399642Z"
+  },
+  {
+    "tableId": 361,
+    "title": "Grunnskolepoeng_INNVKAT",
+    "publishedAt": "2026-01-08T15:38:28.022599Z",
+    "modifiedAt": "2026-07-27T08:57:45.97682Z"
+  },
+  {
+    "tableId": 671,
+    "title": "Leseferdighet_innvkat_1",
+    "publishedAt": "2026-02-16T12:22:31.91486Z",
+    "modifiedAt": "2026-07-27T08:44:16.333069Z"
+  },
+  {
+    "tableId": 688,
+    "title": "Forventede funksjonsfriske leveår_7",
+    "publishedAt": "2025-06-23T09:07:30.416427Z",
+    "modifiedAt": "2026-07-27T11:12:16.855828Z"
+  },
+  {
+    "tableId": 795,
+    "title": "Trangbodd_INNVAND",
+    "publishedAt": "2026-01-20T09:35:28.257245Z",
+    "modifiedAt": "2026-07-27T08:08:12.361431Z"
+  },
+  {
+    "tableId": 175,
+    "title": "Innvandrere og norskfødte med innv.foreldre _LANDBAK",
+    "publishedAt": "2026-02-06T14:57:46.6586Z",
+    "modifiedAt": "2026-07-27T07:07:31.838654Z"
+  },
+  {
+    "tableId": 388,
+    "title": "Overvekt_verneplikt_4",
+    "publishedAt": "2026-01-16T14:53:42.245577Z",
+    "modifiedAt": "2026-07-27T11:59:49.477448Z"
+  },
+  {
+    "tableId": 809,
+    "title": "NEET_UTDANN",
+    "publishedAt": "2026-02-10T19:20:19.064Z",
+    "modifiedAt": "2026-07-27T07:39:12.339554Z"
+  },
+  {
+    "tableId": 359,
+    "title": "Gjennomforing i videregående skole_innvand_3",
+    "publishedAt": "2025-12-15T10:25:56.152534Z",
+    "modifiedAt": "2026-07-27T09:09:17.604202Z"
+  },
+  {
+    "tableId": 181,
+    "title": "Utdanningsnivå",
+    "publishedAt": "2025-11-18T12:35:21.349944Z",
+    "modifiedAt": "2026-07-27T07:04:55.309737Z"
+  },
+  {
+    "tableId": 396,
+    "title": "Vaks_dekning_Influensa",
+    "publishedAt": "2026-01-13T10:35:14.248503Z",
+    "modifiedAt": "2026-07-27T12:04:00.910221Z"
+  },
+  {
+    "tableId": 387,
+    "title": "Overvekt_verneplikt_1",
+    "publishedAt": "2026-01-16T14:54:33.539299Z",
+    "modifiedAt": "2026-07-27T11:59:14.576499Z"
+  },
+  {
+    "tableId": 380,
+    "title": "Regelbrudd_Ungdata_KH",
+    "publishedAt": "2026-02-09T12:34:43.499082Z",
+    "modifiedAt": "2026-05-06T12:47:45.670514Z"
+  },
+  {
+    "tableId": 800,
+    "title": "Luftforurensning, grenseverdi",
+    "publishedAt": "2026-02-05T07:45:33.161833Z",
+    "modifiedAt": "2026-07-27T09:23:07.75641Z"
+  },
+  {
+    "tableId": 806,
+    "title": "MOBBING_3",
+    "publishedAt": "2026-02-04T11:50:48.897641Z",
+    "modifiedAt": "2026-07-27T08:34:05.231177Z"
+  },
+  {
+    "tableId": 366,
+    "title": "Inntektsulikhet",
+    "publishedAt": "2026-02-06T09:20:40.904633Z",
+    "modifiedAt": "2026-07-27T07:27:50.698673Z"
+  },
+  {
+    "tableId": 377,
+    "title": "Mobbing, 7. og 10. klasse, 3-årige tall",
+    "publishedAt": "2025-03-07T13:27:29.115965Z",
+    "modifiedAt": "2025-03-07T13:27:29.115965Z"
+  },
+  {
+    "tableId": 389,
+    "title": "Skjermtid_Ungdata_KH",
+    "publishedAt": "2026-02-09T12:38:50.920167Z",
+    "modifiedAt": "2026-05-06T12:45:47.437172Z"
+  },
+  {
+    "tableId": 353,
+    "title": "Trening_forsvaret_sesjon1_1",
+    "publishedAt": "2026-01-20T09:19:15.088638Z",
+    "modifiedAt": "2026-07-27T10:32:33.542973Z"
+  },
+  {
+    "tableId": 752,
+    "title": "Sosialhjelpsmottakere, ettårig",
+    "publishedAt": "2025-12-02T13:27:15.205756Z",
+    "modifiedAt": "2026-07-27T07:50:14.205185Z"
+  },
+  {
+    "tableId": 601,
+    "title": "Mediebruk_DataTVspill_Ungdata_KH",
+    "publishedAt": "2025-05-21T11:28:47.455265Z",
+    "modifiedAt": "2026-05-06T12:43:03.098238Z"
+  },
+  {
+    "tableId": 602,
+    "title": "Mediebruk_SOME_Ungdata_KH",
+    "publishedAt": "2025-05-21T11:45:16.001373Z",
+    "modifiedAt": "2026-05-06T12:43:27.188484Z"
+  },
+  {
+    "tableId": 358,
+    "title": "Gjeld",
+    "publishedAt": "2025-02-26T11:51:11.007021Z",
+    "modifiedAt": "2026-07-27T07:30:38.676997Z"
+  },
+  {
+    "tableId": 362,
+    "title": "Grunnskolepoeng_UTDANN",
+    "publishedAt": "2026-01-08T15:38:55.208332Z",
+    "modifiedAt": "2026-07-27T09:00:27.605487Z"
+  },
+  {
+    "tableId": 623,
+    "title": " Gjennomforing_VGO_utdann_1",
+    "publishedAt": "2026-01-09T11:02:05.09823Z",
+    "modifiedAt": "2026-07-27T09:04:22.137348Z"
+  },
+  {
+    "tableId": 667,
+    "title": "Mediebruk_underhold_ungdata",
+    "publishedAt": "2025-05-22T10:24:12.167179Z",
+    "modifiedAt": "2026-05-06T12:49:00.486916Z"
+  },
+  {
+    "tableId": 367,
+    "title": "Overvekt, kvinner, MFR",
+    "publishedAt": "2026-06-24T07:55:04.688804Z",
+    "modifiedAt": "2026-07-27T12:01:20.712Z"
+  },
+  {
+    "tableId": 332,
+    "title": "Alkohol_Ungdata_KH",
+    "publishedAt": "2026-01-20T21:37:20.273043Z",
+    "modifiedAt": "2026-05-06T12:25:29.098814Z"
+  },
+  {
+    "tableId": 360,
+    "title": "Gjennomforing i videregående skole_utdann_3",
+    "publishedAt": "2026-01-09T11:02:53.166341Z",
+    "modifiedAt": "2026-07-27T09:06:37.209366Z"
+  },
+  {
+    "tableId": 689,
+    "title": "Regneferd_INNVKAT_1",
+    "publishedAt": "2026-02-10T11:17:08.620557Z",
+    "modifiedAt": "2026-07-27T08:53:04.078973Z"
+  },
+  {
+    "tableId": 368,
+    "title": "Kreft, nye tilfeller_10aarigLFKB",
+    "publishedAt": "2026-01-18T13:01:08.097792Z",
+    "modifiedAt": "2026-07-27T11:39:22.496473Z"
+  },
+  {
+    "tableId": 511,
+    "title": "Utdanningsforskjeller i forventet levealder_7aarigLF",
+    "publishedAt": "2025-12-02T20:40:11.468561Z",
+    "modifiedAt": "2026-07-27T11:01:12.246993Z"
+  },
+  {
+    "tableId": 339,
+    "title": "Depressive symptomer_Ungdata_KH",
+    "publishedAt": "2026-01-20T21:41:49.907708Z",
+    "modifiedAt": "2026-05-06T12:43:46.823485Z"
+  },
+  {
+    "tableId": 619,
+    "title": "Kreft, nye tilfeller_ettårig_LFKB",
+    "publishedAt": "2026-01-18T13:01:46.594781Z",
+    "modifiedAt": "2026-07-27T11:38:17.998151Z"
+  },
+  {
+    "tableId": 401,
+    "title": "Valgdeltakelse",
+    "publishedAt": "2025-09-26T06:51:55.50102Z",
+    "modifiedAt": "2026-07-27T09:19:25.314299Z"
+  },
+  {
+    "tableId": 341,
+    "title": "Drikkevannsforsyning",
+    "publishedAt": "2026-01-12T08:32:55.070565Z",
+    "modifiedAt": "2026-07-27T09:21:44.389612Z"
+  },
+  {
+    "tableId": 338,
+    "title": "Befolkningssammensetning_antall_andel",
+    "publishedAt": "2025-10-21T08:50:38.184798Z",
+    "modifiedAt": "2026-07-27T07:01:28.792087Z"
+  },
+  {
+    "tableId": 185,
+    "title": "Befolkningsvekst",
+    "publishedAt": "2025-10-21T08:56:39.806397Z",
+    "modifiedAt": "2026-07-27T07:17:08.683673Z"
+  },
+  {
+    "tableId": 171,
+    "title": "Befolkningsframskriving",
+    "publishedAt": "2026-06-26T08:10:03.71464Z",
+    "modifiedAt": "2026-06-26T08:10:03.71464Z"
+  },
+  {
+    "tableId": 699,
+    "title": "NPR_1",
+    "publishedAt": "2025-10-21T09:15:04.540704Z",
+    "modifiedAt": "2026-07-27T10:25:33.145724Z"
+  },
+  {
+    "tableId": 510,
+    "title": "Utdanningsforskjeller i forventet levealder_15aarigLFKB",
+    "publishedAt": "2025-12-02T20:42:56.504929Z",
+    "modifiedAt": "2026-07-27T11:10:38.928156Z"
+  },
+  {
+    "tableId": 509,
+    "title": "Forventet levealder_årligetall_ettårALDER_UTD",
+    "publishedAt": "2025-12-02T20:56:33.43415Z",
+    "modifiedAt": "2026-07-27T10:56:20.344561Z"
+  },
+  {
+    "tableId": 345,
+    "title": "Trafikkulykker, femårige tall",
+    "publishedAt": "2026-01-12T09:39:32.447777Z",
+    "modifiedAt": "2026-07-27T10:29:50.567836Z"
+  },
+  {
+    "tableId": 394,
+    "title": "Vaksinasjonsdekning_1",
+    "publishedAt": "2026-01-14T14:23:21.353955Z",
+    "modifiedAt": "2026-07-27T12:02:44.672238Z"
+  },
+  {
+    "tableId": 794,
+    "title": "Trangbodd_UTDANN",
+    "publishedAt": "2026-01-19T11:04:07.466643Z",
+    "modifiedAt": "2026-07-27T08:10:11.42162Z"
+  },
+  {
+    "tableId": 348,
+    "title": "Ensomhet_Ungdata_KH",
+    "publishedAt": "2026-01-20T21:45:04.111339Z",
+    "modifiedAt": "2026-05-06T12:44:05.252263Z"
+  },
+  {
+    "tableId": 788,
+    "title": "Uføre_UTDANN_3",
+    "publishedAt": "2026-01-27T14:40:35.018853Z",
+    "modifiedAt": "2026-07-27T08:06:16.426005Z"
+  },
+  {
+    "tableId": 805,
+    "title": "TRIVSEL_3",
+    "publishedAt": "2026-02-04T11:35:10.518412Z",
+    "modifiedAt": "2026-07-27T08:37:50.309875Z"
+  },
+  {
+    "tableId": 373,
+    "title": "Livskvalitet_Ungdata_KH",
+    "publishedAt": "2026-02-04T12:25:46.313579Z",
+    "modifiedAt": "2026-05-06T12:46:36.452752Z"
+  },
+  {
+    "tableId": 807,
+    "title": "Sysselsatte_INNVKAT_ettårig",
+    "publishedAt": "2026-02-06T10:22:38.256208Z",
+    "modifiedAt": "2026-07-27T07:35:21.945677Z"
+  },
+  {
+    "tableId": 374,
+    "title": "Nærmiljø_Ungdata_KH",
+    "publishedAt": "2026-02-09T11:18:59.078553Z",
+    "modifiedAt": "2026-05-06T12:46:59.56614Z"
+  },
+  {
+    "tableId": 811,
+    "title": "Hasjtilbud_Ungdata",
+    "publishedAt": "2026-03-09T15:21:24.178186Z",
+    "modifiedAt": "2026-05-06T12:50:49.098887Z"
+  },
+  {
+    "tableId": 600,
+    "title": "Kollektivtilbud, ungdom",
+    "publishedAt": "2026-02-10T16:22:04.374466Z",
+    "modifiedAt": "2026-05-06T12:51:48.772534Z"
+  },
+  {
+    "tableId": 812,
+    "title": "Røyk_Ungdata",
+    "publishedAt": "2026-03-09T15:21:08.614525Z",
+    "modifiedAt": "2026-05-06T12:51:09.025294Z"
+  },
+  {
+    "tableId": 813,
+    "title": "Skulketskolen_Ungdata",
+    "publishedAt": "2026-03-09T13:40:23.13494Z",
+    "modifiedAt": "2026-05-06T12:52:35.342286Z"
+  },
+  {
+    "tableId": 814,
+    "title": "Snus_Ungdata",
+    "publishedAt": "2026-03-09T15:20:44.524352Z",
+    "modifiedAt": "2026-05-06T12:51:27.901878Z"
+  },
+  {
+    "tableId": 393,
+    "title": "Røyking_MFR",
+    "publishedAt": "2026-06-08T12:19:12.264044Z",
+    "modifiedAt": "2026-07-27T10:44:35.241791Z"
+  },
+  {
+    "tableId": 379,
+    "title": "NEET_INNVKAT",
+    "publishedAt": "2026-02-10T19:44:15.283028Z",
+    "modifiedAt": "2026-07-27T07:41:29.156619Z"
+  },
+  {
+    "tableId": 583,
+    "title": "Vedvarende lavinntekt INNVKAT",
+    "publishedAt": "2026-02-23T08:44:50.032799Z",
+    "modifiedAt": "2026-07-27T07:20:43.881026Z"
+  },
+  {
+    "tableId": 826,
+    "title": "SYKEFRAV_SSB",
+    "publishedAt": "2026-02-23T07:05:48.431171Z",
+    "modifiedAt": "2026-07-27T07:38:03.220452Z"
+  },
+  {
+    "tableId": 839,
+    "title": "ROYK_STATBANK",
+    "publishedAt": "2026-03-04T12:48:25.930929Z",
+    "modifiedAt": "2026-07-27T10:43:35.9234Z"
+  },
+  {
+    "tableId": 346,
+    "title": "Barn av enslige forsørgere_3aarigLFKB",
+    "publishedAt": "2026-03-09T08:48:17.960139Z",
+    "modifiedAt": "2026-07-27T07:56:29.670641Z"
+  },
+  {
+    "tableId": 852,
+    "title": "Andrenarko_Ungdata_VGO",
+    "publishedAt": "2026-03-23T10:36:27.084294Z",
+    "modifiedAt": "2026-03-23T10:36:27.084296Z"
+  },
+  {
+    "tableId": 859,
+    "title": "Hasjbruk_Ungdata_VGO",
+    "publishedAt": "2026-03-23T10:35:53.428246Z",
+    "modifiedAt": "2026-03-23T10:35:53.428247Z"
+  },
+  {
+    "tableId": 860,
+    "title": "Røyk_Ungdata_VGO",
+    "publishedAt": "2026-03-23T10:39:47.298722Z",
+    "modifiedAt": "2026-03-23T10:39:47.298723Z"
+  },
+  {
+    "tableId": 862,
+    "title": "Snus_Ungdata_VGO",
+    "publishedAt": "2026-03-23T10:34:30.503178Z",
+    "modifiedAt": "2026-03-23T10:34:30.503179Z"
+  },
+  {
+    "tableId": 337,
+    "title": "Barnevern_tiltak",
+    "publishedAt": "2026-03-24T09:13:05.651799Z",
+    "modifiedAt": "2026-07-27T09:13:26.813927Z"
+  },
+  {
+    "tableId": 863,
+    "title": "Vape_Ungdata_VGO",
+    "publishedAt": "2026-03-23T10:37:45.600809Z",
+    "modifiedAt": "2026-03-23T10:37:45.600809Z"
+  },
+  {
+    "tableId": 815,
+    "title": "Vape_Ungdata",
+    "publishedAt": "2026-04-24T11:06:10.096701Z",
+    "modifiedAt": "2026-05-06T12:49:47.062429Z"
+  }
+]

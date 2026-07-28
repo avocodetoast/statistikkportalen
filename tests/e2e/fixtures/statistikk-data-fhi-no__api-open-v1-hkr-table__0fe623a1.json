@@ -1,0 +1,32 @@
+[
+  {
+    "tableId": 668,
+    "title": "Insidens (nye pasienter): Utvalgte diagnoser, antall",
+    "publishedAt": "2026-06-15T05:00:00Z",
+    "modifiedAt": "2026-06-12T12:34:09.524892Z"
+  },
+  {
+    "tableId": 676,
+    "title": "Utvalgte prosedyrer, antall pasienter",
+    "publishedAt": "2026-06-15T05:00:00Z",
+    "modifiedAt": "2026-06-12T12:33:55.380713Z"
+  },
+  {
+    "tableId": 410,
+    "title": "Total forekomst: Utvalgte diagnoser, antall",
+    "publishedAt": "2026-06-15T05:00:00Z",
+    "modifiedAt": "2026-06-12T12:32:55.29775Z"
+  },
+  {
+    "tableId": 896,
+    "title": "Total forekomst: Utvalgte diagnoser, rater NO_EU",
+    "publishedAt": "2026-06-15T05:00:00Z",
+    "modifiedAt": "2026-06-12T12:33:10.274032Z"
+  },
+  {
+    "tableId": 899,
+    "title": "Insidens (nye pasienter): Utvalgte diagnoser, rater NO_EU",
+    "publishedAt": "2026-06-15T05:00:00Z",
+    "modifiedAt": "2026-06-12T12:33:24.830176Z"
+  }
+]

@@ -2,10 +2,15 @@
  * norges-bank-adapter.js — katalogperioder UTEN nettverk ved oppstart.
  *
  * Adapteren probet tidligere hver katalograd ved hver app-init (31 samtidige
- * kall mot data.norges-bank.no, blokkerende for BrowserState.init()). Periodene
- * kommer nå fra den innsjekkede data/sources/nb-periods.js (window.NbPeriods),
- * med en fersk cache-oppføring — skrevet forrige gang tabellen ble åpnet — som
- * overstyring. getTables() skal ikke røre nettverket i det hele tatt.
+ * kall mot data.norges-bank.no, blokkerende for BrowserState.init()). Etter
+ * P1–P4 kommer katalogen normalt fra den forhåndsbygde katalogindeksen
+ * (data/index/, se js/catalog-index.js) — denne adapterens getTables() er kun
+ * fallback-stien når indeksen mangler eller er ubrukelig, og den bygger
+ * fortsatt periodefeltene UTEN nettverk: kun en fersk per-tabell
+ * cache-oppføring — skrevet av fetchCataloguePeriod forrige gang tabellen ble
+ * åpnet — kan fylle dem. Uten en slik oppføring står feltene tomme til
+ * tabellen faktisk åpnes; det er ikke en regresjon, se CLAUDE.md
+ * («file:// er en dokumentert degradert modus»).
  *
  * Harnesset slår av fetch(), så et hvilket som helst nettverkskall her ville
  * kastet — testen ville dermed også fanget en probe som «bare» degraderer pent.
@@ -21,23 +26,6 @@ const app = loadApp(SCRIPTS.sources, {
   fetch: async (url) => {
     fetchCalls++;
     throw new Error('getTables skal ikke gå på nettet (forsøkte: ' + url + ')');
-  },
-  globals: {
-    NbPeriods: {
-      generatedAt: '2026-07-25T09:53:03.921Z',
-      tables: {
-        'nb-EXR': {
-          firstPeriod: '1960', lastPeriod: '2026',
-          firstCode: '1960', lastCode: '2026-07-24',
-          updated: '2026-07-25T09:52:54'
-        },
-        'nb-REGNET-PROD': {
-          firstPeriod: '2003', lastPeriod: '2026',
-          firstCode: '2003-Q1', lastCode: '2026-Q2',
-          updated: '2026-07-25T09:53:02'
-        }
-      }
-    }
   }
 });
 
@@ -49,7 +37,6 @@ app.AppConfig.sources.nb.dataflows = [
     path: ['bf', 'nb-valuta'], label: { nb: 'Valutakurser', en: 'Exchange rates' } },
   { flow: 'REGNET', version: '1.0', tableId: 'nb-REGNET-PROD', probeKey: 'Q.PROD.._X.',
     path: ['bf', 'nb-regnet'], label: { nb: 'Produksjon', en: 'Production' } },
-  // Ingen oppføring i NbPeriods — skal degradere til tomme felt, ikke kaste.
   { flow: 'NYFLOW', version: '1.0', tableId: 'nb-NYFLOW',
     path: ['bf', 'nb-valuta'], label: { nb: 'Ny flow', en: 'New flow' } }
 ];
@@ -62,27 +49,15 @@ describe('NBAdapter.getTables — ingen nettverkskall', () => {
     assert.equal(tables.length, 3);
   });
 
-  it('fyller periode- og oppdatert-feltene fra window.NbPeriods', async () => {
+  it('degraderer alle rader til tomme felt uten cache-oppføring', async () => {
+    // Ingen byggetids-fil å falle tilbake til lenger (se CLAUDE.md) — kun
+    // cache-overstyringen lenger ned i fila kan fylle disse feltene.
     const { tables } = await adapter.getTables({});
-    const exr = tables.find(t => t.id === 'nb-EXR');
-    assert.equal(exr.firstPeriod, '1960');
-    assert.equal(exr.lastPeriod, '2026');
-    assert.equal(exr.updated, '2026-07-25T09:52:54');
-  });
-
-  it('bruker radens egen oppføring når flere rader deler samme flow', async () => {
-    const { tables } = await adapter.getTables({});
-    const prod = tables.find(t => t.id === 'nb-REGNET-PROD');
-    assert.equal(prod.firstPeriod, '2003');
-    assert.equal(prod.lastPeriod, '2026');
-  });
-
-  it('degraderer til tomme felt for rader uten bakt periode', async () => {
-    const { tables } = await adapter.getTables({});
-    const ny = tables.find(t => t.id === 'nb-NYFLOW');
-    assert.equal(ny.firstPeriod, '');
-    assert.equal(ny.lastPeriod, '');
-    assert.equal(ny.updated, '', 'updated MÅ være en streng — menu-hierarchy sorterer på den');
+    for (const t of tables) {
+      assert.equal(t.firstPeriod, '', `${t.id}.firstPeriod`);
+      assert.equal(t.lastPeriod, '', `${t.id}.lastPeriod`);
+      assert.equal(t.updated, '', `${t.id}.updated MÅ være en streng — menu-hierarchy sorterer på den`);
+    }
   });
 
   it('rapporterer katalogen som ikke-nettverkshentet i sourceMeta', async () => {
@@ -92,8 +67,8 @@ describe('NBAdapter.getTables — ingen nettverkskall', () => {
     assert.ok(sourceMeta.fetchedAt, 'statuspanelet viser når katalogen er fra');
   });
 
-  it('lar en fersk cache-oppføring overstyre den bakte perioden', async () => {
-    // Skrives av fetchCataloguePeriod når tabellen åpnes — ferskere enn fila.
+  it('lar en fersk cache-oppføring fylle periodefeltene', async () => {
+    // Skrives av fetchCataloguePeriod når tabellen faktisk åpnes.
     const cache = app.SourceRegistry.ssb.instance.cache;
     await cache.set('nb-catperiod-v2-EXR', {
       firstPeriod: '1960', lastPeriod: '2027',
@@ -105,8 +80,29 @@ describe('NBAdapter.getTables — ingen nettverkskall', () => {
     const { tables } = await adapter.getTables({});
     assert.equal(fetchCalls, 0);
     const exr = tables.find(t => t.id === 'nb-EXR');
+    assert.equal(exr.firstPeriod, '1960');
     assert.equal(exr.lastPeriod, '2027');
     assert.equal(exr.updated, '2027-01-02T05:00:00');
+
+    // Radene UTEN en cache-oppføring er upåvirket — fortsatt tomme felt.
+    const regnet = tables.find(t => t.id === 'nb-REGNET-PROD');
+    assert.equal(regnet.firstPeriod, '');
+    assert.equal(regnet.lastPeriod, '');
+  });
+
+  it('`force` (useCache:false) hopper over cachen — tomme felt selv med en fersk oppføring', async () => {
+    const cache = app.SourceRegistry.ssb.instance.cache;
+    await cache.set('nb-catperiod-v2-EXR', {
+      firstPeriod: '1960', lastPeriod: '2027',
+      firstCode: '1960', lastCode: '2027-01-02',
+      updated: '2027-01-02T05:00:00'
+    }, 24 * 60 * 60 * 1000);
+
+    fetchCalls = 0;
+    const { tables } = await adapter.getTables({ useCache: false });
+    assert.equal(fetchCalls, 0, 'fortsatt ingen nettverkskall — bare cachen forbigås');
+    const exr = tables.find(t => t.id === 'nb-EXR');
+    assert.equal(exr.firstPeriod, '', 'force skal ikke lese cachen');
   });
 
   it('svarer tomt på server-søk/nylig-oppdatert (SSB-only semantikk)', async () => {

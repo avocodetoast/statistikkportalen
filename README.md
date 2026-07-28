@@ -83,20 +83,40 @@ Sidene er fulle app-skall: brukere som lander der overføres umiddelbart til den
 
 Generatoren dekker alle aktiverte kilder i `AppConfig.sources` — også Norges Bank- og
 FHI-tabeller (`nb-*`/`fhi-*`) får egne `/table/{id}/`-sider og inngår i emnesider, sitemap og
-`seo-map.json`. Katalogene bygges av per-kilde-providere i `scripts/lib/seo-sources.mjs`:
-Norges Bank nettverksfritt fra config + den innsjekkede `data/sources/nb-periods.json`
-(tidsperioder), FHI fra den innsjekkede `data/sources/fhi-catalog.json`.
+`seo-map.json`. Katalogen bygges IKKE av generatoren selv: den leser den ferdigbygde
+katalogindeksen i `{webroot}/data/index/` (`catalog-manifest.json` + per-kilde shards,
+skrevet av `scripts/build-catalog-index.mjs`; lesingen ligger i `scripts/lib/seo-enumerate.mjs`).
+Indeksen må derfor ha kjørt minst én gang mot samme webroot før generatoren kan kjøre.
 Kildeattribusjon (JSON-LD `creator`/`license`, «Kilde:»-linjer) hentes per tabell fra
-`AppConfig.sources.<kilde>.branding`. En feilende fremmed kilde logges og hoppes over; feil
-mot SSB avbryter fortsatt hele kjøringen uten å røre webroot.
+`AppConfig.sources.<kilde>.branding` (`scripts/lib/seo-sources.mjs`). Mangler indeksen, har
+den ukjent format, eller dekoder SSB-shardet til færre enn `--min-tables` rader, avbrytes
+kjøringen uten å røre webroot; en fremmed kildes shard som mangler eller ikke lar seg dekode
+logges og hoppes over.
 
-Kjøres periodisk på serveren med cron (krever Node 18+):
+**Cron-rekkefølgen er lastbærende** — hvert steg bygges fra artefaktet forrige steg skrev, så
+kjør i denne rekkefølgen (krever Node 18+):
 ```
-15 4 * * 0 cd /sti/til/repo && node scripts/generate-seo-pages.mjs --webroot /sti/til/webroot --site https://statistikkportalen.no >> seo-gen.log 2>&1
+node scripts/update-fhi-catalog.mjs --incremental
+node scripts/update-nb-periods.mjs
+node scripts/build-catalog-index.mjs --webroot /sti/til/webroot
+node scripts/generate-seo-pages.mjs --webroot /sti/til/webroot --site https://statistikkportalen.no
 ```
-Bruk `--dry-run` for å se hva som ville blitt skrevet. Scriptet sletter kun filer det selv
-har generert (sporet i `{webroot}/.seo-manifest.json`), og avbryter uten å røre webroot
-ved API-feil. De genererte filene skal ikke sjekkes inn i git.
+SEO-generatoren konsumerer katalogindeksen forrige steg skrev — begge byggetidsartefaktene
+(indeksen appen laster, og de statiske SEO-sidene) bygges dermed fra ett og samme
+øyeblikksbilde av kildene og kan aldri bli uenige om hvilke tabeller som finnes.
+`build-catalog-index.mjs` må ha kjørt minst én gang mot webroot før generatoren kan kjøre.
+Som cron-jobb (ukentlig, natt til søndag):
+```
+15 4 * * 0 cd /sti/til/repo && \
+  node scripts/update-fhi-catalog.mjs --incremental >> catalog.log 2>&1 && \
+  node scripts/update-nb-periods.mjs >> catalog.log 2>&1 && \
+  node scripts/build-catalog-index.mjs --webroot /sti/til/webroot >> catalog.log 2>&1 && \
+  node scripts/generate-seo-pages.mjs --webroot /sti/til/webroot --site https://statistikkportalen.no >> seo-gen.log 2>&1
+```
+Bruk `--dry-run` på generatoren for å se hva som ville blitt skrevet. Scriptet sletter kun
+filer det selv har generert (sporet i `{webroot}/.seo-manifest.json`), og avbryter uten å
+røre webroot ved en manglende eller ubrukelig katalogindeks. De genererte filene skal ikke
+sjekkes inn i git.
 
 Tabellsidene berikes med innhold fra lokale metadatafiler i `data/table-metadata/{id}.json`
 (eksakte responser fra `/tables/{id}/metadata`, lastes ned av et eget oppdaterings-script —

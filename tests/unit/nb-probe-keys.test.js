@@ -162,7 +162,8 @@ describe('NBAdapter — discontinued-flagg i katalogen', () => {
 
   it('bruker probeKey (period-varianten) i katalogperiode-proben', async () => {
     // Katalogen probes ikke lenger ved oppstart (periodene kommer fra
-    // data/sources/nb-periods.js) — periodeproben kjøres når en tabell ÅPNES.
+    // katalogindeksen, bygget bl.a. fra nb-periods.json) — periodeproben
+    // kjøres når en tabell ÅPNES.
     await adapter.getTableMetadata('nb-PKSTR', false, 'no');
     await adapter.getTableMetadata('nb-PKOBJ', false, 'no');
 

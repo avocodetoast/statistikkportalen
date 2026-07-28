@@ -1,0 +1,32 @@
+{
+  "format": 1,
+  "generatedAt": "2026-07-25T07:53:03.000Z",
+  "generations": [
+    {
+      "generatedAt": "2026-07-25T07:53:03.000Z",
+      "files": [
+        "ssb-no-24c87da3.json",
+        "ssb-no-24c87da3.json.br",
+        "nb-no-f9bdd413.json",
+        "nb-no-f9bdd413.json.br",
+        "fhi-no-49b8d7be.json",
+        "fhi-no-49b8d7be.json.br",
+        ".index-manifest.json",
+        "catalog-manifest.json"
+      ]
+    },
+    {
+      "generatedAt": "2026-07-25T07:53:03.000Z",
+      "files": [
+        "ssb-no-24c87da3.json",
+        "ssb-no-24c87da3.json.br",
+        "nb-no-f9bdd413.json",
+        "nb-no-f9bdd413.json.br",
+        "fhi-no-49b8d7be.json",
+        "fhi-no-49b8d7be.json.br",
+        ".index-manifest.json",
+        "catalog-manifest.json"
+      ]
+    }
+  ]
+}

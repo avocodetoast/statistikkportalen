@@ -123,3 +123,30 @@ describe('SourceRegistry — per-kilde status', () => {
     await assert.rejects(() => app.api.reloadSource('finnes-ikke'));
   });
 });
+
+describe('SourceRegistry — aggregateTables options.onlySources', () => {
+  it('filtrerer aggregeringen til de oppgitte kildene (delvis-indeks-fallbacken)', async () => {
+    const result = await app.api.getAllTables({
+      lang: 'no',
+      includeDiscontinued: true,
+      onlySources: ['nb']
+    });
+
+    assert.ok(result.tables.length > 0, 'NB skal svare');
+    assert.ok(result.tables.every(t => String(t.id).startsWith('nb-')),
+      'kun NB-tabeller når onlySources = [nb]');
+    assert.deepEqual(Object.keys(result), ['tables'], 'fortsatt kun { tables }');
+  });
+
+  it('rører ikke statusen til kilder som ikke ble spurt', async () => {
+    const ssbBefore = JSON.stringify(statusFor('ssb'));
+    await app.api.getAllTables({ lang: 'no', includeDiscontinued: true, onlySources: ['nb'] });
+    assert.equal(JSON.stringify(statusFor('ssb')), ssbBefore);
+  });
+
+  it('tom/utelatt onlySources aggregerer alle kilder som før', async () => {
+    const all = await app.api.getAllTables({ lang: 'no', includeDiscontinued: true, onlySources: [] });
+    assert.ok(all.tables.some(t => String(t.id).startsWith('nb-')));
+    assert.ok(all.tables.some(t => String(t.id).startsWith('fhi-')));
+  });
+});

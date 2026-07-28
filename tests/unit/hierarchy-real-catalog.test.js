@@ -1,40 +1,63 @@
 /**
- * Emnetreet og de kuraterte tabellnavnene — mot de EKTE, innsjekkede katalogene.
+ * Emnetreet og de kuraterte tabellnavnene — mot de EKTE, innsjekkede katalog-
+ * SNAPSHOTENE i data/index/ (samme filer katalogindeksen laster i nettleseren
+ * ved sidelasting, se js/catalog-index.js).
  *
  * HVORFOR MOT EKTE DATA: menu-hierarchy.test.js bygger treet av sju syntetiske
  * tabeller, og nb-/fhi-adapter-paths.test.js overskriver konfigradene med sine
  * egne. De tester mekanikken, men ingen av dem ville merket at koblingen mellom
  * data/sources/fhi-curation.json og katalogen ryker, at en plassering i
- * source-topology.js forsvinner, eller at en sortCode endrer seg. Her lastes
- * data/sources/fhi-catalog.js og nb-periods.js — de samme globalene nettleseren
- * får — så alle 401 radene er de ekte.
+ * source-topology.js forsvinner, eller at en sortCode endrer seg. Her dekodes
+ * data/index/nb-no-*.json og fhi-no-*.json — de samme shardene nettleseren
+ * henter — via CatalogIndex.decode() (ren, synkron), så alle 401 radene er de
+ * ekte, byggetids-genererte katalogradene.
  *
  * KURATERTE NAVN er hele poenget med FHI-katalogen: API-et returnerer interne
  * kodenavn («D14c_demens», «KPR_3»), og 363 av de 370 tabellene har en
  * håndskrevet tittel som overstyrer dem. Ryker den koblingen, viser portalen
  * kodenavn i emnetreet og søket — uten at noe annet blir rødt.
  *
+ * MERK PÅ SSB-SIDEN: snapshotten i data/index/ har 83 SSB-rader (et
+ * representativt utvalg — se scripts/build-catalog-index.mjs — IKKE hele
+ * SSB-katalogen på ~7747), men FULLE NB (31)- og FHI (370)-rader. SSB-radene
+ * under er derfor håndbygde syntetiske rader (som før), ikke fra shardet.
+ *
  * Standard-`fetch` i harnessen kaster. At denne fila i det hele tatt kjører er
- * derfor beviset på at begge katalogene bygges uten ett eneste nettverkskall,
- * slik CLAUDE.md krever av kaldstart.
+ * derfor beviset på at begge katalogene bygges uten ett eneste nettverkskall —
+ * STERKERE enn før P5: CatalogIndex.decode() er en ren, synkron funksjon som
+ * ikke rører fetch() i det hele tatt (appen kaller aldri lenger adapternes
+ * getTables() for disse kildene ved oppstart — katalogindeksen dekker dem).
  */
 'use strict';
 
 const { describe, it, before } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const { loadApp, SCRIPTS } = require('../helpers/app-env.js');
 
-// Rekkefølgen speiler index.html: datafilene før adapterne som leser dem.
+const ROOT = path.resolve(__dirname, '..', '..');
+const INDEX_DIR = path.join(ROOT, 'data', 'index');
+
+function readIndexFile(name) {
+  return JSON.parse(fs.readFileSync(path.join(INDEX_DIR, name), 'utf8'));
+}
+
+const MANIFEST = readIndexFile('catalog-manifest.json');
+const SHARD = {};
+MANIFEST.shards.forEach(s => { SHARD[s.source] = s; });
+
+// Den innsjekkede FHI-katalogen (Node-siden, ikke en app-global) — kun brukt
+// til å telle registre/kuraterte titler (internalName finnes ikke i det
+// kompakte indeksformatet, se scripts/lib/catalog-format.mjs sin FIELDS-liste).
+const FHI_CATALOG_RAW = JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'data', 'sources', 'fhi-catalog.json'), 'utf8')
+);
+
+// Rekkefølgen speiler index.html: catalog-index.js (i SCRIPTS.core) før
+// modulene som bruker CatalogIndex/MenuHierarchy.
 const app = loadApp([
   ...SCRIPTS.core,
-  'data/sources/fhi-catalog.js',
-  'data/sources/nb-periods.js',
-  'js/sources/sdmx-to-jsonstat.js',
-  'js/sources/source-common.js',
-  'js/sources/norges-bank-adapter.js',
-  'js/sources/fhi-adapter.js',
-  'js/sources/ssb-adapter.js',
-  'js/sources/source-registry.js',
   'js/utils.js',
   'js/router.js',
   'js/subjects.js',
@@ -95,12 +118,11 @@ let allTables;
 let mh;
 let hierarchy;
 
-before(async () => {
-  const nb = app.SourceAdapters.find(a => a.sourceId === 'nb');
-  const fhi = app.SourceAdapters.find(a => a.sourceId === 'fhi');
-
-  nbTables = (await nb.getTables({})).tables;
-  fhiTables = (await fhi.getTables({})).tables;
+before(() => {
+  // Ren, synkron dekoding av de innsjekkede shardene — ingen adapter, ingen
+  // fetch, ingen Promise involvert. Se js/catalog-index.js (CatalogIndex.decode).
+  nbTables = app.CatalogIndex.decode(readIndexFile(SHARD.nb.file));
+  fhiTables = app.CatalogIndex.decode(readIndexFile(SHARD.fhi.file));
   foreignTables = [...nbTables, ...fhiTables];
   allTables = [...SSB_TABLES, ...foreignTables];
 
@@ -115,7 +137,7 @@ function row(id) {
   return found;
 }
 
-describe('De innsjekkede katalogene bygges uten nettverk', () => {
+describe('De innsjekkede katalogsnapshotene dekodes uten nettverk', () => {
   it('Norges Bank gir 31 tabeller', () => {
     // Harnessens fetch kaster; kom vi hit, gikk det null kall ut.
     assert.equal(nbTables.length, 31);
@@ -123,7 +145,7 @@ describe('De innsjekkede katalogene bygges uten nettverk', () => {
 
   it('FHI gir 370 tabeller fordelt på 13 registre', () => {
     assert.equal(fhiTables.length, 370);
-    assert.equal(Object.keys(app.FhiCatalog.sources).length, 13);
+    assert.equal(Object.keys(FHI_CATALOG_RAW.sources).length, 13);
   });
 });
 
@@ -156,7 +178,7 @@ describe('Kuraterte visningsnavn', () => {
     // noe over tid (363 av 370 i dag), men ikke at den forsvinner.
     let differing = 0;
     let total = 0;
-    for (const source of Object.values(app.FhiCatalog.sources)) {
+    for (const source of Object.values(FHI_CATALOG_RAW.sources)) {
       for (const t of source.tables) {
         total++;
         if (t.title !== t.internalName) differing++;

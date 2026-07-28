@@ -1718,7 +1718,23 @@ button {
 .source-status-footer {
   padding-top: var(--spacing-md);
   display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.source-status-index-info {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.source-status-index-message {
+  font-size: var(--font-size-sm);
+}
+
+.source-status-footer-buttons {
+  display: flex;
   justify-content: flex-end;
+  gap: var(--spacing-sm);
 }
 
 @media (max-width: 700px) {

@@ -27,6 +27,8 @@
   let _badge = null;
   let _removeEscape = null;
   const _pending = new Set(); // kilder med pågående retry/refresh
+  let _checkingIndex = false; // «Se etter ny indeks» pågår
+  let _indexMessage = '';     // resultatmelding fra siste indekssjekk (til neste handling/lukking)
 
   /** Kildens visningsnavn fra AppConfig.sources[id].displayName (nb-fallback). */
   function sourceDisplayName(sourceId) {
@@ -44,6 +46,31 @@
     const hours = Math.round(min / 60);
     if (hours < 24) return tpl('apiStatus.age.hours', hours);
     return tpl('apiStatus.age.days', Math.round(hours / 24));
+  }
+
+  /**
+   * Alderslinje for den nedlastede indeksen (manifestets generatedAt) —
+   * no-op når appen ikke kjører fra indeksen (f.eks. over file://, eller alle
+   * shards degraderte til direkte kildehenting ved oppstart).
+   */
+  function renderIndexInfo() {
+    if (!window.CatalogIndex || !CatalogIndex.available()) return '';
+    const builtAt = Date.parse(CatalogIndex.builtAt());
+    if (!Number.isFinite(builtAt)) return '';
+
+    const ageMs = Date.now() - builtAt;
+    const staleAfterMs = (window.AppConfig && AppConfig.catalogIndex &&
+      AppConfig.catalogIndex.staleAfterMs) || 48 * 60 * 60 * 1000;
+
+    const lines = [
+      escapeHtml(t('apiStatus.indexTitle')) + ' · ' +
+      escapeHtml(tpl('apiStatus.indexBuiltAt', formatAge(ageMs)))
+    ];
+    if (ageMs > staleAfterMs) {
+      lines.push('<span class="source-status-stale">' +
+        escapeHtml(tpl('apiStatus.indexStale', formatAge(staleAfterMs))) + '</span>');
+    }
+    return '<div class="source-status-index-info">' + lines.join('<br>') + '</div>';
   }
 
   /** Oppdater badgen (tekst + farge) fra gjeldende status; re-rendrer åpent panel. */
@@ -76,6 +103,7 @@
 
   function openPanel() {
     closePanel();
+    _indexMessage = ''; // fersk åpning — ikke vis en melding fra forrige sesjon
 
     const html = `
       <div class="dialog-overlay" id="${PANEL_ID}">
@@ -118,6 +146,8 @@
         clearSourceCache(sourceId);
       } else if (action === 'refresh-all') {
         refreshAll();
+      } else if (action === 'check-index') {
+        checkForIndexUpdate();
       }
     });
 
@@ -186,13 +216,24 @@
     if (!content) return;
 
     const statuses = api.getSourceStatus();
-    const anyPending = _pending.size > 0;
+    const anyPending = _pending.size > 0 || _checkingIndex;
+    const messageHtml = _indexMessage
+      ? '<div class="source-status-index-message">' + escapeHtml(_indexMessage) + '</div>'
+      : '';
     content.innerHTML =
       statuses.map(renderSourceRow).join('') +
       `<div class="source-status-footer">
-        <button class="btn-secondary" data-action="refresh-all" ${anyPending ? 'disabled' : ''}>
-          ${escapeHtml(t('apiStatus.refreshAll'))}
-        </button>
+        ${renderIndexInfo()}
+        ${messageHtml}
+        <div class="source-status-footer-buttons">
+          <button class="btn-secondary" data-action="check-index" ${anyPending ? 'disabled' : ''}
+                  title="${escapeHtml(t('apiStatus.checkIndexTitle'))}">
+            ${escapeHtml(_checkingIndex ? t('apiStatus.loading') : t('apiStatus.checkIndex'))}
+          </button>
+          <button class="btn-secondary" data-action="refresh-all" ${anyPending ? 'disabled' : ''}>
+            ${escapeHtml(t('apiStatus.refreshAll'))}
+          </button>
+        </div>
       </div>`;
   }
 
@@ -230,6 +271,43 @@
     const removed = await c.clearForSource(sourceId);
     logger.log('[SourceStatus] Tømte ' + removed + ' cacheoppføringer for «' + sourceId + '»');
     renderPanelContent();
+  }
+
+  /**
+   * «Se etter ny indeks»: sjekker manifestet, og — kun hvis noe faktisk
+   * endret seg — merger de endrede kildenes tabeller inn og re-rendrer
+   * browse-visningene. Billig og trygg å klikke gjentatte ganger; ulikt
+   * «Oppdater» treffer den ALDRI kilde-API-ene direkte.
+   */
+  async function checkForIndexUpdate() {
+    if (_checkingIndex || !window.CatalogIndex ||
+        typeof CatalogIndex.checkForUpdate !== 'function') return;
+    _checkingIndex = true;
+    _indexMessage = '';
+    renderPanelContent();
+    try {
+      const result = await CatalogIndex.checkForUpdate({ lang: getCurrentApiLang() });
+      if (!result.available) {
+        _indexMessage = t('apiStatus.indexUnavailable');
+      } else if (!result.changed.length) {
+        _indexMessage = t('apiStatus.indexUpToDate');
+      } else {
+        const changed = BrowserState.applyIndex(result);
+        api.seedSourceStatus(result.meta);
+        const tableCount = changed.reduce(
+          (sum, id) => sum + ((result.bySource[id] || []).length), 0);
+        _indexMessage = tpl('apiStatus.indexUpdated', tableCount);
+        if (BROWSE_VIEWS.includes(AppState.currentView)) {
+          renderCurrentView();
+        }
+      }
+    } catch (e) {
+      logger.error('[SourceStatus] Sjekk etter ny indeks feilet:', e);
+      _indexMessage = t('apiStatus.indexUnavailable');
+    } finally {
+      _checkingIndex = false;
+      update();
+    }
   }
 
   // ---- Init ----

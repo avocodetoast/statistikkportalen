@@ -58,6 +58,19 @@ describe('Translations — nb (default) language', () => {
       assert.ok(keyExists(key), `missing nb key: ${key}`);
     }
   });
+
+  it('has the catalog index refresh/check strings (P7 — source-status.js)', () => {
+    for (const key of [
+      'apiStatus.indexTitle', 'apiStatus.indexBuiltAt', 'apiStatus.indexStale',
+      'apiStatus.checkIndex', 'apiStatus.checkIndexTitle', 'apiStatus.indexUpToDate',
+      'apiStatus.indexUpdated', 'apiStatus.indexUnavailable'
+    ]) {
+      assert.ok(keyExists(key), `missing nb key: ${key}`);
+    }
+    // refreshTitle skal nevne indeksen, ikke lenger bare mellomlageret — den
+    // omfavner nå BÅDE cachen og den nedlastede indeksen (P7).
+    assert.match(t('apiStatus.refreshTitle'), /indeks/i);
+  });
 });
 
 describe('Translations — English', () => {
@@ -68,10 +81,14 @@ describe('Translations — English', () => {
     assert.equal(t('nav.home'), 'Home');
     for (const key of [
       'subject.group.arbeid', 'subject.name.al',
-      'saveQuery.dialogTitle', 'saveQuery.openInSource'
+      'saveQuery.dialogTitle', 'saveQuery.openInSource',
+      'apiStatus.indexTitle', 'apiStatus.indexBuiltAt', 'apiStatus.indexStale',
+      'apiStatus.checkIndex', 'apiStatus.checkIndexTitle', 'apiStatus.indexUpToDate',
+      'apiStatus.indexUpdated', 'apiStatus.indexUnavailable'
     ]) {
       assert.ok(keyExists(key), `missing en key: ${key}`);
     }
+    assert.match(t('apiStatus.refreshTitle'), /index/i);
   });
 
   it('ignores unknown language codes', () => {

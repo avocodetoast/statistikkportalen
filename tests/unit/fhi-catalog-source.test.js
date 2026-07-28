@@ -1,13 +1,20 @@
 /**
- * fhi-adapter.js — katalogen bygges fra den innsjekkede katalogfila, UTEN
- * nettverk ved oppstart.
+ * fhi-adapter.js — katalogen bygges fra den innsjekkede katalogfila, med ETT
+ * memoisert fetch()-kall i stedet for 14 kall ved hver app-init.
  *
  * Adapteren hentet tidligere /Common/source + /{kilde}/table ved hver app-init
  * (14 kall, blokkerende for BrowserState.init()). Alt de leverte —
  * tabellmedlemskap, titler, perioder, kategorier, kildeinfo — ligger allerede i
- * data/sources/fhi-catalog.js (window.FhiCatalog), som index.html laster som
- * <script>. Live-lista er fortsatt fallback for kilder katalogfila ikke dekker,
- * og hentes på nytt når brukeren ber om det (useCache: false).
+ * data/sources/fhi-catalog.json, som getCatalog() henter med fetch() og
+ * memoiserer (ETT kall uansett hvor mange delkilder som slår opp i den — se
+ * _catalogPromise i fhi-adapter.js). Denne testen kjører getTables() direkte
+ * (adapterens EGEN funksjon), som fortsatt gjør nøyaktig dette ene kallet —
+ * i den vanlige appflyten kalles den derimot ikke i det hele tatt ved
+ * sidelasting: katalogindeksen (data/index/, se js/catalog-index.js) dekker
+ * FHI der, og getCatalog() utsettes til brukeren faktisk åpner en FHI-tabell
+ * (se fhi-catalog-lazy-load.test.js). Live-lista er fortsatt fallback for
+ * kilder katalogfila ikke dekker, og hentes på nytt når brukeren ber om det
+ * (useCache: false).
  */
 'use strict';
 
@@ -16,9 +23,10 @@ const assert = require('node:assert/strict');
 const { loadApp, SCRIPTS } = require('../helpers/app-env.js');
 
 // Adapteren låser AppConfig.sources.fhi.sourceIds i en kopi ved lastetidspunkt,
-// så testen kan ikke krympe kildelista etterpå. CATALOG-objektet sendes derimot
-// inn som global FØR lastingen og fylles etter — getCatalog() leser det først
-// ved første kall. Kildene fylles derfor ut fra den faktiske config-lista under.
+// så testen kan ikke krympe kildelista etterpå. CATALOG-objektet serveres av
+// fetch-stubben under (data/sources/fhi-catalog.json) og fylles etter at appen
+// er lastet — getCatalog() leser det først ved første kall. Kildene fylles
+// derfor ut fra den faktiske config-lista under.
 const CATALOG = { generatedAt: '2026-07-25T09:13:46.315Z', sources: {} };
 
 // Én kilde holdes UTENFOR katalogfila: representerer en sourceId aktivert i
@@ -57,6 +65,9 @@ const app = loadApp(SCRIPTS.sources, {
   fetch: async (url) => {
     const u = String(url);
     requested.push(u);
+    if (u.endsWith('data/sources/fhi-catalog.json')) {
+      return jsonResponse(CATALOG);
+    }
     if (u.endsWith('/Common/source')) {
       return jsonResponse([
         { id: 'mfr', title: 'MFR fra API-et', aboutUrl: 'https://api/mfr', publishedBy: 'API' }
@@ -65,8 +76,7 @@ const app = loadApp(SCRIPTS.sources, {
     const m = /\/([^/]+)\/table$/.exec(u);
     if (m) return jsonResponse(TABLE_ROWS[m[1]] || []);
     throw new Error('uventet URL i test: ' + u);
-  },
-  globals: { FhiCatalog: CATALOG }
+  }
 });
 
 const SOURCE_IDS = app.AppConfig.sources.fhi.sourceIds.slice();
@@ -100,12 +110,15 @@ const adapter = app.SourceAdapters.find(a => a.sourceId === 'fhi');
 const mfrCalls = () => requested.filter(u => u.endsWith('/mfr/table'));
 
 describe('FHIAdapter.getTables — nettverksfri oppstart', () => {
-  it('bygger dekkede kilder uten et eneste nettverkskall', async () => {
+  it('bygger dekkede kilder med ETT kall (katalogfila), pluss ett for den udekkede kilden', async () => {
     requested.length = 0;
     const { tables } = await adapter.getTables({});
-    // Kun den udekkede kilden koster nettverk — ingen /Common/source, og
-    // ingen /{kilde}/table for kildene katalogfila dekker.
+    // getCatalog() memoiserer: ETT fetch til fhi-catalog.json dekker ALLE
+    // delkilder — ingen /Common/source (bakedSourceInfo dekker det), og ingen
+    // /{kilde}/table for kildene katalogfila faktisk dekker. Kun den udekkede
+    // kilden (utenfor katalogfila) koster et ekstra kall.
     assert.deepEqual(requested, [
+      'data/sources/fhi-catalog.json',
       app.AppConfig.sources.fhi.baseUrl.replace(/\/+$/, '') + '/' + UNCOVERED + '/table'
     ]);
     assert.equal(tables.filter(t => t.id.startsWith('fhi-mfr-')).length, 2);

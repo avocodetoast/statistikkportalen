@@ -20,19 +20,30 @@ headerkommentaren til `js/sources/source-registry.js`.
 
 ## Fallgruver
 
-- **Ingen `fetch()` av lokale filer.** Appen skal virke over `file://`, så lokale data
-  må leveres som et `<script>`-global. Legger du til en ny lokal datafil nettleseren
-  trenger, gi den en `.js`-tvilling ved siden av `.json`-en (som `fhi-catalog.js`/
-  `.json`) — ellers feiler den stille og kilden degraderer.
-- **Ingen nettverkskall i en adapters `getTables()`.** `BrowserState.init()` venter på
-  hele katalogaggregeringen, så alt en adapter henter der blokkerer første paint. NB og
-  FHI bygger katalogen fra innsjekkede byggetidsfiler i `data/sources/`. Bak det inn,
-  ikke hent det.
-- **SEO-byggeren re-deriverer appen.** `scripts/generate-seo-pages.mjs` +
-  `scripts/lib/seo-sources.mjs` bygger katalog, hierarki og sideinnhold på nytt fra
-  `config.js`/`subjects.js` og speiler `topic-view.js`/`front-page.js`. Endrer du
-  `AppConfig.sources`/`sourceNodes`/branding, emnegrupper, `ui.topicCardDepth`, en
-  adapters katalogoppføring eller forsidens innhold — se over generatoren også.
+- **Lokale datafiler hentes med `fetch()`.** `file://` er en dokumentert DEGRADERT
+  modus, ikke et krav om paritet: katalogindeksen (`js/catalog-index.js`) kan ikke
+  hentes lokalt, og appen faller da tilbake til direkte kildehenting fra API-ene.
+  Fungerer, men tregt og uten byggetids-metadata (se `js/sources/fhi-adapter.js` sin
+  egen `file:`-guard i `getCatalog()`).
+- **Ingen nettverkskall i en adapters `getTables()`.** Normalflyten kaller den ikke i
+  det hele tatt — katalogindeksen (`data/index/`, bygget av
+  `scripts/build-catalog-index.mjs` fra bl.a. `data/sources/*.json`) dekker sidelasting.
+  `getTables()` er kun fallback-stien når indeksen mangler/er ubrukelig, og
+  `BrowserState.init()` venter da på hele resultatet — alt en adapter henter der
+  blokkerer første paint. NB bygger katalogen rent fra config; FHI leser
+  `data/sources/fhi-catalog.json` med et memoisert `fetch()`. Bak det inn ved byggetid,
+  ikke hent det live ved hver sidelasting.
+- **SEO-byggeren re-deriverer hierarkiet og sideinnholdet — ikke lenger katalogen.**
+  `scripts/generate-seo-pages.mjs` leser katalogen ferdigbygd fra `{webroot}/data/index/`
+  (`scripts/lib/seo-enumerate.mjs`, bygget av `scripts/build-catalog-index.mjs` — som må ha
+  kjørt først, se README.md for cron-rekkefølgen). Den bygger fortsatt emnetreet
+  (`buildHierarchy`, speiler `menu-hierarchy.js`) og sideinnholdet (speiler
+  `topic-view.js`/`front-page.js`) på nytt. Endrer du en adapters katalogoppføring,
+  `AppConfig.sourceNodes` eller stiplasseringer — bygg katalogindeksen på nytt FØR du
+  kjører generatoren, ellers ser den gamle data. Endrer du `ui.topicCardDepth`, emnegrupper
+  eller forsidens innhold — se over generatoren også. Kildebranding
+  (`AppConfig.sources.<kilde>.branding`, `scripts/lib/seo-sources.mjs`) leses derimot
+  direkte fra `config.js` og trenger ingen indeks-ombygging.
 - **`nb-catalog.js` og `source-topology.js` må lastes før `config.js`**, og
   `source-registry.js` sist blant `js/sources/*` (den erstatter `window.api`).
 

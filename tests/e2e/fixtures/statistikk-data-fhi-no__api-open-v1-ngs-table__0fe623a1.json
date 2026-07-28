@@ -1,0 +1,68 @@
+[
+  {
+    "tableId": 915,
+    "title": "influensa A(H3N2)",
+    "publishedAt": "2026-06-02T06:47:34.510658Z",
+    "modifiedAt": "2026-06-02T06:47:34.510659Z"
+  },
+  {
+    "tableId": 665,
+    "title": "HCV_per_år",
+    "publishedAt": "2026-07-28T04:07:08.445149Z",
+    "modifiedAt": "2026-07-28T04:07:08.446803Z"
+  },
+  {
+    "tableId": 844,
+    "title": "SARS-CoV-2 varianter av interesse (VOI)",
+    "publishedAt": "2026-06-01T09:16:58.920745Z",
+    "modifiedAt": "2026-06-01T09:16:58.920746Z"
+  },
+  {
+    "tableId": 916,
+    "title": "influensa B/Victoria-linjen",
+    "publishedAt": "2026-06-02T07:02:27.95582Z",
+    "modifiedAt": "2026-06-02T07:02:27.955821Z"
+  },
+  {
+    "tableId": 911,
+    "title": "Fordeling av SARS-CoV-2 varianter i Norge over tid",
+    "publishedAt": "2026-06-01T09:27:21.060158Z",
+    "modifiedAt": "2026-06-02T07:54:13.68173Z"
+  },
+  {
+    "tableId": 832,
+    "title": "SARS-CoV-2-varianter per måned",
+    "publishedAt": "2026-06-01T09:13:10.627645Z",
+    "modifiedAt": "2026-06-02T07:54:37.706674Z"
+  },
+  {
+    "tableId": 842,
+    "title": "Hyppigste SARS-CoV-2-varianter siste to måneder",
+    "publishedAt": "2026-06-01T09:14:53.469858Z",
+    "modifiedAt": "2026-06-02T07:54:51.918468Z"
+  },
+  {
+    "tableId": 845,
+    "title": "SARS-CoV-2 varianter under overvåkning (VUM)",
+    "publishedAt": "2026-06-01T09:18:00.756905Z",
+    "modifiedAt": "2026-06-01T09:18:00.756906Z"
+  },
+  {
+    "tableId": 917,
+    "title": "RSV-A",
+    "publishedAt": "2026-06-02T12:58:39.564428Z",
+    "modifiedAt": "2026-06-02T12:58:39.56443Z"
+  },
+  {
+    "tableId": 918,
+    "title": "RSV-B",
+    "publishedAt": "2026-06-02T12:58:50.807269Z",
+    "modifiedAt": "2026-06-02T12:58:50.807271Z"
+  },
+  {
+    "tableId": 914,
+    "title": "influensa A(H1N1)pdm09",
+    "publishedAt": "2026-06-02T06:42:57.587561Z",
+    "modifiedAt": "2026-06-02T06:43:10.789107Z"
+  }
+]

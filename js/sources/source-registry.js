@@ -325,7 +325,15 @@
     // (query) og nylig-oppdaterte (pastDays) skal ikke flippe statusbadgen.
     const track = method === 'getAllTables' && !foreignSkip;
 
-    const enabled = registry.adapters.filter(a => registry.isEnabled(a));
+    let enabled = registry.adapters.filter(a => registry.isEnabled(a));
+
+    // Delvis-indeks-fallbacken (js/browser-state.js): når katalogindeksen
+    // dekket noen kilder men ikke alle, hentes KUN de manglende her — de
+    // øvrige kildenes status og tabeller står urørt.
+    if (Array.isArray(opts.onlySources) && opts.onlySources.length) {
+      enabled = enabled.filter(a => opts.onlySources.indexOf(a.sourceId) !== -1);
+    }
+
     if (track) {
       enabled.forEach(a => registry._setStatus(a.sourceId, {
         status: 'loading',
@@ -429,6 +437,41 @@
     // ---- Katalogstatus + per-kilde reload (API-statusbadgen) ----
     /** Snapshot av katalogstatus for alle aktiverte kilder. */
     getSourceStatus() { return registry.getStatusSnapshot(); },
+
+    /**
+     * Så statuslaget fra katalogindeksen (js/catalog-index.js), slik at
+     * API-statusbadgen virker UENDRET når katalogen kom derfra i stedet for
+     * fra en getAllTables-aggregering. Patchen har nøyaktig samme form som
+     * statusPatchFromResult produserer, så js/source-status.js leser den
+     * uten å vite hvor tabellene kom fra: den rendrer «Fra mellomlager ·
+     * Hentet for N t siden» og farger badgen på `stale`.
+     *
+     * @param {Object<string, {count:number, generatedAt:string}>} metaBySource
+     *   — index.meta fra CatalogIndex.load().
+     */
+    seedSourceStatus(metaBySource) {
+      const meta = metaBySource || {};
+      const cfg = (window.AppConfig && window.AppConfig.catalogIndex) || {};
+      const staleAfterMs = cfg.staleAfterMs || 48 * 60 * 60 * 1000;
+
+      Object.keys(meta).forEach(sourceId => {
+        const m = meta[sourceId] || {};
+        const builtAt = Date.parse(m.generatedAt);
+        // Uleselig generatedAt → bruk nå. fetchedAt regnes det alder av i
+        // source-status.js (Date.now() - fetchedAt), og NaN ville gitt
+        // «NaN minutter siden» i panelet.
+        const fetchedAt = Number.isFinite(builtAt) ? builtAt : Date.now();
+        registry._setStatus(sourceId, {
+          status: 'ok',
+          tableCount: m.count || 0,
+          fromCache: true,
+          stale: (Date.now() - fetchedAt) > staleAfterMs,
+          fetchedAt: fetchedAt,
+          partial: null,
+          error: null
+        });
+      });
+    },
     /** Abonner/avslutt abonnement på statusendringer (cb får snapshot-arrayen). */
     onSourceStatusChange(cb) { registry.onStatusChange(cb); },
     offSourceStatusChange(cb) { registry.offStatusChange(cb); },

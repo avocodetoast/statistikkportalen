@@ -63,16 +63,50 @@ const BrowserState = {
     try {
       logger.log('[BrowserState] Fetching all tables (including discontinued)...');
 
-      // Fetch API config first to apply server limits before any data requests
-      await api.getConfig();
+      // Forhåndsbygget katalogindeks (AppConfig.catalogIndex) — av som
+      // standard. Er den på og brukbar, erstatter den katalogaggregeringen;
+      // ellers faller vi gjennom til nøyaktig samme sti som før.
+      let loadedFromIndex = false;
 
-      // Fetch all tables (with automatic pagination if needed)
-      const response = await api.getAllTables({
-        lang: getCurrentApiLang(),
-        includeDiscontinued: true
-      });
+      if (AppConfig.catalogIndex && AppConfig.catalogIndex.enabled) {
+        const index = await CatalogIndex.load({ lang: getCurrentApiLang() });
+        if (index.available) {
+          this.allTables = index.rows;
+          // Statusbadgen får sitt grunnlag herfra i stedet for fra
+          // aggregeringen, så js/source-status.js virker uendret.
+          api.seedSourceStatus(index.meta);
 
-      this.allTables = response.tables;
+          // Kilder uten brukbart shard hentes direkte — kun de.
+          if (index.missingSources.length) {
+            const rest = await api.getAllTables({
+              lang: getCurrentApiLang(),
+              includeDiscontinued: true,
+              onlySources: index.missingSources
+            });
+            this.allTables = this.allTables.concat(rest.tables);
+          }
+          loadedFromIndex = true;
+        }
+      }
+
+      if (!loadedFromIndex) {
+        // Fetch API config first to apply server limits before any data requests.
+        // NB: kun på fallback-stien. Kommer katalogen fra indeksen, hentes
+        // /config lat ved første tabellåpning i stedet (ensureApiLimits() i
+        // js/variable-select.js) — den setter bare AppConfig.limits.maxCells,
+        // som ingenting på forsiden eller i emnetreet bruker, og den kostet
+        // en hel sekvensiell tur-retur før første paint.
+        await api.getConfig();
+
+        // Fetch all tables (with automatic pagination if needed)
+        const response = await api.getAllTables({
+          lang: getCurrentApiLang(),
+          includeDiscontinued: true
+        });
+
+        this.allTables = response.tables;
+      }
+
       logger.log(`[BrowserState] Loaded ${this.allTables.length} tables`);
 
       // Alle kilder nede med tom cache → tydelig, retry-bar feil i stedet
@@ -162,6 +196,27 @@ const BrowserState = {
     this.isLoaded = true;
     logger.log('[BrowserState] Reloaded source «' + sourceId + '» — ' +
                this.allTables.length + ' tables total');
+  },
+
+  /**
+   * Ta i bruk resultatet av CatalogIndex.checkForUpdate() («Se etter ny
+   * indeks»): merge inn tabellene for hver kilde som faktisk endret seg.
+   * Gjenbruker applySourceTables() per endret kilde i stedet for å skrive en
+   * egen batched fletting — den nullstiller allerede _searchIndex og bygger
+   * emnehierarkiet på nytt (verifisert over), og dette er en sjelden,
+   * brukerinitiert handling der ekstra hierarki-rebuilds (én per endret
+   * kilde, typisk 0–1) ikke er kostnaden verdt å optimalisere bort.
+   *
+   * @param {{changed:string[], bySource:object}} index - fra CatalogIndex.checkForUpdate().
+   * @returns {string[]} kilde-id-ene som faktisk ble tatt i bruk (samme som index.changed).
+   */
+  applyIndex(index) {
+    const changed = (index && index.changed) || [];
+    changed.forEach(sourceId => {
+      const tables = (index.bySource && index.bySource[sourceId]) || [];
+      this.applySourceTables(sourceId, tables);
+    });
+    return changed;
   },
 
   /**

@@ -21,9 +21,14 @@
  * fungerer fra index.html i repo-roten), caches kun i minnet (se
  * getCatalog/_catalogPromise), og brukes av getTables (buildSourceCatalogue)
  * og getTableMetadata (buildMetadataCore) til å berike katalogoppføringer og
- * metadata-tittel/-note. Mangler fila (aldri kjørt scriptet, eller
- * utilgjengelig fra siden som laster adapteren), faller alt tilbake til
- * dagens rå API-tittel/tomme periodefelt — se getCatalog sin warn-logging.
+ * metadata-tittel/-note. Med katalogindeksen (js/catalog-index.js) på —
+ * standard, se AppConfig.catalogIndex — kaller BrowserState.init() aldri
+ * getTables() for FHI (katalogen kommer da fra den forhåndsbygde indeksen),
+ * så denne fetch()-en utsettes til brukeren faktisk åpner en FHI-tabell.
+ * Mangler fila (aldri kjørt scriptet, siden er åpnet over file:// der
+ * fetch() av lokale filer er blokkert, eller filen er ellers utilgjengelig),
+ * faller alt tilbake til dagens rå API-tittel/tomme periodefelt — se
+ * getCatalog sin warn-logging.
  *
  * KILDE / ÅPENT API
  * -----------------
@@ -172,31 +177,33 @@
   // byggetid, IKKE live-hentet (240 tabeller × 2 kall er for dyrt per
   // sideoppslag). Hentes relativt til siden (index.html ligger i repo-roten,
   // så 'data/...' er korrekt) og caches KUN i minnet (ren lokal statisk fil,
-  // ingen grunn til IndexedDB/localStorage-runde). Mangler filen (aldri
-  // kjørt scriptet, eller kjøring feilet/filen er utilgjengelig fra siden som
-  // laster adapteren — f.eks. en SEO-underside på annet stinivå), faller vi
-  // tilbake til dagens live /table-liste uten berikelse; se getTables/
-  // buildMetadataCore.
+  // ingen grunn til IndexedDB/localStorage-runde). Kun ÉN fetch uansett hvor
+  // mange kilder som slår opp i katalogen (memoisert i _catalogPromise).
+  // Mangler filen (aldri kjørt scriptet, siden er åpnet over file:// der
+  // nettleseren blokkerer fetch() av lokale filer, eller filen er ellers
+  // utilgjengelig fra siden som laster adapteren — f.eks. en SEO-underside på
+  // annet stinivå), faller vi tilbake til dagens live /table-liste uten
+  // berikelse; se getTables/buildMetadataCore.
 
   let _catalogPromise = null;
   function getCatalog() {
     if (_catalogPromise) return _catalogPromise;
 
-    // 1) window.FhiCatalog fra <script src="data/sources/fhi-catalog.js">.
-    //    <script> rammes IKKE av CORS, så dette er den eneste veien som
-    //    fungerer når appen åpnes rett fra disk (file://) — der blokkerer
-    //    Chrome enhver fetch() av en lokal fil («origin 'null'»), og uten
-    //    katalogen faller alle FHI-titler tilbake til interne kodenavn og
-    //    periodekolonnene blir tomme. Se scripts/update-fhi-catalog.mjs, som
-    //    skriver .js-fila ved siden av .json-fila (sistnevnte leses av
-    //    Node-verktøyene: SEO-byggeren og byggescriptet selv).
-    if (window.FhiCatalog && window.FhiCatalog.sources) {
-      _catalogPromise = Promise.resolve(window.FhiCatalog);
+    // Åpnes appen rett fra disk (file://) blokkerer nettleseren fetch() av
+    // lokale filer — og varsler det med en CORS-feil i konsollen, ikke bare en
+    // stille avvisning. Samme resonnement som CatalogIndex._doLoad() (se
+    // js/catalog-index.js): vi vet svaret på forhånd, så vi sparer oss selv
+    // (og konsollen) den bortkastede forespørselen.
+    if (window.location && window.location.protocol === 'file:') {
+      logger.warn(
+        '[FHIAdapter] Åpnet over file:// — data/sources/fhi-catalog.json kan ' +
+        'ikke hentes lokalt. FHI-tabellene vises med interne kodenavn og TOMME ' +
+        'periodekolonner; kjør appen over http/https for byggetids-metadata.'
+      );
+      _catalogPromise = Promise.resolve(null);
       return _catalogPromise;
     }
 
-    // 2) Fallback: hent JSON-fila. Virker over http(s), og dekker sider som
-    //    ikke laster katalog-scriptet.
     _catalogPromise = window.SourceCommon.fetchWithTimeout('data/sources/fhi-catalog.json',
       { headers: JSON_HEADERS },
       { timeoutMs: FETCH_TIMEOUT_MS, timeoutErrorPrefix: '[FHIAdapter] Tidsavbrudd' })
@@ -212,13 +219,11 @@
       })
       .catch(e => {
         logger.warn(
-          '[FHIAdapter] Fant verken window.FhiCatalog (data/sources/fhi-catalog.js) ' +
-          'eller data/sources/fhi-catalog.json — FHI-tabellene vises med interne ' +
-          'kodenavn og TOMME periodekolonner. Vanligste årsak: siden er åpnet fra ' +
-          'disk (file://), der nettleseren blokkerer fetch() av lokale filer — ' +
-          'sjekk at <script src="data/sources/fhi-catalog.js"> er med i index.html, ' +
-          'eller kjør appen over http. Mangler filene, kjør ' +
-          '«node scripts/update-fhi-catalog.mjs».', e
+          '[FHIAdapter] Fant ikke data/sources/fhi-catalog.json — FHI-tabellene ' +
+          'vises med interne kodenavn og TOMME periodekolonner. Vanligste årsaker: ' +
+          'filen mangler («node scripts/update-fhi-catalog.mjs» er aldri kjørt), ' +
+          'eller siden er åpnet fra disk (file://), der nettleseren blokkerer ' +
+          'fetch() av lokale filer — kjør appen over http/https i stedet.', e
         );
         return null;
       });

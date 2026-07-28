@@ -1,9 +1,10 @@
 /**
  * norges-bank-adapter.js — fersk tidsperiode tilbake til tabellistene.
  *
- * Katalogen bygges fra den innsjekkede data/sources/nb-periods.js og kan være
- * noen uker gammel (se nb-catalog-periods.test.js). Når en tabell ÅPNES probes
- * flowen uansett, og adapteren legger da det ferske vinduet i
+ * Katalogen kommer normalt fra den forhåndsbygde katalogindeksen (bygget bl.a.
+ * fra data/sources/nb-periods.json ved byggetid) og kan være noen uker gammel
+ * (se nb-catalog-periods.test.js). Når en tabell ÅPNES probes flowen uansett,
+ * og adapteren legger da det ferske vinduet i
  * meta.extension.periods — det kildeagnostiske feltet
  * BrowserState.syncTablePeriodsFromMetadata() retter katalogen i minnet fra
  * (samme mekanisme som FHI bruker).

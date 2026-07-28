@@ -68,6 +68,28 @@ describe('E2E røyktest (http)', { skip: availability.ok ? false : availability.
     assert.match(badge, /3\/3/, `statusbadgen viste «${badge}»`);
   });
 
+  it('sidelastingen gjør ingen eksterne API-kall', async () => {
+    // Selve poenget med katalogindeksen. Før den lastet BrowserState._doInit()
+    // /config og /tables fra data.ssb.no sekvensielt før første paint (~11,7 MB
+    // rå). Nå kommer hele katalogen fra data/index/ på egen opprinnelse.
+    //
+    // Denne suiten har allerede navigert til forsiden og ventet på emnetreet i
+    // before(), så alt init trengte ligger i app.requests. Asserter på
+    // opprinnelse, ikke på antall kall: da fanger den også et nytt eksternt
+    // kall noen legger inn senere, uansett hvilken vert det går til.
+    // Ett uttrykt unntak: Umami-analyticsskriptet som index.html injiserer.
+    // Det er ikke et API-kall og har ingenting med metadatalasting å gjøre.
+    // Unntaket er navngitt, ikke et generisk filter — dukker det opp en NY
+    // ekstern vert, feiler testen slik den skal.
+    const ANALYTICS = 'stats.statistikkportalen.no';
+    const external = app.externalRequests().filter(u => !u.includes(ANALYTICS));
+
+    assert.deepEqual(
+      external, [],
+      `sidelastingen traff eksterne API-er:\n  - ${external.join('\n  - ')}`
+    );
+  });
+
   it('søk gir treff og bytter rute', async () => {
     await app.page.goto(app.baseUrl, { waitUntil: 'domcontentloaded' });
     await waitForFrontPage(app.page);
@@ -156,10 +178,16 @@ describe('E2E røyktest (http)', { skip: availability.ok ? false : availability.
 });
 
 /**
- * file:// er en dokumentert støttet modus (CLAUDE.md: «Åpnes direkte som
- * index.html»). Den ryker stille når en ny lokal datafil hentes med fetch() i
- * stedet for å lastes som <script> — nettleseren blokkerer fetch() av lokale
- * filer, og da degraderer NB/FHI uten at noe annet varsler.
+ * file:// er en dokumentert, BEVISST DEGRADERT modus (CLAUDE.md: «Åpnes
+ * direkte som index.html»). Katalogindeksen (js/catalog-index.js) og FHIs
+ * pregenererte katalog (data/sources/fhi-catalog.json) hentes begge med
+ * fetch(), som nettleseren blokkerer for lokale filer — appen faller da
+ * tilbake til direkte kildehenting fra API-ene. Fungerer, men tregt og uten
+ * byggetids-metadata: NB/FHI-tabellene mangler periodekolonner (ingen bakt
+ * fil, og ingen tabell er åpnet ennå til å friske opp en cache-oppføring).
+ * Kravet om at appen skal virke IDENTISK over file:// ble droppet da
+ * katalogindeksen kom til — denne testen dekker at degraderingen er PEN
+ * (appen laster, viser tabeller, ingen feil), ikke at den er umerkelig.
  */
 describe('E2E røyktest (file://)', { skip: availability.ok ? false : availability.reason }, () => {
   let app;
@@ -185,27 +213,32 @@ describe('E2E røyktest (file://)', { skip: availability.ok ? false : availabili
     assertClean(app, 'Forsiden over file://');
   });
 
-  it('Norges Bank og FHI virker uten nettverk (bakte kataloger)', async () => {
+  it('Norges Bank og FHI degraderer pent (ingen byggetids-metadata over file://)', async () => {
     const badge = await readSourceBadge(app.page);
     assert.match(badge, /3\/3/, `statusbadgen viste «${badge}» over file://`);
 
-    // Den konkrete regresjonen: NB/FHI-tabeller uten periodekolonner betyr at
-    // nb-periods.js / fhi-catalog.js ikke ble lastet som <script>.
+    // Katalogindeksen OG fhi-catalog.json er begge lokale filer — begge
+    // blokkert av nettleseren over file:// — så NB/FHI-tabellene kommer nå
+    // fra direkte kildehenting UTEN byggetids-berikelse: periodekolonnene er
+    // tomme (ingen bakt fil, og ingen tabell er åpnet ennå), men tabellene
+    // skal fortsatt være der med en gyldig label. Se CLAUDE.md.
     const foreign = await app.page.evaluate(() =>
       window.BrowserState.allTables
         .filter((t) => t.id.startsWith('nb-') || t.id.startsWith('fhi-'))
-        .map((t) => ({ id: t.id, first: t.firstPeriod, last: t.lastPeriod }))
+        .map((t) => ({ id: t.id, label: t.label, first: t.firstPeriod, last: t.lastPeriod }))
     );
 
     assert.ok(foreign.length > 0, 'ingen nb-/fhi-tabeller i katalogen');
-    const withoutPeriods = foreign.filter((t) => !t.first || !t.last);
-    assert.equal(
-      withoutPeriods.length,
-      0,
-      `${withoutPeriods.length} av ${foreign.length} nb-/fhi-tabeller mangler perioder ` +
-        `— tyder på at en bakt datafil ikke lastes som <script>: ` +
-        JSON.stringify(withoutPeriods.slice(0, 5))
+    assert.ok(
+      foreign.every((t) => typeof t.label === 'string' && t.label.trim().length > 0),
+      'alle nb-/fhi-tabeller skal ha en label selv uten byggetids-katalogen'
     );
+    assert.ok(
+      foreign.every((t) => t.first === '' && t.last === ''),
+      'periodekolonnene skal være tomme over file:// — ingen bakt fil er tilgjengelig ' +
+        'og ingen tabell er åpnet ennå til å friske dem opp'
+    );
+    assertClean(app, 'NB/FHI-degradering over file://');
   });
 });
 
@@ -272,13 +305,55 @@ describe('E2E degradert modus', { skip: availability.ok ? false : availability.r
   });
 
   it('appen overlever at SSB er nede', async () => {
+    // Med katalogindeksen på kommer SSB-katalogen fra det innsjekkede shardet,
+    // ikke fra data.ssb.no. Å blokkere verten degraderer derfor IKKE lenger
+    // katalogen — alle tre kildene lastes. Det er hele poenget med indeksen,
+    // og badgen skal si 3/3. (Før indeksen sa den 2/3; assertionen er skjerpet,
+    // ikke svekket — se testen under, som fortsatt dekker det degraderte
+    // tilfellet ved å ta bort indeksen OG SSB samtidig.)
     const badge = await readSourceBadge(app.page);
-    assert.match(badge, /2\/3/, `statusbadgen viste «${badge}» med SSB blokkert`);
+    assert.match(badge, /3\/3/, `statusbadgen viste «${badge}» med SSB blokkert, men indeksen på`);
 
     const subjects = await app.page.locator('[data-subject]').count();
     assert.ok(subjects > 0, 'emnetreet forsvant helt da SSB var nede');
 
     await app.shot('degradert');
+    assert.equal(app.pageErrors.length, 0, `uncaught exceptions:\n${app.pageErrors.join('\n')}`);
+  });
+});
+
+/**
+ * Fallback-stien: både katalogindeksen OG SSB borte. Da er det bare NB+FHI
+ * igjen, og appen skal fortsatt rendre et emnetre og vise degradert status.
+ * Dette er tilfellet «E2E degradert modus» dekket før indeksen fantes — det
+ * krever nå at BEGGE kildene til katalogen tas bort, ikke bare SSB.
+ */
+describe('E2E degradert modus uten indeks', { skip: availability.ok ? false : availability.reason }, () => {
+  let app;
+
+  before(async () => {
+    app = await launchApp({
+      mode: MODE_HTTP,
+      network: NETWORK,
+      blockHosts: ['data.ssb.no'],
+      blockPaths: ['/data/index/'],
+      shotPrefix: 'degradert-uten-indeks'
+    });
+    await waitForFrontPage(app.page);
+  });
+
+  after(async () => {
+    if (app) await app.close();
+  });
+
+  it('faller tilbake til direkte kildehenting når indeksen mangler', async () => {
+    const badge = await readSourceBadge(app.page);
+    assert.match(badge, /2\/3/, `statusbadgen viste «${badge}» med både indeks og SSB blokkert`);
+
+    const subjects = await app.page.locator('[data-subject]').count();
+    assert.ok(subjects > 0, 'emnetreet forsvant helt da både indeks og SSB var nede');
+
+    await app.shot('degradert-uten-indeks');
     assert.equal(app.pageErrors.length, 0, `uncaught exceptions:\n${app.pageErrors.join('\n')}`);
   });
 });

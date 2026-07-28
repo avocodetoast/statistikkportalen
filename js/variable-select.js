@@ -412,7 +412,33 @@ async function handleLoadDefaultSelection() {
  * Load table metadata from API
  * @param {string} tableId - Table ID
  */
+/**
+ * Hent /config én gang, lat og ikke-blokkerende.
+ *
+ * Kallet setter kun AppConfig.limits.maxCells/cellWarningThreshold fra SSBs
+ * maxDataCells, og celletaket brukes utelukkende av variable-select-status.js.
+ * Før katalogindeksen lå kallet i BrowserState._doInit() og kostet en hel
+ * sekvensiell tur-retur til SSB før første paint — for en verdi ingen browse-
+ * visning leser. Nå fyres det her, uten await: js/config.js har allerede
+ * fornuftige defaults (800 000 / 600 000), så en celletelling som rekker å
+ * kjøre før svaret lander bruker dem og korrigeres når svaret kommer.
+ *
+ * Kun for SSB-tabeller — maxDataCells er en SSB-API-grense, og NB/FHI har
+ * ingen nytte av kallet.
+ */
+let _apiLimitsRequested = false;
+function ensureApiLimits(tableId) {
+  if (_apiLimitsRequested) return;
+  if (typeof api.sourceFor === 'function' && api.sourceFor(tableId) !== 'ssb') return;
+  _apiLimitsRequested = true;
+  Promise.resolve(api.getConfig()).catch(e => {
+    logger.warn('[VariableSelect] Klarte ikke å hente /config — beholder celletaket fra AppConfig:', e);
+  });
+}
+
 async function loadTableMetadata(tableId) {
+  ensureApiLimits(tableId);
+
   const data = await safeApiCall(
     () => api.getTableMetadata(tableId, true, getCurrentApiLang()),
     t('error.loadMetadata') + tableId

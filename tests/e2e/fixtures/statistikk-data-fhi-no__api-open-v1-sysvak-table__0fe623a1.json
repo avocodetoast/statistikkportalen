@@ -1,0 +1,56 @@
+[
+  {
+    "tableId": 648,
+    "title": "SYSVAK bvp",
+    "publishedAt": "2026-04-28T06:00:00Z",
+    "modifiedAt": "2026-04-27T12:10:01.817961Z"
+  },
+  {
+    "tableId": 484,
+    "title": "SYSVAK koronavaksinasjon 24/25",
+    "publishedAt": "2025-05-27T00:07:25.040345Z",
+    "modifiedAt": "2025-08-28T08:38:26.001519Z"
+  },
+  {
+    "tableId": 324,
+    "title": "SYSVAK influensavaksinasjon 24/25",
+    "publishedAt": "2025-05-27T02:01:39.882236Z",
+    "modifiedAt": "2025-08-28T08:38:41.226632Z"
+  },
+  {
+    "tableId": 750,
+    "title": "SYSVAK covid-19 årlig 75+",
+    "publishedAt": "2025-10-14T06:00:00Z",
+    "modifiedAt": "2025-10-14T11:50:55.216432Z"
+  },
+  {
+    "tableId": 751,
+    "title": "SYSVAK covid-19 årlig 65+",
+    "publishedAt": "2025-10-14T06:00:00Z",
+    "modifiedAt": "2025-10-14T11:45:28.51978Z"
+  },
+  {
+    "tableId": 753,
+    "title": "SYSVAK influensa årlig 65+",
+    "publishedAt": "2025-12-18T15:08:43.027055Z",
+    "modifiedAt": "2025-12-18T15:08:43.027055Z"
+  },
+  {
+    "tableId": 882,
+    "title": "SYSVAK maternell kikhostevaksinering",
+    "publishedAt": "2026-04-28T06:00:00Z",
+    "modifiedAt": "2026-04-27T13:57:30.869956Z"
+  },
+  {
+    "tableId": 717,
+    "title": "SYSVAK koronavaksinasjon 25/26",
+    "publishedAt": "2026-07-28T00:03:22.130594Z",
+    "modifiedAt": "2026-07-28T00:03:22.131825Z"
+  },
+  {
+    "tableId": 716,
+    "title": "SYSVAK influensavaksinasjon 25/26",
+    "publishedAt": "2026-07-28T02:01:49.328323Z",
+    "modifiedAt": "2026-07-28T02:01:49.329953Z"
+  }
+]

@@ -102,3 +102,28 @@ try {
     console.log(`\nMerk — problemer under innspilling:\n${problems}`);
   }
 }
+
+// file://-modus: katalogindeksen OG FHIs pregenererte fhi-catalog.json blokkeres
+// begge av nettleseren (lokale filer), så FHIAdapter faller videre til live
+// /{kilde}/table PER delkilde — kall som http-modus over aldri trigger (der
+// dekker katalogindeksen FHI). Egen, kort fase her for å fange nettopp de.
+// Se smoke.e2e.mjs sitt «E2E røyktest (file://)»-avsnitt.
+console.log('\nfile://-modus: fanger FHIs live-fallback (katalogfila er blokkert lokalt)...');
+const fileApp = await launchApp({
+  mode: 'file',
+  network: 'record',
+  keepTables: [table, ...BUILDER_TABLES, ...TOPIC_KEEP_TABLES]
+});
+try {
+  await waitForFrontPage(fileApp.page);
+} finally {
+  const fileProblems = fileApp.problems();
+  await fileApp.close();
+
+  console.log(`${fileApp.routes.recorded.length} kall spilt inn (file://):`);
+  for (const line of fileApp.routes.recorded) console.log(`  ${line}`);
+
+  if (fileProblems) {
+    console.log(`\nMerk — problemer under file://-innspilling:\n${fileProblems}`);
+  }
+}

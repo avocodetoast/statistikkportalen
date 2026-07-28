@@ -74,6 +74,7 @@ import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { applyCuration } from './lib/fhi-curation.mjs';
 import { selectStaleTableIds, mergeCatalogSource } from './lib/fhi-catalog-merge.mjs';
+import { atomicWrite } from './lib/atomic-write.mjs';
 
 const DEFAULT_RATE = 240; // kall/minutt — FHI-API-et dokumenterer ingen grense; holdt beskjedent av høflighet
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -478,12 +479,6 @@ async function buildSource(appConfig, source, throttle, limit, presetRows) {
 
 // ---------------------------------------------------------------------------
 
-function atomicWrite(filePath, content) {
-  const tmp = `${filePath}.tmp`;
-  fs.writeFileSync(tmp, content, 'utf8');
-  fs.renameSync(tmp, filePath);
-}
-
 async function main() {
   const args = parseArgs(process.argv);
   const appConfig = loadAppConfig();
@@ -582,27 +577,10 @@ async function main() {
   const json = JSON.stringify(output, null, 2);
   atomicWrite(args.out, json);
 
-  // Samme katalog som en browser-global, ved siden av .json-fila.
-  // BAKGRUNN: nettleseren blokkerer fetch() av lokale filer når appen åpnes
-  // rett fra disk (file:// → «origin 'null'»), og da faller alle FHI-titler
-  // tilbake til interne kodenavn med tomme periodekolonner. <script> rammes
-  // ikke av CORS, så .js-varianten gjør at den dokumenterte «bare åpne
-  // index.html»-flyten virker. .json-fila beholdes for Node-verktøyene
-  // (scripts/lib/seo-sources.mjs og --incremental her).
-  const jsOut = args.out.replace(/\.json$/, '') + '.js';
-  atomicWrite(jsOut,
-    '// AUTOGENERERT av scripts/update-fhi-catalog.mjs — IKKE rediger for hånd.\n' +
-    '// Speiler data/sources/fhi-catalog.json som en browser-global, slik at\n' +
-    '// katalogen også lastes når index.html åpnes fra disk (file://), der\n' +
-    '// fetch() av lokale filer blokkeres av CORS. Se getCatalog() i\n' +
-    '// js/sources/fhi-adapter.js.\n' +
-    'window.FhiCatalog = ' + json + ';\n');
-
   const totalTables = Object.values(sources).reduce((n, s) => n + s.tables.length, 0);
   console.log(`\n[fhi-catalog] Ferdig: ${sourceIds.length} kilder, ${totalTables} tabeller ` +
               `(${probedTotal} hentet fra API-et) skrevet til:`);
   console.log(`[fhi-catalog]   ${args.out}`);
-  console.log(`[fhi-catalog]   ${jsOut}  (browser-global, for file://)`);
 }
 
 main().catch(err => {

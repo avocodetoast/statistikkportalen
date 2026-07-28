@@ -149,6 +149,9 @@ export function e2eAvailable() {
  * @param {'replay'|'record'} [options.network]
  * @param {string[]} [options.keepTables]    tabell-ID-er som må med i fixturen
  * @param {string[]} [options.blockHosts]    API-verter som skal feile
+ * @param {string[]} [options.blockPaths]    lokale stier som skal gi 404
+ *                                           (f.eks. '/data/index/' for å ta
+ *                                           bort katalogindeksen)
  * @param {boolean} [options.shots]          lagre skjermbilder
  * @param {string} [options.shotPrefix]
  * @param {string} [options.hash]            rute å åpne (f.eks. '#table/07459')
@@ -159,6 +162,7 @@ export async function launchApp(options = {}) {
     network = 'replay',
     keepTables = [],
     blockHosts = [],
+    blockPaths = [],
     shots = Boolean(process.env.E2E_SHOTS),
     shotPrefix = 'app',
     hash = ''
@@ -186,7 +190,13 @@ export async function launchApp(options = {}) {
   });
   page.on('pageerror', (err) => pageErrors.push(err.message));
 
-  const routes = await installRoutes(page, { mode: network, keepTables, blockHosts });
+  // Alle URL-er nettleseren faktisk ba om, i rekkefølge. Grunnlaget for å
+  // bevise at katalogindeksen fjerner de eksterne kallene ved sidelasting —
+  // en påstand som ellers bare kunne sannsynliggjøres ved å måle tid.
+  const requests = [];
+  page.on('request', (req) => requests.push(req.url()));
+
+  const routes = await installRoutes(page, { mode: network, keepTables, blockHosts, blockPaths });
 
   let server = null;
   let baseUrl;
@@ -243,6 +253,12 @@ export async function launchApp(options = {}) {
     consoleErrors,
     pageErrors,
     routes,
+    requests,
+    /** URL-ene som gikk til en annen opprinnelse enn appen selv. */
+    externalRequests() {
+      return requests.filter(u => !u.startsWith('file://') &&
+                                  !u.includes('127.0.0.1') && !u.includes('localhost'));
+    },
     baseUrl,
     close
   };

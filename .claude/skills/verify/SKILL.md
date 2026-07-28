@@ -161,9 +161,13 @@ ikke matche det mønsteret. Døp en ny E2E-fil `*.e2e.mjs`.
 
 `stub-routes.mjs` bruker Playwrights `page.route()`. **Ikke foreslå MSW** — det ville
 krevd en ekte npm-avhengighet, en innsjekket service worker og oppkobling i
-`index.html`, i en app uten byggesteg. Hele suiten treffer 32 unike endepunkter
-(20 SSB, 7 Norges Bank, 5 FHI — tell `tests/e2e/fixtures/`), og tre av dem ved kaldstart.
-`page.route()` dekker det med god margin.
+`index.html`, i en app uten byggesteg. Hele suiten treffer 46 unike endepunkter
+(20 SSB, 7 Norges Bank, 19 FHI — tell `tests/e2e/fixtures/`), og null av dem ved
+kaldstart i http-modus (katalogindeksen dekker det — se `data/index/`). De 13
+ekstra FHI-endepunktene (`/{kilde}/table` per delkilde) er `file://`-modusens
+degraderte fallback: der er både katalogindeksen og FHIs egen `fhi-catalog.json`
+lokale filer nettleseren blokkerer `fetch()` av, og adapteren faller da videre
+til live per-kilde tabellister. `page.route()` dekker det med god margin.
 
 Tre modi:
 
@@ -415,8 +419,12 @@ i blinde.
   skal fortsette å ha det. Derfor importeres `playwright-core` dynamisk inne i
   `launchApp()` — en statisk import ville krasjet testfila på et rent checkout i stedet
   for å skippe.
-- **Norges Bank og FHI gjør null nettverkskall ved oppstart.** Katalogene er bakt inn i
-  `data/sources/*.js`. `file://`-testen sjekker dette ved å kreve at alle `nb-`/`fhi-`
-  tabeller har perioder — mangler de, lastes en bakt datafil ikke som `<script>`.
-  Se CLAUDE.md.
+- **Norges Bank og FHI gjør null nettverkskall ved oppstart — når katalogindeksen er
+  tilgjengelig.** `data/index/` (bygget av `scripts/build-catalog-index.mjs`) dekker
+  normalflyten; adapternes egne `getTables()` kalles da ikke i det hele tatt. `file://`
+  er unntaket: der er indeksen OG FHIs `fhi-catalog.json` begge lokale filer nettleseren
+  blokkerer `fetch()` av, så appen faller tilbake til direkte kildehenting — `nb-`/`fhi-`
+  tabellene kommer da med TOMME periodekolonner (ingen bakt fil å falle tilbake til
+  lenger). `file://`-testen sjekker nettopp DENNE pene degraderingen (badge 3/3, gyldige
+  labels, ingen konsollfeil) — ikke at periodene er fylt ut. Se CLAUDE.md.
 - **Ikke myk opp en assertion for å få grønt.** Samme regel som for enhetstestene.

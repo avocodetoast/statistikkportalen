@@ -242,19 +242,6 @@
     });
   }
 
-  /**
-   * Bakte katalogperioder fra data/sources/nb-periods.js (window.NbPeriods,
-   * skrevet av scripts/update-nb-periods.mjs). Lastes som <script> i
-   * index.html — den eneste veien som virker over file://, der nettleseren
-   * blokkerer fetch() av lokale filer. Mangler fila, degraderer katalogen til
-   * tomme periodekolonner (som før fila fantes), og radene fylles etter hvert
-   * som tabeller åpnes (se fetchCataloguePeriod + extension.periods).
-   */
-  function bakedPeriods() {
-    const baked = window.NbPeriods;
-    return (baked && baked.tables) || null;
-  }
-
   async function getTables(options) {
     const opts = options || {};
     // Server-søk / nylig-oppdaterte er SSB-only semantikk.
@@ -262,18 +249,16 @@
     const force = opts.useCache === false;
 
     const tables = buildCatalogue(currentLang());
-    const baked = bakedPeriods();
 
-    // Tidsperiode/Sist oppdatert fylles UTEN nettverk. Norges Banks SDMX-API
-    // har ingen bulkvei til tidsvinduene, og ett probekall per rad betød 31
-    // samtidige kall for hver kalde sidelasting — blokkerende for
-    // BrowserState.init(). Kildene, i prioritert rekkefølge:
-    //   1. fersk cache-oppføring — skrevet av fetchCataloguePeriod forrige
-    //      gang tabellen ble åpnet, altså ferskere enn den innsjekkede fila
-    //   2. den bakte fila (window.NbPeriods)
-    //   3. tomme strenger
-    // `force` (statuspanelets «Oppdater») hopper over cachen og går rett på
-    // den bakte fila; ferske perioder hentes når en tabell faktisk åpnes.
+    // Tidsperiode/Sist oppdatert fylles UTEN nettverk her — denne funksjonen
+    // er kun fallback-stien (katalogindeksen, js/catalog-index.js, dekker
+    // normalflyten uten å røre adapteren i det hele tatt). Norges Banks
+    // SDMX-API har ingen bulkvei til tidsvinduene, og ett probekall per rad
+    // ville betydd 31 samtidige kall for hver kalde sidelasting — blokkerende
+    // for BrowserState.init(). Eneste kilde: en fersk cache-oppføring skrevet
+    // av fetchCataloguePeriod forrige gang tabellen ble åpnet. Uten den (aldri
+    // åpnet, eller `force` — statuspanelets «Oppdater» — som hopper over
+    // cachen) står periodefeltene tomme til tabellen åpnes.
     await Promise.all(tables.map(async (entry) => {
       const flow = flowForId(entry.id);
       if (!flow) return;
@@ -281,7 +266,6 @@
       if (!force) {
         try { period = await cacheGet(cataloguePeriodCacheKey(flow)); } catch (e) { period = null; }
       }
-      if (!period && baked) period = baked[entry.id] || null;
       if (period) {
         entry.firstPeriod = period.firstPeriod || '';
         entry.lastPeriod = period.lastPeriod || '';
@@ -291,14 +275,13 @@
 
     // Katalogen er config-bygget og kan ikke reelt feile. fromCache markerer at
     // ingenting ble hentet over nett, så statuspanelet (source-status.js) ikke
-    // påstår et ferskt API-svar; fetchedAt er da filas byggetidspunkt.
-    const generatedAt = window.NbPeriods && window.NbPeriods.generatedAt;
+    // påstår et ferskt API-svar.
     return {
       tables,
       sourceMeta: {
         fromCache: true,
         stale: false,
-        fetchedAt: (generatedAt ? Date.parse(generatedAt) : NaN) || Date.now()
+        fetchedAt: Date.now()
       }
     };
   }
@@ -1161,8 +1144,9 @@
       }
     }
 
-    // Fersk tidsperiode tilbake til tabellistene: katalogen bygges fra den
-    // innsjekkede data/sources/nb-periods.js, som kan være noen uker gammel.
+    // Fersk tidsperiode tilbake til tabellistene: katalogen kommer normalt fra
+    // den forhåndsbygde katalogindeksen (data/index/, bygget ved byggetid fra
+    // bl.a. den innsjekkede nb-periods.json), som kan være noen uker gammel.
     // Åpnes en tabell, probes flowen uansett (over) — da retter
     // BrowserState.syncTablePeriodsFromMetadata() opp katalogen i minnet.
     // Samme kildeagnostiske felt som fhi-adapter.js bruker.

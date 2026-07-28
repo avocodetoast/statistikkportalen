@@ -1,0 +1,80 @@
+[
+  {
+    "tableId": 588,
+    "title": "A12b: Svangerskapsavbrot fordelt på prevensjonsbruk og alder",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T12:31:46.265306Z"
+  },
+  {
+    "tableId": 589,
+    "title": "A12a: Svangerskapsavbrot fordelt på alder og om det er registrert opplysning om prevensjonsbruk",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T12:31:46.263593Z"
+  },
+  {
+    "tableId": 253,
+    "title": "A5: Nemndbehandla svangerskapsavbrot fordelt på bustadsfylke",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T12:37:03.628749Z"
+  },
+  {
+    "tableId": 262,
+    "title": "A10: Nemndbehandla begjæringar om svangerskapsavbrot med vedtak fordelt på vedtak og svangerskapslengde",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T12:47:16.973945Z"
+  },
+  {
+    "tableId": 286,
+    "title": "A4: Svangerskapsavbrot fordelt på metode, type begjæring og svangerskapslengde",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T13:08:51.143149Z"
+  },
+  {
+    "tableId": 867,
+    "title": "A6: Nemndbehandla svangerskapsavbrot fordelt på abortlov og vedtaksgrunnlag",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T18:24:58.225424Z"
+  },
+  {
+    "tableId": 884,
+    "title": "A7: Nemndbehandla svangerskapsavbrot fordelt på abortlov, vedtaksgrunnlag og svangerskapslengde",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T18:29:23.082233Z"
+  },
+  {
+    "tableId": 264,
+    "title": "A9: Nemndbehandla begjæringar om svangerskapsavbrot fordelt på vedtak og svangerskapslengde",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T18:42:09.113325Z"
+  },
+  {
+    "tableId": 261,
+    "title": "A8: Nemndbehandla begjæringar om svangerskapsavbrot fordelt på type nemnd, vedtak og utførtstatus",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T18:52:42.804822Z"
+  },
+  {
+    "tableId": 280,
+    "title": "A1: Svangerskapsavbrot fordelt på type begjæring og utførtstatus",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T12:31:46.267Z"
+  },
+  {
+    "tableId": 283,
+    "title": "A2: Svangerskapsavbrot fordelt på bustadsfylke og alder",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T12:31:46.26958Z"
+  },
+  {
+    "tableId": 285,
+    "title": "A3: Svangerskapsavbrot fordelt på alder og type begjæring",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T12:31:46.272306Z"
+  },
+  {
+    "tableId": 263,
+    "title": "A11: Begjæringar om svangerskapsavbrot fordelt på institusjon og utførtstatus  ",
+    "publishedAt": "2026-05-12T05:00:00Z",
+    "modifiedAt": "2026-05-11T12:31:46.284832Z"
+  }
+]

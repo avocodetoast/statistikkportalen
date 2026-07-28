@@ -132,6 +132,7 @@ const SCRIPTS = {
     'js/config.js',
     'js/translations.js',
     'js/cache.js',
+    'js/catalog-index.js',
     'js/api.js'
   ],
 
@@ -143,6 +144,7 @@ const SCRIPTS = {
     'js/config.js',
     'js/translations.js',
     'js/cache.js',
+    'js/catalog-index.js',
     'js/api.js',
     'js/utils.js',
     'js/router.js',
@@ -160,6 +162,7 @@ const SCRIPTS = {
     'js/config.js',
     'js/translations.js',
     'js/cache.js',
+    'js/catalog-index.js',
     'js/api.js',
     'js/sources/sdmx-to-jsonstat.js',
     'js/sources/source-common.js',
