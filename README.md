@@ -62,8 +62,12 @@ Applikasjonen kan i tillegg tilpasses andre systemer som bruker PxWebApi v2, eks
     - Språkvalg lagres i nettleseren og huskes til neste besøk
 
 ## Kom i gang
-1. Åpne `index.html` i en moderne nettleser
-2. Vent til tabellisten lastes (caches automatisk)
+1. Server katalogen over HTTP — f.eks. `npx serve` eller `python3 -m http.server` — og åpne
+   `index.html` derfra. Åpnet rett fra disk (`file://`) blokkerer nettleseren `fetch()` av
+   lokale filer, så katalogindeksen er utilgjengelig; appen fungerer fortsatt, men faller
+   tilbake til å hente hele katalogen direkte fra API-ene. Det er en dokumentert, bevisst
+   degradert modus — ikke en feil.
+2. Vent til tabellisten lastes (fra `data/index/`, deretter caches den automatisk)
 3. Søk eller bla til ønsket tabell
 4. Velg verdier for variablene
 5. Klikk «Hent data»
@@ -93,30 +97,11 @@ den ukjent format, eller dekoder SSB-shardet til færre enn `--min-tables` rader
 kjøringen uten å røre webroot; en fremmed kildes shard som mangler eller ikke lar seg dekode
 logges og hoppes over.
 
-**Cron-rekkefølgen er lastbærende** — hvert steg bygges fra artefaktet forrige steg skrev, så
-kjør i denne rekkefølgen (krever Node 18+):
-```
-node scripts/update-fhi-catalog.mjs --incremental
-node scripts/update-nb-periods.mjs
-node scripts/build-catalog-index.mjs --webroot /sti/til/webroot
-node scripts/generate-seo-pages.mjs --webroot /sti/til/webroot --site https://statistikkportalen.no
-```
-SEO-generatoren konsumerer katalogindeksen forrige steg skrev — begge byggetidsartefaktene
-(indeksen appen laster, og de statiske SEO-sidene) bygges dermed fra ett og samme
-øyeblikksbilde av kildene og kan aldri bli uenige om hvilke tabeller som finnes.
-`build-catalog-index.mjs` må ha kjørt minst én gang mot webroot før generatoren kan kjøre.
-Som cron-jobb (ukentlig, natt til søndag):
-```
-15 4 * * 0 cd /sti/til/repo && \
-  node scripts/update-fhi-catalog.mjs --incremental >> catalog.log 2>&1 && \
-  node scripts/update-nb-periods.mjs >> catalog.log 2>&1 && \
-  node scripts/build-catalog-index.mjs --webroot /sti/til/webroot >> catalog.log 2>&1 && \
-  node scripts/generate-seo-pages.mjs --webroot /sti/til/webroot --site https://statistikkportalen.no >> seo-gen.log 2>&1
-```
-Bruk `--dry-run` på generatoren for å se hva som ville blitt skrevet. Scriptet sletter kun
-filer det selv har generert (sporet i `{webroot}/.seo-manifest.json`), og avbryter uten å
-røre webroot ved en manglende eller ubrukelig katalogindeks. De genererte filene skal ikke
-sjekkes inn i git.
+Generatoren er siste steg i byggekjeden — se [Drift og deploy](#drift-og-deploy) for
+rekkefølgen og cron-oppsettet. Bruk `--dry-run` for å se hva som ville blitt skrevet.
+Scriptet sletter kun filer det selv har generert (sporet i `{webroot}/.seo-manifest.json`),
+og avbryter uten å røre webroot ved en manglende eller ubrukelig katalogindeks. De genererte
+filene skal ikke sjekkes inn i git.
 
 Tabellsidene berikes med innhold fra lokale metadatafiler i `data/table-metadata/{id}.json`
 (eksakte responser fra `/tables/{id}/metadata`, lastes ned av et eget oppdaterings-script —
@@ -125,6 +110,111 @@ Tabeller uten gyldig fil får samme innhold som før fra `/tables`-listen alene.
 metadatafilene kan være gamle, hentes tidsperiode og oppdatert-dato alltid fra den ferske
 `/tables`-listen. Berikelsen gjelder kun SSB-tabeller; NB-/FHI-sidene bygges fra
 katalogoppføringene alene.
+
+## Drift og deploy
+
+Appen gjør **ingen eksterne API-kall ved sidelasting**: hele katalogen kommer fra en
+forhåndsbygget indeks i `{webroot}/data/index/`. Det gjør byggekjeden og serverkonfigurasjonen
+til en del av produktet, ikke bare av utrullingen.
+
+### Byggekjeden — rekkefølgen er lastbærende
+
+Hvert steg bygges fra artefaktet forrige steg skrev (krever Node 18+):
+
+```
+node scripts/update-fhi-catalog.mjs --incremental
+node scripts/update-nb-periods.mjs
+node scripts/build-catalog-index.mjs --webroot /sti/til/webroot
+node scripts/generate-seo-pages.mjs  --webroot /sti/til/webroot --site https://statistikkportalen.no
+```
+
+SEO-generatoren konsumerer katalogindeksen steg 3 skrev. Begge byggetidsartefaktene — indeksen
+appen laster og de statiske SEO-sidene — bygges dermed fra ett og samme øyeblikksbilde av
+kildene og kan aldri bli uenige om hvilke tabeller som finnes. `build-catalog-index.mjs` må ha
+kjørt minst én gang mot webroot før generatoren kan kjøre i det hele tatt.
+
+Som cron-jobb (ukentlig, natt til søndag). `&&` mellom stegene er ikke kosmetikk — se
+feilhåndtering under:
+
+```
+15 4 * * 0 cd /sti/til/repo && \
+  node scripts/update-fhi-catalog.mjs --incremental >> catalog.log 2>&1 && \
+  node scripts/update-nb-periods.mjs >> catalog.log 2>&1 && \
+  node scripts/build-catalog-index.mjs --webroot /sti/til/webroot >> catalog.log 2>&1 && \
+  node scripts/generate-seo-pages.mjs --webroot /sti/til/webroot --site https://statistikkportalen.no >> seo-gen.log 2>&1
+```
+
+### Feilhåndtering
+
+`build-catalog-index.mjs` avslutter med exit ≠ 0 og har da skrevet **null filer** når:
+
+- SSB-hentingen feiler, eller gir færre enn `--min-tables` rader
+- krympe-guarden slår til: et shard er mer enn `--max-shrink` % (standard 10) mindre enn det
+  som allerede ligger i webroot — fanger en avkortet, men HTTP 200, katalog
+
+Deploy-scriptet **må stoppe der**, ikke gå videre til SEO-steget: ellers bygges sidene mot en
+indeks som ikke ble oppdatert. En fremmed kilde (NB/FHI) som feiler er derimot feilisolert —
+forrige shard bæres videre og kjøringen lykkes.
+
+Byggeren skriver aldri en halv indeks over en god: alle shards bygges ferdig i minnet, filene
+skrives med tmp+rename, og **manifestet skrives sist**. En leser som løper kappløp med byggeren
+ser derfor enten det gamle manifestet (gamle shards ligger der ennå) eller det nye — aldri et
+manifest som peker på en fil som ikke finnes.
+
+### Filkopiering
+
+- **`.json` og `.json.br` må begge med.** Bare `.json` betyr at du serverer 1,76 MB i stedet
+  for 183 KB.
+- **Ikke `rsync --delete` mot `data/index/`.** `--keep-generations` (standard 2) lar forrige
+  generasjons shards ligge med vilje, slik at en klient som allerede har lest det gamle
+  manifestet fortsatt får sitt shard. Enklest er å la byggeren skrive rett til webroot, som
+  over — da rydder den selv, basert på `{webroot}/data/index/.index-manifest.json`, og rører
+  aldri filer den ikke har skrevet.
+
+### Servering (Caddy)
+
+Filnavnene på shardene er innholdshashet, så de kan caches for alltid. Manifestet er den ene
+fila som endrer innhold under fast navn, og er ~600 B.
+
+```caddyfile
+statistikkportalen.no {
+    root * /sti/til/webroot
+
+    @indexShards path_regexp "^/data/index/.+-[0-9a-f]{8}\.json$"
+    header @indexShards Cache-Control "public, max-age=31536000, immutable"
+
+    @indexManifest path /data/index/catalog-manifest.json
+    header @indexManifest Cache-Control "public, max-age=300, must-revalidate"
+
+    file_server {
+        precompressed br gzip
+    }
+}
+```
+
+`precompressed br gzip` får Caddy til å servere `.br`-tvillingen byggeren allerede har laget
+(brotli kvalitet 11, komprimert én gang på byggetid — null CPU per forespørsel). Caddy setter
+`Content-Encoding` og `Vary` selv. På nginx heter det samme `brotli_static on`, men det krever
+tredjepartsmodulen `ngx_brotli` — den er ikke med i standardpakkene.
+
+### Røyktest etter deploy
+
+```
+curl -sI -H 'Accept-Encoding: br' https://statistikkportalen.no/data/index/catalog-manifest.json
+curl -s  -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}\n' \
+     https://statistikkportalen.no/data/index/<ssb-shard-fra-manifestet>.json
+```
+
+Første skal vise `cache-control: public, max-age=300, must-revalidate`. Andre skal gi ~187 000
+bytes. Får du ~1 800 000, fant ikke serveren `.br`-tvillingen — sjekk at deployen kopierte
+begge filene.
+
+### Overvåking
+
+En cron som slutter å kjøre er den farligste stille feilen her: portalen ser helt frisk ut med
+tre uker gamle tall. Statusbadgen i appen blir gul når indeksen er eldre enn
+`AppConfig.catalogIndex.staleAfterMs` (48 timer), og statuspanelet skriver hvor gammel den er,
+men det forutsetter at noen ser på den. Overvåk exit-koden fra cron-jobben, ikke bare loggen.
 
 ## Systemkrav
 - Moderne nettleser (Chrome, Firefox, Safari, Edge, Vivaldi)
