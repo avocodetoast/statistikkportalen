@@ -28,8 +28,10 @@ node_modules/
 # Git
 .gitignore.local
 # Lokale Claude Code-innstillinger (settings.local.json m.m.).
-# Delte skills og delte innstillinger (permissions + hooks) sjekkes inn;
-# settings.local.json er maskinspesifikk og blir liggende utenfor.
+# Delte skills, delte agent-definisjoner og delte innstillinger
+# (permissions + hooks) sjekkes inn; settings.local.json er
+# maskinspesifikk og blir liggende utenfor.
 .claude/*
 !.claude/skills/
+!.claude/agents/
 !.claude/settings.json
