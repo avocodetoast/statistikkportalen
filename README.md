@@ -186,16 +186,35 @@ statistikkportalen.no {
     @indexManifest path /data/index/catalog-manifest.json
     header @indexManifest Cache-Control "public, max-age=300, must-revalidate"
 
+    encode zstd br gzip
+
     file_server {
         precompressed br gzip
     }
 }
 ```
 
-`precompressed br gzip` får Caddy til å servere `.br`-tvillingen byggeren allerede har laget
-(brotli kvalitet 11, komprimert én gang på byggetid — null CPU per forespørsel). Caddy setter
-`Content-Encoding` og `Vary` selv. På nginx heter det samme `brotli_static on`, men det krever
-tredjepartsmodulen `ngx_brotli` — den er ikke med i standardpakkene.
+De to komprimeringslinjene gjør **hver sin jobb, og dekker hver sine filer** — du trenger begge:
+
+- `precompressed br gzip` får Caddy til å servere `.br`-tvillingen byggeren allerede har laget
+  (brotli kvalitet 11, komprimert én gang på byggetid — null CPU per forespørsel). Den gjelder
+  kun `data/index/`, for det er de eneste filene som har en `.br`-tvilling. `precompressed`
+  komprimerer aldri noe selv: finnes ikke tvillingen, går fila ut rå.
+- `encode zstd br gzip` komprimerer on-the-fly, og er derfor det eneste som dekker `js/`,
+  `css/` og `index.html`. **Utelater du den, serveres 764 KB JavaScript ukomprimert** (39
+  `<script>`-tagger, ~845 KB totalt med CSS og HTML). Med `encode` faller det til ~185 KB.
+  Caddy hopper selv over filer som allerede er dekket av `precompressed`.
+
+Caddy setter `Content-Encoding` og `Vary` selv i begge tilfeller. På nginx heter de to tingene
+`brotli_static on` og `gzip on` — `brotli_static` krever tredjepartsmodulen `ngx_brotli`, som
+ikke er med i standardpakkene, mens `gzip on` er innebygd.
+
+**Minifisering av JS-en er bevisst ikke gjort.** Målt med terser (`--compress --mangle`, ikke
+`--toplevel` — modulene henger på `window`, så toppnivånavn må stå urørt) gir det 169 KB → 70 KB
+brotli. Det er ~100 KB på toppen av de ~660 KB `encode` alene henter, og prisen er et byggesteg
+prosjektet i dag klarer seg uten. Vurderes det på nytt, hører det hjemme i cron-kjeden sammen med
+katalogindeksen — ikke som noe utviklere må kjøre lokalt — og bundling gir mer enn minifisering
+alene, siden 39 forespørsler koster mer enn de siste 100 KB.
 
 ### Røyktest etter deploy
 
@@ -203,11 +222,17 @@ tredjepartsmodulen `ngx_brotli` — den er ikke med i standardpakkene.
 curl -sI -H 'Accept-Encoding: br' https://statistikkportalen.no/data/index/catalog-manifest.json
 curl -s  -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}\n' \
      https://statistikkportalen.no/data/index/<ssb-shard-fra-manifestet>.json
+curl -s  -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}\n' \
+     https://statistikkportalen.no/js/app.js
 ```
 
 Første skal vise `cache-control: public, max-age=300, must-revalidate`. Andre skal gi ~187 000
 bytes. Får du ~1 800 000, fant ikke serveren `.br`-tvillingen — sjekk at deployen kopierte
 begge filene.
+
+Tredje tester `encode`-direktivet, som er en annen feil med et annet symptom: tallet skal være
+klart mindre enn fila på disk (`wc -c js/app.js`). Er de like, komprimeres ikke `js/` — da
+mangler `encode` i serverblokka, og hele appkoden går ut rå.
 
 ### Overvåking
 
