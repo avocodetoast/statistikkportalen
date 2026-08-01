@@ -15,6 +15,13 @@ on:
     # Natt til søndag, 04:15 UTC.
     - cron: '15 4 * * 0'
   workflow_dispatch:
+    inputs:
+      full:
+        description: >-
+          Full regenerering av FHI-katalogen i stedet for inkrementell
+          (~740 kall, ~6 min). Fanger endringer FHI ikke har markert i modifiedAt.
+        type: boolean
+        default: false
 
 concurrency:
   group: refresh-sources
@@ -33,12 +40,26 @@ jobs:
         with:
           node-version: '20'
 
-      # ~30 kall i en normal uke (--incremental henter kun tabeller som er nye
-      # eller endret siden katalogens generatedAt).
+      # Inkrementelt som standard: ~30 kall i en normal uke (henter kun tabeller
+      # som er nye eller endret siden katalogens generatedAt). En full runde er
+      # ~740 kall og kjøres kun når «full» er huket av manuelt — den fanger
+      # endringer FHI ikke har markert i modifiedAt, typisk omskrevne
+      # metadata-sammendrag som tittel-heuristikken utleder titler fra.
+      #
+      # 120 kall/min (2/sek) — FHI dokumenterer ingen grense, så takten er satt
+      # konservativt med vilje.
       - name: FHI-katalog
         id: fhi
         continue-on-error: true
-        run: node scripts/update-fhi-catalog.mjs --incremental
+        env:
+          FULL: ${{ inputs.full }}
+        run: |
+          if [ "$FULL" = "true" ]; then
+            echo "Full regenerering (~740 kall, ~6 min på 120/min)."
+            node scripts/update-fhi-catalog.mjs --rate 120
+          else
+            node scripts/update-fhi-catalog.mjs --incremental --rate 120
+          fi
 
       # ~31 sekvensielle prober à 250 ms mot data.norges-bank.no.
       - name: Norges Bank-perioder
@@ -59,6 +80,21 @@ jobs:
           fi
           if [ "$NB_OUTCOME" = "failure" ]; then
             echo "::warning::NB-periodene ble ikke oppdatert — forrige shard bæres videre."
+          fi
+
+      # lastFullBuildAt arves i det uendelige under --incremental, så uten et
+      # signal her ville ingen noen gang fått vite at det er på tide å huke av
+      # «full». 90 dager er valgt fordi FHI-tabeller endrer struktur sjelden.
+      - name: Sjekk alderen på siste fulle FHI-build
+        run: |
+          read -r last days <<< "$(node -e '
+            const c = JSON.parse(require("fs").readFileSync("data/sources/fhi-catalog.json", "utf8"));
+            const last = c.lastFullBuildAt || c.generatedAt;
+            process.stdout.write(last + " " + Math.round((Date.now() - Date.parse(last)) / 86400000));
+          ')"
+          echo "Siste fulle FHI-build: $last ($days dager siden)" | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ "$days" -gt 90 ]; then
+            echo "::warning::FHI-katalogen har ikke hatt en full regenerering på $days dager — kjør denne workflowen manuelt med «full» huket av."
           fi
 
       - name: Commit endringer

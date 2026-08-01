@@ -163,6 +163,18 @@ To workflows, begge triggbare manuelt fra Actions-fanen:
   kaller `deploy.yml` mot produksjon etterpå — også når ingenting ble committet, siden
   SSB-katalogen endrer seg uavhengig av de to filene.
 
+FHI-katalogen bygges **inkrementelt** som standard: ~30 kall i en normal uke, mot ~740 for en
+full runde. Inkrementelt henter kun tabeller som er nye eller har fått ny `modifiedAt`, så
+endringer FHI gjør uten å bumpe det feltet — typisk omskrevne metadata-sammendrag, som
+tittel-heuristikken utleder titler fra — plukkes aldri opp. Huk av **`full`** ved manuell
+kjøring for å tvinge en full regenerering. Siden `lastFullBuildAt` arves i det uendelige under
+inkrementell drift, logger workflowen alderen på siste fulle build hver gang og advarer etter
+90 dager.
+
+Takten mot FHI er satt til 120 kall/min (2/sek). FHI dokumenterer ingen grense, så tallet er
+konservativt med vilje — en full runde tar da ~6 minutter. NB-probene går sekvensielt med
+250 ms pause og har ingen inkrementell modus; alle 31 kjøres hver gang, på ~8 sekunder.
+
 **Rekkefølgen inne i `deploy.yml` er valgt slik at alt som kan feile skjer før serveren røres.**
 Runneren speiler først ned serverens `data/index/` (~200 KB) — den er både krympe-guardens
 sammenlikningsgrunnlag og byggerens egen oppryddingsliste — bygger indeksen lokalt, og synker
