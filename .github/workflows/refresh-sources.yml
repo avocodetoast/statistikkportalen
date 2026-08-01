@@ -1,0 +1,86 @@
+# Ukentlig oppdatering av byggetids-kildedataene, og deretter utrulling til
+# produksjon.
+#
+# Dette er steg 1-2 i byggekjeden (README.md → «Byggekjeden»). Filene er små,
+# sporede tekstfiler, så de committes tilbake til git: da er git fasit, og en
+# senere kodeutrulling kan aldri rsynce en eldre katalog over en nyere.
+# Serveren commiterer aldri noe — det er runneren som pusher.
+#
+# Steg 3-4 (katalogindeks + SEO-sider) skjer i deploy.yml, som kalles til slutt.
+
+name: Oppdater kildedata
+
+on:
+  schedule:
+    # Natt til søndag, 04:15 UTC.
+    - cron: '15 4 * * 0'
+  workflow_dispatch:
+
+concurrency:
+  group: refresh-sources
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  oppdater:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # ~30 kall i en normal uke (--incremental henter kun tabeller som er nye
+      # eller endret siden katalogens generatedAt).
+      - name: FHI-katalog
+        id: fhi
+        continue-on-error: true
+        run: node scripts/update-fhi-catalog.mjs --incremental
+
+      # ~31 sekvensielle prober à 250 ms mot data.norges-bank.no.
+      - name: Norges Bank-perioder
+        id: nb
+        continue-on-error: true
+        run: node scripts/update-nb-periods.mjs
+
+      # En feilet fremmedkilde skal ikke stoppe utrullingen: byggeren er
+      # feilisolert per kilde og bærer forrige shard videre.
+      - name: Advar om feilede kilder
+        if: steps.fhi.outcome == 'failure' || steps.nb.outcome == 'failure'
+        env:
+          FHI_OUTCOME: ${{ steps.fhi.outcome }}
+          NB_OUTCOME: ${{ steps.nb.outcome }}
+        run: |
+          if [ "$FHI_OUTCOME" = "failure" ]; then
+            echo "::warning::FHI-katalogen ble ikke oppdatert — forrige shard bæres videre."
+          fi
+          if [ "$NB_OUTCOME" = "failure" ]; then
+            echo "::warning::NB-periodene ble ikke oppdatert — forrige shard bæres videre."
+          fi
+
+      - name: Commit endringer
+        run: |
+          if git diff --quiet -- data/sources/; then
+            echo "Ingen endring i data/sources/ — ingenting å committe."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/sources/fhi-catalog.json data/sources/nb-periods.json
+          git commit -m 'Kildedata: ukentlig oppdatering av FHI-katalog og NB-perioder'
+          git push
+          git --no-pager show --stat --oneline HEAD >> "$GITHUB_STEP_SUMMARY"
+
+  # Kjøres også når ingenting ble committet: SSB-katalogen endrer seg uavhengig
+  # av data/sources/, og det er denne utrullingen som holder indeksen fersk
+  # (statusbadgen blir gul etter 48 timer).
+  deploy:
+    needs: oppdater
+    uses: ./.github/workflows/deploy.yml
+    with:
+      target: production
+      rebuild_index: true
+    secrets: inherit

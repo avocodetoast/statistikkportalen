@@ -1,0 +1,258 @@
+# Utrulling av Statistikkportalen til staging eller produksjon.
+#
+# Rekkefølgen er valgt slik at ALT som kan feile skjer før serveren røres:
+# katalogindeksen bygges på runneren (mot serverens nåværende indeks som
+# baseline for krympe-guarden), og først når den er bygget synkes noe opp.
+# Feiler bygget, står serveren urørt.
+#
+# SEO-generatoren kjøres derimot på serveren: den beriker tabellsidene fra
+# data/table-metadata/, som er gitignorert, bor kun på serveren, og bruker
+# ~8,5 time rate-limitet på en kald nedlasting.
+#
+# Se README.md → «Drift og deploy» for hemmeligheter, miljøer og serverkrav.
+
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Miljø
+        type: choice
+        options: [staging, production]
+        required: true
+      rebuild_index:
+        description: Bygg katalogindeksen på nytt (av = kun kode + SEO-sider)
+        type: boolean
+        default: true
+      ref:
+        description: Git-ref å rulle ut (tom = branchen workflowen startes fra)
+        type: string
+        required: false
+        default: ''
+  workflow_call:
+    inputs:
+      target:
+        type: string
+        required: true
+      rebuild_index:
+        type: boolean
+        required: false
+        default: true
+      ref:
+        type: string
+        required: false
+        default: ''
+
+# To samtidige utrullinger mot samme webroot må aldri skje. Ingen avbryting
+# underveis — en halvkjørt deploy er verre enn å vente.
+concurrency:
+  group: deploy-${{ inputs.target }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.target }}
+    env:
+      TARGET: ${{ inputs.target }}
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      # -o IdentitiesOnly: ikke prøv agent-nøkler. BatchMode: aldri spør om passord.
+      SSH_OPTS: -i /home/runner/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes
+
+    steps:
+      - name: Miljøvariabler for målet
+        run: |
+          case "$TARGET" in
+            staging)
+              echo "REMOTE_DIR=statistikkportalen-staging" >> "$GITHUB_ENV"
+              echo "SITE_URL=https://staging.statistikkportalen.no" >> "$GITHUB_ENV"
+              ;;
+            production)
+              echo "REMOTE_DIR=statistikkportalen" >> "$GITHUB_ENV"
+              echo "SITE_URL=https://statistikkportalen.no" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "::error::Ukjent target «$TARGET» — bruk staging eller production."
+              exit 1
+              ;;
+          esac
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: SSH-oppsett
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          if [ -z "$SSH_PRIVATE_KEY" ] || [ -z "$SSH_KNOWN_HOSTS" ] || [ -z "$SSH_HOST" ]; then
+            echo "::error::SSH_PRIVATE_KEY, SSH_KNOWN_HOSTS og SSH_HOST må være satt som repo-hemmeligheter."
+            exit 1
+          fi
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Vertsnøkkelen pinnes — aldri StrictHostKeyChecking=no.
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          ssh $SSH_OPTS "$SSH_HOST" 'echo "Tilkoblet $(hostname). node: $(node -v 2>/dev/null || echo MANGLER)"'
+
+      # Serverens indeksmappe speiles ned først. Den er både krympe-guardens
+      # sammenlikningsgrunnlag (catalog-manifest.json) og byggerens egen
+      # oppryddingsliste for --keep-generations (.index-manifest.json).
+      - name: Hent indeks-baseline fra serveren
+        if: ${{ inputs.rebuild_index }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/webroot/data/index"
+          if ssh $SSH_OPTS "$SSH_HOST" "test -d '$REMOTE_DIR/data/index'"; then
+            rsync -az --info=stats1 -e "ssh $SSH_OPTS" \
+              "$SSH_HOST:$REMOTE_DIR/data/index/" "$RUNNER_TEMP/webroot/data/index/"
+            echo "Baseline:"
+            ls -1 "$RUNNER_TEMP/webroot/data/index/"
+          else
+            echo "::warning::Ingen data/index/ på serveren ennå — bygger uten krympe-guard-baseline (førstegangsutrulling?)."
+          fi
+
+      # Feiler SSB-hentingen, gir den færre enn --min-tables rader, eller slår
+      # krympe-guarden til: exit != 0 og null filer skrevet. Jobben stopper her,
+      # med serveren fullstendig urørt.
+      - name: Bygg katalogindeksen
+        if: ${{ inputs.rebuild_index }}
+        run: node scripts/build-catalog-index.mjs --webroot "$RUNNER_TEMP/webroot" | tee "$RUNNER_TEMP/katalog.log"
+
+      # data/index/ MÅ ekskluderes: den innsjekkede kopien i repoet er en
+      # testfixture (83 SSB-rader), ikke en produksjonsindeks. Uten denne
+      # excluden overskriver hver deploy produksjonsindeksen med fixture-data.
+      # data/table-metadata/ er gitignorert og bor kun på serveren.
+      # Ingen --delete: webroot inneholder genererte SEO-sider, og generatoren
+      # rydder selv etter sitt eget .seo-manifest.json.
+      - name: Synk kode til serveren
+        run: |
+          rsync -az --human-readable --stats -e "ssh $SSH_OPTS" \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude '.claude/' \
+            --exclude 'node_modules/' \
+            --exclude 'tests/' \
+            --exclude 'data/index/' \
+            --exclude 'data/table-metadata/' \
+            ./ "$SSH_HOST:$REMOTE_DIR/"
+
+      # TRE PASS, og rekkefølgen er hele poenget. Byggeren garanterer at
+      # manifestet skrives SIST, slik at en leser aldri ser et manifest som
+      # peker på en fil som ikke finnes — men rsync overfører alfabetisk, og
+      # «catalog-manifest.json» kommer før både fhi-, nb- og ssb-shardene.
+      # Ett enkelt rsync ville altså brutt nøyaktig den garantien.
+      #
+      # Både .json og .json.br følger med — glipper .br-tvillingen serveres
+      # 1,76 MB i stedet for 183 KB.
+      - name: Synk katalogindeksen til serveren
+        if: ${{ inputs.rebuild_index }}
+        run: |
+          src="$RUNNER_TEMP/webroot/data/index/"
+          dst="$SSH_HOST:$REMOTE_DIR/data/index/"
+
+          # 1) Nye shards opp. Det gamle manifestet står ennå og peker på de
+          #    gamle shardene, som fortsatt ligger der.
+          rsync -az --info=stats1 -e "ssh $SSH_OPTS" \
+            --exclude 'catalog-manifest.json' "$src" "$dst"
+
+          # 2) Manifestet flippes — rsync skriver tmp+rename, så byttet er atomisk.
+          rsync -az -e "ssh $SSH_OPTS" \
+            "$RUNNER_TEMP/webroot/data/index/catalog-manifest.json" "$dst"
+
+          # 3) Rydd. Runnerkatalogen er serverens mappe speilet ned, pluss den nye
+          #    generasjonen, minus det byggeren selv pruget — altså nøyaktig de
+          #    generasjonene --keep-generations (standard 2) skal beholde. Uten
+          #    --delete hoper gamle shards seg opp på serveren for alltid.
+          rsync -az --delete --info=stats1 -e "ssh $SSH_OPTS" "$src" "$dst"
+
+      - name: Generer SEO-sider på serveren
+        run: |
+          ssh $SSH_OPTS "$SSH_HOST" \
+            "cd '$REMOTE_DIR' && node scripts/generate-seo-pages.mjs --webroot . --site '$SITE_URL'"
+
+      - name: Tøm Cloudflare-cachen
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ZONE_ID: ${{ vars.CF_ZONE_ID }}
+        run: |
+          if [ -z "$CF_API_TOKEN" ] || [ -z "$CF_ZONE_ID" ]; then
+            echo "::warning::CF_API_TOKEN eller CF_ZONE_ID mangler — cachen ble ikke tømt."
+            exit 0
+          fi
+          response=$(curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/purge_cache" \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}')
+          if echo "$response" | grep -q '"success":true'; then
+            echo "Cloudflare-cachen tømt."
+          else
+            # Sida er ute — en feilet purge skal ikke gjøre utrullingen rød.
+            echo "::warning::Cache-purge feilet: $response"
+          fi
+
+      # De tre sjekkene fra README → «Røyktest etter deploy», som faktiske steg.
+      # Feiler én av dem er serverkonfigurasjonen gal selv om filene ligger der.
+      - name: Røyktest
+        run: |
+          fail=0
+
+          # 1) Manifestet er den ene fila som endrer innhold under fast navn.
+          headers=$(curl -sSI "$SITE_URL/data/index/catalog-manifest.json")
+          echo "$headers"
+          if ! echo "$headers" | grep -qi 'max-age=300'; then
+            echo "::error::catalog-manifest.json mangler cache-control max-age=300 — sjekk header-direktivet i serverblokka."
+            fail=1
+          fi
+
+          # 2) precompressed: serveres .br-tvillingen til indeks-shardet?
+          shard=$(curl -sS "$SITE_URL/data/index/catalog-manifest.json" \
+            | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const m=JSON.parse(s);const e=(m.shards||[]).find(x=>x.source==="ssb")||(m.shards||[])[0];process.stdout.write(e?e.file:"")})')
+          if [ -z "$shard" ]; then
+            echo "::error::Fant ikke noe shard i catalog-manifest.json."
+            fail=1
+          else
+            url="$SITE_URL/data/index/$shard"
+            raw=$(curl -sS -H 'Accept-Encoding: identity' -o /dev/null -w '%{size_download}' "$url")
+            br=$(curl -sS -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}' "$url")
+            echo "Shard $shard: $raw B rå, $br B med brotli"
+            if [ "$br" -ge "$((raw / 2))" ]; then
+              echo "::error::Indeks-shardet serveres ukomprimert — serveren fant ikke .br-tvillingen (mangler «precompressed br gzip»?)."
+              fail=1
+            fi
+          fi
+
+          # 3) encode: dekker js/, css/ og index.html — en annen feil med et annet symptom.
+          raw=$(curl -sS -H 'Accept-Encoding: identity' -o /dev/null -w '%{size_download}' "$SITE_URL/js/app.js")
+          br=$(curl -sS -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}' "$SITE_URL/js/app.js")
+          echo "js/app.js: $raw B rå, $br B komprimert"
+          if [ "$br" -ge "$((raw / 2))" ]; then
+            echo "::error::js/app.js komprimeres ikke — «encode» mangler i serverblokka, og hele appkoden går ut rå."
+            fail=1
+          fi
+
+          exit $fail
+
+      - name: Oppsummering
+        if: always()
+        run: |
+          {
+            echo "## Deploy: $TARGET"
+            echo ""
+            echo "- Site: $SITE_URL"
+            echo "- Ref: \`${{ inputs.ref || github.ref }}\` (\`${{ github.sha }}\`)"
+            echo "- Katalogindeks bygget: ${{ inputs.rebuild_index }}"
+            if [ -f "$RUNNER_TEMP/katalog.log" ]; then
+              echo ""
+              echo '```'
+              grep -E 'rader' "$RUNNER_TEMP/katalog.log" || true
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

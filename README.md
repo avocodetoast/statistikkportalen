@@ -133,16 +133,60 @@ appen laster og de statiske SEO-sidene — bygges dermed fra ett og samme øyebl
 kildene og kan aldri bli uenige om hvilke tabeller som finnes. `build-catalog-index.mjs` må ha
 kjørt minst én gang mot webroot før generatoren kan kjøre i det hele tatt.
 
-Som cron-jobb (ukentlig, natt til søndag). `&&` mellom stegene er ikke kosmetikk — se
-feilhåndtering under:
+Kjeden kjøres av GitHub Actions, ikke av en cron på serveren, og de fire stegene har hver sin
+eier:
+
+| Steg | Hvor | Når |
+|---|---|---|
+| 1-2 `update-fhi-catalog` / `update-nb-periods` | runneren, resultatet committes | `refresh-sources.yml`, ukentlig |
+| 3 `build-catalog-index` | runneren, resultatet rsynces opp | `deploy.yml`, hver utrulling |
+| 4 `generate-seo-pages` | serveren, over SSH | `deploy.yml`, hver utrulling |
+| `update-table-metadata` | serveren, egen cron | månedlig |
+
+`data/table-metadata/` er den ene tingen som fortsatt eier en cron på serveren. En kald kjøring
+er ~10 000 tabeller rate-limitet til 20 kall/min, altså ~8,5 time — det hører ikke hjemme i en
+Actions-jobb med 6 timers tak:
 
 ```
-15 4 * * 0 cd /sti/til/repo && \
-  node scripts/update-fhi-catalog.mjs --incremental >> catalog.log 2>&1 && \
-  node scripts/update-nb-periods.mjs >> catalog.log 2>&1 && \
-  node scripts/build-catalog-index.mjs --webroot /sti/til/webroot >> catalog.log 2>&1 && \
-  node scripts/generate-seo-pages.mjs --webroot /sti/til/webroot --site https://statistikkportalen.no >> seo-gen.log 2>&1
+0 3 1 * * cd ~/statistikkportalen && node scripts/update-table-metadata.mjs >> table-metadata.log 2>&1
 ```
+
+### Utrulling (GitHub Actions)
+
+To workflows, begge triggbare manuelt fra Actions-fanen:
+
+- **`deploy.yml`** — velg miljø (`staging` eller `production`). Ruller ut kode, bygger
+  katalogindeksen og genererer SEO-sidene. Skru av `rebuild_index` for en ren kodeutrulling
+  uten å vente på en full SSB-henting.
+- **`refresh-sources.yml`** — ukentlig (natt til søndag, 04:15 UTC) og manuelt. Oppdaterer
+  `data/sources/fhi-catalog.json` og `nb-periods.json`, committer dem hvis de endret seg, og
+  kaller `deploy.yml` mot produksjon etterpå — også når ingenting ble committet, siden
+  SSB-katalogen endrer seg uavhengig av de to filene.
+
+**Rekkefølgen inne i `deploy.yml` er valgt slik at alt som kan feile skjer før serveren røres.**
+Runneren speiler først ned serverens `data/index/` (~200 KB) — den er både krympe-guardens
+sammenlikningsgrunnlag og byggerens egen oppryddingsliste — bygger indeksen lokalt, og synker
+først da opp. Slår en guard til, står serveren fullstendig urørt.
+
+SEO-generatoren kjøres derimot på serveren. Den beriker tabellsidene fra
+`data/table-metadata/`, som er gitignorert og kun finnes der.
+
+Hemmeligheter og variabler som må finnes i repoet:
+
+| Navn | Sted | Innhold |
+|---|---|---|
+| `SSH_HOST` | repo-hemmelighet | `bruker@vert` |
+| `SSH_PRIVATE_KEY` | repo-hemmelighet | egen deploy-nøkkel, ikke en personlig nøkkel |
+| `SSH_KNOWN_HOSTS` | repo-hemmelighet | output fra `ssh-keyscan <vert>` — vertsnøkkelen pinnes |
+| `CF_API_TOKEN` | repo-hemmelighet | Cloudflare-token med purge-rettighet |
+| `CF_ZONE_ID` | variabel per environment | sone-ID for `staging` hhv. `production` |
+
+Miljøene `staging` og `production` må opprettes under Settings → Environments (det er der
+`CF_ZONE_ID` bor, og der du eventuelt legger på en godkjenningsregel for produksjon).
+
+Serveren må ha Node 18+ tilgjengelig i en **ikke-interaktiv** SSH-shell — `ssh vert 'node -v'`
+må svare. nvm settes typisk kun opp i interaktive shell; svarer den ikke, må absolutt sti til
+`node` brukes i `deploy.yml`. Port 22 må være åpen for GitHub-hostede runnere.
 
 ### Feilhåndtering
 
@@ -152,24 +196,38 @@ feilhåndtering under:
 - krympe-guarden slår til: et shard er mer enn `--max-shrink` % (standard 10) mindre enn det
   som allerede ligger i webroot — fanger en avkortet, men HTTP 200, katalog
 
-Deploy-scriptet **må stoppe der**, ikke gå videre til SEO-steget: ellers bygges sidene mot en
-indeks som ikke ble oppdatert. En fremmed kilde (NB/FHI) som feiler er derimot feilisolert —
-forrige shard bæres videre og kjøringen lykkes.
+Siden indeksen bygges på runneren, slår begge guardene til **før** noen fil er rørt på serveren:
+jobben stopper, ingenting synkes opp, og SEO-steget kjøres ikke — det siste er poenget, ellers
+bygges sidene mot en indeks som ikke ble oppdatert. En fremmed kilde (NB/FHI) som feiler er
+derimot feilisolert — forrige shard bæres videre og kjøringen lykkes.
 
 Byggeren skriver aldri en halv indeks over en god: alle shards bygges ferdig i minnet, filene
 skrives med tmp+rename, og **manifestet skrives sist**. En leser som løper kappløp med byggeren
 ser derfor enten det gamle manifestet (gamle shards ligger der ennå) eller det nye — aldri et
 manifest som peker på en fil som ikke finnes.
 
+Den garantien må kopieringen til serveren opprettholde, og det gjør den ikke av seg selv: rsync
+overfører alfabetisk, og `catalog-manifest.json` kommer før `fhi-`, `nb-` og `ssb-`-shardene.
+`deploy.yml` synker derfor indeksen i **tre pass** — shards først (`--exclude
+catalog-manifest.json`), så manifestet alene, så et opprydningspass med `--delete`. Ett enkelt
+rsync ville brutt nøyaktig den garantien byggeren jobber for.
+
 ### Filkopiering
 
 - **`.json` og `.json.br` må begge med.** Bare `.json` betyr at du serverer 1,76 MB i stedet
   for 183 KB.
-- **Ikke `rsync --delete` mot `data/index/`.** `--keep-generations` (standard 2) lar forrige
-  generasjons shards ligge med vilje, slik at en klient som allerede har lest det gamle
-  manifestet fortsatt får sitt shard. Enklest er å la byggeren skrive rett til webroot, som
-  over — da rydder den selv, basert på `{webroot}/data/index/.index-manifest.json`, og rører
-  aldri filer den ikke har skrevet.
+- **`data/index/` må ekskluderes fra kode-rsyncen.** Kopien som ligger i git er en *testfixture*
+  (SSB-shardet har 83 rader, og `tests/unit/catalog-index-load.test.js` asserter mot den) — ikke
+  en produksjonsindeks. Uten den excluden overskriver hver utrulling den ekte indeksen med
+  fixture-data.
+- **`data/table-metadata/` må også ekskluderes.** Den er gitignorert og bor kun på serveren.
+- **Ingen `--delete` mot webroot.** Der ligger de genererte SEO-sidene; generatoren rydder selv
+  etter sitt eget `.seo-manifest.json`.
+- **`--delete` brukes kun på siste pass av `data/index/`-synken, og der er den nødvendig.** Runnerens
+  indeksmappe er serverens mappe speilet ned, pluss den nye generasjonen, minus det byggeren
+  selv pruget — altså nøyaktig de generasjonene `--keep-generations` (standard 2) skal beholde,
+  så en klient som allerede har lest det gamle manifestet fortsatt får sitt shard. Uten
+  `--delete` ville gamle shards hopet seg opp på serveren for alltid.
 
 ### Servering (Caddy)
 
@@ -218,6 +276,9 @@ alene, siden 39 forespørsler koster mer enn de siste 100 KB.
 
 ### Røyktest etter deploy
 
+`deploy.yml` kjører disse tre automatisk som siste steg og feiler jobben hvis én av dem ikke
+holder — de står her for manuell feilsøking:
+
 ```
 curl -sI -H 'Accept-Encoding: br' https://statistikkportalen.no/data/index/catalog-manifest.json
 curl -s  -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}\n' \
@@ -236,10 +297,19 @@ mangler `encode` i serverblokka, og hele appkoden går ut rå.
 
 ### Overvåking
 
-En cron som slutter å kjøre er den farligste stille feilen her: portalen ser helt frisk ut med
+En jobb som slutter å kjøre er den farligste stille feilen her: portalen ser helt frisk ut med
 tre uker gamle tall. Statusbadgen i appen blir gul når indeksen er eldre enn
 `AppConfig.catalogIndex.staleAfterMs` (48 timer), og statuspanelet skriver hvor gammel den er,
-men det forutsetter at noen ser på den. Overvåk exit-koden fra cron-jobben, ikke bare loggen.
+men det forutsetter at noen ser på den.
+
+GitHub varsler på e-post når en schedulert workflow feiler, men **ikke** når den slutter å
+kjøre — Actions deaktiverer schedulerte workflows automatisk i repoer uten aktivitet på 60
+dager. Sjekk derfor `generatedAt` i `catalog-manifest.json` med jevne mellomrom, ikke bare
+kjørelogger:
+
+```
+curl -s https://statistikkportalen.no/data/index/catalog-manifest.json | grep generatedAt
+```
 
 ## Systemkrav
 - Moderne nettleser (Chrome, Firefox, Safari, Edge, Vivaldi)
