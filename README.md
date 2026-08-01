@@ -244,7 +244,7 @@ statistikkportalen.no {
     @indexManifest path /data/index/catalog-manifest.json
     header @indexManifest Cache-Control "public, max-age=300, must-revalidate"
 
-    encode zstd br gzip
+    encode zstd gzip
 
     file_server {
         precompressed br gzip
@@ -258,14 +258,30 @@ De to komprimeringslinjene gjør **hver sin jobb, og dekker hver sine filer** �
   (brotli kvalitet 11, komprimert én gang på byggetid — null CPU per forespørsel). Den gjelder
   kun `data/index/`, for det er de eneste filene som har en `.br`-tvilling. `precompressed`
   komprimerer aldri noe selv: finnes ikke tvillingen, går fila ut rå.
-- `encode zstd br gzip` komprimerer on-the-fly, og er derfor det eneste som dekker `js/`,
+- `encode zstd gzip` komprimerer on-the-fly, og er derfor det eneste som dekker `js/`,
   `css/` og `index.html`. **Utelater du den, serveres 764 KB JavaScript ukomprimert** (39
-  `<script>`-tagger, ~845 KB totalt med CSS og HTML). Med `encode` faller det til ~185 KB.
-  Caddy hopper selv over filer som allerede er dekket av `precompressed`.
+  `<script>`-tagger, ~845 KB totalt med CSS og HTML). Med `encode` faller det til ~220 KB med
+  gzip, ~185 KB for nettlesere som støtter zstd. Caddy hopper selv over filer som allerede er
+  dekket av `precompressed`.
+
+**Skriv aldri `br` i `encode`-linja.** Standard Caddy — inkludert det offisielle
+`caddy:latest`-imaget — har ingen brotli-*encoder*; den krever en plugin bygget inn med xcaddy.
+Direktivet parser ikke, og Caddy nekter å starte i det hele tatt:
+
+```
+Error: adapting config using caddyfile: parsing caddyfile tokens for 'encode':
+finding encoder module '': module not registered: http.encoders.br
+```
+
+Ligger flere vhoster i samme Caddyfile, tar den feilen ned alle sammen samtidig. `precompressed
+br gzip` er derimot en **annen modul** (`http.precompressed.br`) som *er* med i standardbygget —
+å servere ferdigkomprimerte `.br`-filer virker fint. Det er kun komprimering i sanntid som
+mangler.
 
 Caddy setter `Content-Encoding` og `Vary` selv i begge tilfeller. På nginx heter de to tingene
 `brotli_static on` og `gzip on` — `brotli_static` krever tredjepartsmodulen `ngx_brotli`, som
-ikke er med i standardpakkene, mens `gzip on` er innebygd.
+ikke er med i standardpakkene, mens `gzip on` er innebygd. Mønsteret er altså det samme i begge
+serverne: statisk brotli er gratis, brotli i sanntid koster en modul.
 
 **Minifisering av JS-en er bevisst ikke gjort.** Målt med terser (`--compress --mangle`, ikke
 `--toplevel` — modulene henger på `window`, så toppnivånavn må stå urørt) gir det 169 KB → 70 KB
