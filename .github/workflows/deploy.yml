@@ -78,11 +78,11 @@ jobs:
               ;;
           esac
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.ref || github.ref }}
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '20'
 
@@ -212,7 +212,11 @@ jobs:
             fail=1
           fi
 
-          # 2) precompressed: serveres .br-tvillingen til indeks-shardet?
+          # 2) Indeks-shardet skal ikke gå ut rått.
+          #    NB: står nettstedet bak Cloudflare, komprimerer edgen selv, og denne
+          #    testen kan da IKKE skille «precompressed serverer .br-tvillingen» fra
+          #    «origin sendte rått, Cloudflare pakket det inn». Se README →
+          #    «Røyktest etter deploy» for hvordan man måler origin direkte.
           shard=$(curl -sS "$SITE_URL/data/index/catalog-manifest.json" \
             | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const m=JSON.parse(s);const e=(m.shards||[]).find(x=>x.source==="ssb")||(m.shards||[])[0];process.stdout.write(e?e.file:"")})')
           if [ -z "$shard" ]; then
@@ -224,17 +228,23 @@ jobs:
             br=$(curl -sS -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}' "$url")
             echo "Shard $shard: $raw B rå, $br B med brotli"
             if [ "$br" -ge "$((raw / 2))" ]; then
-              echo "::error::Indeks-shardet serveres ukomprimert — serveren fant ikke .br-tvillingen (mangler «precompressed br gzip»?)."
+              echo "::error::Indeks-shardet serveres ukomprimert — verken .br-tvillingen eller on-the-fly-komprimering slo til."
               fail=1
             fi
           fi
 
-          # 3) encode: dekker js/, css/ og index.html — en annen feil med et annet symptom.
-          raw=$(curl -sS -H 'Accept-Encoding: identity' -o /dev/null -w '%{size_download}' "$SITE_URL/js/app.js")
-          br=$(curl -sS -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}' "$SITE_URL/js/app.js")
-          echo "js/app.js: $raw B rå, $br B komprimert"
-          if [ "$br" -ge "$((raw / 2))" ]; then
-            echo "::error::js/app.js komprimeres ikke — «encode» mangler i serverblokka, og hele appkoden går ut rå."
+          # 3) encode-direktivet, som er en annen feil med et annet symptom.
+          #    index.html er den eneste fila som garantert finnes uansett hvordan
+          #    js/ og css/ heter, og den dekkes kun av «encode» — den har ingen
+          #    .br-tvilling og treffes aldri av «precompressed».
+          raw=$(curl -sS -H 'Accept-Encoding: identity' -o /dev/null -w '%{size_download}' "$SITE_URL/index.html")
+          br=$(curl -sS -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}' "$SITE_URL/index.html")
+          echo "index.html: $raw B rå, $br B komprimert"
+          if [ "$raw" -eq 0 ]; then
+            echo "::error::index.html svarte tomt eller 404 — utrullingen traff ikke webroot."
+            fail=1
+          elif [ "$br" -ge "$((raw / 2))" ]; then
+            echo "::error::index.html komprimeres ikke — «encode» mangler i serverblokka, og hele appkoden går ut rå."
             fail=1
           fi
 

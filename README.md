@@ -284,16 +284,29 @@ curl -sI -H 'Accept-Encoding: br' https://statistikkportalen.no/data/index/catal
 curl -s  -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}\n' \
      https://statistikkportalen.no/data/index/<ssb-shard-fra-manifestet>.json
 curl -s  -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}\n' \
-     https://statistikkportalen.no/js/app.js
+     https://statistikkportalen.no/index.html
 ```
 
-Første skal vise `cache-control: public, max-age=300, must-revalidate`. Andre skal gi ~187 000
-bytes. Får du ~1 800 000, fant ikke serveren `.br`-tvillingen — sjekk at deployen kopierte
-begge filene.
+Første skal vise `cache-control: public, max-age=300, must-revalidate`. Er headeren helt
+fraværende, mangler `header @indexManifest`-blokka i serverkonfigurasjonen.
 
-Tredje tester `encode`-direktivet, som er en annen feil med et annet symptom: tallet skal være
-klart mindre enn fila på disk (`wc -c js/app.js`). Er de like, komprimeres ikke `js/` — da
-mangler `encode` i serverblokka, og hele appkoden går ut rå.
+Andre skal gi ~187 000 bytes mot ~1 800 000 rå. Nummer tre tester `encode`-direktivet, som er
+en annen feil med et annet symptom: `index.html` er den eneste fila som garantert finnes og som
+kun `encode` dekker (aldri `precompressed`, den har ingen `.br`-tvilling). Er tallet like stort
+som fila på disk, komprimeres ingenting — da mangler `encode` i serverblokka, og hele appkoden
+går ut rå.
+
+**Står nettstedet bak Cloudflare, måler ikke test to det du tror.** Cloudflare komprimerer selv
+på vei ut, så et shard ser komprimert ut selv om origin sendte det rått og `precompressed`
+mangler. Symptomet er at tallet er merkbart *større* enn de ~187 000 byggeren rapporterte
+(Cloudflares brotli er raskere og svakere enn byggerens kvalitet 11). Vil du måle origin, må du
+gå utenom edgen:
+
+```
+curl -s --resolve statistikkportalen.no:443:<origin-ip> \
+     -H 'Accept-Encoding: br' -o /dev/null -w '%{size_download}\n' \
+     https://statistikkportalen.no/data/index/<ssb-shard>.json
+```
 
 ### Overvåking
 
