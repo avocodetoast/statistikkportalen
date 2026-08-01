@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-25T10:00:09.037Z",
-  "lastFullBuildAt": "2026-07-18T16:06:01.479Z",
+  "generatedAt": "2026-08-01T07:37:28.059Z",
+  "lastFullBuildAt": "2026-08-01T07:37:28.059Z",
   "sources": {
     "nokkel": {
       "title": "Folkehelsestatistikk",
@@ -41,7 +41,7 @@
             "Verdensdel",
             "Måltall"
           ],
-          "updated": "2026-02-06T14:57:46.6586Z",
+          "updated": "2026-07-27T07:07:31.838654Z",
           "category": "befolkning"
         },
         {
@@ -60,7 +60,7 @@
             "Utdanningsnivå",
             "Måltall"
           ],
-          "updated": "2026-04-16T06:59:07.075606Z",
+          "updated": "2026-07-27T07:04:55.309737Z",
           "category": "levekaar"
         },
         {
@@ -78,7 +78,7 @@
             "Alder",
             "Måltall"
           ],
-          "updated": "2025-10-21T08:56:39.806397Z",
+          "updated": "2026-07-27T07:17:08.683673Z",
           "category": "befolkning"
         },
         {
@@ -96,7 +96,7 @@
             "Eierstatus",
             "Måltall"
           ],
-          "updated": "2025-12-08T09:24:12.660858Z",
+          "updated": "2026-07-27T08:07:15.833343Z",
           "category": "levekaar"
         },
         {
@@ -113,7 +113,7 @@
             "Alder",
             "Måltall"
           ],
-          "updated": "2025-12-08T09:10:42.87317Z",
+          "updated": "2026-07-27T07:13:28.169331Z",
           "category": "levekaar"
         },
         {
@@ -152,7 +152,7 @@
             "Legemiddelgruppe",
             "Måltall"
           ],
-          "updated": "2024-11-04T19:48:29.225776Z",
+          "updated": "2026-07-27T12:05:18.864446Z",
           "category": "miljo"
         },
         {
@@ -171,7 +171,7 @@
             "Stønadslengde",
             "Måltall"
           ],
-          "updated": "2026-02-10T09:44:35.054664Z",
+          "updated": "2026-07-27T07:53:52.229102Z",
           "category": "oppvekst"
         },
         {
@@ -188,7 +188,7 @@
             "Oppfyller norm",
             "Måltall"
           ],
-          "updated": "2026-06-09T08:26:08.061722Z",
+          "updated": "2026-07-27T08:24:33.687013Z",
           "category": "oppvekst"
         },
         {
@@ -206,7 +206,7 @@
             "ALDER",
             "Måltall"
           ],
-          "updated": "2026-03-24T09:13:05.651799Z",
+          "updated": "2026-07-27T09:13:26.813927Z",
           "category": "oppvekst"
         },
         {
@@ -224,7 +224,7 @@
             "Alder",
             "Måltall"
           ],
-          "updated": "2026-06-18T13:08:43.141834Z",
+          "updated": "2026-07-27T07:01:28.792087Z",
           "category": "befolkning"
         },
         {
@@ -262,7 +262,7 @@
             "Forsyningskvalitet",
             "Måltall"
           ],
-          "updated": "2026-01-12T08:32:55.070566Z",
+          "updated": "2026-07-27T09:21:44.389612Z",
           "category": "miljo"
         },
         {
@@ -281,7 +281,7 @@
             "Dødsårsak",
             "Måltall"
           ],
-          "updated": "2026-04-15T12:34:52.543381Z",
+          "updated": "2026-07-27T11:57:42.897635Z",
           "category": "helsetilstand"
         },
         {
@@ -300,7 +300,7 @@
             "Dødsårsaker",
             "Måltall"
           ],
-          "updated": "2026-01-12T09:40:55.35502Z",
+          "updated": "2026-07-27T11:31:38.594806Z",
           "category": "helsetilstand"
         },
         {
@@ -319,7 +319,7 @@
             "Dødsårsak",
             "Måltall"
           ],
-          "updated": "2026-01-12T09:39:58.096601Z",
+          "updated": "2026-07-27T11:42:36.77717Z",
           "category": "helsetilstand"
         },
         {
@@ -338,7 +338,7 @@
             "Dødsårsak",
             "Måltall"
           ],
-          "updated": "2026-01-12T09:39:32.447779Z",
+          "updated": "2026-07-27T10:29:50.567836Z",
           "category": "helsetilstand"
         },
         {
@@ -355,7 +355,7 @@
             "Kjønn",
             "Måltall"
           ],
-          "updated": "2026-03-09T08:48:17.960139Z",
+          "updated": "2026-07-27T07:56:29.670641Z",
           "category": "oppvekst"
         },
         {
@@ -414,7 +414,7 @@
             "svommeferd.",
             "Måltall"
           ],
-          "updated": "2026-05-06T11:41:16.069306Z",
+          "updated": "2026-07-27T10:15:04.730491Z",
           "category": "levevaner"
         },
         {
@@ -433,7 +433,7 @@
             "svommeferd",
             "Måltall"
           ],
-          "updated": "2026-02-16T13:58:22.362566Z",
+          "updated": "2026-07-27T10:10:35.68376Z",
           "category": "levevaner"
         },
         {
@@ -452,7 +452,7 @@
             "Hyppighet av trening",
             "Måltall"
           ],
-          "updated": "2026-04-20T11:26:50.704543Z",
+          "updated": "2026-07-27T10:36:55.883577Z",
           "category": "levevaner"
         },
         {
@@ -471,7 +471,7 @@
             "Hyppighet av trening",
             "Måltall"
           ],
-          "updated": "2026-01-20T09:19:15.088638Z",
+          "updated": "2026-07-27T10:32:33.542973Z",
           "category": "levevaner"
         },
         {
@@ -549,7 +549,7 @@
             "Alder",
             "Måltall"
           ],
-          "updated": "2025-02-26T11:51:11.007021Z",
+          "updated": "2026-07-27T07:30:38.676997Z",
           "category": "levekaar"
         },
         {
@@ -568,7 +568,7 @@
             "Innvandringsbakgrunn",
             "Måltall"
           ],
-          "updated": "2026-05-06T12:58:32.461112Z",
+          "updated": "2026-07-27T09:09:17.604202Z",
           "category": "oppvekst"
         },
         {
@@ -587,7 +587,7 @@
             "Innvandringsbakgrunn",
             "Måltall"
           ],
-          "updated": "2026-05-06T12:59:06.542166Z",
+          "updated": "2026-07-27T09:06:37.209366Z",
           "category": "oppvekst"
         },
         {
@@ -606,7 +606,7 @@
             "Innvandringsbakgrunn",
             "Måltall"
           ],
-          "updated": "2026-05-06T13:09:17.757726Z",
+          "updated": "2026-07-27T08:57:45.97682Z",
           "category": "oppvekst"
         },
         {
@@ -625,7 +625,7 @@
             "Innvandringsbakgrunn",
             "Måltall"
           ],
-          "updated": "2026-05-06T13:08:27.211865Z",
+          "updated": "2026-07-27T09:00:27.605487Z",
           "category": "oppvekst"
         },
         {
@@ -699,7 +699,7 @@
             "År",
             "Måltall"
           ],
-          "updated": "2026-02-06T09:20:40.904633Z",
+          "updated": "2026-07-27T07:27:50.698673Z",
           "category": "levekaar"
         },
         {
@@ -718,7 +718,7 @@
             "KMI-kategori",
             "Måltall"
           ],
-          "updated": "2026-06-24T07:55:04.688804Z",
+          "updated": "2026-07-27T12:01:20.712Z",
           "category": "helsetilstand"
         },
         {
@@ -737,7 +737,7 @@
             "Krefttyper",
             "Måltall"
           ],
-          "updated": "2026-06-26T08:40:33.412229Z",
+          "updated": "2026-07-27T11:39:22.496473Z",
           "category": "helsetilstand"
         },
         {
@@ -756,7 +756,7 @@
             "Sykdomsgruppe",
             "Måltall"
           ],
-          "updated": "2026-04-20T11:28:55.310863Z",
+          "updated": "2026-07-27T11:21:04.305565Z",
           "category": "helsetilstand"
         },
         {
@@ -775,7 +775,7 @@
             "Sykdomsgruppe",
             "Måltall"
           ],
-          "updated": "2026-04-15T12:31:03.890669Z",
+          "updated": "2026-07-27T11:17:47.321289Z",
           "category": "helsetilstand"
         },
         {
@@ -796,7 +796,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-05-06T13:03:50.786353Z",
+          "updated": "2026-07-27T08:41:05.759158Z",
           "category": "oppvekst"
         },
         {
@@ -816,7 +816,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-05-06T13:00:59.8413Z",
+          "updated": "2026-07-27T08:47:44.469133Z",
           "category": "oppvekst"
         },
         {
@@ -914,7 +914,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-02-03T15:08:19.411738Z",
+          "updated": "2026-07-27T08:32:48.399642Z",
           "category": "oppvekst"
         },
         {
@@ -933,7 +933,7 @@
             "Innvandringsbakgrunn",
             "Måltall"
           ],
-          "updated": "2026-02-10T19:44:15.283028Z",
+          "updated": "2026-07-27T07:41:29.156619Z",
           "category": "oppvekst"
         },
         {
@@ -972,7 +972,7 @@
             "Legemiddel",
             "Måltall"
           ],
-          "updated": "2024-10-29T13:09:17.201712Z",
+          "updated": "2026-07-27T11:34:35.385306Z",
           "category": "miljo"
         },
         {
@@ -991,7 +991,7 @@
             "KMI-kategori",
             "Måltall"
           ],
-          "updated": "2026-01-19T13:19:13.71667Z",
+          "updated": "2026-07-27T11:59:14.576499Z",
           "category": "helsetilstand"
         },
         {
@@ -1010,7 +1010,7 @@
             "KMI-kategori",
             "Måltall"
           ],
-          "updated": "2026-04-20T11:32:27.167922Z",
+          "updated": "2026-07-27T11:59:49.477448Z",
           "category": "helsetilstand"
         },
         {
@@ -1088,7 +1088,7 @@
             "Alder",
             "Måltall"
           ],
-          "updated": "2025-05-13T14:39:57.70227Z",
+          "updated": "2026-07-27T07:58:29.491032Z",
           "category": "levekaar"
         },
         {
@@ -1105,7 +1105,7 @@
             "Alder",
             "Måltall"
           ],
-          "updated": "2026-06-24T07:17:04.334187Z",
+          "updated": "2026-07-27T10:44:35.241791Z",
           "category": "levevaner"
         },
         {
@@ -1124,7 +1124,7 @@
             "Vaksine",
             "Måltall"
           ],
-          "updated": "2026-01-14T14:23:21.353955Z",
+          "updated": "2026-07-27T12:02:44.672238Z",
           "category": "miljo"
         },
         {
@@ -1159,7 +1159,7 @@
             "År",
             "Måltall"
           ],
-          "updated": "2026-01-13T10:51:57.052147Z",
+          "updated": "2026-07-27T12:04:00.910221Z",
           "category": "miljo"
         },
         {
@@ -1178,7 +1178,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-02-04T11:35:45.312498Z",
+          "updated": "2026-07-27T08:36:41.563254Z",
           "category": "oppvekst"
         },
         {
@@ -1215,7 +1215,7 @@
             "Valg",
             "Måltall"
           ],
-          "updated": "2025-09-26T06:51:55.50102Z",
+          "updated": "2026-07-27T09:19:25.314299Z",
           "category": "levekaar"
         },
         {
@@ -1234,7 +1234,7 @@
             "Lavinntektsgrense",
             "Måltall"
           ],
-          "updated": "2026-04-20T11:00:28.230874Z",
+          "updated": "2026-07-27T07:22:19.168642Z",
           "category": "levekaar"
         },
         {
@@ -1253,7 +1253,7 @@
             "Utdanningsnivå",
             "Måltall"
           ],
-          "updated": "2026-04-16T06:57:29.02954Z",
+          "updated": "2026-07-27T10:57:27.302513Z",
           "category": "helsetilstand"
         },
         {
@@ -1272,7 +1272,7 @@
             "Utdanningsnivå",
             "Måltall"
           ],
-          "updated": "2026-04-16T06:56:45.693738Z",
+          "updated": "2026-07-27T10:58:32.606196Z",
           "category": "helsetilstand"
         },
         {
@@ -1291,7 +1291,7 @@
             "Utdanningsnivå",
             "Måltall"
           ],
-          "updated": "2026-04-16T06:58:33.570385Z",
+          "updated": "2026-07-27T10:56:20.344561Z",
           "category": "helsetilstand"
         },
         {
@@ -1310,7 +1310,7 @@
             "utdanningsnivå",
             "Måltall"
           ],
-          "updated": "2025-12-03T09:55:11.706007Z",
+          "updated": "2026-07-27T11:10:38.928156Z",
           "category": "helsetilstand"
         },
         {
@@ -1329,7 +1329,7 @@
             "Utdanningsnivå",
             "Måltall"
           ],
-          "updated": "2025-12-03T09:43:16.729127Z",
+          "updated": "2026-07-27T11:01:12.246993Z",
           "category": "helsetilstand"
         },
         {
@@ -1348,7 +1348,7 @@
             "Lavinntektsgrense",
             "Måltall"
           ],
-          "updated": "2026-04-20T10:59:32.598006Z",
+          "updated": "2026-07-27T07:20:43.881026Z",
           "category": "levekaar"
         },
         {
@@ -1427,7 +1427,7 @@
             "Tannstatus",
             "Måltall"
           ],
-          "updated": "2026-06-23T07:30:49.554672Z",
+          "updated": "2026-07-27T12:07:11.157606Z",
           "category": "helsetilstand"
         },
         {
@@ -1486,7 +1486,7 @@
             "Krefttype",
             "Måltall"
           ],
-          "updated": "2026-06-26T08:37:16.920827Z",
+          "updated": "2026-07-27T11:38:17.998151Z",
           "category": "helsetilstand"
         },
         {
@@ -1505,7 +1505,7 @@
             "Innvandringsbakgrunn",
             "Måltall"
           ],
-          "updated": "2026-05-06T13:01:49.155194Z",
+          "updated": "2026-07-27T09:04:22.137348Z",
           "category": "oppvekst"
         },
         {
@@ -1526,7 +1526,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-05-06T12:59:31.841602Z",
+          "updated": "2026-07-27T08:54:32.820482Z",
           "category": "oppvekst"
         },
         {
@@ -1545,7 +1545,7 @@
             "Landbakgrunn",
             "Måltall"
           ],
-          "updated": "2026-02-10T09:09:07.520259Z",
+          "updated": "2026-07-27T07:09:07.69105Z",
           "category": "befolkning"
         },
         {
@@ -1564,7 +1564,7 @@
             "Utdanningsnivå",
             "Måltall"
           ],
-          "updated": "2026-04-16T06:56:03.576722Z",
+          "updated": "2026-07-27T11:00:05.616716Z",
           "category": "helsetilstand"
         },
         {
@@ -1625,7 +1625,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-05-06T13:01:16.949244Z",
+          "updated": "2026-07-27T08:42:51.964641Z",
           "category": "oppvekst"
         },
         {
@@ -1646,7 +1646,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-05-06T13:02:07.386333Z",
+          "updated": "2026-07-27T08:44:16.333069Z",
           "category": "oppvekst"
         },
         {
@@ -1667,7 +1667,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-05-06T13:02:31.06242Z",
+          "updated": "2026-07-27T08:50:42.207546Z",
           "category": "oppvekst"
         },
         {
@@ -1686,7 +1686,7 @@
             "Innvandringsbakgrunn",
             "Måltall"
           ],
-          "updated": "2026-05-06T13:03:21.002054Z",
+          "updated": "2026-07-27T09:07:40.278141Z",
           "category": "oppvekst"
         },
         {
@@ -1707,7 +1707,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-05-06T13:00:26.746104Z",
+          "updated": "2026-07-27T08:52:01.366212Z",
           "category": "oppvekst"
         },
         {
@@ -1725,7 +1725,7 @@
             "Alder",
             "Måltall"
           ],
-          "updated": "2025-06-23T09:14:39.112096Z",
+          "updated": "2026-07-27T11:12:16.855828Z",
           "category": "helsetilstand"
         },
         {
@@ -1746,7 +1746,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-05-06T13:03:02.804329Z",
+          "updated": "2026-07-27T08:53:04.078973Z",
           "category": "oppvekst"
         },
         {
@@ -1765,7 +1765,7 @@
             "Sykdomsgruppe",
             "Måltall"
           ],
-          "updated": "2025-10-21T09:15:04.540704Z",
+          "updated": "2026-07-27T10:25:33.145724Z",
           "category": "helsetilstand"
         },
         {
@@ -1784,7 +1784,7 @@
             "Sykdomsgruppe",
             "Måltall"
           ],
-          "updated": "2026-04-20T11:25:21.982583Z",
+          "updated": "2026-07-27T10:28:21.454066Z",
           "category": "helsetilstand"
         },
         {
@@ -1804,7 +1804,7 @@
             "Stønadslengde",
             "Måltall"
           ],
-          "updated": "2025-12-02T13:27:15.205756Z",
+          "updated": "2026-07-27T07:50:14.205185Z",
           "category": "levekaar"
         },
         {
@@ -1824,7 +1824,7 @@
             "Ytelse",
             "Måltall"
           ],
-          "updated": "2026-04-16T06:46:15.13153Z",
+          "updated": "2026-07-27T08:05:05.497958Z",
           "category": "levekaar"
         },
         {
@@ -1844,7 +1844,7 @@
             "Ytelse",
             "Måltall"
           ],
-          "updated": "2026-04-20T11:01:44.956444Z",
+          "updated": "2026-07-27T08:06:16.426005Z",
           "category": "levekaar"
         },
         {
@@ -1864,7 +1864,7 @@
             "Ytelse",
             "Måltall"
           ],
-          "updated": "2026-01-27T14:44:59.329574Z",
+          "updated": "2026-07-27T07:59:54.363922Z",
           "category": "levekaar"
         },
         {
@@ -1884,7 +1884,7 @@
             "Ytelse",
             "Måltall"
           ],
-          "updated": "2026-04-20T11:01:02.870678Z",
+          "updated": "2026-07-27T08:03:01.450233Z",
           "category": "levekaar"
         },
         {
@@ -1903,7 +1903,7 @@
             "Status",
             "Måltall"
           ],
-          "updated": "2026-04-16T06:51:48.986192Z",
+          "updated": "2026-07-27T08:10:11.42162Z",
           "category": "levekaar"
         },
         {
@@ -1922,7 +1922,7 @@
             "status",
             "Måltall"
           ],
-          "updated": "2026-01-20T09:35:28.257246Z",
+          "updated": "2026-07-27T08:08:12.361431Z",
           "category": "levekaar"
         },
         {
@@ -1939,7 +1939,7 @@
             "Nivå",
             "Måltall"
           ],
-          "updated": "2026-06-08T05:44:36.428768Z",
+          "updated": "2026-07-27T09:23:07.75641Z",
           "category": "miljo"
         },
         {
@@ -1955,7 +1955,7 @@
             "År",
             "Måltall"
           ],
-          "updated": "2026-06-08T05:43:42.783813Z",
+          "updated": "2026-07-27T09:24:28.226553Z",
           "category": "miljo"
         },
         {
@@ -1975,7 +1975,7 @@
             "Stillingsandel",
             "Måltall"
           ],
-          "updated": "2026-04-21T09:01:13.354415Z",
+          "updated": "2026-07-27T07:33:34.783873Z",
           "category": "levekaar"
         },
         {
@@ -1994,7 +1994,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-02-10T14:13:24.307206Z",
+          "updated": "2026-07-27T08:37:50.309875Z",
           "category": "oppvekst"
         },
         {
@@ -2013,7 +2013,7 @@
             "Klassetrinn",
             "Måltall"
           ],
-          "updated": "2026-02-04T11:50:48.897642Z",
+          "updated": "2026-07-27T08:34:05.231177Z",
           "category": "oppvekst"
         },
         {
@@ -2033,7 +2033,7 @@
             "Stillingsandel",
             "Måltall"
           ],
-          "updated": "2026-04-21T09:01:49.395962Z",
+          "updated": "2026-07-27T07:35:21.945677Z",
           "category": "levekaar"
         },
         {
@@ -2052,7 +2052,7 @@
             "Utdanningsnivå",
             "Måltall"
           ],
-          "updated": "2026-04-16T06:47:43.252926Z",
+          "updated": "2026-07-27T07:39:12.339554Z",
           "category": "oppvekst"
         },
         {
@@ -2190,7 +2190,7 @@
             "Alder",
             "Måltall"
           ],
-          "updated": "2026-02-23T07:49:54.660396Z",
+          "updated": "2026-07-27T07:38:03.220452Z",
           "category": "levekaar"
         },
         {
@@ -2209,7 +2209,7 @@
             "Røykevaner",
             "Måltall"
           ],
-          "updated": "2026-03-04T12:48:25.93093Z",
+          "updated": "2026-07-27T10:43:35.9234Z",
           "category": "levevaner"
         },
         {
@@ -4481,7 +4481,7 @@
             "Overvåkingstype",
             "Måltall"
           ],
-          "updated": "2026-07-23T10:36:22.763184Z",
+          "updated": "2026-07-30T10:36:25.604809Z",
           "category": "luftveis"
         },
         {
@@ -4499,7 +4499,7 @@
             "Influensatype",
             "Måltall"
           ],
-          "updated": "2026-07-23T10:36:30.895547Z",
+          "updated": "2026-07-30T10:36:31.819604Z",
           "category": "luftveis"
         },
         {
@@ -4517,7 +4517,7 @@
             "RS-virus type",
             "Måltall"
           ],
-          "updated": "2026-07-23T10:36:27.191459Z",
+          "updated": "2026-07-30T10:36:28.977484Z",
           "category": "luftveis"
         },
         {
@@ -4536,7 +4536,7 @@
             "Overvåkingstype",
             "Måltall"
           ],
-          "updated": "2026-07-23T10:36:11.78466Z",
+          "updated": "2026-07-30T10:36:19.427981Z",
           "category": "luftveis"
         },
         {
@@ -4553,7 +4553,7 @@
             "Overvåkingstype",
             "Måltall"
           ],
-          "updated": "2026-07-23T10:36:08.738278Z",
+          "updated": "2026-07-30T10:36:16.645842Z",
           "category": "luftveis"
         },
         {
@@ -4571,7 +4571,7 @@
             "Overvåkingstype",
             "Måltall"
           ],
-          "updated": "2026-07-23T10:36:14.837093Z",
+          "updated": "2026-07-30T10:36:13.725654Z",
           "category": "luftveis"
         },
         {
@@ -4580,7 +4580,7 @@
           "internalName": "Oversikt luftveisagens",
           "description": "",
           "firstPeriod": "2021-01",
-          "lastPeriod": "2026-29",
+          "lastPeriod": "2026-30",
           "timeUnit": null,
           "variableNames": [
             "Smittestoff",
@@ -4589,7 +4589,7 @@
             "Geografi",
             "Måltall"
           ],
-          "updated": "2026-07-23T11:06:42.291068Z",
+          "updated": "2026-07-30T11:06:35.412422Z",
           "category": "luftveis"
         },
         {
@@ -4608,7 +4608,7 @@
             "Overvåkingstype",
             "Måltall"
           ],
-          "updated": "2026-07-23T10:36:18.133913Z",
+          "updated": "2026-07-30T10:36:22.095802Z",
           "category": "luftveis"
         },
         {
@@ -4627,7 +4627,7 @@
             "Geografi",
             "Måltall"
           ],
-          "updated": "2026-07-22T02:36:23.619648Z",
+          "updated": "2026-07-29T02:36:22.320413Z",
           "category": "mage"
         },
         {
@@ -4636,7 +4636,7 @@
           "internalName": "Oversikt gastroenterittvirus",
           "description": "",
           "firstPeriod": "2024-51",
-          "lastPeriod": "2026-29",
+          "lastPeriod": "2026-30",
           "timeUnit": null,
           "variableNames": [
             "Smittestoff",
@@ -4645,7 +4645,7 @@
             "Geografi",
             "Måltall"
           ],
-          "updated": "2026-07-22T02:36:14.785879Z",
+          "updated": "2026-07-29T02:36:14.965029Z",
           "category": "mage"
         }
       ],
@@ -4723,7 +4723,7 @@
           "internalName": "SYSVAK influensavaksinasjon 25/26",
           "description": "",
           "firstPeriod": "2025 -uke 36",
-          "lastPeriod": "2026 -uke 30",
+          "lastPeriod": "2026 -uke 31",
           "timeUnit": null,
           "variableNames": [
             "Geografi",
@@ -4732,7 +4732,7 @@
             "Uke",
             "Måltall"
           ],
-          "updated": "2026-07-25T02:01:46.621302Z"
+          "updated": "2026-08-01T02:01:52.954328Z"
         },
         {
           "tableId": 717,
@@ -4740,7 +4740,7 @@
           "internalName": "SYSVAK koronavaksinasjon 25/26",
           "description": "",
           "firstPeriod": "2025 -uke 36",
-          "lastPeriod": "2026 -uke 30",
+          "lastPeriod": "2026 -uke 31",
           "timeUnit": null,
           "variableNames": [
             "Geografi",
@@ -4750,7 +4750,7 @@
             "Uke",
             "Måltall"
           ],
-          "updated": "2026-07-25T00:03:11.41852Z"
+          "updated": "2026-08-01T00:03:23.308753Z"
         },
         {
           "tableId": 750,
@@ -6654,7 +6654,7 @@
             "Genotype",
             "Måltall"
           ],
-          "updated": "2026-07-25T04:07:04.234896Z",
+          "updated": "2026-08-01T04:07:06.209222Z",
           "category": "hepatitt"
         },
         {
