@@ -9,6 +9,12 @@
 # data/table-metadata/, som er gitignorert, bor kun på serveren, og bruker
 # ~8,5 time rate-limitet på en kald nedlasting.
 #
+# ARBEIDSDELING: denne workflowen ruller ut KODE. Dataferskhet eies av
+# cron-jobbene på serveren (bin/refresh-*.sh), som har hvert sitt tidspunkt per
+# kilde. Derfor bygger en deploy bare SSB-shardet — NB og FHI bæres videre
+# uendret fra serverens manifest, siden serveren eier data/sources/ og
+# git-kopien der kan være eldre.
+#
 # Se README.md → «Drift og deploy» for hemmeligheter, miljøer og serverkrav.
 
 name: Deploy
@@ -25,21 +31,16 @@ on:
         description: Bygg katalogindeksen på nytt (av = kun kode + SEO-sider)
         type: boolean
         default: true
+      sources:
+        description: >-
+          Hvilke kilder indeksen bygges fra. «ssb» er normalen — NB og FHI eies
+          av cron på serveren og bæres videre uendret. «alle» bygger NB/FHI fra
+          git-kopien av data/sources/ og er kun for førstegangsoppsett.
+        type: choice
+        options: [ssb, alle]
+        default: ssb
       ref:
         description: Git-ref å rulle ut (tom = branchen workflowen startes fra)
-        type: string
-        required: false
-        default: ''
-  workflow_call:
-    inputs:
-      target:
-        type: string
-        required: true
-      rebuild_index:
-        type: boolean
-        required: false
-        default: true
-      ref:
         type: string
         required: false
         default: ''
@@ -134,12 +135,27 @@ jobs:
       # med serveren fullstendig urørt.
       - name: Bygg katalogindeksen
         if: ${{ inputs.rebuild_index }}
-        run: node scripts/build-catalog-index.mjs --webroot "$RUNNER_TEMP/webroot" | tee "$RUNNER_TEMP/katalog.log"
+        env:
+          SOURCES: ${{ inputs.sources }}
+        run: |
+          # «ssb» bygger kun SSB-shardet; NB og FHI bæres videre uendret fra
+          # baselinen vi nettopp hentet ned, fordi serveren eier data/sources/.
+          if [ "$SOURCES" = "alle" ]; then
+            echo "::warning::Bygger ALLE kilder — NB/FHI kommer da fra git-kopien av data/sources/, som kan være eldre enn serverens."
+            node scripts/build-catalog-index.mjs --webroot "$RUNNER_TEMP/webroot" | tee "$RUNNER_TEMP/katalog.log"
+          else
+            node scripts/build-catalog-index.mjs --webroot "$RUNNER_TEMP/webroot" --source ssb | tee "$RUNNER_TEMP/katalog.log"
+          fi
 
-      # data/index/ MÅ ekskluderes: den innsjekkede kopien i repoet er en
-      # testfixture (83 SSB-rader), ikke en produksjonsindeks. Uten denne
-      # excluden overskriver hver deploy produksjonsindeksen med fixture-data.
-      # data/table-metadata/ er gitignorert og bor kun på serveren.
+      # TRE EKSKLUDERINGER SOM IKKE ER VALGFRIE — alle tre beskytter data
+      # serveren eier mot å bli overskrevet av en eldre kopi fra git:
+      #
+      #   data/index/          den innsjekkede kopien er en TESTFIXTURE
+      #                        (83 SSB-rader), ikke en produksjonsindeks
+      #   data/sources/        eies av cron på serveren (bin/refresh-*.sh);
+      #                        git-kopien er bare bootstrap og blir raskt eldre
+      #   data/table-metadata/ gitignorert, ~8,5 time å bygge opp igjen
+      #
       # Ingen --delete: webroot inneholder genererte SEO-sider, og generatoren
       # rydder selv etter sitt eget .seo-manifest.json.
       - name: Synk kode til serveren
@@ -151,6 +167,7 @@ jobs:
             --exclude 'node_modules/' \
             --exclude 'tests/' \
             --exclude 'data/index/' \
+            --exclude 'data/sources/' \
             --exclude 'data/table-metadata/' \
             ./ "$SSH_HOST:$REMOTE_DIR/"
 
@@ -269,7 +286,7 @@ jobs:
             echo "- Site: $SITE_URL"
             echo "- Ref: \`${{ inputs.ref || github.ref }}\`"
             echo "- Utrullet commit: \`${DEPLOYED_SHA:-ukjent}\` — ${DEPLOYED_SUBJECT:-}"
-            echo "- Katalogindeks bygget: ${{ inputs.rebuild_index }}"
+            echo "- Katalogindeks bygget: ${{ inputs.rebuild_index }} (kilder: ${{ inputs.sources }})"
             if [ -f "$RUNNER_TEMP/katalog.log" ]; then
               echo ""
               echo '```'

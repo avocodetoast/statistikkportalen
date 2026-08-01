@@ -108,8 +108,10 @@ function resolveGeneratedAt(generatedAt, key, rows) {
  * Bygg alle forespurte shards i minnet og håndhev guardene. Skriver INGENTING.
  *
  * @param {object} opts
- * @param {Array} opts.sources - [{key, lang, primary?, build: async () => rows[]}]
+ * @param {Array} opts.sources - [{key, lang, primary?, carryForward?, build: async () => rows[]}]
  *   `primary: true` markerer kilden som hard (SSB): feil der velter kjøringen.
+ *   `carryForward: true` betyr «bygg ikke denne nå» — forrige shard-oppføring
+ *   bæres videre uendret, og `build` kalles aldri (trenger ikke finnes).
  * @param {object|null} opts.previousManifest - Det DEPLOYEDE catalog-manifest.json.
  * @param {number} [opts.minTables] - Sanity-terskel for primærkilden.
  * @param {number} [opts.maxShrink] - Maks tillatt fall i radantall, i prosent.
@@ -136,7 +138,24 @@ export async function planBuild({
   let fatal = false;
 
   for (const source of sources) {
-    const { key, lang = 'no', primary = false } = source;
+    const { key, lang = 'no', primary = false, carryForward = false } = source;
+
+    // Garanti 5: en kilde som ikke bygges denne kjøringen står urørt i
+    // manifestet. Per-kilde-oppdatering (--source) finnes fordi kildene har
+    // ulike publiseringstidspunkt; uten dette ville en kjøring for én kilde
+    // strøket de andre ut av manifestet, og de forsvant fra portalen selv om
+    // shard-filene lå på disk. Ingen guard gjelder her — det bygges ingenting,
+    // så det finnes ingen radliste å måle mot.
+    if (carryForward) {
+      const carried = findShardEntry(previousManifest, key, lang);
+      if (carried) {
+        log(`Kilde «${key}»: ikke forespurt — beholder ${carried.file} (${carried.count} rader).`);
+        manifestShards.push(carried);
+      } else {
+        warn(`Kilden «${key}» er ikke forespurt og har ingen tidligere shard — utelates fra manifestet.`);
+      }
+      continue;
+    }
 
     let rows;
     try {

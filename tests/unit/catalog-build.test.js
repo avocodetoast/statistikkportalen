@@ -16,6 +16,9 @@
  *       videre, og kjøringen lykkes fortsatt for SSB
  *   (d) SSB-feil gir feil OG null skriveoperasjoner
  *   (e) catalog-manifest.json skrives SIST av alt
+ *   (f) en kilde som IKKE bygges denne kjøringen (carryForward) bærer forrige
+ *       shard-oppføring videre — manifestet beskriver alltid en HEL indeks,
+ *       også når bare én kilde oppdateres
  */
 'use strict';
 
@@ -229,6 +232,82 @@ describe('planBuild — (c) fremmede kilder feilisoleres', () => {
     assert.equal(plan.ok, true);
     assert.equal(plan.manifest.shards.filter((s) => s.source === 'fhi').length, 0);
     assert.ok(plan.skipped.some((s) => s.source === 'fhi' && s.carriedForward === false));
+  });
+});
+
+describe('planBuild — (f) kilder som ikke bygges denne kjøringen', () => {
+  // Per-kilde-oppdatering: hver kilde har sitt eget publiseringstidspunkt og
+  // sin egen cron. Da bygges ÉN kilde om gangen, og de andre må stå urørt i
+  // manifestet — ellers forsvinner de fra portalen selv om shard-filene ligger
+  // på disk.
+  it('bærer ikke-forespurte kilders shards verbatim videre', async () => {
+    const { planBuild } = await mod;
+    const forrigeSsb = manifestEntry('ssb', 7747, 'ssb-no-deadbeef.json');
+    const forrigeFhi = manifestEntry('fhi', 370, 'fhi-no-cafebabe.json');
+    const previousManifest = {
+      format: 1,
+      generatedAt: '2026-07-21T03:00:00.000Z',
+      shards: [forrigeSsb, manifestEntry('nb', 31, 'nb-no-01020304.json'), forrigeFhi],
+    };
+
+    const plan = await planBuild({
+      sources: [
+        { key: 'ssb', lang: 'no', primary: true, carryForward: true },
+        { key: 'nb', lang: 'no', build: async () => rows(31, '9') },
+        { key: 'fhi', lang: 'no', carryForward: true },
+      ],
+      previousManifest,
+      // Terskelen skal ikke slå til på en videreført primærkilde — den bygges
+      // jo ikke, så det finnes ingen radliste å måle.
+      minTables: 5000,
+      maxShrink: 10,
+      generatedAt: GEN_AT,
+      compress: fakeCompress,
+      log: () => {}, warn: () => {},
+    });
+
+    assert.equal(plan.ok, true, `Videreføring skal ikke velte kjøringen: ${JSON.stringify(plan.errors)}`);
+    // Bare NB ble faktisk bygget...
+    assert.deepEqual(plan.shards.map((s) => s.source), ['nb']);
+    // ...men manifestet beskriver fortsatt alle tre.
+    assert.deepEqual(plan.manifest.shards.map((s) => s.source), ['ssb', 'nb', 'fhi']);
+    assert.deepEqual(plan.manifest.shards.find((s) => s.source === 'ssb'), forrigeSsb);
+    assert.deepEqual(plan.manifest.shards.find((s) => s.source === 'fhi'), forrigeFhi);
+    // Videreføring er ikke en feil.
+    assert.deepEqual(plan.errors, []);
+  });
+
+  it('hopper over en ikke-forespurt kilde som ikke har noe tidligere shard', async () => {
+    const { planBuild } = await mod;
+    const plan = await planBuild({
+      sources: [
+        ssbSource(rows(100)),
+        { key: 'fhi', lang: 'no', carryForward: true },
+      ],
+      previousManifest: null,
+      minTables: 0,
+      generatedAt: GEN_AT,
+      compress: fakeCompress,
+      log: () => {}, warn: () => {},
+    });
+
+    assert.equal(plan.ok, true);
+    assert.deepEqual(plan.manifest.shards.map((s) => s.source), ['ssb']);
+    assert.deepEqual(plan.errors, []);
+  });
+
+  it('bygger kilden når carryForward ikke er satt (uendret oppførsel)', async () => {
+    const { planBuild } = await mod;
+    const plan = await planBuild({
+      sources: [ssbSource(rows(100)), { key: 'nb', lang: 'no', build: async () => rows(31, '9') }],
+      previousManifest: null,
+      minTables: 0,
+      generatedAt: GEN_AT,
+      compress: fakeCompress,
+      log: () => {}, warn: () => {},
+    });
+
+    assert.deepEqual(plan.shards.map((s) => s.source), ['ssb', 'nb']);
   });
 });
 

@@ -133,55 +133,79 @@ appen laster og de statiske SEO-sidene — bygges dermed fra ett og samme øyebl
 kildene og kan aldri bli uenige om hvilke tabeller som finnes. `build-catalog-index.mjs` må ha
 kjørt minst én gang mot webroot før generatoren kan kjøre i det hele tatt.
 
-Kjeden kjøres av GitHub Actions, ikke av en cron på serveren, og de fire stegene har hver sin
-eier:
+### Arbeidsdelingen: Actions eier kode, cron eier ferskhet
 
-| Steg | Hvor | Når |
+Dette er den ene tingen å ha klart før noe annet gir mening:
+
+| | Actions (`deploy.yml`) | Cron på serveren (`bin/refresh.sh`) |
 |---|---|---|
-| 1-2 `update-fhi-catalog` / `update-nb-periods` | runneren, resultatet committes | `refresh-sources.yml`, ukentlig |
-| 3 `build-catalog-index` | runneren, resultatet rsynces opp | `deploy.yml`, hver utrulling |
-| 4 `generate-seo-pages` | serveren, over SSH | `deploy.yml`, hver utrulling |
-| `update-table-metadata` | serveren, egen cron | månedlig |
+| Trigges av | deg, manuelt | tidspunkt, per kilde |
+| Oppdaterer | koden | dataene |
+| Bygger shard | kun `ssb` | kun kilden som kjøres |
+| Eier | `js/`, `css/`, `index.html`, `scripts/` | `data/sources/`, `data/index/`, `data/table-metadata/` |
 
-`data/table-metadata/` er den ene tingen som fortsatt eier en cron på serveren. En kald kjøring
-er ~10 000 tabeller rate-limitet til 20 kall/min, altså ~8,5 time — det hører ikke hjemme i en
-Actions-jobb med 6 timers tak:
+Grunnen til at dataoppdateringen ikke ligger i Actions: `data/sources/` må overleve mellom
+kjøringer. På en runner finnes ingen varig disk, så eneste vei ville vært en commit per
+kjøring — med ti kjøringer i døgnet blir det tusenvis i året. Serveren har filsystemet
+allerede. I tillegg er GitHubs scheduler «best effort» og kan bli titalls minutter forsinket,
+mens kildene her har konkrete publiseringstidspunkt du vil treffe.
+
+### Per kilde: `bin/refresh.sh`
+
+Hver kilde har sitt eget tidspunkt, fordi SSB, Norges Bank og FHI publiserer til ulik tid:
 
 ```
-0 3 1 * * cd ~/statistikkportalen && node scripts/update-table-metadata.mjs >> table-metadata.log 2>&1
+bin/refresh.sh ssb    # /tables hentes live av byggeren — ingen byggetidsfil
+bin/refresh.sh nb     # update-nb-periods → data/sources/nb-periods.json
+bin/refresh.sh fhi    # update-fhi-catalog --incremental → data/sources/fhi-catalog.json
 ```
+
+Hver kjøring gjør tre ting: oppdaterer kildens byggetidsfil (ikke SSB, som hentes live),
+bygger **kun den kildens shard**, og regenererer SEO-sidene. De øvrige kildenes shards bæres
+videre uendret, så manifestet beskriver alltid en hel indeks.
+
+Cron-oppføringene (tidspunktene under er eksempler — juster etter kildenes publisering):
+
+```
+15 6,10,14 * * *  cd ~/statistikkportalen && bin/refresh.sh ssb >> log/ssb.log 2>&1
+15 7,15    * * *  cd ~/statistikkportalen && bin/refresh.sh nb  >> log/nb.log  2>&1
+45 5       * * 0  cd ~/statistikkportalen && bin/refresh.sh fhi >> log/fhi.log 2>&1
+0  3 1     * *    cd ~/statistikkportalen && node scripts/update-table-metadata.mjs >> log/metadata.log 2>&1
+```
+
+Scriptet leser `~/statistikkportalen/.env`:
+
+```
+SITE_URL=https://statistikkportalen.no      # påkrevd
+CF_API_TOKEN=...                            # valgfri — cache-purge
+CF_ZONE_ID=...                              # valgfri — cache-purge
+HEALTHCHECK_SSB=https://hc-ping.com/<uuid>  # valgfri — se Overvåking
+HEALTHCHECK_NB=...
+HEALTHCHECK_FHI=...
+```
+
+**Staging bør ha en mye roligere plan enn produksjon.** Hvert miljø har sin egen kopi av
+`data/sources/` og sin egen cron, så identiske planer dobler trafikken mot FHI og NB. Staging
+skal vise at koden virker, ikke at tallene er ferske — én kjøring i døgnet holder.
+
+Cachen tømmes kun for `catalog-manifest.json` og `sitemap.xml`, ikke med `purge_everything`.
+Shardene er innholdshashet og ligger under `immutable`, så en full purge ti ganger i døgnet
+ville bare revet ned treffraten på alt annet uten å gjøre nytte.
+
+`update-table-metadata.mjs` står utenfor `refresh.sh`: en kald kjøring er ~10 000 tabeller
+rate-limitet til 20 kall/min, altså ~8,5 time, og den eier `data/table-metadata/` alene.
 
 ### Utrulling (GitHub Actions)
 
-To workflows, begge triggbare manuelt fra Actions-fanen:
+Én workflow, `deploy.yml`, triggbar manuelt fra Actions-fanen. Velg miljø (`staging` eller
+`production`), så rsynces koden opp, indeksen bygges og SEO-sidene genereres.
 
-- **`deploy.yml`** — velg miljø (`staging` eller `production`). Ruller ut kode, bygger
-  katalogindeksen og genererer SEO-sidene. Skru av `rebuild_index` for en ren kodeutrulling
-  uten å vente på en full SSB-henting.
-- **`refresh-sources.yml`** — ukentlig (natt til søndag, 04:15 UTC) og manuelt. Oppdaterer
-  `data/sources/fhi-catalog.json` og `nb-periods.json`, og committer dem hvis de endret seg.
-  Deretter kaller den `deploy.yml` for de miljøene du har huket av — også når ingenting ble
-  committet, siden SSB-katalogen endrer seg uavhengig av de to filene.
-
-  Utrullingen styres av to avkrysningsbokser: **`deploy_staging`** (på som standard) og
-  **`deploy_production`** (av som standard). Huk av begge for å oppdatere begge; de kjører
-  parallelt og uavhengig, så en feilet staging stopper ikke produksjon. På en **schedulert**
-  kjøring er inputs tomme, og da rulles kun staging ut — en automatisk jobb skal aldri kunne
-  treffe produksjon uten at noen har bedt om det. Produksjonsindeksen holdes derfor fersk kun
-  hvis du kjører workflowen manuelt med `deploy_production` avhuket, eller trigger `deploy.yml`
-  direkte.
-
-FHI-katalogen bygges **inkrementelt** som standard: ~30 kall i en normal uke, mot ~740 for en
-full runde. Inkrementelt henter kun tabeller som er nye eller har fått ny `modifiedAt`, så
-endringer FHI gjør uten å bumpe det feltet — typisk omskrevne metadata-sammendrag, som
-tittel-heuristikken utleder titler fra — plukkes aldri opp. Huk av **`full`** ved manuell
-kjøring for å tvinge en full regenerering. Siden `lastFullBuildAt` arves i det uendelige under
-inkrementell drift, logger workflowen alderen på siste fulle build hver gang og advarer etter
-90 dager.
-
-Takten mot FHI er satt til 120 kall/min (2/sek). FHI dokumenterer ingen grense, så tallet er
-konservativt med vilje — en full runde tar da ~6 minutter. NB-probene går sekvensielt med
-250 ms pause og har ingen inkrementell modus; alle 31 kjøres hver gang, på ~8 sekunder.
+- **`rebuild_index`** (på) — av gir en ren kodeutrulling uten å vente på SSB-hentingen.
+- **`sources`** (`ssb`) — hvilke kilder indeksen bygges fra. `ssb` er normalen: NB og FHI eies
+  av cron på serveren og bæres videre uendret. `alle` bygger NB/FHI fra **git-kopien** av
+  `data/sources/`, som raskt blir eldre enn serverens — bruk den kun ved førstegangsoppsett av
+  et nytt miljø.
+- **`ref`** — rull ut en annen branch enn den workflowen startes fra.
 
 **Rekkefølgen inne i `deploy.yml` er valgt slik at alt som kan feile skjer før serveren røres.**
 Runneren speiler først ned serverens `data/index/` (~200 KB) — den er både krympe-guardens
@@ -236,11 +260,14 @@ rsync ville brutt nøyaktig den garantien byggeren jobber for.
 
 - **`.json` og `.json.br` må begge med.** Bare `.json` betyr at du serverer 1,76 MB i stedet
   for 183 KB.
-- **`data/index/` må ekskluderes fra kode-rsyncen.** Kopien som ligger i git er en *testfixture*
-  (SSB-shardet har 83 rader, og `tests/unit/catalog-index-load.test.js` asserter mot den) — ikke
-  en produksjonsindeks. Uten den excluden overskriver hver utrulling den ekte indeksen med
-  fixture-data.
-- **`data/table-metadata/` må også ekskluderes.** Den er gitignorert og bor kun på serveren.
+- **Tre kataloger må ekskluderes fra kode-rsyncen.** Alle tre eies av serveren, og git-kopien er
+  i beste fall en eldre bootstrap:
+  - `data/index/` — kopien i git er en *testfixture* (SSB-shardet har 83 rader, og
+    `tests/unit/catalog-index-load.test.js` asserter mot den), ikke en produksjonsindeks. Uten
+    excluden overskriver hver utrulling den ekte indeksen med fixture-data.
+  - `data/sources/` — eies av `bin/refresh.sh` på serveren. Uten excluden ruller en
+    kodeutrulling tilbake alt cron har hentet siden forrige deploy.
+  - `data/table-metadata/` — gitignorert, ~8,5 time å bygge opp igjen.
 - **Ingen `--delete` mot webroot.** Der ligger de genererte SEO-sidene; generatoren rydder selv
   etter sitt eget `.seo-manifest.json`.
 - **`--delete` brukes kun på siste pass av `data/index/`-synken, og der er den nødvendig.** Runnerens
@@ -351,10 +378,23 @@ tre uker gamle tall. Statusbadgen i appen blir gul når indeksen er eldre enn
 `AppConfig.catalogIndex.staleAfterMs` (48 timer), og statuspanelet skriver hvor gammel den er,
 men det forutsetter at noen ser på den.
 
-GitHub varsler på e-post når en schedulert workflow feiler, men **ikke** når den slutter å
-kjøre — Actions deaktiverer schedulerte workflows automatisk i repoer uten aktivitet på 60
-dager. Sjekk derfor `generatedAt` i `catalog-manifest.json` med jevne mellomrom, ikke bare
-kjørelogger:
+Cron sier ingenting når den feiler, og enda mindre når den slutter å kjøre. Derfor pinger
+`bin/refresh.sh` en dead man's switch **helt til slutt**, etter at alle stegene har lykkes:
+
+```
+HEALTHCHECK_SSB=https://hc-ping.com/<uuid>
+```
+
+Uteblir pingen innen forventet vindu, varsler tjenesten. Det dekker begge feilene: at scriptet
+avsluttet med feil (`set -e` stopper før pingen), og at cron aldri kjørte i det hele tatt — den
+siste ville en ren e-post-ved-feil aldri fanget. Bruk én URL per kilde, siden de har hver sin
+plan; en stille SSB-jobb skal ikke skjules av at FHI-jobben går fint.
+
+To uavhengige canary-er i tillegg:
+
+- Statusbadgen i appen blir gul når indeksen er eldre enn `AppConfig.catalogIndex.staleAfterMs`
+  (48 timer), og statuspanelet skriver hvor gammel den er. Forutsetter at noen ser på den.
+- `generatedAt` i manifestet, som du kan sjekke utenfra:
 
 ```
 curl -s https://statistikkportalen.no/data/index/catalog-manifest.json | grep generatedAt

@@ -141,7 +141,14 @@ function buildSourceList(appConfig, subjectConfig, args, lang) {
   for (const [key, src] of Object.entries(appConfig.sources || {})) {
     if (!src?.adapter) continue;
     if (src.enabled === false) continue;
-    if (requested.size && !requested.has(key)) continue;
+    // Aktivert, men ikke forespurt med --source: bygges ikke nå, men skal stå
+    // urørt i manifestet. Uten dette ville en per-kilde-kjøring strøket de
+    // andre kildene ut av indeksen. En kilde som er skrudd AV i AppConfig
+    // faller derimot ut over — da skal den faktisk forsvinne.
+    if (requested.size && !requested.has(key)) {
+      list.push({ key, lang, carryForward: true });
+      continue;
+    }
     if (!isKnownAdapter(src.adapter)) {
       warn(`Kilden «${key}» har ukjent adapter «${src.adapter}» — hopper over ` +
            '(legg til en gren i scripts/lib/catalog-sources.mjs).');
@@ -166,6 +173,11 @@ function buildSourceList(appConfig, subjectConfig, args, lang) {
     if (!list.some(s => s.key === key)) warn(`Ukjent eller avskrudd kilde «${key}» i --source — ignorert.`);
   }
   return list;
+}
+
+/** Kildene som faktisk bygges denne kjøringen (resten bæres videre). */
+function builtSources(list) {
+  return list.filter(s => !s.carryForward);
 }
 
 // ---------------------------------------------------------------------------
@@ -232,8 +244,14 @@ async function main() {
   log(`Ut: ${outDir}${args.snapshot ? '  (innsjekket snapshot)' : ''}`);
 
   const sources = buildSourceList(appConfig, subjectConfig, args, lang);
-  if (sources.length === 0) throw new Error('Ingen kilder å bygge — sjekk --source og AppConfig.sources.');
-  log(`Kilder: ${sources.map(s => s.key).join(', ')} (språk ${lang})`);
+  const built = builtSources(sources);
+  // En typo i --source ville ellers blitt en stille no-op: alle kilder bæres
+  // videre, manifestet skrives på nytt med identisk innhold, og ingenting
+  // oppdateres — uten at noe klager.
+  if (built.length === 0) throw new Error('Ingen kilder å bygge — sjekk --source og AppConfig.sources.');
+  const carried = sources.filter(s => s.carryForward).map(s => s.key);
+  log(`Kilder: ${built.map(s => s.key).join(', ')} (språk ${lang})` +
+      (carried.length ? `  [bæres videre: ${carried.join(', ')}]` : ''));
 
   const previousManifest = readJsonIfPresent(path.join(outDir, CATALOG_MANIFEST_NAME));
   const indexManifest = readJsonIfPresent(path.join(outDir, INDEX_MANIFEST_NAME));
