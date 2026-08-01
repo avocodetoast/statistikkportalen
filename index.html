@@ -102,6 +102,10 @@
   <script src="js/translations.js?v=1.10.0"></script>
   <script src="js/cache.js?v=1.10.0"></script>
   <script src="js/api.js?v=1.10.0"></script>
+  <!-- Periodenormalisering (yyyyUxx/yyyyMxx) for tabelloversiktene. Ren logikk
+       uten avhengigheter; må lastes før fhi-adapter.js, som bruker den i
+       derivePeriods(). -->
+  <script src="js/period-format.js?v=1.10.0"></script>
   <!-- Kildeadaptere + fasade (Statistikkportalen 2.0). Lastes etter api.js
        (trenger window.SSBApi/window.api) og før browser-state.js (bruker api).
        source-registry.js laster SIST og erstatter window.api med fasaden.

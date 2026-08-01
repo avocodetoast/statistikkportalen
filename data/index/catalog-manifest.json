@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generatedAt": "2026-07-25T07:53:03.000Z",
+  "generatedAt": "2026-08-01T16:36:07.143Z",
   "shards": [
     {
       "source": "ssb",
@@ -21,10 +21,10 @@
     {
       "source": "fhi",
       "lang": "no",
-      "file": "fhi-no-49b8d7be.json",
+      "file": "fhi-no-2689bf62.json",
       "count": 370,
-      "bytes": 139617,
-      "generatedAt": "2026-07-25T04:07:04.234Z"
+      "bytes": 139583,
+      "generatedAt": "2026-08-01T16:36:07.143Z"
     }
   ]
 }

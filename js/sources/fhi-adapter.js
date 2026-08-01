@@ -683,9 +683,19 @@
    * firstPeriod/lastPeriod for tabeller brukeren faktisk åpner; katalogfila
    * bygges ved byggetid og kan være noen uker gammel.
    *
+   * Endepunktene normaliseres til SSB-form (2024U17, 2025M10) av
+   * PeriodFormat.normalizePeriod — samme normalisering som katalogen får ved
+   * byggetid, slik at kolonnen ikke faller tilbake til FHIs råformat i det
+   * brukeren åpner tabellen. Dimensjonsetiketten sendes som hint: den skiller
+   * uke fra sesong for former som «2025-26». Verdilistene i variabelvelgeren
+   * røres IKKE (se getTableMetadata/normalizeDataset) — der er kildens eget
+   * format det som svarer til verdikoden.
+   *
    * MERK: samme regel som deriveTimeInfo() i scripts/update-fhi-catalog.mjs.
    * Bevisst duplisering (byggescriptet kan ikke laste nettleser-globaler) —
-   * hold dem i sync, på samme måte som TIME_PATTERN over.
+   * hold dem i sync, på samme måte som TIME_PATTERN over. Selve
+   * periodeparseren deles derimot: byggescriptet laster js/period-format.js
+   * via scripts/lib/period-format.mjs.
    *
    * @returns {{first:string,last:string}|null}
    */
@@ -694,7 +704,12 @@
     if (!timeDim) return null;
     const leaves = leafCategories(timeDim.categories || []).filter(e => e.label);
     if (!leaves.length) return null;
-    return { first: leaves[0].label, last: leaves[leaves.length - 1].label };
+    const hint = timeDim.label || timeDim.code;
+    const norm = raw => PeriodFormat.normalizePeriod(raw, hint) || raw;
+    return {
+      first: norm(leaves[0].label),
+      last: norm(leaves[leaves.length - 1].label)
+    };
   }
 
   /**

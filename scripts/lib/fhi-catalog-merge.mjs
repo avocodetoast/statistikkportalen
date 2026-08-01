@@ -13,8 +13,14 @@
  * tabeller som fortsatt finnes (mergeCatalogSource) — så fjernede tabeller
  * faktisk forsvinner fra katalogen.
  *
+ * Fila eier også normaliseringspasset over katalogradene (normalizeCatalogPeriods)
+ * — samme sted i pipelinen, og av samme grunn: passet MÅ dekke rader som en
+ * inkrementell kjøring beholdt uendret.
+ *
  * Ren ESM uten sideeffekter — testes i tests/unit/fhi-catalog-merge.test.js.
  */
+
+import { normalizePeriod, classifyTimeUnit } from './period-format.mjs';
 
 /** Tabell-id-er sammenlignes som streng: API-et og katalogfila blander tall/streng. */
 const key = (id) => String(id);
@@ -95,4 +101,43 @@ export function mergeCatalogSource(existingTables, liveRows, probedTables) {
 
   tables.sort((a, b) => Number(a.tableId) - Number(b.tableId));
   return { tables, added, updated, removed };
+}
+
+/**
+ * Normaliser firstPeriod/lastPeriod til SSB-form (2024U17, 2025M10, 2023T1) og
+ * utled frekvens av resultatet. FHI leverer fem ulike former for uke/måned/
+ * tertial; se js/period-format.js for reglene.
+ *
+ * Kjøres over HELE kildens tabelliste, ikke bare de nyhentede radene: en
+ * --incremental-kjøring beholder uendrede rader ordrett, og de ville ellers
+ * blitt liggende på råformat til neste fulle regenerering (~740 kall). Passet
+ * er idempotent, så gjentatte kjøringer er trygge.
+ *
+ * `variableNames` er hintet som skiller formene som kolliderer: «2025-26» er en
+ * SESONG, mens «2021-01» er ÅR-UKE. Adapteren har den eksakte
+ * dimensjonsetiketten og bruker den i stedet (js/sources/fhi-adapter.js,
+ * derivePeriods).
+ *
+ * timeUnit settes KUN når feltet står tomt: 'Annual' fra deriveTimeInfo
+ * (scripts/update-fhi-catalog.mjs) er utledet av samtlige kategorier og er en
+ * bedre kilde enn endepunktene alene.
+ *
+ * @param {Array<object>} tables katalograder
+ * @returns {Array<object>} nye rader; input muteres aldri
+ */
+export function normalizeCatalogPeriods(tables) {
+  return (tables || []).map(table => {
+    const hint = (table.variableNames || []).join(' ');
+    const first = normalizePeriod(table.firstPeriod, hint) || table.firstPeriod;
+    const last = normalizePeriod(table.lastPeriod, hint) || table.lastPeriod;
+    const derivedUnit = table.timeUnit ? null : classifyTimeUnit(first, last);
+
+    if (first === table.firstPeriod && last === table.lastPeriod && !derivedUnit) {
+      return table;
+    }
+    const out = { ...table, firstPeriod: first, lastPeriod: last };
+    // Aldri introduser feltet på en rad som ikke har det fra før.
+    if (derivedUnit) out.timeUnit = derivedUnit;
+    return out;
+  });
 }

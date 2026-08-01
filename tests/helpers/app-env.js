@@ -164,6 +164,7 @@ const SCRIPTS = {
     'js/cache.js',
     'js/catalog-index.js',
     'js/api.js',
+    'js/period-format.js',
     'js/sources/sdmx-to-jsonstat.js',
     'js/sources/source-common.js',
     'js/sources/norges-bank-adapter.js',

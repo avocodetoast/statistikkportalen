@@ -216,9 +216,21 @@ const AppConfig = {
     // regnes som «daglige» (SSB bruker i praksis ikke 'Daily' i dag, men
     // verdien tas med for framtidig sikkerhet). Gjelder KUN forsidens
     // nylig-oppdatert-seksjon — søk/emnefiltre påvirkes ikke.
+    // excludedTableIds er en KURATERT liste: enkelttabeller som aldri skal
+    // vises der, uavhengig av showHighFrequency. Den finnes fordi frekvens
+    // alene ikke fanger tilfellet: FHIs ukestabeller (sysvak/msis) har
+    // ukesperioder, men får nye tall hver dag og fyller derfor lista like
+    // effektivt som NBs dagsserier. Legg til nye id-er her når en tabell viser
+    // seg å oppdateres oftere enn periodelengden tilsier.
     recentUpdates: {
       showHighFrequency: false,
-      highFrequencyTimeUnits: ['Business', 'Daily']
+      highFrequencyTimeUnits: ['Business', 'Daily'],
+      excludedTableIds: [
+        // FHI, ukestall med daglig påfyll — se kommentaren over.
+        'fhi-sysvak-324', 'fhi-sysvak-484', 'fhi-sysvak-716', 'fhi-sysvak-717',
+        'fhi-msis-724', 'fhi-msis-726', 'fhi-msis-729', 'fhi-msis-731',
+        'fhi-msis-733', 'fhi-msis-769'
+      ]
     },
 
     // Skjul tidsperioden som ofte står på slutten av SSB-tabelltitler i

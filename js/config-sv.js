@@ -158,7 +158,10 @@ const AppConfig = {
     // KUN forsidens nylig-oppdatert-seksjon — søk/emnefiltre påvirkes ikke.
     recentUpdates: {
       showHighFrequency: false,
-      highFrequencyTimeUnits: ['Business', 'Daily']
+      highFrequencyTimeUnits: ['Business', 'Daily'],
+      // Kuraterte enkelttabeller som aldri skal vises (se js/config.js).
+      // SCB-instansen har ingen FHI-kilde, så lista er tom.
+      excludedTableIds: []
     },
 
     // Skjul tidsperioden som ofte står på slutten av SSB-tabelltitler i

@@ -1,6 +1,7 @@
 /**
  * Forsidens «Nylig oppdaterte tabeller»: filtrering av høyfrekvente tabeller
- * (AppConfig.ui.recentUpdates) i _collectRecentUpdateGroups.
+ * og av den kuraterte unntakslista (AppConfig.ui.recentUpdates) i
+ * _collectRecentUpdateGroups.
  *
  * Pre-fetch-grenen (recentTables gitt) trenger ingen MenuHierarchy, så
  * front-page.js kan lastes uten DOM-avhengighetene rundt renderFrontPage().
@@ -82,6 +83,59 @@ describe('_collectRecentUpdateGroups — høyfrekvente tabeller', () => {
     assert.equal(bucket.groups.length, 1);
     assert.equal(bucket.totalCount, 1);
     assert.equal(bucket.groups[0].tables.length, 1);
+  });
+});
+
+describe('_collectRecentUpdateGroups — kuratert unntaksliste', () => {
+  it('utelater tabell-id-er i excludedTableIds', () => {
+    AppConfig.ui.recentUpdates = {
+      showHighFrequency: false,
+      highFrequencyTimeUnits: ['Business', 'Daily'],
+      excludedTableIds: ['fhi-sysvak-324']
+    };
+    const bucket = todayBucket([
+      table('fhi-sysvak-324', 'Weekly'),
+      table('fhi-sysvak-750', 'Annual')
+    ]);
+    assert.deepEqual(tableIds(bucket), ['fhi-sysvak-750']);
+  });
+
+  it('utelater ikke en tabell bare fordi den er ukentlig', () => {
+    AppConfig.ui.recentUpdates = {
+      showHighFrequency: false,
+      highFrequencyTimeUnits: ['Business', 'Daily'],
+      excludedTableIds: ['fhi-sysvak-324']
+    };
+    const bucket = todayBucket([table('fhi-msis-724', 'Weekly')]);
+    assert.deepEqual(tableIds(bucket), ['fhi-msis-724']);
+  });
+
+  it('endrer ingenting når lista mangler eller er tom', () => {
+    AppConfig.ui.recentUpdates = {
+      showHighFrequency: false,
+      highFrequencyTimeUnits: ['Business', 'Daily']
+    };
+    assert.deepEqual(tableIds(todayBucket([table('13760', 'Monthly')])), ['13760']);
+
+    AppConfig.ui.recentUpdates = {
+      showHighFrequency: false,
+      highFrequencyTimeUnits: ['Business', 'Daily'],
+      excludedTableIds: []
+    };
+    assert.deepEqual(tableIds(todayBucket([table('13760', 'Monthly')])), ['13760']);
+  });
+
+  it('gjelder også når showHighFrequency er true (kuratering er uavhengig)', () => {
+    AppConfig.ui.recentUpdates = {
+      showHighFrequency: true,
+      highFrequencyTimeUnits: ['Business', 'Daily'],
+      excludedTableIds: ['fhi-sysvak-324']
+    };
+    const bucket = todayBucket([
+      table('fhi-sysvak-324', 'Weekly'),
+      table('nb-exr', 'Business')
+    ]);
+    assert.deepEqual(tableIds(bucket), ['nb-exr']);
   });
 });
 

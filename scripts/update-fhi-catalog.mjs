@@ -40,6 +40,17 @@
  * API-tittelfeltet beholdes ALLTID som `internalName` (søk/debug), uansett
  * hvilken gren som traff.
  *
+ * PERIODEFORMAT
+ * --------------
+ * FHI har fem ulike former for uke/måned/tertial («2024 -uke 17», «2024-w40»,
+ * «2021-01», «Oktober 2025», «2023 1.tertial»). first-/lastPeriod normaliseres
+ * derfor til SSB-form (2024U17, 2025M10, 2023T1) av normalizeCatalogPeriods
+ * (scripts/lib/fhi-catalog-merge.mjs) FØR skriving, og timeUnit utledes av
+ * resultatet der deriveTimeInfo ikke allerede har fastslått 'Annual'. Reglene
+ * ligger i js/period-format.js, som nettleseren og dette scriptet DELER (via
+ * scripts/lib/period-format.mjs) — adapteren normaliserer de samme periodene
+ * på nytt når en tabell åpnes.
+ *
  * MANUELL KURATERING (data/sources/fhi-curation.json)
  * ----------------------------------------------------
  * Håndskrevne visningstitler og kategoritilordninger (register → kategori i
@@ -73,7 +84,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { applyCuration } from './lib/fhi-curation.mjs';
-import { selectStaleTableIds, mergeCatalogSource } from './lib/fhi-catalog-merge.mjs';
+import { selectStaleTableIds, mergeCatalogSource, normalizeCatalogPeriods } from './lib/fhi-catalog-merge.mjs';
 import { atomicWrite } from './lib/atomic-write.mjs';
 
 const DEFAULT_RATE = 240; // kall/minutt — FHI-API-et dokumenterer ingen grense; holdt beskjedent av høflighet
@@ -260,6 +271,12 @@ const SINGLE_YEAR_PATTERN = /^\d{4}\*?$/;
 
 /**
  * Finn tidsdimensjonen (om noen) og utled first/lastPeriod + timeUnit.
+ *
+ * Periodene er kildens RÅ etiketter her; de normaliseres til SSB-form av
+ * normalizeCatalogPeriods rett før skriving (se filhodet). timeUnit fastslås
+ * kun som 'Annual' — den regelen ser samtlige kategorier og er derfor sikrere
+ * enn endepunktene alene; Weekly/Monthly utledes av normaliseringspasset.
+ *
  * @returns {{firstPeriod:string, lastPeriod:string, timeUnit:(string|null)}}
  */
 function deriveTimeInfo(dims) {
@@ -548,6 +565,12 @@ async function main() {
       tables = await buildSource(appConfig, source, throttle, args.limit);
       probedTotal += tables.length;
     }
+
+    // Periodene normaliseres til SSB-form (2024U17/2025M10/2023T1) over HELE
+    // kilden, av samme grunn som kurateringen under: en inkrementell kjøring
+    // beholder uendrede rader ordrett, og de skal ikke bli liggende på FHIs
+    // råformat til neste fulle regenerering. Se normalizeCatalogPeriods.
+    tables = normalizeCatalogPeriods(tables);
 
     // Kurateringen flettes på nytt over HELE kilden, også inkrementelt: den
     // ligger i en egen innsjekket fil og er idempotent.

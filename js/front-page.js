@@ -166,6 +166,21 @@ function _isHighFrequencyTable(table) {
 }
 
 /**
+ * True når tabellen ikke skal vises i «Nylig oppdatert» — enten fordi
+ * frekvensen er høy (over), eller fordi den står på den kuraterte
+ * unntakslista (AppConfig.ui.recentUpdates.excludedTableIds).
+ *
+ * Lista er uavhengig av showHighFrequency: den er et bevisst redaksjonelt
+ * valg per tabell, ikke en frekvensregel. Se kommentaren i config.js.
+ */
+function _isExcludedFromRecent(table) {
+  if (_isHighFrequencyTable(table)) return true;
+  const cfg = (AppConfig.ui && AppConfig.ui.recentUpdates) || {};
+  const excluded = cfg.excludedTableIds || [];
+  return excluded.indexOf(table.id) !== -1;
+}
+
+/**
  * Collect recently updated tables grouped by hierarchy node and time bucket.
  * - "I dag" and previous business day always shown (with empty state if needed).
  * - Monday uses "fredag" as previous business day instead of "i går".
@@ -249,7 +264,7 @@ function _collectRecentUpdateGroups(mh, recentTables) {
     const groups = nodeEntries.map(({ label, path, tables }) => {
       const matching = tables.filter(t => {
         if (t.discontinued) return false;
-        if (_isHighFrequencyTable(t)) return false;
+        if (_isExcludedFromRecent(t)) return false;
         if (!t.updated) return false;
         const d = new Date(t.updated);
         return d >= bucket.from && (!bucket.to || d < bucket.to);
@@ -265,3 +280,4 @@ function _collectRecentUpdateGroups(mh, recentTables) {
 
 window.renderFrontPage = renderFrontPage;
 window._isHighFrequencyTable = _isHighFrequencyTable;
+window._isExcludedFromRecent = _isExcludedFromRecent;
