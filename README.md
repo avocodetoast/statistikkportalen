@@ -159,9 +159,17 @@ To workflows, begge triggbare manuelt fra Actions-fanen:
   katalogindeksen og genererer SEO-sidene. Skru av `rebuild_index` for en ren kodeutrulling
   uten å vente på en full SSB-henting.
 - **`refresh-sources.yml`** — ukentlig (natt til søndag, 04:15 UTC) og manuelt. Oppdaterer
-  `data/sources/fhi-catalog.json` og `nb-periods.json`, committer dem hvis de endret seg, og
-  kaller `deploy.yml` mot produksjon etterpå — også når ingenting ble committet, siden
-  SSB-katalogen endrer seg uavhengig av de to filene.
+  `data/sources/fhi-catalog.json` og `nb-periods.json`, og committer dem hvis de endret seg.
+  Deretter kaller den `deploy.yml` for de miljøene du har huket av — også når ingenting ble
+  committet, siden SSB-katalogen endrer seg uavhengig av de to filene.
+
+  Utrullingen styres av to avkrysningsbokser: **`deploy_staging`** (på som standard) og
+  **`deploy_production`** (av som standard). Huk av begge for å oppdatere begge; de kjører
+  parallelt og uavhengig, så en feilet staging stopper ikke produksjon. På en **schedulert**
+  kjøring er inputs tomme, og da rulles kun staging ut — en automatisk jobb skal aldri kunne
+  treffe produksjon uten at noen har bedt om det. Produksjonsindeksen holdes derfor fersk kun
+  hvis du kjører workflowen manuelt med `deploy_production` avhuket, eller trigger `deploy.yml`
+  direkte.
 
 FHI-katalogen bygges **inkrementelt** som standard: ~30 kall i en normal uke, mot ~740 for en
 full runde. Inkrementelt henter kun tabeller som er nye eller har fått ny `modifiedAt`, så

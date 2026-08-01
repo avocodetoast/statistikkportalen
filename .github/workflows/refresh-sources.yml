@@ -22,6 +22,14 @@ on:
           (~740 kall, ~6 min). Fanger endringer FHI ikke har markert i modifiedAt.
         type: boolean
         default: false
+      deploy_staging:
+        description: Rull ut til staging etterpå
+        type: boolean
+        default: true
+      deploy_production:
+        description: Rull ut til produksjon etterpå
+        type: boolean
+        default: false
 
 concurrency:
   group: refresh-sources
@@ -110,11 +118,28 @@ jobs:
           git push
           git --no-pager show --stat --oneline HEAD >> "$GITHUB_STEP_SUMMARY"
 
-  # Kjøres også når ingenting ble committet: SSB-katalogen endrer seg uavhengig
-  # av data/sources/, og det er denne utrullingen som holder indeksen fersk
-  # (statusbadgen blir gul etter 48 timer).
-  deploy:
+  # Begge utrullingene kjøres også når ingenting ble committet: SSB-katalogen
+  # endrer seg uavhengig av data/sources/, og det er denne utrullingen som
+  # holder indeksen fersk (statusbadgen blir gul etter 48 timer).
+  #
+  # De kjører parallelt og er uavhengige — feiler staging, ruller produksjon
+  # ut likevel hvis du har huket av for den.
+  #
+  # På en schedulert kjøring er inputs tomme. Da faller staging tilbake på å
+  # kjøre, mens produksjon IKKE gjør det: en automatisk jobb skal aldri kunne
+  # treffe produksjon uten at noen har bedt om det.
+  deploy-staging:
     needs: oppdater
+    if: ${{ inputs.deploy_staging || github.event_name == 'schedule' }}
+    uses: ./.github/workflows/deploy.yml
+    with:
+      target: staging
+      rebuild_index: true
+    secrets: inherit
+
+  deploy-production:
+    needs: oppdater
+    if: ${{ inputs.deploy_production }}
     uses: ./.github/workflows/deploy.yml
     with:
       target: production

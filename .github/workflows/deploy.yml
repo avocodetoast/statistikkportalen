@@ -82,6 +82,16 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      # github.sha er commiten som TRIGGET kjøringen, ikke den som ble sjekket
+      # ut. Kalles denne workflowen fra refresh-sources.yml, har den jobben
+      # nettopp pushet en ny commit, og checkout av branchen henter den — mens
+      # github.sha fortsatt peker på den gamle. Oppsummeringen må rapportere det
+      # som faktisk ble rullet ut.
+      - name: Registrer utrullet commit
+        run: |
+          echo "DEPLOYED_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "DEPLOYED_SUBJECT=$(git log -1 --pretty=%s)" >> "$GITHUB_ENV"
+
       - uses: actions/setup-node@v5
         with:
           node-version: '20'
@@ -257,7 +267,8 @@ jobs:
             echo "## Deploy: $TARGET"
             echo ""
             echo "- Site: $SITE_URL"
-            echo "- Ref: \`${{ inputs.ref || github.ref }}\` (\`${{ github.sha }}\`)"
+            echo "- Ref: \`${{ inputs.ref || github.ref }}\`"
+            echo "- Utrullet commit: \`${DEPLOYED_SHA:-ukjent}\` — ${DEPLOYED_SUBJECT:-}"
             echo "- Katalogindeks bygget: ${{ inputs.rebuild_index }}"
             if [ -f "$RUNNER_TEMP/katalog.log" ]; then
               echo ""
