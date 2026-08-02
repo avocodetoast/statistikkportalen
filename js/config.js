@@ -233,11 +233,21 @@ const AppConfig = {
       ]
     },
 
-    // Skjul tidsperioden som ofte står på slutten av SSB-tabelltitler i
-    // listevisningen (søk, emner, forsiden), f.eks. "Konsumprisindeks 2010-2025"
-    // → "Konsumprisindeks". Perioden vises uansett i egen "Tidsperiode"-kolonne.
-    // Suffikset fjernes kun når det faktisk matcher start-/sluttperioden som
-    // vises i kolonnen (også flerårige intervaller som "(1990-2000)-(2024-2025)").
+    // Skjul metadata-halene i tabelltitler i listevisningen (søk, emner,
+    // forsiden) — begge har allerede sin egen kolonne der:
+    //
+    //   1. Tidsperioden SSB ofte setter bakerst: "Konsumprisindeks 2010-2025"
+    //      → "Konsumprisindeks". Fjernes KUN når suffikset faktisk matcher
+    //      start-/sluttperioden i "Tidsperiode"-kolonnen (også flerårige
+    //      intervaller som "(1990-2000)-(2024-2025)").
+    //   2. FHIs frekvensmerke: "Influensa: antall og andel positive (ukestall)"
+    //      → "Influensa: antall og andel positive". Perioden viser frekvensen
+    //      (2024U40, 2025M10). MERK: de flerårige halene (", treårige tall")
+    //      beholdes — de er aggregeringsvindu, ikke oppdateringstakt, og er for
+    //      20 FHI-tabellpar det eneste som skiller to ellers like titler. Se
+    //      BrowserState.stripFrequencyTail.
+    //
+    // Detaljsidene (variabelvelger, tabellvisning) viser alltid full tittel.
     hidePeriodInTableTitles: true,
 
     // Antall stinivåer under et emne som vises som navigasjonskort før

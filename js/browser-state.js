@@ -8,6 +8,18 @@
  * - Shared rendering helpers (table lists, date formatting, etc.)
  */
 
+/**
+ * Frekvenshalen FHI setter på tabelltitler, fjernet av
+ * BrowserState.stripFrequencyTail (se den for hvorfor lista er eksplisitt og
+ * hvorfor de flerårige variantene bevisst mangler).
+ */
+const FREQUENCY_TAIL = new RegExp(
+  '\\s*(?:' +
+    '\\((?:ukestall|månedstall|kvartalstall|tertialtall|halvårstall|årstall|' +
+      'ukentlige tall|månedlige tall|kvartalsvise tall|halvårlige tall|årlige tall)\\)' +
+    '|,\\s*ettårige tall' +
+  ')\\s*$', 'i');
+
 const BrowserState = {
   menuHierarchy: null,
   allTables: [],
@@ -762,19 +774,44 @@ const BrowserState = {
   },
 
   /**
-   * Clean table label (remove table ID prefix if present, and optionally the
-   * trailing time period that SSB appends to many titles).
+   * Clean table label: remove the table ID prefix, and — when
+   * AppConfig.ui.hidePeriodInTableTitles is enabled — the two metadata tails
+   * that already have their own column in the list:
    *
-   * The trailing period is only stripped when AppConfig.ui.hidePeriodInTableTitles
-   * is enabled and the suffix actually matches the table's first/last period,
-   * so we never accidentally cut off part of a real title.
+   *   1. the trailing time period SSB appends to many titles, and
+   *   2. FHI's frequency marker («(ukestall)», «, ettårige tall»), which the
+   *      normalized «Tidsperiode»-kolonne already shows (2024U17, 2025M10).
+   *
+   * The period is only stripped when the suffix actually matches the table's
+   * first/last period, so we never accidentally cut off part of a real title.
+   * The frequency tail is stripped FIRST, so a title carrying both
+   * («Dødsfall 1986-2025 (årlige tall)») is left with a clean stem.
    */
   cleanTableLabel(label, firstPeriod, lastPeriod) {
     let cleaned = label.replace(/^\d+:\s*/, '');
     if (AppConfig.ui.hidePeriodInTableTitles) {
+      cleaned = this.stripFrequencyTail(cleaned);
       cleaned = this.stripTrailingPeriod(cleaned, firstPeriod, lastPeriod);
     }
     return cleaned;
+  },
+
+  /**
+   * Remove FHI's frequency marker from the end of a title.
+   *
+   * DELIBERATELY AN EXPLICIT LIST, not a broad pattern. Two things must survive:
+   *
+   *   - parentheses that are not a frequency: «(antall)» (18 tables),
+   *     «(sesjon 1)», «(NPR)», «(SARS-CoV-2)», «(Pangolin-nomenklatur)»;
+   *   - the MULTI-year tails («, treårige tall», «, tiårige tall», …). Those
+   *     denote the aggregation window (a rolling average), not how often the
+   *     table updates — and for 20 pairs of FHI tables they are the ONLY thing
+   *     separating two otherwise identical titles («Nye krefttilfeller» exists
+   *     as both an annual and a ten-year table). «, ettårige tall» is safe to
+   *     drop precisely because it is the plain-annual member of such a pair.
+   */
+  stripFrequencyTail(label) {
+    return label.replace(FREQUENCY_TAIL, '').replace(/\s+$/, '');
   },
 
   /**

@@ -196,14 +196,43 @@ describe('Kuraterte visningsnavn', () => {
     }
   });
 
-  it('renderen slipper alle 401 kuraterte navn gjennom uendret', () => {
-    // cleanTableLabel stripper ledende «12345: » og etterfølgende periodesuffiks
-    // for SSB-titler. Heuristikken skal ALDRI spise et kuratert navn — blir den
-    // grådigere, er dette testen som fanger det.
+  it('periodeheuristikken rører ikke ett eneste av de 401 kuraterte navnene', () => {
+    // stripTrailingPeriod stripper periodesuffikset SSB setter på titlene sine,
+    // og skal ALDRI spise et kuratert fremmednavn. Blir heuristikken grådigere,
+    // er dette testen som fanger det. (cleanTableLabel fjerner i tillegg
+    // frekvenshalen — den er tilsiktet og har sin egen test under.)
     const mangled = foreignTables
-      .filter(t => app.BrowserState.cleanTableLabel(t.label, t.firstPeriod, t.lastPeriod) !== t.label)
+      .filter(t => app.BrowserState.stripTrailingPeriod(t.label, t.firstPeriod, t.lastPeriod) !== t.label)
       .map(t => t.id);
     assert.deepEqual(mangled, []);
+  });
+
+  it('frekvenshalen er det ENESTE cleanTableLabel fjerner fra et kuratert navn', () => {
+    // Hver eneste endring renderen gjør på et fremmednavn skal være en
+    // frekvenshale fjernet fra SLUTTEN av tittelen — aldri noe midt inne i den,
+    // og aldri hele navnet. Fanger både en grådigere frekvensregel og en
+    // periodeheuristikk som begynner å bite på fremmedtitler.
+    const changed = foreignTables
+      .map(t => ({ id: t.id, før: t.label, etter: app.BrowserState.cleanTableLabel(t.label, t.firstPeriod, t.lastPeriod) }))
+      .filter(x => x.etter !== x.før);
+
+    for (const { id, før, etter } of changed) {
+      assert.ok(etter.length > 0, `${id}: hele navnet ble spist`);
+      assert.ok(før.startsWith(etter), `${id}: «${før}» → «${etter}» er ikke et rent halekutt`);
+      assert.match(før.slice(etter.length), /^[\s,]*(?:\([^()]*tall\)|ettårige tall)$/i,
+        `${id}: det som ble fjernet er ikke en frekvenshale`);
+    }
+
+    // De flerårige halene («, treårige tall») MÅ overleve: for 20 FHI-tabellpar
+    // er de det eneste som skiller to ellers identiske titler.
+    const flerårige = foreignTables.filter(t => /,\s*(?:to|tre|fire|fem|seks|sju|syv|åtte|ni|ti|elleve|tolv|femten)årige tall$/i.test(t.label));
+    // 27 i dagens katalog; gulvet er en vakt mot at utvalget stille tømmes
+    // (da ville løkka under blitt en no-op og testen grønn av feil grunn).
+    assert.ok(flerårige.length >= 25, `fant bare ${flerårige.length} flerårige titler i katalogen`);
+    for (const t of flerårige) {
+      assert.equal(app.BrowserState.cleanTableLabel(t.label, t.firstPeriod, t.lastPeriod), t.label,
+        `${t.id}: den flerårige halen ble fjernet`);
+    }
   });
 });
 

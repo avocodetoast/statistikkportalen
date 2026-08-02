@@ -164,11 +164,9 @@ const AppConfig = {
       excludedTableIds: []
     },
 
-    // Skjul tidsperioden som ofte står på slutten av SSB-tabelltitler i
-    // listevisningen (søk, emner, forsiden), f.eks. "Konsumprisindeks 2010-2025"
-    // → "Konsumprisindeks". Perioden vises uansett i egen "Tidsperiode"-kolonne.
-    // Suffikset fjernes kun når det faktisk matcher start-/sluttperioden som
-    // vises i kolonnen (også flerårige intervaller som "(1990-2000)-(2024-2025)").
+    // Skjul metadata-halene (tidsperiode og frekvensmerke) i tabelltitler i
+    // listevisningen — begge har egen kolonne der. Se js/config.js for full
+    // forklaring. Frekvensmerket er norsk og treffer i praksis bare FHI.
     hidePeriodInTableTitles: true,
 
     // Antall stinivåer under et emne som vises som navigasjonskort før
