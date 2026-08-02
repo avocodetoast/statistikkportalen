@@ -164,7 +164,13 @@ const translations = {
     'status.seriesMatch':   '{0} serier matcher valget',
     'status.noSeriesMatch': 'Ingen serier matcher valget',
     'status.seriesMatchPending': 'Velg verdier i alle dimensjoner for å se antall serier',
-    'status.exceedsLimit': '\u2014 overskrider API-grensen på 800\u202f000!',
+    // Grensen fylles inn: SSBs kommer fra /config (og kan endres av SSB),
+    // og Norges Bank/FHI har ingen \u2014 se AppConfig.limits.bySource.
+    'status.exceedsLimit': '\u2014 overskrider API-grensen p\u00E5 {0}!',
+    // Myke advarsler for kilder UTEN cellegrense: uttrekket er lovlig, bare stort.
+    'status.largeQuery':    '\u2014 stor sp\u00F8rring: uttrekket kan ta tid.',
+    'status.verySlowQuery': '\u2014 sv\u00E6rt stor sp\u00F8rring: uttrekket kan bli avbrutt f\u00F8r det er ferdig.',
+    'status.denseTooLarge': '\u2014 utvalget spenner over for mange kombinasjoner til \u00E5 bygges som tabell. Begrens antall verdier per dimensjon.',
 
     // API builder
     'api.builder':          'API-bygger',
@@ -197,7 +203,9 @@ const translations = {
     'api.formatCsvTs':      'CSV (én serie per rad)',
     'api.formatExcelTs':    'Excel (én serie per rad)',
     'api.maxRowCount':      'Maks rader:',
-    'api.maxRowCountHint':  'Tomt felt = ubegrenset',
+    // Feltet ignoreres av FHIs API (målt 2026-08-02, se API-FINDINGS.md), men
+    // står i deres egen API-kontrakt og vises derfor fortsatt.
+    'api.maxRowCountHint':  'Tomt felt = ubegrenset. Feltet ser ut til å bli ignorert av FHIs API.',
     'api.detail':           'Detaljnivå:',
     'api.detailFull':       'Alt',
     'api.detailDataonly':   'Kun data',
@@ -485,7 +493,10 @@ const translations = {
     'status.seriesMatch':   '{0} series match your selection',
     'status.noSeriesMatch': 'No series match your selection',
     'status.seriesMatchPending': 'Select values in all dimensions to see the number of series',
-    'status.exceedsLimit': '\u2014 exceeds the API limit of 800,000!',
+    'status.exceedsLimit': '\u2014 exceeds the API limit of {0}!',
+    'status.largeQuery':    '\u2014 large query: the download may take a while.',
+    'status.verySlowQuery': '\u2014 very large query: the download may be cut short.',
+    'status.denseTooLarge': '\u2014 the selection spans too many combinations to build as a table. Narrow the values per dimension.',
 
     'api.builder':          'API builder',
     'api.method':           'Method:',
@@ -517,7 +528,7 @@ const translations = {
     'api.formatCsvTs':      'CSV (one series per row)',
     'api.formatExcelTs':    'Excel (one series per row)',
     'api.maxRowCount':      'Max rows:',
-    'api.maxRowCountHint':  'Empty = unlimited',
+    'api.maxRowCountHint':  'Empty = unlimited. The field appears to be ignored by FHI’s API.',
     'api.detail':           'Detail level:',
     'api.detailFull':       'All',
     'api.detailDataonly':   'Data only',
@@ -799,7 +810,10 @@ const translations = {
     'status.seriesMatch':   '{0} serier matchar valet',
     'status.noSeriesMatch': 'Inga serier matchar valet',
     'status.seriesMatchPending': 'Välj värden i alla dimensioner för att se antalet serier',
-    'status.exceedsLimit': '\u2014 \u00F6verskrider API-gr\u00E4nsen p\u00E5 800\u202F000!',
+    'status.exceedsLimit': '\u2014 \u00F6verskrider API-gr\u00E4nsen p\u00E5 {0}!',
+    'status.largeQuery':    '\u2014 stor fr\u00E5ga: h\u00E4mtningen kan ta tid.',
+    'status.verySlowQuery': '\u2014 mycket stor fr\u00E5ga: h\u00E4mtningen kan avbrytas innan den \u00E4r klar.',
+    'status.denseTooLarge': '\u2014 urvalet sp\u00E4nner \u00F6ver f\u00F6r m\u00E5nga kombinationer f\u00F6r att byggas som tabell. Begr\u00E4nsa antalet v\u00E4rden per dimension.',
 
     'api.builder':          'API-byggare',
     'api.method':           'Metod:',
@@ -831,7 +845,7 @@ const translations = {
     'api.formatCsvTs':      'CSV (en serie per rad)',
     'api.formatExcelTs':    'Excel (en serie per rad)',
     'api.maxRowCount':      'Max rader:',
-    'api.maxRowCountHint':  'Tomt f\u00E4lt = obegr\u00E4nsat',
+    'api.maxRowCountHint':  'Tomt f\u00E4lt = obegr\u00E4nsat. F\u00E4ltet verkar ignoreras av FHI:s API.',
     'api.detail':           'Detaljniv\u00E5:',
     'api.detailFull':       'Allt',
     'api.detailDataonly':   'Endast data',

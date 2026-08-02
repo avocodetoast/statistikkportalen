@@ -65,19 +65,61 @@ Verifisert mot det levende API-et (`/api/data/{FLOW}/{key}`):
 API-byggeren (variable-select) eksponerer format, detail, includeHistory og
 bom via `buildApiQuery`-options; appen selv henter alltid `sdmx-json`.
 
-## FHI: responsformater og maxRowCount (verifisert 2026-07)
+## FHI: responsformater og maxRowCount (verifisert 2026-07, maxRowCount målt på nytt 2026-08-02)
 
 Verifisert mot det levende API-et (`POST /api/open/v1/{source}/Table/{id}/data`):
 
 - Gyldige `response.format`-verdier: `json-stat2`, `csv2`, `csv3` (to
   CSV-varianter, `text/csv`) og `parquet` (`application/vnd.apache.parquet`).
   Alle andre verdier avvises med 422 før spørringen kjøres.
-- `response.maxRowCount` er valgfri: utelatt felt betyr ubegrenset; en
-  spørring som overskrider grensen gir feil (ikke trunkert svar).
+- **`response.maxRowCount` er virkningsløs.** Målt 2026-08-02: `maxRowCount`
+  1, 10, 50000 og utelatt felt gav BYTE-IDENTISKE svar — både for `json-stat2`
+  og `csv2`, og også for en tabell på 1,2 mill. celler. Feltet trunkerer ikke
+  og gir ingen feil. (Retter en tidligere påstand her om at en spørring over
+  grensen gir feil; det stemmer ikke.)
 - Dimensjonsfiltre: `item`, `top`, `bottom` og `all` (med `*`-jokertegn).
 
 API-byggeren eksponerer format og maxRowCount via `buildApiQuery`-options;
-appen selv henter alltid `json-stat2` med `maxRowCount: 50000`.
+appen selv henter alltid `json-stat2` med `maxRowCount: 50000` — en verdi som
+altså ikke har noen effekt. Feltet beholdes fordi det står i FHIs egen
+API-kontrakt og vises som en knott i API-byggeren.
+
+## Cellegrenser: kun SSB har en (målt 2026-08-02)
+
+Appen håndhevet lenge ett globalt celletak på 800 000 mot alle kilder. Det er
+en ren SSB-regel. Målt mot de tre levende API-ene:
+
+| Kilde | Cellegrense | Måling |
+|---|---|---|
+| **SSB** | **Reell: 800 000**, live fra `GET /config` → `maxDataCells` (bekreftet `800000`). 403 ved brudd. | Eneste ekte API-regel. |
+| **FHI** | **Ingen** — og ingen feilkode. Bare tid. | 0,6 mill. celler → 2,5 s / 4 MB · 2,0 mill. → 39 s / 11 MB · 6,0 mill. → 116 s / 30 MB · 14 mill. → klient-timeout 150 s · 49 mill. → timeout 180 s. ~52 000 celler/s i det lineære området. |
+| **NB** | **Ingen.** | Full EXR = 1 544 388 celler levert på 1,5 s (7,4 MB). MONEY_MARKET: 61 MB / 3,1 mill. observasjoner på 11,2 s, HTTP 200. |
+
+Omfang: 37 av 370 FHI-tabeller har et kryssprodukt over 800 000; den største er
+49 129 080 celler (`nokkel-343`). Med det gamle taket var alle disse usynlig
+sperret av en regel som ikke fantes. Verifisert i nettleser: `fhi-msis-733`
+(1 224 960 celler) hentes nå på 22,6 s — den var både sperret av celletaket OG
+over det gamle 15 s-taket.
+
+Norges Bank traff derimot sjelden taket i praksis, og det er verdt å vite
+hvorfor: celletelleren anslår perioder for den VALGTE frekvensen, ikke for alle
+frekvenser samtidig. Full EXR blir derfor 2 747 celler i UI-et, ikke 1 544 388 —
+sistnevnte er kryssproduktet i selve API-svaret (alle tre frekvenser × 12 556
+perioder). Sperringen var altså feil av prinsipp for NB, ikke en daglig plage.
+
+FHIs vegg er ikke en grense, men en asymptote: svaret bare tar lengre og lengre
+tid, uten feilkode. Den bindende skranken for appen var derfor i praksis
+`sources.fetchTimeoutMs` (15 s), ikke celletallet.
+
+**Konsekvens i koden:**
+- `AppConfig.limits.bySource` — hard sperre kun for SSB (`maxCells`); Norges
+  Bank og FHI har `maxCells: null` og får myke advarsler i stedet.
+- `sources.dataFetchTimeoutMs` = 90 s for selve datauttrekket, mens
+  `sources.fetchTimeoutMs` = 15 s fortsatt verner katalog-/metadatastien.
+- For Norges Bank måles advarselen mot ANSLÅTTE observasjoner (serier ×
+  perioder), ikke det tette kryssproduktet: SDMX er sparsomt, og
+  GOVT_PRIMARY_MARKET har et produkt på 5,2 billioner celler mot 11 264
+  faktiske observasjoner.
 
 ## Norges Bank (SDMX): nøkkelsyntaks-fallgruver (verifisert 2026-07)
 

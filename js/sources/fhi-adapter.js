@@ -145,11 +145,18 @@
   const NOT_SIGN = '¬'; // SSB-hierarkiprefiks (se ARCHITECTURE.md)
   const SUBJECT_ID = 'he'; // Helse
 
-  // Timeout for nettverkskall mot FHI-API-et — en hengende FHI-server skal
-  // ikke blokkere app-initialiseringen (BrowserState venter på hele
-  // katalogaggregeringen i source-registry.js). Delt nøkkel med
+  // Timeout for KATALOG- OG METADATAKALL mot FHI-API-et — en hengende
+  // FHI-server skal ikke blokkere app-initialiseringen (BrowserState venter på
+  // hele katalogaggregeringen i source-registry.js). Delt nøkkel med
   // norges-bank-adapter.js.
   const FETCH_TIMEOUT_MS = (window.AppConfig.sources && window.AppConfig.sources.fetchTimeoutMs) || 15000;
+
+  // Timeout for SELVE DATAUTTREKKET. Et stort uttrekk er ikke en hengende
+  // server: FHI leverer 2 mill. celler på 39 s og 6 mill. på 116 s (målt
+  // 2026-08-02, se API-FINDINGS.md). Med det korte taket over var en tabell på
+  // 2 mill. celler uhentbar uansett hva brukeren gjorde.
+  const DATA_FETCH_TIMEOUT_MS =
+    (window.AppConfig.sources && window.AppConfig.sources.dataFetchTimeoutMs) || 90000;
 
   // Emnesubjektets sortCode — kun kosmetisk (SSB-tabeller under 'he' oppretter
   // subjektnoden i emnetreet først; jf. tilsvarende resonnement i
@@ -267,10 +274,16 @@
    * respons: detail / errors{} / title — FHI bruker alle tre avhengig av
    * feiltype, se f.eks. 400 «RequestInvalidProperty»/«RequestMissingProperty»
    * og 422 «One or more validation errors occurred»).
+   *
+   * @param {object} [opts] - Overstyrer fetchWithTimeout-opsjonene. Kun
+   *   getTableData bruker den (DATA_FETCH_TIMEOUT_MS) — katalog- og
+   *   metadatakall skal beholde det korte taket som verner første paint.
    */
-  async function fetchJson(url, options) {
-    const res = await window.SourceCommon.fetchWithTimeout(url, options,
-      { timeoutMs: FETCH_TIMEOUT_MS, timeoutErrorPrefix: '[FHIAdapter] Tidsavbrudd', queue: 'fhi' });
+  async function fetchJson(url, options, opts) {
+    const o = Object.assign(
+      { timeoutMs: FETCH_TIMEOUT_MS, timeoutErrorPrefix: '[FHIAdapter] Tidsavbrudd', queue: 'fhi' },
+      opts || {});
+    const res = await window.SourceCommon.fetchWithTimeout(url, options, o);
     if (!res.ok) {
       let message = '';
       try {
@@ -999,8 +1012,14 @@
    * slik at API-bygger-forhåndsvisningen aldri divergerer fra det appen
    * faktisk sender). responseOptions ({format, maxRowCount}) settes kun av
    * API-byggeren — getTableData utelater dem og får dermed alltid dagens
-   * json-stat2-body uendret. maxRowCount: null utelater feltet (API-et
-   * tolker det som ubegrenset); ugyldige verdier faller tilbake til standard.
+   * json-stat2-body uendret. maxRowCount: null utelater feltet; ugyldige
+   * verdier faller tilbake til standard.
+   *
+   * maxRowCount er BEVIST VIRKNINGSLØS: målt 2026-08-02 gav 1, 10, 50000 og
+   * utelatt felt byte-identiske svar — både for json-stat2 og csv2, også for en
+   * tabell på 1,2 mill. celler. Feltet står i FHIs egen API-kontrakt og vises i
+   * API-byggeren, og beholdes derfor — men det trunkerer ikke og gir ingen feil.
+   * Se API-FINDINGS.md.
    */
   function buildDataBody(meta, valueCodes, responseOptions) {
     const sel = valueCodes || {};
@@ -1132,13 +1151,16 @@
     const meta = await getTableMetadata(tableId, true, lang); // cachet — trengs for dimensjonsrekkefølge/roller
     const body = buildDataBody(meta, valueCodes);
 
+    // Eneste kallet med det lange tidsavbruddet: store uttrekk er trege, ikke
+    // hengende (se DATA_FETCH_TIMEOUT_MS).
     const json = await fetchJson(
       BASE + '/' + encodeURIComponent(source) + '/Table/' + encodeURIComponent(rawId) + '/data',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(body)
-      }
+      },
+      { timeoutMs: DATA_FETCH_TIMEOUT_MS }
     );
 
     return normalizeDataset(json, meta);

@@ -267,6 +267,44 @@ function formatNumber(value, decimals = null) {
 }
 
 /**
+ * Celletak for kilden som eier en tabell.
+ *
+ * Grensene er KILDESPESIFIKKE, og de to semantikkene må ikke blandes:
+ *   maxCells       HARD grense — kun SSB, der den er en ekte API-regel
+ *                  (maxDataCells fra /config, 403 ved brudd). null = ingen
+ *                  hard grense, og Hent-knappen skal da aldri sperres.
+ *   warnCells      MYK: stor spørring, kan ta tid.
+ *   slowWarnCells  MYK: vil trolig gå i tidsavbrudd.
+ *   denseWarnCells MYK, mot det tette kryssproduktet (klientminne).
+ *
+ * Norges Bank og FHI har ingen cellegrense i det hele tatt (målt 2026-08-02,
+ * se API-FINDINGS.md) — store uttak der er trege, ikke ulovlige.
+ *
+ * Ukjent kilde (eller en instans uten api.sourceFor, jf. config-sv.js) faller
+ * tilbake på AppConfig.limits-reserven.
+ *
+ * @param {string} tableId
+ * @returns {{maxCells: number|null, warnCells: number|null,
+ *            slowWarnCells: number|null, denseWarnCells: number|null}}
+ */
+function cellLimitsFor(tableId) {
+  const limits = (window.AppConfig && AppConfig.limits) || {};
+  const fallback = {
+    maxCells: limits.maxCells != null ? limits.maxCells : null,
+    warnCells: limits.cellWarningThreshold != null ? limits.cellWarningThreshold : null,
+    slowWarnCells: null,
+    denseWarnCells: null
+  };
+
+  const sourceId = (typeof api !== 'undefined' && api && typeof api.sourceFor === 'function')
+    ? api.sourceFor(tableId)
+    : null;
+  const entry = (sourceId && limits.bySource) ? limits.bySource[sourceId] : null;
+
+  return entry ? Object.assign({}, fallback, entry) : fallback;
+}
+
+/**
  * Generate a timestamp string for file names
  * @returns {string} - Timestamp in format YYYYMMDD_HHMMSS
  */

@@ -119,3 +119,30 @@ describe('Translations — getCurrentApiLang', () => {
     assert.equal(getCurrentApiLang(), 'no');
   });
 });
+
+// Ordboken direkte (ikke via t()): t() faller tilbake til nb for manglende
+// nøkler, så en paritetssjekk MÅ lese hvert språks egen bås.
+// eslint-disable-next-line no-undef
+const dict = translations;
+
+describe('Translations — celletak og størrelsesadvarsler', () => {
+  // Grensen er ikke lenger 800 000 for alle: SSBs kommer fra /config (og kan
+  // endres av SSB), NB/FHI har ingen. Teksten må derfor fylles fra tallet som
+  // faktisk gjelder, ikke hardkode det.
+  it('status.exceedsLimit tar grensen som parameter i alle språk', () => {
+    for (const lang of ['nb', 'en', 'sv']) {
+      const s = dict[lang]['status.exceedsLimit'];
+      assert.ok(s, `mangler status.exceedsLimit i ${lang}`);
+      assert.match(s, /\{0\}/, `${lang}: skal ha en {0}-plassholder`);
+      assert.doesNotMatch(s, /800/, `${lang}: grensen skal ikke være hardkodet`);
+    }
+  });
+
+  it('har de myke størrelsesadvarslene i alle språk', () => {
+    for (const key of ['status.largeQuery', 'status.verySlowQuery', 'status.denseTooLarge']) {
+      for (const lang of ['nb', 'en', 'sv']) {
+        assert.ok(dict[lang][key], `mangler ${key} i ${lang}`);
+      }
+    }
+  });
+});

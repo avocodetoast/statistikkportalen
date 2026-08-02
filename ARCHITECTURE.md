@@ -180,7 +180,7 @@ renderFrontPage()
         CatalogIndex.load()                    //   manifest + per-source shards from data/index/
         + api.getAllTables({ onlySources })    //   only for sources without a usable shard
      else (or index unavailable) →
-        api.getConfig()                        //   server limits → AppConfig.limits.maxCells (SSB-only)
+        api.getConfig()                        //   server limits → AppConfig.limits.bySource.ssb (SSB-only)
         + api.getAllTables()                   //   full catalogue, aggregated across all enabled
                                                 //   sources (SSB + Norges Bank + FHI)
   → _collectRecentUpdateGroups(mh, recentTables)
@@ -415,7 +415,23 @@ GET  /savedqueries/{id}               — Fetch saved query
 
 ### Dynamic configuration
 
-On startup, `api.getConfig()` fetches the `/config` endpoint and updates `AppConfig.limits.maxCells` with the server's `maxDataCells` value. This means the cell limit in the variable selection view adapts automatically if SSB changes their limits. The warning threshold is set to 75% of the max. If the `/config` call fails, the hardcoded defaults in `config.js` are used.
+`api.getConfig()` fetches the `/config` endpoint and updates **`AppConfig.limits.bySource.ssb`** with the server's `maxDataCells` value (warning threshold = 75% of the max), so the cell limit adapts automatically if SSB changes theirs. If the call fails, the defaults in `config.js` are used. The call is lazy and SSB-only — see `ensureApiLimits()` in `variable-select.js`.
+
+It writes only into SSB's slot, and deliberately so: **the 800 000 cell limit is an SSB rule, not a universal one.** Norges Bank and FHI have no cell limit at all (measured 2026-08-02, see [API-FINDINGS.md](API-FINDINGS.md)). `AppConfig.limits.bySource` therefore holds one entry per source, read through `cellLimitsFor(tableId)` in `js/utils.js`:
+
+- `maxCells` — **hard** limit; blocks the fetch button. Only SSB has one (403 on breach); `null` for NB/FHI means the button is never blocked on size.
+- `warnCells` / `slowWarnCells` / `denseWarnCells` — **soft** thresholds that only colour the cell counter and add a warning. For Norges Bank the estimate is measured against *series × periods*, not the dense cross-product, because SDMX is sparse (GOVT_PRIMARY_MARKET: 5.2 trillion dense cells vs 11 264 actual observations).
+
+The top-level `AppConfig.limits.maxCells`/`cellWarningThreshold` remain as the fallback for sources without an entry — which is what `config-sv.js` (no `sources` block) relies on.
+
+### Two fetch timeouts for foreign sources
+
+`AppConfig.sources` carries two deliberately different timeouts, and they must not be merged:
+
+- **`fetchTimeoutMs` (15 s)** — catalogue and metadata calls. This protects first paint: `BrowserState` waits for the whole catalogue aggregation, so a hanging source must fail fast.
+- **`dataFetchTimeoutMs` (90 s)** — `getTableData` only. A large extract is not a hanging source: FHI serves 2 million cells in 39 s and 6 million in 116 s. Under the short timeout, a 2-million-cell FHI table was unfetchable no matter what the user did.
+
+Both adapters thread this through an optional third argument on their fetch helper (`fetchJson` in `fhi-adapter.js`, `fetchSdmx` in `norges-bank-adapter.js`); `tests/unit/fetch-timeout-split.test.js` guards the split.
 
 ### Error handling
 

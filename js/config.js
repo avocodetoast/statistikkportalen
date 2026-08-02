@@ -164,10 +164,12 @@ const AppConfig = {
    * API request limits
    */
   limits: {
-    // Maximum cells per request. Overridden at runtime by config.maxDataCells from the /config endpoint.
+    // RESERVE for kilder uten oppføring i bySource under (og for instanser
+    // uten sources-blokk, jf. config-sv.js). Muteres ikke lenger av /config —
+    // det svaret er SSB-spesifikt og skrives i bySource.ssb (js/api.js).
     maxCells: 800000,
 
-    // Warning threshold (cells). Overridden at runtime to 75% of config.maxDataCells from the /config endpoint.
+    // Reserve-advarselsterskel (75 % av maxCells). Se kommentaren over.
     cellWarningThreshold: 600000,
 
     // Supported export formats. Null until populated at runtime from config.dataFormats via the /config endpoint.
@@ -179,7 +181,41 @@ const AppConfig = {
     tablePageBatchSize: 10000,
 
     // Maximum GET URL length before warning (SSB recommends < 2000 chars)
-    maxGetUrlLength: 2000
+    maxGetUrlLength: 2000,
+
+    // Celletak PER KILDE. Kun SSB har en ekte API-regel — Norges Bank og FHI
+    // har INGEN cellegrense (målt 2026-08-02, se API-FINDINGS.md). Store uttak
+    // der er trege, ikke ulovlige, og skal derfor advares mot, ikke sperres.
+    //
+    //   maxCells       HARD grense. null = Hent-knappen sperres aldri.
+    //   warnCells      MYK: stor spørring, kan ta tid.
+    //   slowWarnCells  MYK: vil trolig gå i tidsavbrudd.
+    //   denseWarnCells MYK, mot det TETTE kryssproduktet (klientminne).
+    //
+    // Skriv null eksplisitt for ubrukte felter: cellLimitsFor() legger
+    // oppføringen over reserven med Object.assign, som også kopierer undefined.
+    bySource: {
+      // Hard grense: SSB svarer 403 ved brudd. maxCells/warnCells overskrives i
+      // runtime av /config (maxDataCells) — se _applyConfig i js/api.js.
+      ssb: { maxCells: 800000, warnCells: 600000, slowWarnCells: null, denseWarnCells: null },
+
+      // Norges Bank: ingen grense. Full EXR = 1 544 388 celler på 1,5 s / 7,4 MB;
+      // MONEY_MARKET 3,1 mill. observasjoner / 61 MB på 11,2 s, HTTP 200.
+      // warnCells måles mot ANSLÅTTE observasjoner (serier × perioder), ikke det
+      // tette kryssproduktet — SDMX er sparsomt, og produktet ville gitt en
+      // meningsløs advarsel på hver eneste NB-tabell.
+      // denseWarnCells speiler MAX_DENSE_CELLS i sdmx-to-jsonstat.js: over det
+      // klarer ikke klienten å bygge det tette JSON-Stat2-arrayet i det hele tatt.
+      // HOLD DE TO I SYNK.
+      nb: { maxCells: null, warnCells: 2000000, slowWarnCells: null, denseWarnCells: 20000000 },
+
+      // FHI: ingen grense og ingen feilkode — bare tid. Målt: 0,6 mill. celler
+      // → 2,5 s, 2,0 mill. → 39 s, 6,0 mill. → 116 s (~52 000 celler/s).
+      // Med dataFetchTimeoutMs = 90 s rekker vi ~4,6 mill. celler; slowWarnCells
+      // ligger like under. warnCells er satt over SSBs 800 000, slik at de 37
+      // FHI-tabellene med kryssprodukt over det ikke advarer av seg selv.
+      fhi: { maxCells: null, warnCells: 1000000, slowWarnCells: 4000000, denseWarnCells: null }
+    }
   },
 
   /**
@@ -303,10 +339,18 @@ const AppConfig = {
    * og at kildens tabeller ikke rutes — resten av portalen påvirkes ikke.
    */
   sources: {
-    // Timeout (ms) for fremmedkilders nettverkskall (NB/FHI) — en hengende
-    // kilde skal feile innen dette og ikke blokkere app-initialiseringen
-    // (BrowserState venter på hele katalogaggregeringen).
+    // Timeout (ms) for KATALOG- OG METADATAKALL mot fremmedkilder (NB/FHI) —
+    // en hengende kilde skal feile innen dette og ikke blokkere app-
+    // initialiseringen (BrowserState venter på hele katalogaggregeringen).
     fetchTimeoutMs: 15000,
+
+    // Timeout (ms) for SELVE DATAUTTREKKET (kun getTableData). Et stort uttrekk
+    // er ikke en hengende kilde: FHI leverer 2 mill. celler på 39 s og 6 mill.
+    // på 116 s (målt 2026-08-02, se API-FINDINGS.md), NB 61 MB på 11 s. Med det
+    // korte taket over var en FHI-tabell på 2 mill. celler uhentbar uansett hva
+    // brukeren gjorde. 90 s rekker ~4,6 mill. FHI-celler — over det advarer
+    // UI-et (limits.bySource.fhi.slowWarnCells) i stedet for å la fanen henge.
+    dataFetchTimeoutMs: 90000,
 
     // Maks samtidige nettverkskall PER FREMMEDKILDE (kø i
     // js/sources/source-common.js). NB/FHI går utenom SSBs egen throttle, så

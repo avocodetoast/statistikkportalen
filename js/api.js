@@ -659,8 +659,18 @@ class SSBApi {
    */
   _applyConfig(config) {
     if (config.maxDataCells != null) {
-      AppConfig.limits.maxCells = config.maxDataCells;
-      AppConfig.limits.cellWarningThreshold = Math.round(config.maxDataCells * 0.75);
+      // /config er SSBs EGEN API-regel. Verdien skrives kun i SSBs bås: Norges
+      // Bank og FHI har ingen cellegrense (API-FINDINGS.md), og et SSB-svar
+      // skal aldri kunne flytte terskelen som leses for dem. Båsen opprettes om
+      // den mangler, så instanser uten limits.bySource (config-sv.js) også får
+      // den dynamiske verdien.
+      const limits = AppConfig.limits;
+      if (!limits.bySource) limits.bySource = {};
+      if (!limits.bySource.ssb) {
+        limits.bySource.ssb = { maxCells: null, warnCells: null, slowWarnCells: null, denseWarnCells: null };
+      }
+      limits.bySource.ssb.maxCells = config.maxDataCells;
+      limits.bySource.ssb.warnCells = Math.round(config.maxDataCells * 0.75);
     }
     // Stored for diagnostics and future use (e.g. version display in footer)
     if (config.apiVersion != null) {

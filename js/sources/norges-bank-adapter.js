@@ -153,15 +153,22 @@
 
   // ---- Fetch-hjelpere ----
 
-  /** Hent JSON. Returnerer {status, json}; kaster kun på nettverksfeil. */
-  async function fetchSdmx(url) {
+  /**
+   * Hent JSON. Returnerer {status, json}; kaster kun på nettverksfeil.
+   *
+   * @param {object} [opts] - {timeoutMs}. Kun getTableData setter den
+   *   (dataFetchTimeoutMs): katalog- og metadataprober skal beholde det korte
+   *   taket som verner første paint.
+   */
+  async function fetchSdmx(url, opts) {
     // Format velges via ?format=sdmx-json i URL-en. En spesifikk vnd.sdmx-Accept
     // kolliderer med format-parameteren og gir 406 på strukturendepunktet, så vi
     // holder oss til et generisk Accept.
     // Timeout via AbortSignal slik at et hengende NB-API ikke blokkerer hele
     // app-initialiseringen (katalogaggregeringen venter på alle kilder). Verdien
     // leses fra AppConfig.sources.fetchTimeoutMs med 15 s fallback.
-    const timeoutMs = (window.AppConfig && window.AppConfig.sources &&
+    const timeoutMs = (opts && opts.timeoutMs) ||
+      (window.AppConfig && window.AppConfig.sources &&
       window.AppConfig.sources.fetchTimeoutMs) || 15000;
     const res = await window.SourceCommon.fetchWithTimeout(url,
       { headers: { Accept: 'application/json, */*' } },
@@ -1416,9 +1423,14 @@
 
     const metricDims = (meta.role && meta.role.metric) || [];
 
+    // Eneste kallet med det lange tidsavbruddet: et stort uttrekk er tregt, ikke
+    // hengende (MONEY_MARKET: 61 MB på 11 s, målt 2026-08-02).
+    const dataTimeoutMs = (window.AppConfig && window.AppConfig.sources &&
+      window.AppConfig.sources.dataFetchTimeoutMs) || 90000;
+
     let json = null;
     try {
-      const res = await fetchSdmx(url);
+      const res = await fetchSdmx(url, { timeoutMs: dataTimeoutMs });
       if (res.status === 404) {
         return emptyDataFromSelection(meta, valueCodes);
       }

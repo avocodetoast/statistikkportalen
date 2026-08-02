@@ -168,9 +168,12 @@
     // JSON-Stat2 er et TETT kryssprodukt — for svært sparsomme flows (f.eks.
     // GOVT_PRIMARY_MARKET, ISIN-nøklede serier) kan et åpent uttak gi et
     // produkt langt over det en JS-array kan romme («Invalid array length»).
-    // UI-et blokkerer slike uttak via celletaket (AppConfig.limits.maxCells,
-    // variable-select-status.validateSelection) — dette er en defensiv skranke
-    // for kall utenom UI-et, med en lesbar feil i stedet for RangeError.
+    //
+    // UI-et sperrer IKKE slike uttak: Norges Bank har ingen cellegrense, så
+    // Hent-knappen er alltid åpen (AppConfig.limits.bySource.nb.maxCells er
+    // null). DETTE er derfor den faktiske skranken, ikke en teoretisk reserve.
+    // UI-et advarer i forkant når det tette produktet passerer samme tall
+    // (bySource.nb.denseWarnCells) — HOLD DE TO I SYNK.
     const MAX_DENSE_CELLS = 20000000;
     const totalCells = size.reduce((a, b) => a * b, 1);
     if (totalCells > MAX_DENSE_CELLS) {

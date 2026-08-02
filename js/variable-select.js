@@ -415,16 +415,17 @@ async function handleLoadDefaultSelection() {
 /**
  * Hent /config én gang, lat og ikke-blokkerende.
  *
- * Kallet setter kun AppConfig.limits.maxCells/cellWarningThreshold fra SSBs
- * maxDataCells, og celletaket brukes utelukkende av variable-select-status.js.
+ * Kallet setter kun AppConfig.limits.bySource.ssb fra SSBs maxDataCells, og
+ * celletaket brukes utelukkende av variable-select-status.js.
  * Før katalogindeksen lå kallet i BrowserState._doInit() og kostet en hel
  * sekvensiell tur-retur til SSB før første paint — for en verdi ingen browse-
  * visning leser. Nå fyres det her, uten await: js/config.js har allerede
  * fornuftige defaults (800 000 / 600 000), så en celletelling som rekker å
  * kjøre før svaret lander bruker dem og korrigeres når svaret kommer.
  *
- * Kun for SSB-tabeller — maxDataCells er en SSB-API-grense, og NB/FHI har
- * ingen nytte av kallet.
+ * Kun for SSB-tabeller — maxDataCells er en SSB-API-grense. Norges Bank og FHI
+ * har ingen cellegrense i det hele tatt (se API-FINDINGS.md), og grensene deres
+ * er derfor statiske i AppConfig.limits.bySource.
  */
 let _apiLimitsRequested = false;
 function ensureApiLimits(tableId) {

@@ -644,10 +644,12 @@ function updateSelectionStatus() {
 
   // Update the live API query preview and cell count
   updateQueryPreview();
-  const cellCount = updateSelectionCellCount();
+  const cellCounts = updateSelectionCellCount();
 
-  // Disable fetch button if cell count exceeds API limit (800,000)
-  if (isValid && cellCount > AppConfig.limits.maxCells) {
+  // Sperr KUN når kilden har en ekte API-grense (SSB svarer 403 ved brudd).
+  // Norges Bank og FHI har ingen cellegrense — der advarer celletelleren om at
+  // uttrekket er stort, men Hent-knappen skal aldri sperres. Se cellLimitsFor().
+  if (isValid && cellCounts.verdict.level === 'block') {
     statusElement.textContent = t('status.tooManyCells');
     statusElement.className = 'selection-status-invalid';
     fetchButton.disabled = true;
@@ -730,18 +732,111 @@ function getTrueDimensionValueCount(dimCode) {
 }
 
 /**
+ * Anslå hvor mange observasjoner uttrekket faktisk henter.
+ *
+ * For sparsomme kilder (Norges Bank/SDMX) er det tette kryssproduktet
+ * meningsløst som mål på uttrekkets størrelse: GOVT_PRIMARY_MARKET har et
+ * produkt på 5,2 billioner celler og 11 264 faktiske observasjoner. Når
+ * metadataene enumererer gyldige serier (extension.validKeys), er
+ * serier × perioder et realistisk anslag.
+ *
+ * ØVRE GRENSE, ikke et fasitsvar: anslaget antar at hver serie har en
+ * observasjon i hver periode. Riktig retning for en advarsel — men ikke les
+ * tallet som en faktisk størrelse.
+ *
+ * Uten validKeys (SSB/FHI) ER det tette produktet uttrekket.
+ *
+ * @param {number} denseCells - Produktet av valgte verdier over alle dimensjoner
+ * @param {number} timeCount - Antall valgte perioder
+ * @param {number|null} seriesMatchCount - Serier som treffer utvalget, eller null
+ * @returns {number}
+ */
+function estimateFetchCells(denseCells, timeCount, seriesMatchCount) {
+  if (seriesMatchCount == null || !(timeCount > 0)) return denseCells;
+  return seriesMatchCount * timeCount;
+}
+
+/**
+ * Klassifiser et utvalg mot kildens grenser.
+ *
+ * Rekkefølgen er bevisst:
+ *   apiLimit  før alt — SSBs harde grense er en ekte API-regel (403).
+ *   memory    før timeout — et tett produkt over vakten er et KLIENTproblem
+ *             (JSON-Stat2 er et tett array): brukeren må snevre inn per
+ *             dimensjon, ikke vente lenger.
+ *
+ * 'block' kan bare oppstå når kilden har maxCells. NB/FHI har den satt til
+ * null, og kan derfor aldri sperres.
+ *
+ * @param {{denseCells: number, estimatedCells: number}} counts
+ * @param {object} limits - Fra cellLimitsFor()
+ * @returns {{level: 'ok'|'warn'|'severe'|'block', reason: string}}
+ */
+function classifyCellCount(counts, limits) {
+  const dense = counts.denseCells || 0;
+  const est = counts.estimatedCells || 0;
+
+  // Ufullstendig utvalg (obligatorisk dimensjon uten verdier) → denseCells er 0.
+  // Da er det ingenting å advare om ennå: seriesMatchCount er optimistisk i den
+  // tilstanden (se hasPendingMandatorySelection), og en advarsel om «stor
+  // spørring» ved siden av «0 celler valgt» er bare forvirrende.
+  if (dense <= 0) return { level: 'ok', reason: 'none' };
+
+  if (limits.maxCells != null && dense > limits.maxCells) {
+    return { level: 'block', reason: 'apiLimit' };
+  }
+  if (limits.denseWarnCells != null && dense > limits.denseWarnCells) {
+    return { level: 'severe', reason: 'memory' };
+  }
+  if (limits.slowWarnCells != null && est > limits.slowWarnCells) {
+    return { level: 'severe', reason: 'timeout' };
+  }
+  if (limits.warnCells != null && est > limits.warnCells) {
+    return { level: 'warn', reason: 'slow' };
+  }
+  return { level: 'ok', reason: 'none' };
+}
+
+/**
+ * Antall serier uttrekket faktisk henter, eller null uten validKeys (SSB/FHI).
+ *
+ * Skiller seg fra crossFilter.matchCount på ett punkt: dimensjoner i
+ * extension.unfilterableDims kan ikke filtreres via API-nøkkelen (koder med
+ * `.` eller `/`) og filtreres klientside ETTER henting. Et smalt utvalg der
+ * reduserer altså ikke overføringen, og skal ikke telle med — ellers
+ * undervurderer anslaget uttrekket.
+ */
+function fetchSeriesCount() {
+  const vk = getValidKeys();
+  if (!vk) return null;
+
+  const constraints = readCrossFilterConstraints(vk);
+  const unfilterable = (tableMetadata.extension && tableMetadata.extension.unfilterableDims) || [];
+  unfilterable.forEach(dimId => { constraints[dimId] = null; });
+
+  return countCrossFilterMatches(vk, constraints);
+}
+
+/**
  * Calculate and display the total number of cells that will be fetched.
  *
  * Cell count = product of selected value counts across all included dimensions.
  * Uses metadata counts (not DOM element counts) for accurate totals, since the
  * text filter and codelists change which items are present/visible in the DOM.
- * The API has an 800,000 cell limit per request.
  *
- * @returns {number} - Total selected cell count (0 if invalid)
+ * Grensene er kildespesifikke (se cellLimitsFor i js/utils.js): kun SSB har en
+ * hard grense å sperre på — NB/FHI får en advarsel og hentes uansett.
+ *
+ * @returns {{denseCells: number, estimatedCells: number, verdict: object}}
  */
 function updateSelectionCellCount() {
   const cellCountEl = document.getElementById('cell-count-display');
-  if (!cellCountEl || !tableMetadata) return 0;
+  const emptyResult = { denseCells: 0, estimatedCells: 0, verdict: { level: 'ok', reason: 'none' } };
+  if (!cellCountEl || !tableMetadata) return emptyResult;
+
+  const timeDim = (tableMetadata.role && tableMetadata.role.time && tableMetadata.role.time[0])
+    || 'TIME_PERIOD';
+  let timeSelectedCount = 0;
 
   let selectedCells = 1;
   let maxCells = 1;
@@ -777,6 +872,7 @@ function updateSelectionCellCount() {
 
       if (count > 0) selectedCells *= count;
       else hasMissingMandatory = true; // invertert/tomt intervall
+      if (dimCode === timeDim) timeSelectedCount = count > 0 ? count : 0;
       const maxEstimate = (bounds.min && bounds.max)
         ? P.estimatePeriodCount(bounds.min, bounds.max, gran)
         : getTrueDimensionValueCount(dimCode);
@@ -862,6 +958,7 @@ function updateSelectionCellCount() {
     if (dimSelectedCount > 0) {
       selectedCells *= dimSelectedCount;
     }
+    if (dimCode === timeDim) timeSelectedCount = dimSelectedCount;
 
     maxCells *= dimMaxCount;
   });
@@ -881,19 +978,27 @@ function updateSelectionCellCount() {
   const maxFormatted = maxCells.toLocaleString('nb-NO');
   cellCountEl.textContent = tpl('status.cellsSelected', formatted, t('unit.cell.many'), maxFormatted);
 
-  // Warn if approaching API cell limit
-  const apiMaxCells = AppConfig.limits.maxCells;
-  const apiWarningThreshold = AppConfig.limits.cellWarningThreshold;
-  if (selectedCells > apiMaxCells) {
+  // Grensene er kildespesifikke: kun SSB kan gi 'block'.
+  const limits = cellLimitsFor(AppState.selectedTable && AppState.selectedTable.id);
+  const estimatedCells = estimateFetchCells(selectedCells, timeSelectedCount, fetchSeriesCount());
+  const verdict = classifyCellCount(
+    { denseCells: selectedCells, estimatedCells: estimatedCells }, limits);
+
+  if (verdict.level === 'block') {
     cellCountEl.style.color = 'var(--color-error)';
-    cellCountEl.textContent += ' ' + t('status.exceedsLimit');
-  } else if (selectedCells > apiWarningThreshold) {
+    cellCountEl.textContent += ' ' + tpl('status.exceedsLimit', formatNumber(limits.maxCells, 0));
+  } else if (verdict.level === 'severe') {
     cellCountEl.style.color = '#e65100';
+    cellCountEl.textContent += ' ' +
+      t(verdict.reason === 'memory' ? 'status.denseTooLarge' : 'status.verySlowQuery');
+  } else if (verdict.level === 'warn') {
+    cellCountEl.style.color = '#e65100';
+    cellCountEl.textContent += ' ' + t('status.largeQuery');
   } else {
     cellCountEl.style.color = '';
   }
 
-  return selectedCells;
+  return { denseCells: selectedCells, estimatedCells: estimatedCells, verdict: verdict };
 }
 
 /**

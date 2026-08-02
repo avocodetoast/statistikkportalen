@@ -32,9 +32,36 @@ describe('AppConfig — SSB instance', () => {
     assert.equal(AppConfig.languages[0].apiLang, 'no');
   });
 
-  it('has SSB cell limits', () => {
+  // Toppnivåfeltene er ikke lenger den grensen appen håndhever — de er
+  // reserven for kilder uten oppføring i limits.bySource (og for instanser
+  // uten sources-blokk, jf. config-sv.js).
+  it('has fallback cell limits for sources without their own entry', () => {
     assert.equal(AppConfig.limits.maxCells, 800000);
     assert.equal(AppConfig.limits.cellWarningThreshold, 600000);
+  });
+
+  // Kun SSB har en ekte API-regel (maxDataCells, 403 ved brudd). Norges Bank
+  // og FHI har ingen cellegrense — målt 2026-08-02, se API-FINDINGS.md.
+  it('has per-source cell limits — only SSB has a hard one', () => {
+    const by = AppConfig.limits.bySource;
+
+    assert.equal(by.ssb.maxCells, 800000);
+    assert.equal(by.ssb.warnCells, 600000);
+
+    assert.strictEqual(by.nb.maxCells, null);
+    assert.equal(by.nb.warnCells, 2000000);
+    assert.equal(by.nb.denseWarnCells, 20000000); // speiler MAX_DENSE_CELLS
+
+    assert.strictEqual(by.fhi.maxCells, null);
+    assert.equal(by.fhi.warnCells, 1000000);
+    assert.equal(by.fhi.slowWarnCells, 4000000);
+  });
+
+  // Begge asserteres, så ingen kan slå dem sammen ved uhell: det korte taket
+  // verner første paint, det lange gjør store uttrekk mulige i det hele tatt.
+  it('has a separate, longer timeout for data fetches', () => {
+    assert.equal(AppConfig.sources.fetchTimeoutMs, 15000);
+    assert.equal(AppConfig.sources.dataFetchTimeoutMs, 90000);
   });
 
   it('hides high-frequency tables from the front page by default', () => {
