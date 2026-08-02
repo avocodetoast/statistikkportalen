@@ -16,17 +16,14 @@ function openRotationDialog() {
   const dimensions = currentData.id;
   const currentLayout = AppState.tableLayout;
 
-  // Create dialog overlay
-  const overlay = document.createElement('div');
-  overlay.className = 'dialog-overlay';
-  overlay.innerHTML = `
-    <div class="dialog-box">
-      <div class="dialog-header">
-        <h3>${t('rotation.title')}</h3>
-        <button class="dialog-close" id="close-rotation-dialog">×</button>
-      </div>
-
-      <div class="dialog-content">
+  // Skall, ESC, bakgrunnsklikk og ARIA: js/dialog.js. Bredden lå tidligere i
+  // .dialog-box; med .dialog-container arver dialogen mobiloppsettet de andre
+  // dialogene har (css/main.css).
+  const { dialog: overlay, close } = openDialog({
+    id: 'rotation-dialog',
+    title: t('rotation.title'),
+    maxWidth: '800px',
+    bodyHtml: `
         <p class="dialog-description">
           ${t('rotation.instructions')}
         </p>
@@ -54,19 +51,15 @@ function openRotationDialog() {
           ${dimensions.length > 2 ? '<button class="btn-link preset-btn" data-preset="all-rows">' + t('rotation.allRows') + '</button>' : ''}
           ${dimensions.length > 2 ? '<button class="btn-link preset-btn" data-preset="all-cols">' + t('rotation.allColumns') + '</button>' : ''}
         </div>
-      </div>
-
-      <div class="dialog-footer">
+    `,
+    footerHtml: `
         <button id="apply-rotation-btn" class="btn-primary">${t('rotation.apply')}</button>
-        <button id="cancel-rotation-btn" class="btn-secondary">${t('rotation.cancel')}</button>
-      </div>
-    </div>
-  `;
-
-  document.body.appendChild(overlay);
+        <button class="btn-secondary" data-dialog-close>${t('rotation.cancel')}</button>
+    `
+  });
 
   // Set up event listeners
-  setupRotationEvents(overlay, dimensions);
+  setupRotationEvents(overlay, dimensions, close);
 }
 
 /**
@@ -106,19 +99,14 @@ function renderDimensionList(dimCodes, zone) {
  * Set up event listeners for rotation dialog
  * @param {HTMLElement} overlay - Dialog overlay element
  * @param {Array} dimensions - All dimension codes
+ * @param {Function} close - close() fra openDialog
  */
-function setupRotationEvents(overlay, dimensions) {
-  const closeOverlay = () => { overlay.remove(); removeEscape(); };
-  const removeEscape = addEscapeHandler(closeOverlay);
-
-  // Close button
-  overlay.querySelector('#close-rotation-dialog')?.addEventListener('click', closeOverlay);
-  overlay.querySelector('#cancel-rotation-btn')?.addEventListener('click', closeOverlay);
+function setupRotationEvents(overlay, dimensions, close) {
+  // Lukkeknapp, avbryt (data-dialog-close), ESC og bakgrunnsklikk: js/dialog.js
 
   // Apply button
   overlay.querySelector('#apply-rotation-btn')?.addEventListener('click', () => {
-    removeEscape();
-    applyRotation(overlay);
+    applyRotation(overlay, close);
   });
 
   // Preset buttons
@@ -334,8 +322,9 @@ function applyPreset(preset, dimensions, overlay) {
 /**
  * Apply rotation and update table
  * @param {HTMLElement} overlay - Dialog overlay element
+ * @param {Function} close - close() fra openDialog
  */
-function applyRotation(overlay) {
+function applyRotation(overlay, close) {
   const rowsZone = overlay.querySelector('#rows-zone');
   const colsZone = overlay.querySelector('#columns-zone');
 
@@ -371,7 +360,7 @@ function applyRotation(overlay) {
   logger.log('[TableRotation] New layout:', AppState.tableLayout);
 
   // Close dialog
-  overlay.remove();
+  close();
 
   // Re-render table
   displayData();

@@ -7,6 +7,10 @@
       "covered": 7,
       "total": 21
     },
+    "js/app-terms.js": {
+      "covered": 1,
+      "total": 2
+    },
     "js/browser-state.js": {
       "covered": 28,
       "total": 40
@@ -142,6 +146,7 @@
   },
   "untracked": [
     "js/config-sv.js",
+    "js/dialog.js",
     "js/export.js",
     "js/menu-bar.js",
     "js/seo-head.js",

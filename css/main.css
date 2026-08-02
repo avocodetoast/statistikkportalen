@@ -1073,18 +1073,8 @@ button {
 
 /* ========== Dialog/Modal ========== */
 
-/* Wide variant used by the rotation dialog */
-.dialog-box {
-  background: var(--color-surface);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
-  max-width: 800px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
+/* .dialog-box er borte: rotasjonsdialogen bruker nå .dialog-container med
+   maxWidth fra openDialog (js/dialog.js), så den arver mobiloppsettet under. */
 
 .dialog-description {
   color: var(--color-text-light);
@@ -1291,6 +1281,31 @@ button {
   gap: var(--spacing-md);
   padding: var(--spacing-lg);
   border-top: 1px solid var(--color-border);
+}
+
+/* ========== Kilder og vilkår (js/app-terms.js) ========== */
+
+.terms-section + .terms-section {
+  margin-top: var(--spacing-lg);
+}
+
+.terms-section h4 {
+  margin: 0 0 var(--spacing-xs);
+  color: var(--color-primary-dark);
+}
+
+.terms-section p {
+  margin: 0;
+  color: var(--color-text-light);
+}
+
+.terms-source-list {
+  margin: 0;
+  padding-left: var(--spacing-lg);
+}
+
+.terms-source-list li + li {
+  margin-top: var(--spacing-xs);
 }
 
 /* ========== Form Elements ========== */

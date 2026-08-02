@@ -46,9 +46,12 @@ const AppConfig = {
    */
   app: {
     name: 'Statistikkportalen',
+    // Kildeuavhengig med hensikt: taglinen skal ikke måtte utvides hver gang en
+    // kilde aktiveres. Kildelisten hører hjemme i «Kilder og vilkår»-dialogen
+    // (js/app-terms.js), som bygger den fra sources-konfigurasjonen under.
     tagline: {
-      nb: 'Et uoffisielt verktøy som gir deg bedre tilgang til åpne data fra SSB, Norges Bank og FHI.',
-      en: 'An unofficial tool giving you better access to open data from Statistics Norway, Norges Bank and FHI.'
+      nb: 'Et uoffisielt verktøy som gir deg bedre tilgang til norske åpne data',
+      en: 'An unofficial tool giving you better access to Norwegian open data'
     }
   },
 
@@ -333,9 +336,10 @@ const AppConfig = {
       displayName: { nb: 'Norges Bank', en: 'Norges Bank' },
       // SEO-/attribusjonsinfo (samme form som det globale `source`-objektet
       // over) — brukes av scripts/generate-seo-pages.mjs og js/seo-head.js for
-      // «Kilde:»-linjer og JSON-LD creator/license på nb-*-tabeller. Norges
-      // Banks åpne data er gratis å bruke med kildehenvisning, men er ikke
-      // CC-merket — licenseUrl utelates derfor bevisst (ingen lisenslenke).
+      // «Kilde:»-linjer og JSON-LD creator/license på nb-*-tabeller, og av
+      // «Kilder og vilkår»-dialogen (js/app-terms.js). Norges Banks åpne data
+      // er ikke CC-merket, men dekkes av NLOD (Norsk lisens for offentlige
+      // data) — bruk er gratis mot kildehenvisning.
       // `shortName` er kilde-badgen i tabellistene (sourceBadgeHTML i utils.js
       // / sourceBadgeHtml i scripts/lib/seo-sources.mjs) og må være kort nok
       // til å stå bak en tabelltittel; `nameFull` er hover-teksten på badgen.
@@ -343,7 +347,9 @@ const AppConfig = {
         name: 'Norges Bank',
         nameFull: 'Norges Bank',
         shortName: 'NB',
-        url: 'https://www.norges-bank.no/'
+        url: 'https://www.norges-bank.no/',
+        licenseUrl: 'https://data.norge.no/nlod',
+        licenseName: 'NLOD'
       },
       // Dataflow-katalog + søkeord: js/sources/nb-catalog.js (window.NbCatalog),
       // lastet FØR denne filen. Se den filen for radformat og alle kuraterings-

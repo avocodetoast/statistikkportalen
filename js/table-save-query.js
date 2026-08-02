@@ -28,41 +28,17 @@ async function showSaveQueryDialog() {
     columns: layout ? layout.columns : []
   });
 
-  // Remove any existing dialog
-  document.getElementById('save-query-dialog')?.remove();
-
   const needsLoading = !(_lastSavedQuery && _lastSavedQuery.fingerprint === fingerprint);
 
-  const dialogHtml = `
-    <div class="dialog-overlay" id="save-query-dialog">
-      <div class="dialog-container" style="max-width: 540px;">
-        <div class="dialog-header">
-          <h3>${escapeHtml(t('saveQuery.dialogTitle'))}</h3>
-          <button class="dialog-close" id="save-query-close">&times;</button>
-        </div>
-        <div class="dialog-content" id="save-query-content">
+  // Skall, ESC, bakgrunnsklikk (inkl. guarden mot lukking ved tekstmarkering
+  // i lenkefeltene) og ARIA: js/dialog.js
+  openDialog({
+    id: 'save-query-dialog',
+    title: t('saveQuery.dialogTitle'),
+    maxWidth: '540px',
+    bodyHtml: `<div id="save-query-content">
           ${needsLoading ? `<p class="loading-message">${escapeHtml(tpl('saveQuery.saving', branding.name))}</p>` : ''}
-        </div>
-      </div>
-    </div>
-  `;
-
-  document.body.insertAdjacentHTML('beforeend', dialogHtml);
-
-  const dialog = document.getElementById('save-query-dialog');
-  const closeDialog = () => { dialog.remove(); removeEscape(); };
-  const removeEscape = addEscapeHandler(closeDialog);
-
-  document.getElementById('save-query-close')?.addEventListener('click', closeDialog);
-
-  // Only close overlay click if the mousedown also started on the overlay —
-  // prevents accidental close when dragging to select text in the inputs.
-  let mouseDownOnOverlay = false;
-  dialog.addEventListener('mousedown', (e) => {
-    mouseDownOnOverlay = e.target === dialog;
-  });
-  dialog.addEventListener('click', (e) => {
-    if (e.target === dialog && mouseDownOnOverlay) closeDialog();
+        </div>`
   });
 
   const showLinks = (id) => {

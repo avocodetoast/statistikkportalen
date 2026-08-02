@@ -19,25 +19,12 @@ function showExportDialog() {
     return;
   }
 
-  // Check if dialog already exists
-  let dialog = document.getElementById('export-dialog');
-  if (dialog) {
-    dialog.remove();
-  }
-
   // Get current layout
   const layout = AppState.tableLayout;
 
-  // Create dialog HTML
-  const dialogHtml = `
-    <div class="dialog-overlay" id="export-dialog">
-      <div class="dialog-container">
-        <div class="dialog-header">
-          <h3>${t('export.title')}</h3>
-          <button class="dialog-close" id="export-dialog-close">&times;</button>
-        </div>
-
-        <div class="dialog-content">
+  // Innholdet i .dialog-content; skallet (header/lukkeknapp/footer) bygges av
+  // openDialog i js/dialog.js.
+  const bodyHtml = `
           <!-- File Format -->
           <div class="form-group">
             <label class="form-label">${t('export.format')}</label>
@@ -127,18 +114,19 @@ function showExportDialog() {
             <p>${tpl('export.downloadInfo', escapeHtml(sourceBrandingForTable(AppState.selectedTable?.id)?.name || 'API'))}</p>
             <p>${tpl('export.dataPoints', escapeHtml(currentData.value.length.toLocaleString('nb-NO')))}</p>
           </div>
-        </div>
-
-        <div class="dialog-footer">
-          <button class="btn-secondary" id="export-cancel-btn">${t('export.cancel')}</button>
-          <button class="btn-primary" id="export-download-btn">${t('export.download')}</button>
-        </div>
-      </div>
-    </div>
   `;
 
-  // Add dialog to page
-  document.body.insertAdjacentHTML('beforeend', dialogHtml);
+  const footerHtml = `
+          <button class="btn-secondary" data-dialog-close>${t('export.cancel')}</button>
+          <button class="btn-primary" id="export-download-btn">${t('export.download')}</button>
+  `;
+
+  const { close } = openDialog({
+    id: 'export-dialog',
+    title: t('export.title'),
+    bodyHtml,
+    footerHtml
+  });
 
   // Hide format radios for formats not supported by the live API config.
   if (Array.isArray(AppConfig.limits.dataFormats)) {
@@ -158,32 +146,18 @@ function showExportDialog() {
   }
 
   // Set up event listeners
-  setupExportDialogEvents();
+  setupExportDialogEvents(close);
 }
 
 /**
  * Set up event listeners for export dialog
+ * @param {Function} closeDialog - close() fra openDialog
  */
-function setupExportDialogEvents() {
+function setupExportDialogEvents(closeDialog) {
   const dialog = document.getElementById('export-dialog');
   if (!dialog) return;
 
-  // Close buttons
-  const closeBtn = document.getElementById('export-dialog-close');
-  const cancelBtn = document.getElementById('export-cancel-btn');
-
-  const closeDialog = () => { dialog.remove(); removeEscape(); };
-  const removeEscape = addEscapeHandler(closeDialog);
-
-  if (closeBtn) closeBtn.addEventListener('click', closeDialog);
-  if (cancelBtn) cancelBtn.addEventListener('click', closeDialog);
-
-  // Click outside to close
-  dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) {
-      closeDialog();
-    }
-  });
+  // Lukkeknapp, avbryt (data-dialog-close), ESC og bakgrunnsklikk: js/dialog.js
 
   // Format change: show/hide CSV separator options
   const formatRadios = dialog.querySelectorAll('input[name="export-format"]');

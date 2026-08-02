@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Statistikkportalen</title>
-  <meta name="description" content="Et uoffisielt verktøy for bedre tilgang til åpne statistikkdata fra SSB, Norges Bank og FHI." id="meta-description">
+  <meta name="description" content="Et uoffisielt verktøy som gir deg bedre tilgang til norske åpne data" id="meta-description">
   <link rel="canonical" href="https://statistikkportalen.no/">
   <meta property="og:title" content="Statistikkportalen">
-  <meta property="og:description" content="Et uoffisielt verktøy for bedre tilgang til åpne statistikkdata fra SSB, Norges Bank og FHI.">
+  <meta property="og:description" content="Et uoffisielt verktøy som gir deg bedre tilgang til norske åpne data">
   <meta property="og:url" content="https://statistikkportalen.no/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Statistikkportalen">
@@ -20,16 +20,16 @@
        config.js er lastet nederst i <body>. -->
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/main.css?v=1.10.0">
-  <link rel="stylesheet" href="css/table.css?v=1.10.0">
-  <link rel="stylesheet" href="css/menu-navigator.css?v=1.10.0">
+  <link rel="stylesheet" href="css/main.css?v=1.11.0">
+  <link rel="stylesheet" href="css/table.css?v=1.11.0">
+  <link rel="stylesheet" href="css/menu-navigator.css?v=1.11.0">
 </head>
 <body>
   <!-- Header -->
   <header>
     <div class="header-content">
       <h1><a href="#home" id="header-home-link">Statistikkportalen</a></h1>
-      <p class="subtitle" id="header-subtitle">Et uoffisielt verktøy som gir deg bedre tilgang til åpne data fra SSB, Norges Bank og FHI.</p>
+      <p class="subtitle" id="header-subtitle">Et uoffisielt verktøy som gir deg bedre tilgang til norske åpne data</p>
     </div>
     <div class="header-tools">
       <button id="api-status-badge" class="api-status-badge js-only" type="button" hidden></button>
@@ -62,10 +62,10 @@
 
   <!-- Footer -->
   <footer>
-    <!-- Statisk kildeliste for crawlere/noscript; bygges om fra
-         AppConfig.sources ved oppstart og språkbytte (applyTranslatableUI). -->
-    <p id="footer-source-line"><span id="footer-data-from">Data fra</span>
-    <span id="footer-sources"><a href="https://www.ssb.no/" target="_blank" rel="noopener noreferrer">Statistisk sentralbyrå</a> <a href="https://www.ssb.no/diverse/lisens" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a>, <a href="https://www.norges-bank.no/" target="_blank" rel="noopener noreferrer">Norges Bank</a> og <a href="https://www.fhi.no/" target="_blank" rel="noopener noreferrer">Folkehelseinstituttet</a> <a href="https://creativecommons.org/licenses/by/4.0/deed.no" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a></span>
+    <!-- Statisk kildeliste med attribusjon for crawlere/noscript. Når JS
+         kjører, byttes hele spanet ut med «Kilder og vilkår»-lenken, som åpner
+         dialogen i js/app-terms.js (applyTranslatableUI under). -->
+    <p id="footer-source-line"><span id="footer-sources">Data fra <a href="https://www.ssb.no/" target="_blank" rel="noopener noreferrer">Statistisk sentralbyrå</a> <a href="https://www.ssb.no/diverse/lisens" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a>, <a href="https://www.norges-bank.no/" target="_blank" rel="noopener noreferrer">Norges Bank</a> <a href="https://data.norge.no/nlod" target="_blank" rel="noopener noreferrer">(NLOD)</a> og <a href="https://www.fhi.no/" target="_blank" rel="noopener noreferrer">Folkehelseinstituttet</a> <a href="https://creativecommons.org/licenses/by/4.0/deed.no" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a></span>
     <span class="footer-separator">·</span>
     <a href="https://github.com/avocodetoast/statistikkportalen" target="_blank" rel="noopener noreferrer">GitHub</a>
     <span class="footer-separator js-only">·</span>
@@ -79,9 +79,9 @@
   <script src="js/version.js"></script>
   <!-- Kildedata skilt ut fra config.js — må lastes FØR config.js, som refererer
        window.NbCatalog / window.SourceTopology. Rene browser-globals uten deps. -->
-  <script src="js/sources/nb-catalog.js?v=1.10.0"></script>
-  <script src="js/sources/source-topology.js?v=1.10.0"></script>
-  <script src="js/config.js?v=1.10.0"></script>
+  <script src="js/sources/nb-catalog.js?v=1.11.0"></script>
+  <script src="js/sources/source-topology.js?v=1.11.0"></script>
+  <script src="js/config.js?v=1.11.0"></script>
 
   <!-- Analytics: injiser Umami-scriptet fra AppConfig.analytics. Slås av
        ved å sette analytics til null (eller tomt scriptUrl/websiteId) i config.js. -->
@@ -99,13 +99,13 @@
     })();
   </script>
 
-  <script src="js/translations.js?v=1.10.0"></script>
-  <script src="js/cache.js?v=1.10.0"></script>
-  <script src="js/api.js?v=1.10.0"></script>
+  <script src="js/translations.js?v=1.11.0"></script>
+  <script src="js/cache.js?v=1.11.0"></script>
+  <script src="js/api.js?v=1.11.0"></script>
   <!-- Periodenormalisering (yyyyUxx/yyyyMxx) for tabelloversiktene. Ren logikk
        uten avhengigheter; må lastes før fhi-adapter.js, som bruker den i
        derivePeriods(). -->
-  <script src="js/period-format.js?v=1.10.0"></script>
+  <script src="js/period-format.js?v=1.11.0"></script>
   <!-- Kildeadaptere + fasade (Statistikkportalen 2.0). Lastes etter api.js
        (trenger window.SSBApi/window.api) og før browser-state.js (bruker api).
        source-registry.js laster SIST og erstatter window.api med fasaden.
@@ -116,39 +116,44 @@
        katalogindeksen, se scripts/lib/catalog-sources.mjs) — ingen av dem
        lastes som <script> her lenger. Over file:// degraderer begge til
        direkte kildehenting (se js/catalog-index.js). -->
-  <script src="js/sources/sdmx-to-jsonstat.js?v=1.10.0"></script>
-  <script src="js/sources/source-common.js?v=1.10.0"></script>
-  <script src="js/catalog-index.js?v=1.10.0"></script>
-  <script src="js/sources/norges-bank-adapter.js?v=1.10.0"></script>
-  <script src="js/sources/fhi-adapter.js?v=1.10.0"></script>
-  <script src="js/sources/ssb-adapter.js?v=1.10.0"></script>
-  <script src="js/sources/source-registry.js?v=1.10.0"></script>
-  <script src="js/utils.js?v=1.10.0"></script>
-  <script src="js/router.js?v=1.10.0"></script>
-  <script src="js/seo-head.js?v=1.10.0"></script>
-  <script src="js/subjects.js?v=1.10.0"></script>
-  <script src="js/menu-hierarchy.js?v=1.10.0"></script>
-  <script src="js/browser-state.js?v=1.10.0"></script>
-  <script src="js/index-refresh.js?v=1.10.0"></script>
-  <script src="js/menu-bar.js?v=1.10.0"></script>
-  <script src="js/front-page.js?v=1.10.0"></script>
-  <script src="js/source-status.js?v=1.10.0"></script>
-  <script src="js/synonyms.js?v=1.10.0"></script>
-  <script src="js/search-enhanced.js?v=1.10.0"></script>
-  <script src="js/search-view.js?v=1.10.0"></script>
-  <script src="js/topic-view.js?v=1.10.0"></script>
-  <script src="js/variable-select-state.js?v=1.10.0"></script>
-  <script src="js/variable-select-status.js?v=1.10.0"></script>
-  <script src="js/variable-select-codelists.js?v=1.10.0"></script>
-  <script src="js/variable-select-render.js?v=1.10.0"></script>
-  <script src="js/variable-select-events.js?v=1.10.0"></script>
-  <script src="js/variable-select-api.js?v=1.10.0"></script>
-  <script src="js/variable-select.js?v=1.10.0"></script>
-  <script src="js/table-display.js?v=1.10.0"></script>
-  <script src="js/table-metadata.js?v=1.10.0"></script>
-  <script src="js/table-save-query.js?v=1.10.0"></script>
-  <script src="js/table-rotation.js?v=1.10.0"></script>
-  <script src="js/export.js?v=1.10.0"></script>
+  <script src="js/sources/sdmx-to-jsonstat.js?v=1.11.0"></script>
+  <script src="js/sources/source-common.js?v=1.11.0"></script>
+  <script src="js/catalog-index.js?v=1.11.0"></script>
+  <script src="js/sources/norges-bank-adapter.js?v=1.11.0"></script>
+  <script src="js/sources/fhi-adapter.js?v=1.11.0"></script>
+  <script src="js/sources/ssb-adapter.js?v=1.11.0"></script>
+  <script src="js/sources/source-registry.js?v=1.11.0"></script>
+  <script src="js/utils.js?v=1.11.0"></script>
+  <!-- Delt dialogskall + «Kilder og vilkår». dialog.js trenger utils.js
+       (addEscapeHandler/escapeHtml) og må lastes FØR alle dialogbrukerne
+       (source-status, table-save-query, table-rotation, export, app-terms). -->
+  <script src="js/dialog.js?v=1.11.0"></script>
+  <script src="js/app-terms.js?v=1.11.0"></script>
+  <script src="js/router.js?v=1.11.0"></script>
+  <script src="js/seo-head.js?v=1.11.0"></script>
+  <script src="js/subjects.js?v=1.11.0"></script>
+  <script src="js/menu-hierarchy.js?v=1.11.0"></script>
+  <script src="js/browser-state.js?v=1.11.0"></script>
+  <script src="js/index-refresh.js?v=1.11.0"></script>
+  <script src="js/menu-bar.js?v=1.11.0"></script>
+  <script src="js/front-page.js?v=1.11.0"></script>
+  <script src="js/source-status.js?v=1.11.0"></script>
+  <script src="js/synonyms.js?v=1.11.0"></script>
+  <script src="js/search-enhanced.js?v=1.11.0"></script>
+  <script src="js/search-view.js?v=1.11.0"></script>
+  <script src="js/topic-view.js?v=1.11.0"></script>
+  <script src="js/variable-select-state.js?v=1.11.0"></script>
+  <script src="js/variable-select-status.js?v=1.11.0"></script>
+  <script src="js/variable-select-codelists.js?v=1.11.0"></script>
+  <script src="js/variable-select-render.js?v=1.11.0"></script>
+  <script src="js/variable-select-events.js?v=1.11.0"></script>
+  <script src="js/variable-select-api.js?v=1.11.0"></script>
+  <script src="js/variable-select.js?v=1.11.0"></script>
+  <script src="js/table-display.js?v=1.11.0"></script>
+  <script src="js/table-metadata.js?v=1.11.0"></script>
+  <script src="js/table-save-query.js?v=1.11.0"></script>
+  <script src="js/table-rotation.js?v=1.11.0"></script>
+  <script src="js/export.js?v=1.11.0"></script>
 
   <!-- Application Initialization -->
   <script>
@@ -167,29 +172,17 @@
       }
       document.getElementById('header-subtitle').textContent = appTagline;
 
-      const dataFromEl = document.getElementById('footer-data-from');
-      if (dataFromEl) dataFromEl.textContent = t('footer.dataFrom');
-
-      // Kildeliste i footeren: én lenke (+ evt. lisenslenke) per aktivert
-      // kilde, fra AppConfig.sources/AppConfig.source (listSourceBrandings i
-      // utils.js). Bindeordet («og»/«and») følger språket.
+      // Den statiske kildelisten i markupen er crawler-/noscript-basisen.
+      // Med JS erstattes den av én lenke som åpner «Kilder og vilkår»-dialogen
+      // (js/app-terms.js), der selve kildelisten bygges fra AppConfig.
       const sourcesEl = document.getElementById('footer-sources');
       if (sourcesEl) {
-        const items = listSourceBrandings().map(src => {
-          const name = escapeHtml(src.nameFull || src.name || src.url || '');
-          let html = src.url
-            ? `<a href="${escapeHtml(src.url)}" target="_blank" rel="noopener noreferrer">${name}</a>`
-            : name;
-          if (src.licenseUrl) {
-            html += ` <a href="${escapeHtml(src.licenseUrl)}" target="_blank" rel="noopener noreferrer">(${escapeHtml(src.licenseName || 'License')})</a>`;
-          } else if (src.licenseName) {
-            html += ` (${escapeHtml(src.licenseName)})`;
-          }
-          return html;
+        sourcesEl.innerHTML =
+          `<a href="#" id="terms-link">${escapeHtml(t('terms.link'))}</a>`;
+        document.getElementById('terms-link').addEventListener('click', (e) => {
+          e.preventDefault();
+          showTermsDialog();
         });
-        sourcesEl.innerHTML = items.length > 1
-          ? items.slice(0, -1).join(', ') + ' ' + escapeHtml(t('footer.and')) + ' ' + items[items.length - 1]
-          : items.join('');
       }
 
       const clearLink = document.getElementById('clear-cache-link');

@@ -28,7 +28,7 @@
   const BROWSE_VIEWS = IndexRefresh.BROWSE_VIEWS;
 
   let _badge = null;
-  let _removeEscape = null;
+  let _closeDialog = null;    // close() fra openDialog mens panelet er åpent
   const _pending = new Set(); // kilder med pågående retry/refresh
   let _checkingIndex = false; // «Se etter ny indeks» pågår
   let _indexMessage = '';     // resultatmelding fra siste indekssjekk (til neste handling/lukking)
@@ -100,42 +100,23 @@
   // ---- Statuspanel ----
 
   function closePanel() {
-    document.getElementById(PANEL_ID)?.remove();
-    if (_removeEscape) { _removeEscape(); _removeEscape = null; }
+    if (_closeDialog) { _closeDialog(); _closeDialog = null; }
   }
 
   function openPanel() {
     closePanel();
     _indexMessage = ''; // fersk åpning — ikke vis en melding fra forrige sesjon
 
-    const html = `
-      <div class="dialog-overlay" id="${PANEL_ID}">
-        <div class="dialog-container source-status-dialog" style="max-width: 560px;">
-          <div class="dialog-header">
-            <h3>${escapeHtml(t('apiStatus.title'))}</h3>
-            <button class="dialog-close" id="source-status-close"
-                    aria-label="${escapeHtml(t('apiStatus.close'))}">&times;</button>
-          </div>
-          <div class="dialog-content" id="${CONTENT_ID}"></div>
-        </div>
-      </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', html);
-
-    const dialog = document.getElementById(PANEL_ID);
-    const close = () => closePanel();
-    _removeEscape = addEscapeHandler(close);
-    document.getElementById('source-status-close')?.addEventListener('click', close);
-
-    // Lukk kun når mousedown OG click begge traff overlayet (samme mønster
-    // som table-save-query.js — hindrer utilsiktet lukking ved tekstmarkering).
-    let mouseDownOnOverlay = false;
-    dialog.addEventListener('mousedown', (e) => {
-      mouseDownOnOverlay = e.target === dialog;
+    // Skall, ESC, bakgrunnsklikk og ARIA: js/dialog.js
+    const { close } = openDialog({
+      id: PANEL_ID,
+      title: t('apiStatus.title'),
+      className: 'source-status-dialog',
+      maxWidth: '560px',
+      bodyHtml: `<div id="${CONTENT_ID}"></div>`,
+      onClose: () => { _closeDialog = null; }
     });
-    dialog.addEventListener('click', (e) => {
-      if (e.target === dialog && mouseDownOnOverlay) close();
-    });
+    _closeDialog = close;
 
     // Én delegert klikklytter overlever re-rendring av innholdet.
     document.getElementById(CONTENT_ID).addEventListener('click', (e) => {

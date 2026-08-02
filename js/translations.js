@@ -289,9 +289,18 @@ const translations = {
     'saveQuery.noIdInResponse':  'Ingen ID i svar fra API',
     'saveQuery.saveFailed':      'Kunne ikke lagre spørringen: {0}',
 
-    // Footer
-    'footer.dataFrom':    'Data fra',
-    'footer.and':         'og',
+    // Delt dialogskall (js/dialog.js)
+    'dialog.close':       'Lukk',
+
+    // Kilder og vilk\u00E5r (footer-lenke + dialog \u2014 js/app-terms.js).
+    // Kildelisten under overskriften bygges fra AppConfig, ikke herfra.
+    'terms.link':                'Kilder og vilk\u00E5r',
+    'terms.title':               'Kilder og vilk\u00E5r',
+    'terms.liabilityHeading':    'Ansvar',
+    'terms.liabilityBody':       'Statistikkportalen er et uoffisielt verkt\u00F8y uten tilknytning til rettighetshaverne. All bruk skjer p\u00E5 eget ansvar. Vi tilstreber korrekt gjengivelse av kildedataene, men kan ikke garantere at portalen eller de underliggende dataene er feilfrie til enhver tid. Ved avvik er det kildens egen publisering som gjelder.',
+    'terms.attributionHeading':  'Kildehenvisning',
+    'terms.attributionBody':     'Ved bruk av data fra Statistikkportalen er det brukerens ansvar \u00E5 oppgi kilde i henhold til rettighetshavernes lisensvilk\u00E5r.',
+    'terms.sourcesHeading':      'Kilder og lisens',
 
     // Cache
     'cache.clear':        'T\u00F8m hurtigbuffer',
@@ -330,7 +339,6 @@ const translations = {
     'apiStatus.indexUpToDate':    'Indeksen er allerede oppdatert.',
     'apiStatus.indexUpdated':     'Ny indeks lastet inn ({0} tabeller).',
     'apiStatus.indexUnavailable': 'Fant ingen nedlastet indeks \u2014 henter direkte fra kildene.',
-    'apiStatus.close':            'Lukk',
 
     // Search
     'search.found': 'funnet',
@@ -596,9 +604,18 @@ const translations = {
     'saveQuery.noIdInResponse':  'No ID in API response',
     'saveQuery.saveFailed':      'Could not save the query: {0}',
 
-    // Footer
-    'footer.dataFrom':    'Data from',
-    'footer.and':         'and',
+    // Shared dialog shell (js/dialog.js)
+    'dialog.close':       'Close',
+
+    // Sources and terms (footer link + dialog — js/app-terms.js).
+    // The source list below the heading is built from AppConfig, not from here.
+    'terms.link':                'Sources and terms',
+    'terms.title':               'Sources and terms',
+    'terms.liabilityHeading':    'Liability',
+    'terms.liabilityBody':       'Statistikkportalen is an unofficial tool with no affiliation to the rights holders. All use is at your own risk. We aim to reproduce the source data correctly, but cannot guarantee that the portal or the underlying data are free of errors at all times. In case of discrepancies, the source’s own publication prevails.',
+    'terms.attributionHeading':  'Attribution',
+    'terms.attributionBody':     'When using data from Statistikkportalen, it is the user’s responsibility to credit the source in accordance with the rights holders’ licence terms.',
+    'terms.sourcesHeading':      'Sources and licences',
 
     // Cache
     'cache.clear':        'Clear cache',
@@ -637,7 +654,6 @@ const translations = {
     'apiStatus.indexUpToDate':    'The index is already up to date.',
     'apiStatus.indexUpdated':     'New index loaded ({0} tables).',
     'apiStatus.indexUnavailable': 'No downloaded index found — fetching directly from the sources.',
-    'apiStatus.close':            'Close',
 
     // Search
     'search.found': 'found',
@@ -889,9 +905,14 @@ const translations = {
     'saveQuery.noIdInResponse':  'Inget ID i svaret från API',
     'saveQuery.saveFailed':      'Kunde inte spara frågan: {0}',
 
-    // Footer
-    'footer.dataFrom':    'Data fr\u00E5n',
-    'footer.and':         'och',
+    // Delat dialogskal (js/dialog.js)
+    'dialog.close':       'St\u00E4ng',
+
+    // OBS: terms.*-nycklarna (\u00ABKilder og vilk\u00E5r\u00BB, js/app-terms.js) saknas med
+    // flit p\u00E5 svenska. Texten \u00E4r ansvarsfriskrivning och k\u00E4llh\u00E4nvisning f\u00F6r den
+    // NORSKA instansen och g\u00E4ller inte SCB:s r\u00E4ttighetshavare eller licenser.
+    // Skriv egna terms.*-str\u00E4ngar innan denna instans tas i bruk \u2014 se
+    // config-sv.js/subjects-sv.js f\u00F6r resten av instansupps\u00E4ttningen.
 
     // Cache
     'cache.clear':        'Rensa cache',
@@ -930,7 +951,6 @@ const translations = {
     'apiStatus.indexUpToDate':    'Indexet är redan uppdaterat.',
     'apiStatus.indexUpdated':     'Nytt index laddat ({0} tabeller).',
     'apiStatus.indexUnavailable': 'Hittade inget nedladdat index — hämtar direkt från källorna.',
-    'apiStatus.close':            'Stäng',
 
     // Search
     'search.found': 'hittade',

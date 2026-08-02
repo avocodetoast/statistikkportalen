@@ -53,9 +53,13 @@ describe('AppConfig — tagline', () => {
     assert.equal(typeof AppConfig.app.tagline.en, 'string');
   });
 
-  it('mentions the source in both languages', () => {
-    assert.ok(AppConfig.app.tagline.nb.includes('SSB'));
-    assert.ok(AppConfig.app.tagline.en.includes('Statistics Norway'));
+  // Taglinen ramset tidligere opp kildene (SSB/Norges Bank/FHI). Den er nå
+  // kildeuavhengig med hensikt — kildelisten hører hjemme i «Kilder og
+  // vilkår»-dialogen, som bygger den fra AppConfig.sources. Det som fortsatt
+  // MÅ holde, på begge språk, er at portalen presenterer seg som uoffisiell.
+  it('presents the app as unofficial in both languages', () => {
+    assert.match(AppConfig.app.tagline.nb, /uoffisielt/i);
+    assert.match(AppConfig.app.tagline.en, /unofficial/i);
   });
 });
 

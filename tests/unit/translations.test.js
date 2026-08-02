@@ -29,7 +29,21 @@ describe('Translations — nb (default) language', () => {
     // Kildenøytral overskrift — søket dekker SSB, Norges Bank og FHI,
     // så det SSB-spesifikke «statistikkbanken» skal ikke brukes her.
     assert.equal(t('search.heading'), 'Søk i statistikken');
-    assert.equal(t('footer.and'), 'og');
+  });
+
+  // Footeren viser ikke lenger «Data fra X og Y» — den lenker til «Kilder og
+  // vilkår»-dialogen (js/app-terms.js), som bygger kildelisten fra AppConfig.
+  // footer.dataFrom/footer.and er derfor fjernet fra ordboken.
+  it('has the sources-and-terms strings, and no leftover footer source line', () => {
+    for (const key of [
+      'terms.link', 'terms.title', 'terms.liabilityHeading', 'terms.liabilityBody',
+      'terms.attributionHeading', 'terms.attributionBody', 'terms.sourcesHeading',
+      'dialog.close'
+    ]) {
+      assert.ok(keyExists(key), `missing nb key: ${key}`);
+    }
+    assert.ok(!keyExists('footer.dataFrom'), 'footer.dataFrom skal være fjernet');
+    assert.ok(!keyExists('footer.and'), 'footer.and skal være fjernet');
   });
 
   it('has save-query dialog labels (table-save-query.js)', () => {
@@ -82,6 +96,9 @@ describe('Translations — English', () => {
     for (const key of [
       'subject.group.arbeid', 'subject.name.al',
       'saveQuery.dialogTitle', 'saveQuery.openInSource',
+      'terms.link', 'terms.title', 'terms.liabilityHeading', 'terms.liabilityBody',
+      'terms.attributionHeading', 'terms.attributionBody', 'terms.sourcesHeading',
+      'dialog.close',
       'apiStatus.indexTitle', 'apiStatus.indexBuiltAt', 'apiStatus.indexStale',
       'apiStatus.checkIndex', 'apiStatus.checkIndexTitle', 'apiStatus.indexUpToDate',
       'apiStatus.indexUpdated', 'apiStatus.indexUnavailable'
