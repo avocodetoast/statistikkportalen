@@ -154,6 +154,11 @@ const URLRouter = {
       AppState.currentView = 'home';
       renderCurrentView();
     }
+
+    // Stille bakgrunnssjekk mot serverens katalogindeks (js/index-refresh.js).
+    // Etter dispatch og uten await med vilje: rendringen skal aldri vente på
+    // den, og modulen struper seg selv til ett kall per 30. minutt.
+    if (window.IndexRefresh) IndexRefresh.maybeRun('navigation');
   },
 
   /**

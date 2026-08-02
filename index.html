@@ -129,6 +129,7 @@
   <script src="js/subjects.js?v=1.10.0"></script>
   <script src="js/menu-hierarchy.js?v=1.10.0"></script>
   <script src="js/browser-state.js?v=1.10.0"></script>
+  <script src="js/index-refresh.js?v=1.10.0"></script>
   <script src="js/menu-bar.js?v=1.10.0"></script>
   <script src="js/front-page.js?v=1.10.0"></script>
   <script src="js/source-status.js?v=1.10.0"></script>
@@ -218,6 +219,9 @@
 
       // API-statusbadge + statuspanel (abonnerer på fasadens kildestatus)
       SourceStatusUI.init();
+
+      // Stille bakgrunnssjekk mot serverens katalogindeks (synlighet + navigering)
+      IndexRefresh.init();
 
       // Language selector
       const langContainer = document.getElementById('header-lang');

@@ -13,7 +13,9 @@
  * stale/delvis/lastende; rød = minst én kilde helt uten data.
  *
  * Laster etter front-page.js (trenger translations, utils, fasaden og
- * BrowserState); ingenting senere avhenger av denne.
+ * BrowserState) og etter index-refresh.js (deler indekssjekken med
+ * bakgrunnsstien og låner BROWSE_VIEWS derfra, ved lastetid);
+ * ingenting senere avhenger av denne.
  */
 (function () {
   'use strict';
@@ -22,7 +24,8 @@
 
   const PANEL_ID = 'source-status-dialog';
   const CONTENT_ID = 'source-status-content';
-  const BROWSE_VIEWS = ['home', 'search', 'topic'];
+  // Eid av js/index-refresh.js (lastes før denne) — én liste, ikke to.
+  const BROWSE_VIEWS = IndexRefresh.BROWSE_VIEWS;
 
   let _badge = null;
   let _removeEscape = null;
@@ -278,30 +281,30 @@
    * endret seg — merger de endrede kildenes tabeller inn og re-rendrer
    * browse-visningene. Billig og trygg å klikke gjentatte ganger; ulikt
    * «Oppdater» treffer den ALDRI kilde-API-ene direkte.
+   *
+   * Selve sjekken og anvendelsen ligger i IndexRefresh.run() — samme sti som
+   * bakgrunnssjekken bruker, så det finnes bare én. Forskjellen er render:
+   * true: her ER den oppdaterte visningen poenget med klikket, mens
+   * bakgrunnssjekken lar DOM-en stå til neste navigering. Denne funksjonen
+   * eier bare tilbakemeldingen til brukeren.
    */
   async function checkForIndexUpdate() {
-    if (_checkingIndex || !window.CatalogIndex ||
-        typeof CatalogIndex.checkForUpdate !== 'function') return;
+    if (_checkingIndex || !window.IndexRefresh) return;
     _checkingIndex = true;
     _indexMessage = '';
     renderPanelContent();
     try {
-      const result = await CatalogIndex.checkForUpdate({ lang: getCurrentApiLang() });
+      const result = await IndexRefresh.run({ render: true });
       if (!result.available) {
         _indexMessage = t('apiStatus.indexUnavailable');
       } else if (!result.changed.length) {
         _indexMessage = t('apiStatus.indexUpToDate');
       } else {
-        const changed = BrowserState.applyIndex(result);
-        api.seedSourceStatus(result.meta);
-        const tableCount = changed.reduce(
-          (sum, id) => sum + ((result.bySource[id] || []).length), 0);
-        _indexMessage = tpl('apiStatus.indexUpdated', tableCount);
-        if (BROWSE_VIEWS.includes(AppState.currentView)) {
-          renderCurrentView();
-        }
+        _indexMessage = tpl('apiStatus.indexUpdated', result.tableCount);
       }
     } catch (e) {
+      // run() er dokumentert til aldri å kaste; havner vi likevel her, skal
+      // panelet si fra i stedet for å stå med en tom melding.
       logger.error('[SourceStatus] Sjekk etter ny indeks feilet:', e);
       _indexMessage = t('apiStatus.indexUnavailable');
     } finally {

@@ -142,7 +142,19 @@ const AppConfig = {
     // Tidsavbrudd per manifest-/shard-hent. Løper det ut, degraderer den
     // kilden (eller hele indeksen, hvis det var manifestet) til direkte
     // kildehenting — appen henger aldri på indeksen.
-    timeoutMs: 15000
+    timeoutMs: 15000,
+
+    // Bakgrunnssjekk mot serverens indeks (js/index-refresh.js): utløses når
+    // fanen blir synlig igjen og ved navigering, og bytter dataene stille —
+    // visningen re-rendres først ved neste navigering. AV = kun den manuelle
+    // knappen «Se etter ny indeks» i statuspanelet, som før.
+    autoCheck: true,
+
+    // Minsteintervall som ALLE utløsere deler, så antall nettverkskall er
+    // uavhengig av hvor mye brukeren klikker. 30 min er valgt mot driften:
+    // manifestet serveres med max-age=300, og cron bygger maks 3x/døgn —
+    // tettere sjekk gir ingenting. (30 minutter)
+    autoCheckMs: 30 * 60 * 1000
   },
 
   /**

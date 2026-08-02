@@ -369,6 +369,15 @@ What gets cached:
 - **Server search results** (`tables_no_true_10000_q_{query}`): 24h TTL
 - **Foreign source catalogue/metadata** (`tables_nb_no`, `table_nb-IR_no`, `table_fhi-daar-344_no`, ...): same CacheManager, key infix `nb_`/`fhi_`; plain 24h TTL (the SSB-update-schedule staleness check below is skipped for these keys — see "Multi-source architecture")
 
+### Keeping the cached index in step with the server
+
+Cron rebuilds `data/index/` several times a day while the client's manifest lives on a 24h TTL revalidated only at SSB's two fixed times — so a tab left open overnight can browse a stale catalogue. `js/index-refresh.js` closes that gap. It owns nothing but the *trigger*: detection is `CatalogIndex.checkForUpdate()` (re-fetches the ~600 B manifest and diffs the content-hashed shard filenames), application is `BrowserState.applyIndex()`.
+
+- **Triggers**: the tab becoming visible again, and `URLRouter.handleRoute()`. Deliberately no `setInterval`. All triggers share one throttle (`AppConfig.catalogIndex.autoCheckMs`, default 30 min), so request count is independent of how much the user clicks, and the run is scheduled through `requestIdleCallback` so navigation never waits on it. `IndexRefresh.init()` seeds the throttle with the load timestamp — page load has just fetched the manifest, so an immediate check would be a duplicate request on *every* load.
+- **Silent by design**: the auto path swaps `BrowserState.allTables` and refreshes the status badge but **never** calls `renderCurrentView()` — rebuilding the list under the user's cursor would cost scroll position and focus for an update they didn't ask for. The next navigation renders from `allTables` anyway, so it shows fresh data for free. Only the status panel's «Se etter ny indeks» passes `render: true`, sharing the exact same path.
+- **Gated to browse views** (`home`/`search`/`topic`): in `variables`/`table` the catalogue isn't on screen, and rebuilding the topic tree mid-route buys nothing.
+- **Free recovery**: if the app booted on the fallback path (manifest was down), the first successful background check sees an empty `prevMeta`, reports every source as changed, and lifts the app back onto the index without a reload.
+
 ## URL state encoding
 
 All view state is encoded into the URL hash so any view can be bookmarked and shared.
