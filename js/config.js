@@ -217,19 +217,26 @@ const AppConfig = {
     // verdien tas med for framtidig sikkerhet). Gjelder KUN forsidens
     // nylig-oppdatert-seksjon — søk/emnefiltre påvirkes ikke.
     // excludedTableIds er en KURATERT liste: enkelttabeller som aldri skal
-    // vises der, uavhengig av showHighFrequency. Den finnes fordi frekvens
-    // alene ikke fanger tilfellet: FHIs ukestabeller (sysvak/msis) har
-    // ukesperioder, men får nye tall hver dag og fyller derfor lista like
-    // effektivt som NBs dagsserier. Legg til nye id-er her når en tabell viser
-    // seg å oppdateres oftere enn periodelengden tilsier.
+    // vises der, uavhengig av showHighFrequency. Den finnes fordi timeUnit
+    // alene ikke fanger tilfellet — en tabell kan ha en lang tidsperiode og
+    // likevel oppdateres hver natt.
+    //
+    // MÅL, IKKE ANTA. Lista inneholdt en periode ti FHI-tabeller under
+    // antagelsen om at «ukestall» betyr daglig påfyll. Det stemte ikke:
+    // `updated` i data/sources/fhi-catalog.json er en ekte modifiedAt, fila er
+    // innsjekket, og «git log -p» på den ga en tidsserie som viste at msis
+    // skriver én gang i uka (torsdag ~10:36, onsdag ~02:36), sysvak natt til
+    // lørdag, og at sysvak-324/484 ikke var rørt på nesten et år. Et
+    // live-oppslag mot GET /{kilde}/table på en dag uten katalogbygg avgjør
+    // saken: rykker modifiedAt fram, er tabellen daglig.
     recentUpdates: {
       showHighFrequency: false,
       highFrequencyTimeUnits: ['Business', 'Daily'],
       excludedTableIds: [
-        // FHI, ukestall med daglig påfyll — se kommentaren over.
-        'fhi-sysvak-324', 'fhi-sysvak-484', 'fhi-sysvak-716', 'fhi-sysvak-717',
-        'fhi-msis-724', 'fhi-msis-726', 'fhi-msis-729', 'fhi-msis-731',
-        'fhi-msis-733', 'fhi-msis-769'
+        // Årlig tidsdimensjon, men skrives hver natt kl. 04:07 — verifisert
+        // ved at modifiedAt rykker fram ett døgn om gangen, også på dager
+        // uten katalogbygg. Eneste FHI-tabellen som gjør dette.
+        'fhi-ngs-665'
       ]
     },
 
