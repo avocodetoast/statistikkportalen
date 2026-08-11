@@ -174,6 +174,22 @@ const SCRIPTS = {
     'js/sources/fhi-adapter.js',
     'js/sources/ssb-adapter.js',
     'js/sources/source-registry.js'
+  ],
+
+  /** core + table action logic, ordered as the corresponding scripts in index.html */
+  tableTools: [
+    'js/version.js',
+    'js/sources/nb-catalog.js',
+    'js/sources/source-topology.js',
+    'js/config.js',
+    'js/translations.js',
+    'js/cache.js',
+    'js/sources/source-common.js',
+    'js/catalog-index.js',
+    'js/api.js',
+    'js/table-save-query.js',
+    'js/table-rotation.js',
+    'js/export.js'
   ]
 };
 

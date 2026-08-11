@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "id": ["Region", "Tid"],
+    "size": [1, 1],
+    "dimension": {
+      "Region": { "label": "Region", "category": { "index": { "0": 0 }, "label": { "0": "Hele landet" } } },
+      "Tid": { "label": "Tid", "category": { "index": { "2025": 0 }, "label": { "2025": "2025" } } }
+    },
+    "role": { "time": ["Tid"], "geo": ["Region"] }
+  },
+  "data": {
+    "id": ["Region", "Tid"],
+    "size": [1, 1],
+    "dimension": {
+      "Region": { "label": "Region", "category": { "index": { "0": 0 }, "label": { "0": "Hele landet" } } },
+      "Tid": { "label": "Tid", "category": { "index": { "2025": 0 }, "label": { "2025": "2025" } } }
+    },
+    "role": { "time": ["Tid"], "geo": ["Region"] },
+    "value": [42]
+  },
+  "codelist": {
+    "id": "vs_Region",
+    "label": "Region",
+    "type": "Valueset",
+    "values": [{ "code": "0", "label": "Hele landet", "valueMap": ["0"] }]
+  },
+  "defaultSelection": {
+    "selection": [{ "variableCode": "Tid", "valueCodes": ["2025"] }]
+  },
+  "config": {
+    "maxDataCells": 123456,
+    "maxCallsPerTimeWindow": 30,
+    "timeWindow": "PT1M",
+    "apiVersion": "test-v2",
+    "dataFormats": ["json-stat2", "csv"]
+  },
+  "savedQuery": {
+    "id": "saved/id",
+    "tableId": "13760",
+    "selection": { "selection": [{ "variableCode": "Tid", "valueCodes": ["2025"] }] }
+  }
+}
