@@ -187,12 +187,12 @@ describe('BrowserState source filtering', () => {
 
   it('counts tables per source, ignoring the source filter itself', () => {
     const counts = BrowserState.calcSourceCounts(tables, { sourceFilter: ['fhi'] });
-    assert.deepEqual(counts, { ssb: 1, nb: 1, fhi: 2 });
+    assert.deepEqual(counts, { ssb: 1, nb: 1, fhi: 2, dbh: 0 });
   });
 
   it('applies the other filters when counting per source', () => {
     const counts = BrowserState.calcSourceCounts(tables, { sourceFilter: [], subjectFilter: 'be' });
-    assert.deepEqual(counts, { ssb: 1, nb: 0, fhi: 1 });
+    assert.deepEqual(counts, { ssb: 1, nb: 0, fhi: 1, dbh: 0 });
   });
 });
 

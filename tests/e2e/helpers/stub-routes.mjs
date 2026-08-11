@@ -37,7 +37,8 @@ const HELPER_DIR = path.dirname(fileURLToPath(import.meta.url));
 export const FIXTURE_DIR = path.resolve(HELPER_DIR, '..', 'fixtures');
 
 /** Verter appen har lov til å snakke med i det hele tatt. */
-const API_HOSTS = ['data.ssb.no', 'data.norges-bank.no', 'statistikk-data.fhi.no'];
+const API_HOSTS = ['data.ssb.no', 'data.norges-bank.no', 'statistikk-data.fhi.no',
+  'dbh-data.dataporten-api.no'];
 
 /** Telemetri o.l. som aldri skal treffe nett i en test, og aldri feile den. */
 const IGNORED_HOSTS = ['stats.statistikkportalen.no'];

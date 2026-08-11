@@ -46,6 +46,12 @@
    * (for passthrough-nodene leverer SSBs egne data uansett `en`-labelen).
    */
   const sourceNodes = {
+    'dbh-studenter':    { sortCode: '920', label: { nb: 'Studenter og søkere', en: 'Students and applicants' } },
+    'dbh-studietilbud': { sortCode: '921', label: { nb: 'Studietilbud og studieplasser', en: 'Study programmes and places' } },
+    'dbh-fagskoler':    { sortCode: '922', label: { nb: 'Fagskoler', en: 'Vocational colleges' } },
+    'dbh-personale':    { sortCode: '923', label: { nb: 'Tilsatte i høyere utdanning', en: 'Higher education staff' } },
+    'dbh-forskning':    { sortCode: '924', label: { nb: 'Vitenskapelig publisering', en: 'Scientific publishing' } },
+    'dbh-annet':        { sortCode: '925', label: { nb: 'Institusjonsdata', en: 'Institution data' } },
     // Norges Bank – tematiske leaf-noder (kryssplasseres under flere SSB-mapper).
     'nb-finansmarkeder':    { sortCode: '905', label: { nb: 'Finansmarkeder', en: 'Financial markets' } },
     'nb-pengepolitikk':     { sortCode: '910', label: { nb: 'Pengepolitikk og pengemarked', en: 'Monetary policy and money market' } },

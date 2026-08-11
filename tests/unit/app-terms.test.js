@@ -64,12 +64,13 @@ describe('termsSourceLineHTML', () => {
 });
 
 describe('Kildelisten i dialogen', () => {
-  it('bygges fra AppConfig, med lisens for hver av de tre kildene', () => {
+  it('bygges fra AppConfig, med lisens for hver av de fire kildene', () => {
     const lines = listSourceBrandings().map(termsSourceLineHTML);
-    assert.equal(lines.length, 3);
+    assert.equal(lines.length, 4);
     assert.match(lines.join('\n'), /Statistisk sentralbyrå/);
     assert.match(lines.join('\n'), /Norges Bank/);
     assert.match(lines.join('\n'), /Folkehelseinstituttet/);
+    assert.match(lines.join('\n'), /Database for statistikk om høgare utdanning/);
   });
 
   it('oppgir NLOD for Norges Bank (jf. AppConfig.sources.nb.branding)', () => {

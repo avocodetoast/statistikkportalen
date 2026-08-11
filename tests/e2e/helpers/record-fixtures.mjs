@@ -20,7 +20,7 @@ import {
   runSearchFlow, runTopicFlow, runTableFlow,
   BUILDER_TABLES, BUILDER_FLOWS,
   TOPIC_ROUTES, TOPIC_KEEP_TABLES, runTopicRouteFlow,
-  DEFAULT_TABLE, NB_TABLE, FHI_TABLE
+  DEFAULT_TABLE, NB_TABLE, FHI_TABLE, DBH_TABLE
 } from './flows.mjs';
 import { FIXTURE_DIR } from './stub-routes.mjs';
 
@@ -65,10 +65,10 @@ try {
   await waitForFrontPage(app.page);
   await runTopicFlow(app.page);
 
-  // Én tabell per kilde: SSB (PxWebApi), Norges Bank (SDMX) og FHI
-  // (JSON-Stat2 + eget metadata/flag-kall). Alle tre går ulike veier gjennom
-  // adapterlaget, så alle tre må spilles inn.
-  for (const id of [table, NB_TABLE, FHI_TABLE]) {
+  // Én tabell per kilde: SSB (PxWebApi), Norges Bank (SDMX), FHI
+  // (JSON-Stat2 + eget metadata/flag-kall) og DBH (flat JSON via POST). Alle
+  // går ulike veier gjennom adapterlaget, så alle må spilles inn.
+  for (const id of [table, NB_TABLE, FHI_TABLE, DBH_TABLE]) {
     await app.page.goto(app.baseUrl, { waitUntil: 'domcontentloaded' });
     await waitForFrontPage(app.page);
     await runTableFlow(app.page, id);

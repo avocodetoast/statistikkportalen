@@ -29,11 +29,15 @@ export const NB_TABLE = 'nb-IR';
  */
 export const FHI_TABLE = 'fhi-nokkel-185';
 
-/** Alle tre kildene, for tester som skal dekke hele matrisen. */
+/** DBH: areal. Liten årstabell som går gjennom DBH→JSON-Stat2-konverteringen. */
+export const DBH_TABLE = 'dbh-226';
+
+/** Alle fire kildene, for tester som skal dekke hele matrisen. */
 export const SOURCE_TABLES = [
   { source: 'ssb', tableId: DEFAULT_TABLE },
   { source: 'nb', tableId: NB_TABLE },
-  { source: 'fhi', tableId: FHI_TABLE }
+  { source: 'fhi', tableId: FHI_TABLE },
+  { source: 'dbh', tableId: DBH_TABLE }
 ];
 
 const TIMEOUT = 20000;

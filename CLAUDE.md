@@ -13,7 +13,7 @@ runtime-avhengigheter. Bla i og eksporter statistikk fra PxWebApi v2 (SSB), Norg
 | hvordan kjøre og verifisere appen, E2E, fixtures, skjermbilder, feilsøking | `verify`-skillen |
 | tilstandsflyt, kildefasaden, caching, URL-koding, SEO-pipelinen | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | testharnessen, dekningsporten, hva som testes hvor | [tests/README.md](tests/README.md) |
-| API-atferd som avviker fra spec | skillene `api-ssb`, `api-norges-bank`, `api-fhi` |
+| API-atferd som avviker fra spec | skillene `api-ssb`, `api-norges-bank`, `api-fhi`, `api-dbh` |
 | hva som er aktivert vs. planlagt av NB-/FHI-kilder | [ROADMAP.md](ROADMAP.md) |
 
 Lastrekkefølgen er `<script>`-rekkefølgen i `index.html`. Adapterkontrakten står i

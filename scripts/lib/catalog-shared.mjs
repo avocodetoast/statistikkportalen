@@ -19,3 +19,5 @@ export const buildNbRows = (...args) =>
   structuredClone(CatalogShared.buildNbRows(...args));
 export const buildFhiRows = (...args) =>
   structuredClone(CatalogShared.buildFhiRows(...args));
+export const buildDbhRows = (...args) =>
+  structuredClone(CatalogShared.buildDbhRows(...args));

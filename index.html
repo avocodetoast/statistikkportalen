@@ -65,7 +65,7 @@
     <!-- Statisk kildeliste med attribusjon for crawlere/noscript. Når JS
          kjører, byttes hele spanet ut med «Kilder og vilkår»-lenken, som åpner
          dialogen i js/app-terms.js (applyTranslatableUI under). -->
-    <p id="footer-source-line"><span id="footer-sources">Data fra <a href="https://www.ssb.no/" target="_blank" rel="noopener noreferrer">Statistisk sentralbyrå</a> <a href="https://www.ssb.no/diverse/lisens" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a>, <a href="https://www.norges-bank.no/" target="_blank" rel="noopener noreferrer">Norges Bank</a> <a href="https://data.norge.no/nlod" target="_blank" rel="noopener noreferrer">(NLOD)</a> og <a href="https://www.fhi.no/" target="_blank" rel="noopener noreferrer">Folkehelseinstituttet</a> <a href="https://creativecommons.org/licenses/by/4.0/deed.no" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a></span>
+    <p id="footer-source-line"><span id="footer-sources">Data fra <a href="https://www.ssb.no/" target="_blank" rel="noopener noreferrer">Statistisk sentralbyrå</a> <a href="https://www.ssb.no/diverse/lisens" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a>, <a href="https://www.norges-bank.no/" target="_blank" rel="noopener noreferrer">Norges Bank</a> <a href="https://data.norge.no/nlod" target="_blank" rel="noopener noreferrer">(NLOD)</a>, <a href="https://www.fhi.no/" target="_blank" rel="noopener noreferrer">Folkehelseinstituttet</a> <a href="https://creativecommons.org/licenses/by/4.0/deed.no" target="_blank" rel="noopener noreferrer">(CC BY 4.0)</a> og <a href="https://dbh.hkdir.no/" target="_blank" rel="noopener noreferrer">DBH (HK-dir)</a> <a href="https://data.norge.no/nlod/no" target="_blank" rel="noopener noreferrer">(NLOD)</a></span>
     <span class="footer-separator">·</span>
     <a href="https://github.com/avocodetoast/statistikkportalen" target="_blank" rel="noopener noreferrer">GitHub</a>
     <span class="footer-separator js-only">·</span>
@@ -80,6 +80,7 @@
   <!-- Kildedata skilt ut fra config.js — må lastes FØR config.js, som refererer
        window.NbCatalog / window.SourceTopology. Rene browser-globals uten deps. -->
   <script src="js/sources/nb-catalog.js?v=1.11.0"></script>
+  <script src="js/sources/dbh-catalog.js?v=1.11.0"></script>
   <script src="js/sources/source-topology.js?v=1.11.0"></script>
   <script src="js/config.js?v=1.11.0"></script>
 
@@ -119,9 +120,11 @@
        lastes som <script> her lenger. Over file:// degraderer begge til
        direkte kildehenting (se js/catalog-index.js). -->
   <script src="js/sources/sdmx-to-jsonstat.js?v=1.11.0"></script>
+  <script src="js/sources/dbh-to-jsonstat.js?v=1.11.0"></script>
   <script src="js/catalog-index.js?v=1.11.0"></script>
   <script src="js/sources/norges-bank-adapter.js?v=1.11.0"></script>
   <script src="js/sources/fhi-adapter.js?v=1.11.0"></script>
+  <script src="js/sources/dbh-adapter.js?v=1.11.0"></script>
   <script src="js/sources/ssb-adapter.js?v=1.11.0"></script>
   <script src="js/sources/source-registry.js?v=1.11.0"></script>
   <script src="js/utils.js?v=1.11.0"></script>

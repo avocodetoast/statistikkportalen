@@ -66,6 +66,15 @@ const appConfig = {
       },
       sourceIds: ['nokkel'],
     },
+    dbh: {
+      adapter: 'dbh', enabled: true, idPrefix: 'dbh-',
+      branding: { name: 'DBH', nameFull: 'Database for statistikk om høgare utdanning', shortName: 'DBH' },
+      tables: [{
+        id: 'dbh-226', rawId: 226, title: 'Areal', paths: [['ud', 'dbh-annet']],
+        timeUnit: 'year', dimensions: [{ code: 'Årstall', label: 'Årstall' }],
+        measures: ['Brutto m2']
+      }]
+    },
   },
   sourceNodes: {
     'nb-valutakurser': { label: { nb: 'Valutakurser (Norges Bank)', en: 'Exchange rates (Norges Bank)' }, sortCode: '910' },
@@ -75,6 +84,7 @@ const appConfig = {
     'renter': { label: { nb: 'Renter i banker og kredittforetak' }, sortCode: '0000009' },
     'nb-pengepolitikk': { label: { nb: 'Pengepolitikk og pengemarked', en: 'Monetary policy and money market' }, sortCode: '910' },
     'fhi-nokkel': { label: { nb: 'Folkehelse: nøkkeltall (FHI)', en: 'Public health: key figures (FHI)' }, sortCode: '920' },
+    'dbh-annet': { label: { nb: 'Institusjonsdata', en: 'Institution data' }, sortCode: '925' },
   },
 };
 
@@ -84,6 +94,7 @@ const subjectNames = {
   bf: { nb: 'Bank og finansmarked', en: 'Banking and financial markets' },
   ut: 'Utenriksøkonomi',
   he: { nb: 'Helse', en: 'Health' },
+  ud: { nb: 'Utdanning', en: 'Education' },
 };
 
 const fhiCatalog = {
@@ -121,6 +132,7 @@ describe('sourceKeyForId', () => {
     const { sourceKeyForId } = await mod;
     assert.equal(sourceKeyForId('nb-EXR', appConfig), 'nb');
     assert.equal(sourceKeyForId('fhi-nokkel-171', appConfig), 'fhi');
+    assert.equal(sourceKeyForId('dbh-226', appConfig), 'dbh');
     assert.equal(sourceKeyForId('13760', appConfig), 'ssb');
   });
 
@@ -372,24 +384,38 @@ describe('buildFhiCatalogue', () => {
   });
 });
 
+describe('buildDbhCatalogue', () => {
+  it('bygger kuraterte DBH-rader nettverksfritt via CatalogShared', async () => {
+    const { buildDbhCatalogue } = await mod;
+    const tables = buildDbhCatalogue(appConfig, subjectNames, 'nb');
+    assert.equal(tables.length, 1);
+    assert.equal(tables[0].id, 'dbh-226');
+    assert.equal(tables[0].label, 'Areal');
+    assert.deepEqual(tables[0].paths[0].map(segment => segment.id), ['ud', 'dbh-annet']);
+    assert.equal(tables[0].source, 'DBH');
+  });
+});
+
 describe('enabledSourceNames / joinNamesNo', () => {
   it('lister det globale kildenavnet først, deretter aktiverte kilder med branding', async () => {
     const { enabledSourceNames } = await mod;
     assert.deepEqual(
       enabledSourceNames(appConfig),
-      ['Statistisk sentralbyrå', 'Norges Bank', 'Folkehelseinstituttet']
+      ['Statistisk sentralbyrå', 'Norges Bank', 'Folkehelseinstituttet',
+        'Database for statistikk om høgare utdanning']
     );
   });
 
   it('kan gi kortnavn (name) i stedet for fulle navn', async () => {
     const { enabledSourceNames } = await mod;
-    assert.deepEqual(enabledSourceNames(appConfig, 'name'), ['SSB', 'Norges Bank', 'FHI']);
+    assert.deepEqual(enabledSourceNames(appConfig, 'name'), ['SSB', 'Norges Bank', 'FHI', 'DBH']);
   });
 
   it('hopper over avskrudde kilder', async () => {
     const { enabledSourceNames } = await mod;
     const cfg = { ...appConfig, sources: { ...appConfig.sources, fhi: { ...appConfig.sources.fhi, enabled: false } } };
-    assert.deepEqual(enabledSourceNames(cfg), ['Statistisk sentralbyrå', 'Norges Bank']);
+    assert.deepEqual(enabledSourceNames(cfg), ['Statistisk sentralbyrå', 'Norges Bank',
+      'Database for statistikk om høgare utdanning']);
   });
 
   it('binder navnelister med komma og «og»', async () => {

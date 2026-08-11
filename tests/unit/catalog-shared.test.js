@@ -56,4 +56,12 @@ describe('CatalogShared — adapter/SEO-ekvivalens', () => {
 
     assert.deepEqual(tables, seoRows);
   });
+
+  it('gir identiske DBH-rader fra den kuraterte katalogen', async () => {
+    const adapter = app.SourceAdapters.find(candidate => candidate.sourceId === 'dbh');
+    const { tables } = await adapter.getTables({ lang: 'nb' });
+    const { buildDbhCatalogue } = await seoSources;
+    const seoRows = buildDbhCatalogue(app.AppConfig, app.SubjectConfig.subjectNames, 'nb');
+    assert.deepEqual(tables, seoRows);
+  });
 });

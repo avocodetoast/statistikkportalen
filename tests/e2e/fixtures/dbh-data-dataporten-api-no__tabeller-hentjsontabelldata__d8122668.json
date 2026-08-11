@@ -1,0 +1,19 @@
+[
+  {
+    "status": {
+      "tabell_id": 226,
+      "api_versjon": 1,
+      "antall": 44,
+      "returkode": 0,
+      "melding": "Data levert."
+    }
+  },
+  {
+    "Årstall": "2024",
+    "Institusjonskode": "0217",
+    "Institusjonsnavn": "Samisk høgskole",
+    "Leieforhold": "A",
+    "Leietypetekst": "Arealer der det betales leie til andre organisasjoner",
+    "Brutto m2": 362
+  }
+]

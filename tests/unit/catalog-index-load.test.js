@@ -75,15 +75,16 @@ beforeEach(() => {
 });
 
 describe('CatalogIndex.load — full indeks', () => {
-  it('(a) manifest + 3 shards gir bySource, tom missingSources og radsummen', async () => {
+  it('(a) manifest + 4 shards gir bySource, tom missingSources og radsummen', async () => {
     const index = await CatalogIndex.load({ lang: 'no' });
 
     assert.equal(index.available, true);
     assert.equal(CatalogIndex.available(), true);
-    assert.deepEqual(Object.keys(index.bySource).sort(), ['fhi', 'nb', 'ssb']);
+    assert.deepEqual(Object.keys(index.bySource).sort(), ['dbh', 'fhi', 'nb', 'ssb']);
     assert.equal(index.bySource.ssb.length, SHARD.ssb.count);
     assert.equal(index.bySource.nb.length, SHARD.nb.count);
     assert.equal(index.bySource.fhi.length, SHARD.fhi.count);
+    assert.equal(index.bySource.dbh.length, SHARD.dbh.count);
     assert.equal(index.rows.length, TOTAL_ROWS);
     assert.deepEqual(index.missingSources, []);
   });
@@ -123,8 +124,8 @@ describe('CatalogIndex.load — degradering', () => {
 
     assert.equal(index.available, true);
     assert.deepEqual(index.missingSources, ['fhi']);
-    assert.deepEqual(Object.keys(index.bySource).sort(), ['nb', 'ssb']);
-    assert.equal(index.rows.length, SHARD.ssb.count + SHARD.nb.count);
+    assert.deepEqual(Object.keys(index.bySource).sort(), ['dbh', 'nb', 'ssb']);
+    assert.equal(index.rows.length, SHARD.ssb.count + SHARD.nb.count + SHARD.dbh.count);
   });
 
   it('(c) manifest-404 gir available false og kaster ikke', async () => {
@@ -159,7 +160,7 @@ describe('CatalogIndex.load — degradering', () => {
 
     assert.equal(index.available, true);
     assert.deepEqual(index.missingSources, ['nb']);
-    assert.equal(index.rows.length, SHARD.ssb.count + SHARD.fhi.count);
+    assert.equal(index.rows.length, SHARD.ssb.count + SHARD.fhi.count + SHARD.dbh.count);
   });
 
   it('(g) decode-feil (format 2 i ett shard) degraderer kun den kilden', async () => {
@@ -171,8 +172,8 @@ describe('CatalogIndex.load — degradering', () => {
 
     assert.equal(index.available, true);
     assert.deepEqual(index.missingSources, ['ssb']);
-    assert.deepEqual(Object.keys(index.bySource).sort(), ['fhi', 'nb']);
-    assert.equal(index.rows.length, SHARD.nb.count + SHARD.fhi.count);
+    assert.deepEqual(Object.keys(index.bySource).sort(), ['dbh', 'fhi', 'nb']);
+    assert.equal(index.rows.length, SHARD.nb.count + SHARD.fhi.count + SHARD.dbh.count);
   });
 
   it('alle shards ubrukelige → 0 rader → available false', async () => {
@@ -189,7 +190,7 @@ describe('CatalogIndex.load — caching', () => {
   it('(e) andre load() gjør ingen nye fetch-kall — verken memoisert eller via CacheManager', async () => {
     const first = await CatalogIndex.load({ lang: 'no' });
     const afterFirst = fetchCalls.length;
-    assert.ok(afterFirst >= 4, 'manifest + 3 shards skal hentes én gang hver');
+    assert.ok(afterFirst >= 5, 'manifest + 4 shards skal hentes én gang hver');
 
     // Memoisert tilstand
     await CatalogIndex.load({ lang: 'no' });
@@ -339,7 +340,7 @@ describe('api.seedSourceStatus', () => {
     app.api.seedSourceStatus(index.meta);
 
     const snapshot = app.api.getSourceStatus();
-    assert.deepEqual(snapshot.map(s => s.sourceId).sort(), ['fhi', 'nb', 'ssb']);
+    assert.deepEqual(snapshot.map(s => s.sourceId).sort(), ['dbh', 'fhi', 'nb', 'ssb']);
     snapshot.forEach(s => {
       assert.equal(s.status, 'ok');
       assert.equal(s.fromCache, true);
@@ -347,5 +348,6 @@ describe('api.seedSourceStatus', () => {
       assert.equal(typeof s.stale, 'boolean');
     });
     assert.equal(snapshot.find(s => s.sourceId === 'fhi').tableCount, SHARD.fhi.count);
+    assert.equal(snapshot.find(s => s.sourceId === 'dbh').tableCount, SHARD.dbh.count);
   });
 });

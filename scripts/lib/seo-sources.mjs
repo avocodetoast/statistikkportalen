@@ -17,7 +17,7 @@
  * tests/unit/seo-sources.test.js.
  */
 
-import { buildNbRows, buildFhiRows } from './catalog-shared.mjs';
+import { buildNbRows, buildFhiRows, buildDbhRows } from './catalog-shared.mjs';
 
 /** SSB-/FHI-periode → ISO 8601 for temporalCoverage: "2006" → "2006",
  *  "2006M01" → "2006-01", kvartal/uke/halvår ("2006K1" osv.) → året.
@@ -142,6 +142,19 @@ export function buildFhiCatalogue(catalog, appConfig, subjectNames, lang) {
     }));
   }
   return tables;
+}
+
+/** DBH-katalogen, nettverksfritt fra den kuraterte JS-katalogen i config. */
+export function buildDbhCatalogue(appConfig, subjectNames, lang) {
+  const cfg = appConfig?.sources?.dbh || {};
+  return buildDbhRows({
+    tables: cfg.tables || [],
+    subjectNames,
+    sourceNodes: appConfig?.sourceNodes || {},
+    lang,
+    pickLabel,
+    sourceName: cfg.branding?.name || '',
+  });
 }
 
 /** Kildenavn for forside-/beskrivelsestekster: det globale kildenavnet (SSB)

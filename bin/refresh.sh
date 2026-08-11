@@ -2,7 +2,7 @@
 #
 # Oppdaterer ÉN kilde i katalogindeksen og regenererer SEO-sidene.
 #
-# HVORFOR PER KILDE: SSB, Norges Bank og FHI publiserer på ulike tidspunkt, og
+# HVORFOR PER KILDE: SSB, Norges Bank, FHI og DBH publiserer på ulike tidspunkt, og
 # hver kilde har derfor sin egen cron-oppføring. Byggeren tar --source og bærer
 # de øvrige kildenes shards videre uendret, så en kjøring for én kilde rører
 # aldri de andre.
@@ -14,7 +14,7 @@
 # og kan bli forsinket titalls minutter).
 #
 # Bruk:
-#   bin/refresh.sh ssb|nb|fhi
+#   bin/refresh.sh ssb|nb|fhi|dbh
 #
 # Konfigurasjon leses fra en .env ved siden av repoet (samme mappe som denne
 # fila ligger i overordnet til):
@@ -24,11 +24,13 @@
 #   HEALTHCHECK_SSB=https://hc-ping.com/<uuid>  (valgfri — dead man's switch)
 #   HEALTHCHECK_NB=...
 #   HEALTHCHECK_FHI=...
+#   HEALTHCHECK_DBH=...
 #
 # Cron (tidspunktene er eksempler — juster etter kildenes publisering):
 #   15 6,10,14 * * *  cd ~/statistikkportalen && bin/refresh.sh ssb >> log/ssb.log 2>&1
 #   15 7,15    * * *  cd ~/statistikkportalen && bin/refresh.sh nb  >> log/nb.log  2>&1
 #   45 5       * * 0  cd ~/statistikkportalen && bin/refresh.sh fhi >> log/fhi.log 2>&1
+#   30 6       * * 1  cd ~/statistikkportalen && bin/refresh.sh dbh >> log/dbh.log 2>&1
 
 set -euo pipefail
 
@@ -47,8 +49,8 @@ fail() { printf '[refresh:%s] FEIL: %s\n' "${SOURCE:-?}" "$*" >&2; exit 1; }
 # Argumentet valideres før konfigurasjonen: en typo i cron-oppføringen skal gi
 # en lesbar feil, ikke en klage over en .env som er helt i orden.
 case "$SOURCE" in
-  ssb|nb|fhi) ;;
-  *) fail "ukjent kilde «${SOURCE}». Bruk: $0 ssb|nb|fhi" ;;
+  ssb|nb|fhi|dbh) ;;
+  *) fail "ukjent kilde «${SOURCE}». Bruk: $0 ssb|nb|fhi|dbh" ;;
 esac
 
 [ -n "${SITE_URL:-}" ] || fail "SITE_URL er ikke satt (se .env)."
@@ -72,6 +74,9 @@ case "$SOURCE" in
       log "ingen fhi-catalog.json — kjører full build (~740 kall)"
       node scripts/update-fhi-catalog.mjs --rate 120
     fi
+    ;;
+  dbh)
+    node scripts/update-dbh-metadata.mjs
     ;;
 esac
 

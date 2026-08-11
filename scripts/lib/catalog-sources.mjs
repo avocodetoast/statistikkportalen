@@ -28,7 +28,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
-import { buildNbCatalogue, buildFhiCatalogue } from './seo-sources.mjs';
+import { buildNbCatalogue, buildFhiCatalogue, buildDbhCatalogue } from './seo-sources.mjs';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(SCRIPT_DIR, '..', '..');
@@ -55,7 +55,7 @@ export function loadAppConfig() {
   // kommer da ut ferdig utfylt med sources.nb.dataflows/variableNames,
   // sources.fhi.sourceIds/paths og sourceNodes — som før.
   const sandbox = { window: {} };
-  for (const file of ['sources/nb-catalog.js', 'sources/source-topology.js', 'config.js']) {
+  for (const file of ['sources/nb-catalog.js', 'sources/dbh-catalog.js', 'sources/source-topology.js', 'config.js']) {
     vm.runInNewContext(fs.readFileSync(path.join(REPO_ROOT, 'js', file), 'utf8'), sandbox);
   }
   const cfg = sandbox.window.AppConfig;
@@ -106,6 +106,7 @@ const ADAPTER_PROVIDERS = {
   ssb: buildSsbRows,
   'norges-bank': buildNorgesBankRows,
   fhi: buildFhiRows,
+  dbh: buildDbhRows,
 };
 
 /** Adaptere det finnes en provider for her. En kilde i AppConfig.sources med
@@ -251,6 +252,22 @@ async function buildNorgesBankRows(opts) {
 async function buildFhiRows(opts) {
   const { appConfig, subjectConfig, lang } = opts;
   return buildFhiCatalogue(readFhiCatalog(), appConfig, subjectConfig.subjectNames, lang);
+}
+
+async function buildDbhRows(opts) {
+  const { appConfig, subjectConfig, lang } = opts;
+  const rows = buildDbhCatalogue(appConfig, subjectConfig.subjectNames, lang);
+  const file = path.join(REPO_ROOT, 'data', 'sources', 'dbh-metadata.json');
+  if (!fs.existsSync(file)) return rows;
+  const metadata = JSON.parse(fs.readFileSync(file, 'utf8'));
+  for (const row of rows) {
+    const info = metadata.tables?.[row.id];
+    if (!info) continue;
+    row.firstPeriod = info.periods?.firstPeriod || '';
+    row.lastPeriod = info.periods?.lastPeriod || '';
+    row.updated = metadata.generatedAt || '';
+  }
+  return rows;
 }
 
 export async function buildSourceRows(sourceKey, opts = {}) {

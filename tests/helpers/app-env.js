@@ -128,6 +128,7 @@ const SCRIPTS = {
   core: [
     'js/version.js',
     'js/sources/nb-catalog.js',
+    'js/sources/dbh-catalog.js',
     'js/sources/source-topology.js',
     'js/config.js',
     'js/translations.js',
@@ -141,6 +142,7 @@ const SCRIPTS = {
   browse: [
     'js/version.js',
     'js/sources/nb-catalog.js',
+    'js/sources/dbh-catalog.js',
     'js/sources/source-topology.js',
     'js/config.js',
     'js/translations.js',
@@ -160,6 +162,7 @@ const SCRIPTS = {
   sources: [
     'js/version.js',
     'js/sources/nb-catalog.js',
+    'js/sources/dbh-catalog.js',
     'js/sources/source-topology.js',
     'js/config.js',
     'js/translations.js',
@@ -170,8 +173,10 @@ const SCRIPTS = {
     'js/api.js',
     'js/period-format.js',
     'js/sources/sdmx-to-jsonstat.js',
+    'js/sources/dbh-to-jsonstat.js',
     'js/sources/norges-bank-adapter.js',
     'js/sources/fhi-adapter.js',
+    'js/sources/dbh-adapter.js',
     'js/sources/ssb-adapter.js',
     'js/sources/source-registry.js'
   ],
@@ -180,6 +185,7 @@ const SCRIPTS = {
   tableTools: [
     'js/version.js',
     'js/sources/nb-catalog.js',
+    'js/sources/dbh-catalog.js',
     'js/sources/source-topology.js',
     'js/config.js',
     'js/translations.js',

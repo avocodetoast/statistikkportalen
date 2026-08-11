@@ -220,7 +220,14 @@ function main() {
 
   // Filer porten ikke kan se i det hele tatt (ingen test laster dem). En ny
   // slik fil skal ikke kunne gli inn i stillhet — se listAppFiles().
-  const known = new Set([...Object.keys(baseline.files), ...(baseline.untracked || [])]);
+  // En NY fil som faktisk ble lastet i denne kjøringen finnes naturlig nok
+  // ikke i den gamle basislinjen ennå, men er målbar og behandles av
+  // ny-fil-porten under. Bare filer som verken er kjente ELLER målt er ukjente.
+  const known = new Set([
+    ...Object.keys(baseline.files),
+    ...(baseline.untracked || []),
+    ...summary.keys()
+  ]);
   const unknown = listAppFiles().filter((f) => !known.has(f));
   if (unknown.length > 0) {
     failures.push(

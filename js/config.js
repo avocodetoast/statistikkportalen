@@ -215,6 +215,7 @@ const AppConfig = {
       // ligger like under. warnCells er satt over SSBs 800 000, slik at de 37
       // FHI-tabellene med kryssprodukt over det ikke advarer av seg selv.
       fhi: { maxCells: null, warnCells: 1000000, slowWarnCells: 4000000, denseWarnCells: null }
+      ,dbh: { maxCells: null, warnCells: 500000, slowWarnCells: null, denseWarnCells: null }
     }
   },
 
@@ -434,6 +435,18 @@ const AppConfig = {
       // (window.SourceTopology.fhi), lastet FØR denne filen.
       sourceIds: (((window.SourceTopology || {}).fhi || {}).sourceIds) || [],
       paths: (((window.SourceTopology || {}).fhi || {}).paths) || {}
+    },
+
+    dbh: {
+      adapter: 'dbh', enabled: true, idPrefix: 'dbh-',
+      baseUrl: 'https://dbh-data.dataporten-api.no/Tabeller/',
+      displayName: { nb: 'DBH (HK-dir)', en: 'DBH (HK-dir)' },
+      branding: {
+        name: 'DBH', nameFull: 'Database for statistikk om høgare utdanning (HK-dir)',
+        shortName: 'DBH', url: 'https://dbh.hkdir.no/',
+        licenseName: 'NLOD', licenseUrl: 'https://data.norge.no/nlod/no'
+      },
+      tables: ((window.DbhCatalog || {}).tables) || []
     }
   },
 

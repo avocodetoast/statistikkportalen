@@ -34,6 +34,10 @@ describe('sourceKeyForTableId', () => {
     assert.equal(sourceKeyForTableId('fhi-mfr-123'), 'fhi');
   });
 
+  it('routes dbh- prefixed ids to dbh', () => {
+    assert.equal(sourceKeyForTableId('dbh-226'), 'dbh');
+  });
+
   it('falls back to ssb for plain table ids', () => {
     assert.equal(sourceKeyForTableId('13760'), 'ssb');
   });
@@ -67,17 +71,18 @@ describe('sourceBrandingForTable', () => {
 describe('listEnabledSources', () => {
   it('pairs each enabled source key with its branding, in config order', () => {
     const list = listEnabledSources();
-    assert.deepEqual(list.map(s => s.key), ['ssb', 'nb', 'fhi']);
+    assert.deepEqual(list.map(s => s.key), ['ssb', 'nb', 'fhi', 'dbh']);
     assert.equal(list[0].branding, AppConfig.source); // ssb → global fallback
     assert.equal(list[1].branding.shortName, 'NB');
     assert.equal(list[2].branding.shortName, 'FHI');
+    assert.equal(list[3].branding.shortName, 'DBH');
   });
 
   it('skips disabled sources', () => {
     const original = AppConfig.sources.nb.enabled;
     AppConfig.sources.nb.enabled = false;
     try {
-      assert.deepEqual(listEnabledSources().map(s => s.key), ['ssb', 'fhi']);
+      assert.deepEqual(listEnabledSources().map(s => s.key), ['ssb', 'fhi', 'dbh']);
     } finally {
       AppConfig.sources.nb.enabled = original;
     }
@@ -113,6 +118,13 @@ describe('sourceBadgeHTML', () => {
     assert.match(html, /class="source-badge source-badge--fhi"/);
     assert.match(html, /data-tooltip="Folkehelseinstituttet"/);
     assert.match(html, />FHI</);
+  });
+
+  it('renders a DBH badge with the full source name as tooltip', () => {
+    const html = sourceBadgeHTML('dbh-226');
+    assert.match(html, /class="source-badge source-badge--dbh"/);
+    assert.match(html, /Database for statistikk om høgare utdanning/);
+    assert.match(html, />DBH</);
   });
 
   it('falls back to branding.name when shortName is absent', () => {
@@ -153,11 +165,12 @@ describe('sourceBadgeHTML', () => {
 describe('listSourceBrandings', () => {
   it('lists one branding per enabled source, in config order', () => {
     const list = listSourceBrandings();
-    assert.equal(list.length, 3);
+    assert.equal(list.length, 4);
     // ssb has no per-source branding → global AppConfig.source fallback
     assert.equal(list[0], AppConfig.source);
     assert.equal(list[1].name, 'Norges Bank');
     assert.equal(list[2].name, 'FHI');
+    assert.equal(list[3].name, 'DBH');
   });
 
   it('skips disabled sources', () => {
@@ -165,7 +178,7 @@ describe('listSourceBrandings', () => {
     AppConfig.sources.fhi.enabled = false;
     try {
       const list = listSourceBrandings();
-      assert.equal(list.length, 2);
+      assert.equal(list.length, 3);
       assert.ok(!list.some(b => b.name === 'FHI'));
     } finally {
       AppConfig.sources.fhi.enabled = original;

@@ -11,9 +11,9 @@ const { loadApp, SCRIPTS } = require('../helpers/app-env.js');
 const app = loadApp(SCRIPTS.sources);
 
 describe('SourceRegistry — adapter registration', () => {
-  it('registers the ssb, nb and fhi adapters', () => {
+  it('registers the ssb, nb, fhi and dbh adapters', () => {
     const ids = app.SourceRegistry.adapters.map(a => a.sourceId).sort();
-    assert.deepEqual(ids, ['fhi', 'nb', 'ssb']);
+    assert.deepEqual(ids, ['dbh', 'fhi', 'nb', 'ssb']);
   });
 
   it('replaces window.api with the facade (not a plain SSBApi)', () => {
@@ -36,6 +36,10 @@ describe('SourceRegistry — table-id routing (adapterFor)', () => {
 
   it('routes fhi-* ids to the FHI adapter', () => {
     assert.equal(owner('fhi-123'), 'fhi');
+  });
+
+  it('routes dbh-* ids to the DBH adapter', () => {
+    assert.equal(owner('dbh-226'), 'dbh');
   });
 
   it('routes plain numeric SSB ids to the SSB adapter (fallback)', () => {

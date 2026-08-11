@@ -63,9 +63,9 @@ describe('E2E røyktest (http)', { skip: availability.ok ? false : availability.
     assertClean(app, 'Forsiden');
   });
 
-  it('alle tre kildene lastes inn', async () => {
+  it('alle fire kildene lastes inn', async () => {
     const badge = await readSourceBadge(app.page);
-    assert.match(badge, /3\/3/, `statusbadgen viste «${badge}»`);
+    assert.match(badge, /4\/4/, `statusbadgen viste «${badge}»`);
   });
 
   it('sidelastingen gjør ingen eksterne API-kall', async () => {
@@ -213,9 +213,9 @@ describe('E2E røyktest (file://)', { skip: availability.ok ? false : availabili
     assertClean(app, 'Forsiden over file://');
   });
 
-  it('Norges Bank og FHI degraderer pent (ingen byggetids-metadata over file://)', async () => {
+  it('fremmedkildene degraderer pent over file://', async () => {
     const badge = await readSourceBadge(app.page);
-    assert.match(badge, /3\/3/, `statusbadgen viste «${badge}» over file://`);
+    assert.match(badge, /4\/4/, `statusbadgen viste «${badge}» over file://`);
 
     // Katalogindeksen OG fhi-catalog.json er begge lokale filer — begge
     // blokkert av nettleseren over file:// — så NB/FHI-tabellene kommer nå
@@ -224,14 +224,14 @@ describe('E2E røyktest (file://)', { skip: availability.ok ? false : availabili
     // skal fortsatt være der med en gyldig label. Se CLAUDE.md.
     const foreign = await app.page.evaluate(() =>
       window.BrowserState.allTables
-        .filter((t) => t.id.startsWith('nb-') || t.id.startsWith('fhi-'))
+        .filter((t) => t.id.startsWith('nb-') || t.id.startsWith('fhi-') || t.id.startsWith('dbh-'))
         .map((t) => ({ id: t.id, label: t.label, first: t.firstPeriod, last: t.lastPeriod }))
     );
 
-    assert.ok(foreign.length > 0, 'ingen nb-/fhi-tabeller i katalogen');
+    assert.ok(foreign.length > 0, 'ingen nb-/fhi-/dbh-tabeller i katalogen');
     assert.ok(
       foreign.every((t) => typeof t.label === 'string' && t.label.trim().length > 0),
-      'alle nb-/fhi-tabeller skal ha en label selv uten byggetids-katalogen'
+      'alle nb-/fhi-/dbh-tabeller skal ha en label selv uten byggetids-katalogen'
     );
     assert.ok(
       foreign.every((t) => t.first === '' && t.last === ''),
@@ -307,12 +307,12 @@ describe('E2E degradert modus', { skip: availability.ok ? false : availability.r
   it('appen overlever at SSB er nede', async () => {
     // Med katalogindeksen på kommer SSB-katalogen fra det innsjekkede shardet,
     // ikke fra data.ssb.no. Å blokkere verten degraderer derfor IKKE lenger
-    // katalogen — alle tre kildene lastes. Det er hele poenget med indeksen,
-    // og badgen skal si 3/3. (Før indeksen sa den 2/3; assertionen er skjerpet,
+    // katalogen — alle fire kildene lastes. Det er hele poenget med indeksen,
+    // og badgen skal si 4/4. (Før indeksen sa den 3/4; assertionen er skjerpet,
     // ikke svekket — se testen under, som fortsatt dekker det degraderte
     // tilfellet ved å ta bort indeksen OG SSB samtidig.)
     const badge = await readSourceBadge(app.page);
-    assert.match(badge, /3\/3/, `statusbadgen viste «${badge}» med SSB blokkert, men indeksen på`);
+    assert.match(badge, /4\/4/, `statusbadgen viste «${badge}» med SSB blokkert, men indeksen på`);
 
     const subjects = await app.page.locator('[data-subject]').count();
     assert.ok(subjects > 0, 'emnetreet forsvant helt da SSB var nede');
@@ -348,7 +348,7 @@ describe('E2E degradert modus uten indeks', { skip: availability.ok ? false : av
 
   it('faller tilbake til direkte kildehenting når indeksen mangler', async () => {
     const badge = await readSourceBadge(app.page);
-    assert.match(badge, /2\/3/, `statusbadgen viste «${badge}» med både indeks og SSB blokkert`);
+    assert.match(badge, /3\/4/, `statusbadgen viste «${badge}» med både indeks og SSB blokkert`);
 
     const subjects = await app.page.locator('[data-subject]').count();
     assert.ok(subjects > 0, 'emnetreet forsvant helt da både indeks og SSB var nede');

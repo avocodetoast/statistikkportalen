@@ -9,7 +9,7 @@
  * data/sources/fhi-curation.json og katalogen ryker, at en plassering i
  * source-topology.js forsvinner, eller at en sortCode endrer seg. Her dekodes
  * data/index/nb-no-*.json og fhi-no-*.json — de samme shardene nettleseren
- * henter — via CatalogIndex.decode() (ren, synkron), så alle 401 radene er de
+ * henter — via CatalogIndex.decode() (ren, synkron), så alle 415 radene er de
  * ekte, byggetids-genererte katalogradene.
  *
  * KURATERTE NAVN er hele poenget med FHI-katalogen: API-et returnerer interne
@@ -19,7 +19,7 @@
  *
  * MERK PÅ SSB-SIDEN: snapshotten i data/index/ har 83 SSB-rader (et
  * representativt utvalg — se scripts/build-catalog-index.mjs — IKKE hele
- * SSB-katalogen på ~7747), men FULLE NB (31)- og FHI (370)-rader. SSB-radene
+ * SSB-katalogen på ~7747), men FULLE NB (31)-, FHI (370)- og DBH (14)-rader. SSB-radene
  * under er derfor håndbygde syntetiske rader (som før), ikke fra shardet.
  *
  * Standard-`fetch` i harnessen kaster. At denne fila i det hele tatt kjører er
@@ -113,6 +113,7 @@ function ssbTable(id, label, parentPath, leafSeg, discontinued = false) {
 
 let nbTables;
 let fhiTables;
+let dbhTables;
 let foreignTables;
 let allTables;
 let mh;
@@ -123,7 +124,8 @@ before(() => {
   // fetch, ingen Promise involvert. Se js/catalog-index.js (CatalogIndex.decode).
   nbTables = app.CatalogIndex.decode(readIndexFile(SHARD.nb.file));
   fhiTables = app.CatalogIndex.decode(readIndexFile(SHARD.fhi.file));
-  foreignTables = [...nbTables, ...fhiTables];
+  dbhTables = app.CatalogIndex.decode(readIndexFile(SHARD.dbh.file));
+  foreignTables = [...nbTables, ...fhiTables, ...dbhTables];
   allTables = [...SSB_TABLES, ...foreignTables];
 
   mh = new app.MenuHierarchy();
@@ -146,6 +148,12 @@ describe('De innsjekkede katalogsnapshotene dekodes uten nettverk', () => {
   it('FHI gir 370 tabeller fordelt på 13 registre', () => {
     assert.equal(fhiTables.length, 370);
     assert.equal(Object.keys(FHI_CATALOG_RAW.sources).length, 13);
+  });
+
+  it('DBH gir de 14 kuraterte tabellene', () => {
+    assert.equal(dbhTables.length, 14);
+    assert.equal(row('dbh-226').label, 'Areal');
+    assert.deepEqual(row('dbh-226').paths[0].map(segment => segment.id), ['ud', 'dbh-annet']);
   });
 });
 
@@ -196,7 +204,7 @@ describe('Kuraterte visningsnavn', () => {
     }
   });
 
-  it('periodeheuristikken rører ikke ett eneste av de 401 kuraterte navnene', () => {
+  it('periodeheuristikken rører ikke ett eneste av de 415 kuraterte navnene', () => {
     // stripTrailingPeriod stripper periodesuffikset SSB setter på titlene sine,
     // og skal ALDRI spise et kuratert fremmednavn. Blir heuristikken grådigere,
     // er dette testen som fanger det. (cleanTableLabel fjerner i tillegg

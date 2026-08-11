@@ -114,10 +114,28 @@
     });
   }
 
+  /** Bygg de nettverksfrie DBH-radene fra den kuraterte katalogen. */
+  function buildDbhRows(opts) {
+    const options = opts || {};
+    return (options.tables || []).map(function (table, index) {
+      const placements = table.paths || [];
+      return {
+        id: table.id, label: table.title, sortCode: String(920 + index),
+        updated: '', firstPeriod: '', lastPeriod: '', discontinued: false,
+        timeUnit: table.timeUnit || 'year',
+        variableNames: table.dimensions.map(function (d) { return d.label || d.code; }).concat(table.measures),
+        subjectCode: placements[0] && placements[0][0],
+        paths: placements.map(function (placement) { return buildPathSegments(placement, options); }),
+        source: options.sourceName || ''
+      };
+    });
+  }
+
   window.CatalogShared = {
     SUBJECT_SORTCODE: SUBJECT_SORTCODE,
     buildPathSegments: buildPathSegments,
     buildNbRows: buildNbRows,
-    buildFhiRows: buildFhiRows
+    buildFhiRows: buildFhiRows,
+    buildDbhRows: buildDbhRows
   };
 })(window);

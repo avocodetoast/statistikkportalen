@@ -1,8 +1,9 @@
 # Statistikkportalen 2.0 — veikart
 
-Status per juli 2026: prototypen integrerer **Norges Bank** og **FHI** i det
-eksisterende emnehierarkiet via kildeadaptere (`js/sources/`). SSB-flyten er
-uendret. Adapterkontrakten er dokumentert i `js/sources/source-registry.js`.
+Status per august 2026: prototypen integrerer **Norges Bank**, **FHI** og
+**DBH (HK-dir)** i det eksisterende emnehierarkiet via kildeadaptere
+(`js/sources/`). SSB-flyten er uendret. Adapterkontrakten er dokumentert i
+`js/sources/source-registry.js`.
 
 ## Aktivert i prototypen
 
@@ -59,8 +60,18 @@ uendret. Adapterkontrakten er dokumentert i `js/sources/source-registry.js`.
   `data/sources/fhi-curation.json`, som `scripts/update-fhi-catalog.mjs`
   fletter inn i `data/sources/fhi-catalog.json` ved hver regenerering
   (kurateringen overskrives aldri; se scripts/lib/fhi-curation.mjs).
+- **DBH** (under Arbeid, lønn og utdanning → Utdanning): 14 kuraterte tabeller
+  fra HK-dirs DBH-API, fordelt på seks emnenoder (Studenter og søkere,
+  Studietilbud, Fagskoler, Tilsatte, Vitenskapelig publisering,
+  Institusjonsdata). Kuratert katalog i `js/sources/dbh-catalog.js` med
+  reduserte dimensjonssett per tabell (API-et aggregerer server-side);
+  årsdekning + dimensjonsverdier probes ved byggetid av
+  `scripts/update-dbh-metadata.mjs` → `data/sources/dbh-metadata.json`.
+  Datauttrekk filtrerer kun på Årstall server-side (ytelse — se
+  `api-dbh`-skillen), resten klientside. Utvalget bygger på en systematisk
+  gjennomgang av alle 23 Data-tabeller i API-et (aug. 2026).
 - **Per-kilde status + resiliens**: portalen fungerer (degradert, tydelig
-  merket) selv når SSB er nede. Statusbadge i headeren («3/3 API-er lastet
+  merket) selv når SSB er nede. Statusbadge i headeren («4/4 API-er lastet
   inn», grønn/gul/rød) med panel per kilde: status, cache-info, tabellantall,
   retry/refresh, «Oppdater alle», tøm cache per kilde (`js/source-status.js`).
   Stale-if-error: utløpt katalog-cache serveres når en kilde er nede
@@ -82,7 +93,25 @@ attributtkolonner (`VALID_FROM`, `DELTA_VALUE`, `AUCTION_DATE`, `TICKER`,
 vist tomme/meningsløse celler i GUI-et. Krever attributt-støtte i
 konverteren (egen kolonne per attributt) før de kan aktiveres.
 
+### DBH — 9 bevisst utsatte tabeller
+- **906 Eksamensdata detaljert** og **374 Publisering – kanaler**: mangler
+  tidsakse helt (totaler aggregert over alle år) — uegnet som statistikktabell.
+- **705/706/707 Gjennomføring og frafall (sektor-/studium-/programnivå)**:
+  bit-identisk metadata og likt radantall som hverandre; uklart skille.
+  704 (institusjonsnivå) er aktivert — vurder én av de andre hvis behovet
+  oppstår.
+- **543/544 Videreutdanning lærere** og **537 Lærlinger**: avsluttede serier
+  (siste år 2019). Kan aktiveres som historiske tabeller ved behov.
+- **948 Fagskolestudenter utenfor telletidspunkt**: bare 13 rader/år.
+- `Kjønn` (0/1) og `Opptakstype` (L/N) mangler kodetekst i DBH selv — vises
+  som koder. Kuratert etikettkart i katalogen er mulig hvis betydningen
+  bekreftes med HK-dir.
+
 ### Vedlikehold
+- DBH-metadataene (`data/sources/dbh-metadata.json` — årsdekning +
+  dimensjonsverdier per kuratert tabell) er et øyeblikksbilde; kjør
+  `node scripts/update-dbh-metadata.mjs` ved nye årganger (inngår i
+  `bin/refresh.sh dbh`).
 - FHI-katalogen (`data/sources/fhi-catalog.json` — titler, tidsperioder,
   beskrivelser) er et øyeblikksbilde; kjør `node scripts/update-fhi-catalog.mjs`
   ved nye FHI-tabeller eller endrede sammendrag. Manuell kuratering

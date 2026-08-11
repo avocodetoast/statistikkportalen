@@ -684,6 +684,11 @@
   color: #857a9c;
 }
 
+.source-badge--dbh {
+  border-color: #bfd9d5;
+  color: #477d76;
+}
+
 .table-row:hover .source-badge {
   border-color: #c6c6c6;
   color: #6f6f6f;
