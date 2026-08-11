@@ -1,11 +1,10 @@
 /**
- * Shared helpers for source adapters (Norges Bank, FHI) — Statistikkportalen 2.0
- * ===============================================================================
+ * Shared HTTP/source helpers — Statistikkportalen 2.0
+ * ===================================================
  *
- * Loads BEFORE norges-bank-adapter.js/fhi-adapter.js (after sdmx-to-jsonstat.js
- * in index.html), pushes onto window.SourceCommon. Extracted because both
- * adapters implemented byte-identical label-lookup and fetch-timeout logic
- * independently — see CLAUDE.md's adapter contract note in source-registry.js.
+ * Loads after config/cache and before api.js plus all source adapters, then
+ * exposes window.SourceCommon. Extracted because NB/FHI implemented identical
+ * label/timeout logic; SSBApi now also uses the timeout/queue helper.
  */
 (function () {
   'use strict';
@@ -25,12 +24,11 @@
 
   // ---- Forespørselskø ----
 
-  // NB- og FHI-adapterne går UTENOM SSBs egen throttle (SSBApi._throttledFetch
-  // i js/api.js) — den er bundet til SSB-instansen. Uten køen her fyres derfor
+  // NB- og FHI-adapterne går utenom SSBs egen throttle. Uten køen her fyres
   // alt de trenger av gårde samtidig: en tvungen katalogoppfriskning treffer
   // kilden med hele radlista på én gang, og en tabellåpning med fire parallelle
-  // metadatakall. Køen holder samtidigheten nede PER BASSENG (én per kilde), så
-  // en treg kilde ikke spiser den andres slots.
+  // metadatakall. SSB bruker også hjelperen for timeout, i eget basseng. Køen
+  // holder samtidigheten nede per kilde, så en treg kilde ikke spiser andres.
   const DEFAULT_LIMIT = 4;
   /** @type {Object<string, {limit:number, active:number, waiting:Function[], inflight:Map}>} */
   const pools = Object.create(null);

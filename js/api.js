@@ -38,7 +38,12 @@ class SSBApi {
       await new Promise(r => setTimeout(r, 100 - timeSinceLastRequest));
     }
     this._lastRequestTime = Date.now();
-    return fetch(url, options);
+    const sourceConfig = (AppConfig.sources && AppConfig.sources.ssb) || {};
+    return window.SourceCommon.fetchWithTimeout(url, options, {
+      queue: 'ssb',
+      timeoutMs: sourceConfig.fetchTimeoutMs || 30000,
+      timeoutErrorPrefix: '[SSBApi] Tidsavbrudd'
+    });
   }
 
   /**
@@ -686,7 +691,7 @@ class SSBApi {
    * Clear all cached data
    */
   clearCache() {
-    this.cache.clear();
+    return this.cache.clear();
   }
 
   /**
@@ -699,7 +704,7 @@ class SSBApi {
 
   /**
    * Clean up expired cache entries
-   * @returns {number} - Number of entries removed
+   * @returns {Promise<number>} - Number of entries removed
    */
   cleanupCache() {
     return this.cache.cleanup();

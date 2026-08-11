@@ -363,6 +363,10 @@ const AppConfig = {
     ssb: {
       adapter: 'ssb',
       enabled: true,
+      // SSBs fullstendige /tables-katalog er tyngre enn NB/FHI-metadata.
+      // Samme tak gjelder alle SSBApi-kall; 30 s verner oppstarten uten å
+      // avbryte normale, store katalogsvar ved 15-sekundersgrensen.
+      fetchTimeoutMs: 30000,
       displayName: { nb: 'Statistisk sentralbyrå (SSB)', en: 'Statistics Norway (SSB)' }
     },
 

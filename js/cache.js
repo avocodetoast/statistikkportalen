@@ -373,7 +373,7 @@ class CacheManager {
           logger.warn('[Cache] Attempting cleanup and retry...');
 
           // Try to free up space
-          const removed = this.cleanup();
+          const removed = await this.cleanup();
 
           if (removed > 0) {
             // Retry once
@@ -687,8 +687,9 @@ class CacheManager {
    * ETTER utløp, slik at stale-if-error-fallbacken i getEntry() har noe å
    * servere når kilden er nede — cleanup kjøres ved oppstart, FØR
    * katalogene hentes.
+   * @returns {Promise<number>} antall fjernede oppføringer/referanser
    */
-  cleanup() {
+  async cleanup() {
     try {
       const keys = Object.keys(localStorage)
         .filter(k => k.startsWith(this.prefix) && !k.endsWith('_ref'));
@@ -723,15 +724,37 @@ class CacheManager {
       const refKeys = Object.keys(localStorage)
         .filter(k => k.startsWith(this.prefix) && k.endsWith('_ref'));
 
-      refKeys.forEach(k => {
+      for (const k of refKeys) {
         try {
           const ref = JSON.parse(localStorage.getItem(k));
-          // Could verify if the IndexedDB entry exists, but skip for now
+          if (!ref || ref.storage !== 'indexeddb') {
+            localStorage.removeItem(k);
+            removedCount++;
+            continue;
+          }
+
+          const key = k.slice(this.prefix.length, -'_ref'.length);
+          await this._initPromise;
+          const item = await this.indexedDBCache._getRaw(key);
+
+          if (!item) {
+            localStorage.removeItem(k);
+            removedCount++;
+            continue;
+          }
+
+          const isCatalogueKey = key.startsWith('tables_');
+          const deadline = isCatalogueKey ? item.expires + retentionMs : item.expires;
+          if (Date.now() > deadline) {
+            await this.indexedDBCache.delete(key);
+            localStorage.removeItem(k);
+            removedCount++;
+          }
         } catch (e) {
           localStorage.removeItem(k);
           removedCount++;
         }
-      });
+      }
 
       logger.log('[Cache] Cleanup removed ' + removedCount + ' expired entries');
       return removedCount;

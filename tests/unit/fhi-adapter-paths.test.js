@@ -26,7 +26,7 @@ const TABLE_ROWS = {
   daar: [{ tableId: 301, title: 'DÅR-tabell', publishedAt: '2024-03-01', modifiedAt: '' }]
 };
 
-const app = loadApp(SCRIPTS.sources, {
+const app = loadApp([...SCRIPTS.sources, 'js/subjects.js'], {
   fetch: async (url) => {
     const u = String(url);
     if (u.includes('fhi-catalog.json')) {
@@ -119,6 +119,13 @@ describe('FHIAdapter — multi-path katalogbygging', () => {
       assert.ok(typeof seg.label === 'string' && seg.label.length > 0);
       assert.ok(typeof seg.sortCode === 'string' && seg.sortCode.length > 0);
     });
+  });
+
+  it('bruker options.lang i stedet for globalt UI-språk', async () => {
+    const { tables } = await adapter.getTables({ lang: 'en' });
+    const nokkel = tables.find(t => t.id === 'fhi-nokkel-101');
+    assert.equal(nokkel.paths[0][0].label, app.SubjectConfig.subjectNames.he.en);
+    assert.equal(nokkel.paths[0][1].label, app.AppConfig.sourceNodes['fhi-nokkel'].label.en);
   });
 });
 

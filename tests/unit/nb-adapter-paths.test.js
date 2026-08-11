@@ -95,4 +95,11 @@ describe('NBAdapter — multi-path katalogbygging', () => {
     const { tables } = await adapter.getTables({});
     tables.forEach(t => assert.equal(typeof t.updated, 'string'));
   });
+
+  it('bruker options.lang i stedet for globalt UI-språk', async () => {
+    const { tables } = await adapter.getTables({ lang: 'en' });
+    const exr = tables.find(t => t.id === 'nb-EXR');
+    assert.equal(exr.label, 'Exchange rates');
+    assert.equal(exr.paths[0][1].label, app.AppConfig.sourceNodes['nb-valuta'].label.en);
+  });
 });

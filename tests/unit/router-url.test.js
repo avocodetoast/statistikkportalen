@@ -87,6 +87,21 @@ describe('URLRouter.encode / decode', () => {
   });
 });
 
+describe('URLRouter.decodeLayout', () => {
+  it('bevarer et gyldig layout med array på begge akser', () => {
+    const layout = { rows: ['Tid'], columns: ['Region'] };
+    assert.deepEqual(R.decodeLayout(R.encode(layout)), layout);
+  });
+
+  it('faller tilbake til tomt layout for håndredigerte objekter', () => {
+    for (const invalid of [{}, { rows: [], columns: 'Region' }, { rows: null, columns: [] }]) {
+      assert.deepEqual(R.decodeLayout(R.encode(invalid)), { rows: [], columns: [] });
+    }
+    // e30 er upaddet base64url for "{}" og er eksempelet som tidligere krasjet.
+    assert.deepEqual(R.decodeLayout('e30'), { rows: [], columns: [] });
+  });
+});
+
 describe('URLRouter.buildHash', () => {
   it('rute uten parametre gir bare hashen', () => {
     assert.equal(R.buildHash('topic/os/os07/offogjeld'), '#topic/os/os07/offogjeld');

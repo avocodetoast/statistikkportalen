@@ -255,7 +255,7 @@
     if (opts.query || opts.pastDays) return { tables: [] };
     const force = opts.useCache === false;
 
-    const tables = buildCatalogue(currentLang());
+    const tables = buildCatalogue(opts.lang || currentLang());
 
     // Tidsperiode/Sist oppdatert fylles UTEN nettverk her — denne funksjonen
     // er kun fallback-stien (katalogindeksen, js/catalog-index.js, dekker

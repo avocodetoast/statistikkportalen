@@ -80,7 +80,7 @@ describe('CacheManager.cleanup — retensjon av utløpte katalognøkler', () => 
     await cm.set('tables_no_true_10000', { tables: [] }, 60000);
     rewriteEntry(cm, 'tables_no_true_10000', { expires: Date.now() - 1000 });
 
-    cm.cleanup();
+    await cm.cleanup();
 
     assert.ok(localStorage.getItem(cm.prefix + 'tables_no_true_10000'),
       'utløpt katalognøkkel innen retensjon skal overleve cleanup');
@@ -91,7 +91,7 @@ describe('CacheManager.cleanup — retensjon av utløpte katalognøkler', () => 
     await cm.set('tables_no_true_10000', { tables: [] }, 60000);
     rewriteEntry(cm, 'tables_no_true_10000', { expires: Date.now() - 8 * DAY_MS });
 
-    cm.cleanup();
+    await cm.cleanup();
 
     assert.equal(localStorage.getItem(cm.prefix + 'tables_no_true_10000'), null,
       'katalognøkkel utenfor retensjon skal fjernes');
@@ -102,9 +102,34 @@ describe('CacheManager.cleanup — retensjon av utløpte katalognøkler', () => 
     await cm.set('table_13760_meta', { meta: true }, 60000);
     rewriteEntry(cm, 'table_13760_meta', { expires: Date.now() - 1000 });
 
-    cm.cleanup();
+    await cm.cleanup();
 
     assert.equal(localStorage.getItem(cm.prefix + 'table_13760_meta'), null,
       'ikke-katalognøkler følger vanlig utløp i cleanup');
+  });
+
+  it('slår opp _ref-nøkler og sletter IndexedDB-data utenfor retensjon', async () => {
+    const cm = new app.CacheManager();
+    const key = 'tables_nb_no';
+    const refKey = cm.prefix + key + '_ref';
+    localStorage.setItem(refKey, JSON.stringify({ storage: 'indexeddb', size: 2048 }));
+
+    const deleted = [];
+    cm._initPromise = Promise.resolve(true);
+    cm.indexedDBCache._getRaw = async (lookupKey) => {
+      assert.equal(lookupKey, key);
+      return {
+        value: { tables: [] },
+        stored: Date.now() - 10 * DAY_MS,
+        expires: Date.now() - 8 * DAY_MS
+      };
+    };
+    cm.indexedDBCache.delete = async (deleteKey) => { deleted.push(deleteKey); };
+
+    const removed = await cm.cleanup();
+
+    assert.deepEqual(deleted, [key]);
+    assert.equal(localStorage.getItem(refKey), null);
+    assert.equal(removed, 1);
   });
 });

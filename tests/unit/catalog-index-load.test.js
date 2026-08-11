@@ -109,6 +109,9 @@ describe('CatalogIndex.load — full indeks', () => {
     // Feltene flere callsites kaller .localeCompare() rett på skal aldri være null
     assert.equal(typeof row.updated, 'string');
     assert.equal(typeof row.sortCode, 'string');
+    assert.equal(row.source, 'Statistisk sentralbyrå');
+    assert.equal(index.bySource.nb[0].source, 'Norges Bank');
+    assert.equal(index.bySource.fhi[0].source, 'FHI');
   });
 });
 

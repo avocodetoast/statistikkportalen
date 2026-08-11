@@ -623,7 +623,7 @@
     if (opts.query || opts.pastDays) return { tables: [] };
     const force = opts.useCache === false;
 
-    const lang = currentLang();
+    const lang = opts.lang || currentLang();
     const infoMap = await getSourceInfo();
 
     // Promise.allSettled PER FHI-kilde (nokkel/mfr/daar …) — én kilde nede

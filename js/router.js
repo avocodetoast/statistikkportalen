@@ -51,6 +51,15 @@ const URLRouter = {
     }
   },
 
+  /** Decode and validate the table-layout URL parameter. */
+  decodeLayout(str) {
+    const layout = this.decode(str);
+    if (!layout || !Array.isArray(layout.rows) || !Array.isArray(layout.columns)) {
+      return { rows: [], columns: [] };
+    }
+    return layout;
+  },
+
   /**
    * Parse URL hash and extract route + parameters
    * @param {string} hash - Hash to parse (defaults to current location.hash)
@@ -377,7 +386,7 @@ const URLRouter = {
     // Decode parameters
     const variableSelection = params.v ? this.decode(params.v) : null;
     const codelistIds = params.c ? this.decode(params.c) : null;
-    const layout = params.l ? this.decode(params.l) : null;
+    const layout = this.decodeLayout(params.l);
 
     // Validate that we have variable selections (required for table view)
     if (!variableSelection || Object.keys(variableSelection).length === 0) {
@@ -404,11 +413,7 @@ const URLRouter = {
       AppState.activeCodelistIds = {};
     }
 
-    if (layout) {
-      AppState.tableLayout = layout;
-    } else {
-      AppState.tableLayout = { rows: [], columns: [] };
-    }
+    AppState.tableLayout = layout;
 
     AppState.currentView = 'table';
 

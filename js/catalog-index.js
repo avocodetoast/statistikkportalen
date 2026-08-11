@@ -219,9 +219,10 @@ class CatalogIndex {
     const ttl = (window.AppConfig && window.AppConfig.cache &&
                  window.AppConfig.cache.tableListTTL) || 24 * 60 * 60 * 1000;
 
-    if (cache) {
-      const hit = await cache.get(cacheKey);
-      if (hit) return hit;
+    let entry = null;
+    if (cache && typeof cache.getEntry === 'function') {
+      entry = await cache.getEntry(cacheKey);
+      if (entry && entry.fresh) return entry.value;
     }
 
     try {
@@ -229,12 +230,9 @@ class CatalogIndex {
       if (cache) await cache.set(cacheKey, doc, ttl);
       return doc;
     } catch (e) {
-      if (cache) {
-        const entry = await cache.getEntry(cacheKey);
-        if (entry && entry.value) {
-          logger.warn('[CatalogIndex] ' + url + ' feilet — serverer utløpt kopi:', e);
-          return entry.value;
-        }
+      if (entry && entry.value) {
+        logger.warn('[CatalogIndex] ' + url + ' feilet — serverer utløpt kopi:', e);
+        return entry.value;
       }
       throw e;
     }
@@ -264,10 +262,21 @@ class CatalogIndex {
       throw new Error('[CatalogIndex] Shard «' + entry.file + '» dekodet til 0 rader');
     }
 
+    // Formatet dropper `source` per rad for å spare bytes, men ett shard
+    // tilhører nøyaktig én kilde. Rehydrer proveniensen fra shard-meta.
+    // FHI-shardet mangler registertittelen per rad, så det kan bare gi den
+    // generiske brandingen «FHI» (live-adapteren gir «FHI/<register>»).
+    const sourceId = entry.source || doc.source;
+    const sourceConfig = ((window.AppConfig || {}).sources || {})[sourceId] || {};
+    const branding = sourceConfig.branding || {};
+    const sourceLabel = branding.name || branding.nameFull ||
+      (((window.AppConfig || {}).source || {}).nameFull) || sourceId || '';
+    rows.forEach(row => { row.source = sourceLabel; });
+
     const generatedAt = doc.generatedAt || entry.generatedAt || '';
     const builtAt = Date.parse(generatedAt);
     return {
-      sourceId: entry.source,
+      sourceId: sourceId,
       rows: rows,
       meta: {
         count: rows.length,

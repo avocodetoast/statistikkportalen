@@ -74,7 +74,7 @@
  *         csvFormats:[...], maxRowCount:{default}|null, nbAdvanced?:true }.
  *       labelKey oversettes med t() av visningen. Adaptere uten metoden
  *       (SSB) gir null via fasadens apiBuilderOptionsFor().)
- *   cleanupCache()                                → number
+ *   cleanupCache()                                → Promise<number>
  *   clearCache()                                  → void|Promise<void>
  *   getCacheStats()                               → object|null
  *

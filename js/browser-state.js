@@ -26,6 +26,7 @@ const BrowserState = {
   recentTables: null,
   isLoaded: false,
   _initPromise: null,
+  _generation: 0,
 
   // Search view filters (independent from topic filters)
   // sourceFilter: kildenøkler ('ssb'/'nb'/'fhi') — tom liste = alle kilder
@@ -65,13 +66,17 @@ const BrowserState = {
   },
 
   reset() {
+    this._generation++;
     this.isLoaded = false;
     this._initPromise = null;
     this.allTables = [];
     this.menuHierarchy = null;
+    this._searchIndex = null;
   },
 
   async _doInit() {
+    const generation = this._generation;
+    const lang = getCurrentApiLang();
     try {
       logger.log('[BrowserState] Fetching all tables (including discontinued)...');
 
@@ -79,23 +84,25 @@ const BrowserState = {
       // standard. Er den på og brukbar, erstatter den katalogaggregeringen;
       // ellers faller vi gjennom til nøyaktig samme sti som før.
       let loadedFromIndex = false;
+      let tables = [];
+      let indexMeta = null;
 
       if (AppConfig.catalogIndex && AppConfig.catalogIndex.enabled) {
-        const index = await CatalogIndex.load({ lang: getCurrentApiLang() });
+        const index = await CatalogIndex.load({ lang: lang });
+        if (generation !== this._generation) return;
         if (index.available) {
-          this.allTables = index.rows;
-          // Statusbadgen får sitt grunnlag herfra i stedet for fra
-          // aggregeringen, så js/source-status.js virker uendret.
-          api.seedSourceStatus(index.meta);
+          tables = index.rows;
+          indexMeta = index.meta;
 
           // Kilder uten brukbart shard hentes direkte — kun de.
           if (index.missingSources.length) {
             const rest = await api.getAllTables({
-              lang: getCurrentApiLang(),
+              lang: lang,
               includeDiscontinued: true,
               onlySources: index.missingSources
             });
-            this.allTables = this.allTables.concat(rest.tables);
+            if (generation !== this._generation) return;
+            tables = tables.concat(rest.tables);
           }
           loadedFromIndex = true;
         }
@@ -109,29 +116,40 @@ const BrowserState = {
         // som ingenting på forsiden eller i emnetreet bruker, og den kostet
         // en hel sekvensiell tur-retur før første paint.
         await api.getConfig();
+        if (generation !== this._generation) return;
 
         // Fetch all tables (with automatic pagination if needed)
         const response = await api.getAllTables({
-          lang: getCurrentApiLang(),
+          lang: lang,
           includeDiscontinued: true
         });
+        if (generation !== this._generation) return;
 
-        this.allTables = response.tables;
+        tables = response.tables;
       }
 
-      logger.log(`[BrowserState] Loaded ${this.allTables.length} tables`);
+      logger.log(`[BrowserState] Loaded ${tables.length} tables`);
 
       // Alle kilder nede med tom cache → tydelig, retry-bar feil i stedet
       // for et stille tomt emnegrid (feilvisningen i front-page.js).
-      if (this.allTables.length === 0) {
+      if (tables.length === 0) {
         throw new Error(t('apiStatus.allSourcesFailed'));
       }
 
-      this.menuHierarchy = new MenuHierarchy();
-      this.menuHierarchy.buildHierarchy(this.allTables);
+      const menuHierarchy = new MenuHierarchy();
+      menuHierarchy.buildHierarchy(tables);
 
+      if (generation !== this._generation) return;
+
+      // Statusbadgen får sitt grunnlag fra indeksen i stedet for fra
+      // aggregeringen. Utsettes til samme generasjonsguard som state-commit.
+      if (indexMeta) api.seedSourceStatus(indexMeta);
+
+      this.allTables = tables;
+      this.menuHierarchy = menuHierarchy;
       this.isLoaded = true;
     } catch (error) {
+      if (generation !== this._generation) return;
       logger.error('[BrowserState] Error fetching tables:', error);
       this._initPromise = null;
       throw error;

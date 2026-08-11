@@ -101,6 +101,7 @@
 
   <script src="js/translations.js?v=1.11.0"></script>
   <script src="js/cache.js?v=1.11.0"></script>
+  <script src="js/sources/source-common.js?v=1.11.0"></script>
   <script src="js/api.js?v=1.11.0"></script>
   <!-- Periodenormalisering (yyyyUxx/yyyyMxx) for tabelloversiktene. Ren logikk
        uten avhengigheter; må lastes før fhi-adapter.js, som bruker den i
@@ -117,7 +118,6 @@
        lastes som <script> her lenger. Over file:// degraderer begge til
        direkte kildehenting (se js/catalog-index.js). -->
   <script src="js/sources/sdmx-to-jsonstat.js?v=1.11.0"></script>
-  <script src="js/sources/source-common.js?v=1.11.0"></script>
   <script src="js/catalog-index.js?v=1.11.0"></script>
   <script src="js/sources/norges-bank-adapter.js?v=1.11.0"></script>
   <script src="js/sources/fhi-adapter.js?v=1.11.0"></script>
@@ -196,7 +196,7 @@
     }
 
     // Initialize app when DOM is ready
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       // Apply instance-specific branding from AppConfig
       const appName = AppConfig.app?.name || 'Statistikkportalen';
 
@@ -251,7 +251,7 @@
       logger.log('[App] API Base URL:', api.baseUrl);
 
       // Cleanup expired cache entries on startup
-      const removed = api.cleanupCache();
+      const removed = await api.cleanupCache();
       if (removed > 0) {
         logger.log('[App] Cleaned up ' + removed + ' expired cache entries');
       }
