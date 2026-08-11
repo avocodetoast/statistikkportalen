@@ -7,7 +7,9 @@ description: Oppskrift for å implementere en helt ny API-kilde (adapter) i Stat
 
 Å legge til en ny kilde er to jobber: **forstå API-et** (del A) og **koble det inn i
 repoet** (del B). Gjør A ferdig før du skriver kode — svarene styrer nesten alle
-designvalg i B, og de skal uansett dokumenteres i `API-FINDINGS.md`.
+designvalg i B, og de skal dokumenteres i en ny `api-<kilde>`-skill
+(`.claude/skills/api-<kilde>/SKILL.md`) FØR implementeringen starter, slik at
+implementasjonsagenten har dem fra første linje kode.
 
 Kontrakten en adapter må oppfylle står i headerkommentaren til
 `js/sources/source-registry.js` — les den først, den dupliseres ikke her.
@@ -17,8 +19,13 @@ Arkitekturbeskrivelsen (ruting, feilisolasjon, cache-deling) står i
 ## Del A — Undersøk API-et før koding
 
 Fyll ut dette skjemaet ved å lese dokumentasjon OG teste endepunktene med ekte kall
-(spec og virkelighet avviker — se `API-FINDINGS.md` for hva SSB/NB/FHI faktisk gjør).
-Nye funn føres inn i `API-FINDINGS.md` under en egen kildeoverskrift.
+(spec og virkelighet avviker — se skillene `api-ssb`, `api-norges-bank` og `api-fhi`
+for hva de eksisterende kildene faktisk gjør, og som mal for formatet). Funnene
+skrives inn i den nye `api-<kilde>`-skillen: kun avvik fra spec, målte
+grenser/ytelse (datert) og design-konsekvenser med kodepekere — ikke generell
+API-dokumentasjon. Skriv en trigger-orientert `description` som navngir filene og
+oppgavetypene som skal laste skillen. Skillen er et LEVENDE dokument: mange funn
+dukker først opp under implementeringen (del B) — før dem inn løpende.
 
 | Spørsmål | Hvorfor det avgjør design |
 |---|---|
@@ -115,7 +122,8 @@ Rekkefølgen er også en fornuftig arbeidsrekkefølge. TDD for all ren logikk
      («3/3»-badge, `nb-`/`fhi-`-prefikslister) og `tests/unit/catalog-index-load.test.js`
      (eksakte shard-/statusnøkler).
    E2E asserter struktur, aldri tallverdier. `npm run verify` grønn før commit.
-9. **Dokumentasjon**: API-funn → `API-FINDINGS.md`; aktivert/utsatt-status →
+9. **Dokumentasjon**: nye API-funn fra implementeringen → `api-<kilde>`-skillen
+   (opprettet i del A); aktivert/utsatt-status →
    `ROADMAP.md`; ny File Guide-rad + ev. Common Tasks-rad i `repo-map`-skillen.
 
 ## Selvtest

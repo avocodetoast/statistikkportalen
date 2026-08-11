@@ -417,7 +417,7 @@ GET  /savedqueries/{id}               — Fetch saved query
 
 `api.getConfig()` fetches the `/config` endpoint and updates **`AppConfig.limits.bySource.ssb`** with the server's `maxDataCells` value (warning threshold = 75% of the max), so the cell limit adapts automatically if SSB changes theirs. If the call fails, the defaults in `config.js` are used. The call is lazy and SSB-only — see `ensureApiLimits()` in `variable-select.js`.
 
-It writes only into SSB's slot, and deliberately so: **the 800 000 cell limit is an SSB rule, not a universal one.** Norges Bank and FHI have no cell limit at all (measured 2026-08-02, see [API-FINDINGS.md](API-FINDINGS.md)). `AppConfig.limits.bySource` therefore holds one entry per source, read through `cellLimitsFor(tableId)` in `js/utils.js`:
+It writes only into SSB's slot, and deliberately so: **the 800 000 cell limit is an SSB rule, not a universal one.** Norges Bank and FHI have no cell limit at all (measured 2026-08-02, see the `api-ssb`/`api-norges-bank`/`api-fhi` skills). `AppConfig.limits.bySource` therefore holds one entry per source, read through `cellLimitsFor(tableId)` in `js/utils.js`:
 
 - `maxCells` — **hard** limit; blocks the fetch button. Only SSB has one (403 on breach); `null` for NB/FHI means the button is never blocked on size.
 - `warnCells` / `slowWarnCells` / `denseWarnCells` — **soft** thresholds that only colour the cell counter and add a warning. For Norges Bank the estimate is measured against *series × periods*, not the dense cross-product, because SDMX is sparse (GOVT_PRIMARY_MARKET: 5.2 trillion dense cells vs 11 264 actual observations).
