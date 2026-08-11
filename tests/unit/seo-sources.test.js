@@ -27,6 +27,7 @@ const appConfig = {
     nb: {
       adapter: 'norges-bank',
       enabled: true,
+      idPrefix: 'nb-',
       branding: { name: 'Norges Bank', nameFull: 'Norges Bank', shortName: 'NB', url: 'https://www.norges-bank.no/' },
       dataflows: [
         { flow: 'EXR', version: '1.0', tableId: 'nb-EXR',
@@ -58,6 +59,7 @@ const appConfig = {
     fhi: {
       adapter: 'fhi',
       enabled: true,
+      idPrefix: 'fhi-',
       branding: {
         name: 'FHI', nameFull: 'Folkehelseinstituttet', shortName: 'FHI', url: 'https://www.fhi.no/',
         licenseUrl: 'https://creativecommons.org/licenses/by/4.0/deed.no', licenseName: 'CC BY 4.0',
@@ -117,9 +119,20 @@ describe('isoPeriod', () => {
 describe('sourceKeyForId', () => {
   it('ruter på tabell-id-prefiks som kildefasaden', async () => {
     const { sourceKeyForId } = await mod;
-    assert.equal(sourceKeyForId('nb-EXR'), 'nb');
-    assert.equal(sourceKeyForId('fhi-nokkel-171'), 'fhi');
-    assert.equal(sourceKeyForId('13760'), 'ssb');
+    assert.equal(sourceKeyForId('nb-EXR', appConfig), 'nb');
+    assert.equal(sourceKeyForId('fhi-nokkel-171', appConfig), 'fhi');
+    assert.equal(sourceKeyForId('13760', appConfig), 'ssb');
+  });
+
+  it('deriverer prefikset fra AppConfig', async () => {
+    const { sourceKeyForId } = await mod;
+    const config = {
+      sources: {
+        ssb: { enabled: true },
+        test: { enabled: true, idPrefix: 'test-' },
+      },
+    };
+    assert.equal(sourceKeyForId('test-tabell', config), 'test');
   });
 });
 

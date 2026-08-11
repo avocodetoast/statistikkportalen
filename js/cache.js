@@ -298,20 +298,24 @@ class CacheManager {
   }
 
   /**
-   * Whether a cache key belongs to a foreign source (Norges Bank / FHI).
+   * Om en cache-nøkkel tilhører en fremmedkilde.
    *
    * SSB-oppdateringsplan-staleness (_isStaleBySSBSchedule, basert på
    * AppConfig.sourceUpdateTimes) gjelder KUN SSB-eide nøkler. Fremmede kilder
-   * cacher under nøkler som inneholder segmentene 'nb-'/'nb_'/'fhi-'/'fhi_'
-   * (f.eks. 'tables_nb_no', 'table_nb-IR_no', 'table_fhi-daar-344_no') og skal
+   * cacher under nøkler som inneholder kildeprefikset eller kildenavnet fulgt
+   * av understrek. Mønstrene avledes fra AppConfig.sources[*].idPrefix og skal
    * kun følge ren TTL. SSB-nøkler er numeriske tabell-id-er eller
    * vs_/agg_-kodelister med språk 'no'/'en'/'sv' og treffer derfor aldri
    * dette guarden.
    */
   _isForeignSourceKey(key) {
     if (typeof key !== 'string') return false;
-    return key.includes('nb-') || key.includes('nb_') ||
-           key.includes('fhi-') || key.includes('fhi_');
+    const sources = window.AppConfig && window.AppConfig.sources;
+    if (!sources) return false;
+    return Object.entries(sources).some(([sourceId, source]) =>
+      source && typeof source === 'object' && source.idPrefix &&
+      (key.includes(source.idPrefix) || key.includes(sourceId + '_'))
+    );
   }
 
   /**
@@ -341,6 +345,13 @@ class CacheManager {
           await this._initPromise;
           await this.indexedDBCache.set(key, value, ttlMs);
 
+          // Fjern eventuell gammel localStorage-representasjon
+          try {
+            localStorage.removeItem(this.prefix + key);
+          } catch (e) {
+            // Ignorer localStorage-feil ved opprydding
+          }
+
           // Store a reference in localStorage so we know it's in IndexedDB
           try {
             localStorage.setItem(
@@ -365,6 +376,19 @@ class CacheManager {
           serialized
         );
 
+        // Fjern eventuell gammel IndexedDB-representasjon og referansen til den
+        try {
+          await this._initPromise;
+          await this.indexedDBCache.delete(key);
+        } catch (e) {
+          // Ignorer IndexedDB-feil ved opprydding
+        }
+        try {
+          localStorage.removeItem(this.prefix + key + '_ref');
+        } catch (e) {
+          // Ignorer localStorage-feil ved opprydding
+        }
+
         logger.log('[Cache] Stored: ' + key + ' (' + sizeKB + ' KB, TTL: ' + Math.round(ttlMs / 1000 / 60) + ' minutes)');
       } catch (error) {
         // Handle QuotaExceededError
@@ -379,6 +403,17 @@ class CacheManager {
             // Retry once
             try {
               localStorage.setItem(this.prefix + key, serialized);
+              try {
+                await this._initPromise;
+                await this.indexedDBCache.delete(key);
+              } catch (e) {
+                // Ignorer IndexedDB-feil ved opprydding
+              }
+              try {
+                localStorage.removeItem(this.prefix + key + '_ref');
+              } catch (e) {
+                // Ignorer localStorage-feil ved opprydding
+              }
               logger.log('[Cache] Stored after cleanup: ' + key);
               return;
             } catch (retryError) {
@@ -391,10 +426,19 @@ class CacheManager {
           try {
             await this._initPromise;
             await this.indexedDBCache.set(key, value, ttlMs);
-            localStorage.setItem(
-              this.prefix + key + '_ref',
-              JSON.stringify({ storage: 'indexeddb', size: sizeKB })
-            );
+            try {
+              localStorage.removeItem(this.prefix + key);
+            } catch (e) {
+              // Ignorer localStorage-feil ved opprydding
+            }
+            try {
+              localStorage.setItem(
+                this.prefix + key + '_ref',
+                JSON.stringify({ storage: 'indexeddb', size: sizeKB })
+              );
+            } catch (e) {
+              // Ignorer localStorage-feil for referansen
+            }
             logger.log('[Cache] Stored in IndexedDB (fallback): ' + key);
           } catch (idbError) {
             logger.warn('[Cache] Both localStorage and IndexedDB failed for: ' + key);
@@ -593,20 +637,23 @@ class CacheManager {
   }
 
   /**
-   * Clear all cache entries belonging to one source ('ssb'|'nb'|'fhi').
-   * Speiler _isForeignSourceKey: nb/fhi-nøkler inneholder kildesegmentet,
-   * SSB eier alt annet. delete() håndterer IndexedDB via _ref-nøklene, så
+   * Clear all cache entries belonging to one source.
+   * Speiler _isForeignSourceKey: fremmednøkler inneholder de konfigurerte
+   * kildesegmentene, mens SSB eier alt annet. delete() håndterer IndexedDB via _ref-nøklene, så
    * skannet over localStorage dekker begge lagre.
    * @returns {Promise<number>} antall slettede nøkler
    */
   async clearForSource(sourceId) {
     try {
+      const sources = window.AppConfig && window.AppConfig.sources;
+      if (!sources) return 0;
+
       const matchesSource = (key) => {
         const foreign = this._isForeignSourceKey(key);
         if (sourceId === 'ssb') return !foreign;
-        if (sourceId === 'nb') return key.includes('nb-') || key.includes('nb_');
-        if (sourceId === 'fhi') return key.includes('fhi-') || key.includes('fhi_');
-        return false;
+        const source = sources[sourceId];
+        return Boolean(source && typeof source === 'object' && source.idPrefix &&
+          (key.includes(source.idPrefix) || key.includes(sourceId + '_')));
       };
 
       const unprefixed = Object.keys(localStorage)

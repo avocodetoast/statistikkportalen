@@ -11,11 +11,21 @@ const { loadApp, SCRIPTS } = require('../helpers/app-env.js');
 
 const app = loadApp([...SCRIPTS.core, 'js/utils.js']);
 const {
-  AppConfig, sourceKeyForTableId, sourceBrandingForTable,
+  AppConfig, sourceKeyForTableId, sourceBrandingForTable, displayTableId,
   listSourceBrandings, listEnabledSources, sourceBadgeHTML
 } = app;
 
 describe('sourceKeyForTableId', () => {
+  it('deriverer ruting og visnings-id fra en syntetisk kilde i config', () => {
+    AppConfig.sources.test = { enabled: true, idPrefix: 'test-' };
+    try {
+      assert.equal(sourceKeyForTableId('test-tabell'), 'test');
+      assert.equal(displayTableId('test-tabell'), 'tabell');
+    } finally {
+      delete AppConfig.sources.test;
+    }
+  });
+
   it('routes nb- prefixed ids to nb', () => {
     assert.equal(sourceKeyForTableId('nb-EXR'), 'nb');
   });

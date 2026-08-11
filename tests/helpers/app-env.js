@@ -165,6 +165,7 @@ const SCRIPTS = {
     'js/translations.js',
     'js/cache.js',
     'js/sources/source-common.js',
+    'js/sources/catalog-shared.js',
     'js/catalog-index.js',
     'js/api.js',
     'js/period-format.js',

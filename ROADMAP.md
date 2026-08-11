@@ -94,6 +94,29 @@ konverteren (egen kolonne per attributt) før de kan aktiveres.
   byggescriptet logger tabeller uten gjenkjent tidsdimensjon, sjekk loggen
   ved nye kilder/tabeller.
 
+### ~~Funn fra adapterlag-review (aug. 2026)~~ — **Gjort**
+
+Fra en ekstern kodereview (Codex), etterprøvd mot koden. Alt under er fikset
+(aug. 2026), med regresjonstester som feilet før fiks:
+
+- ~~`js/cache.js` nivåbytte rydder ikke gammel representasjon~~ — `set()`
+  rydder nå motsatt lager i alle skrivestier (`tests/unit/cache-storage-transition.test.js`).
+- ~~`adapterForTableId()` ruter deaktivert kildes id-er til SSB~~ — returnerer
+  nå `null` (→ lesbar feil) når en deaktivert fremmed kilde eier id-en.
+- ~~Status-race mellom kataloglasting og `reloadSource()`~~ — verifisert reell;
+  fikset med attempt-token per kilde (eldre operasjons resultat droppes stille).
+- ~~Id→kilde-regelen hardkodet tre steder~~ — nå deklarert én gang som
+  `AppConfig.sources.<kilde>.idPrefix`; `utils.js`, `cache.js` og
+  `seo-sources.mjs` deriverer fra config.
+- ~~`KNOWN_ADAPTERS`-sett + `if`-kjede i `catalog-sources.mjs`~~ — nå én
+  `ADAPTER_PROVIDERS`-map (registrering og dispatch samlet).
+- ~~Katalognormalisering/emnesti-bygging duplisert adapter vs. SEO~~ — delt
+  kjerne i `js/sources/catalog-shared.js` (lastes av byggeskriptene via
+  `scripts/lib/catalog-shared.mjs`, samme mønster som `period-format.js`);
+  ekvivalenstest i `tests/unit/catalog-shared.test.js` er driftvernet.
+- ~~Cache-oppslag/feiltolerante wrappere duplisert i NB-/FHI-adapterne~~ —
+  delt `SourceCommon.sharedCache()/cacheGet()/cacheSet()`.
+
 ### Øvrig
 - Kryssfiltrering av gyldige kombinasjoner finnes kun for Norges Bank
   (via `extension.validKeys` fra serieskeysonly); FHI har ingen tilsvarende

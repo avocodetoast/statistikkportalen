@@ -1,10 +1,10 @@
 {
   "_comment": "Autogenerert av scripts/check-coverage.mjs. Funksjonsdekning per appfil. Porten feiler når en fil får FLERE udekkede funksjoner enn her. Oppdater bevisst med `npm run coverage:baseline` når du senker terskelen med vitende og vilje.",
   "_untrackedComment": "Filer INGEN enhetstest laster, og som porten derfor ikke kan måle i det hele tatt. Dukker det opp en ny js/-fil som verken står her eller i `files`, feiler porten — da må du enten skrive en test som laster den, eller føre den opp her med vitende og vilje.",
-  "generatedAt": "2026-08-02T06:36:36.001Z",
+  "generatedAt": "2026-08-11T10:26:06.587Z",
   "files": {
     "js/api.js": {
-      "covered": 7,
+      "covered": 8,
       "total": 21
     },
     "js/app-terms.js": {
@@ -16,8 +16,8 @@
       "total": 40
     },
     "js/cache.js": {
-      "covered": 12,
-      "total": 18
+      "covered": 14,
+      "total": 19
     },
     "js/catalog-index.js": {
       "covered": 24,
@@ -44,8 +44,8 @@
       "total": 4
     },
     "js/router.js": {
-      "covered": 5,
-      "total": 15
+      "covered": 6,
+      "total": 16
     },
     "js/search-enhanced.js": {
       "covered": 8,
@@ -55,25 +55,29 @@
       "covered": 1,
       "total": 9
     },
+    "js/sources/catalog-shared.js": {
+      "covered": 4,
+      "total": 4
+    },
     "js/sources/fhi-adapter.js": {
-      "covered": 33,
-      "total": 46
+      "covered": 32,
+      "total": 43
     },
     "js/sources/nb-catalog.js": {
       "covered": 0,
       "total": 0
     },
     "js/sources/norges-bank-adapter.js": {
-      "covered": 42,
-      "total": 52
+      "covered": 38,
+      "total": 48
     },
     "js/sources/sdmx-to-jsonstat.js": {
       "covered": 19,
       "total": 19
     },
     "js/sources/source-common.js": {
-      "covered": 11,
-      "total": 11
+      "covered": 14,
+      "total": 14
     },
     "js/sources/source-registry.js": {
       "covered": 26,
@@ -112,8 +116,8 @@
       "total": 5
     },
     "js/utils.js": {
-      "covered": 8,
-      "total": 28
+      "covered": 9,
+      "total": 29
     },
     "js/variable-select-api.js": {
       "covered": 1,
@@ -136,8 +140,8 @@
       "total": 1
     },
     "js/variable-select-status.js": {
-      "covered": 3,
-      "total": 27
+      "covered": 10,
+      "total": 30
     },
     "js/version.js": {
       "covered": 0,

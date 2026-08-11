@@ -61,6 +61,51 @@ describe('SourceCommon.uiLabelLang', () => {
   });
 });
 
+describe('SourceCommon delt cache', () => {
+  it('bruker den delte SSB-cachen og videresender TTL ved skriving', async () => {
+    const calls = [];
+    const cache = {
+      async get(key) { calls.push(['get', key]); return { verdi: 42 }; },
+      async set(key, value, ttlMs) { calls.push(['set', key, value, ttlMs]); }
+    };
+    app.SourceRegistry = { ssb: { instance: { cache } } };
+
+    assert.equal(SourceCommon.sharedCache(), cache);
+    assert.deepEqual(await SourceCommon.cacheGet('felles-nøkkel'), { verdi: 42 });
+    await SourceCommon.cacheSet('felles-nøkkel', { verdi: 43 }, 1234);
+    assert.deepEqual(calls, [
+      ['get', 'felles-nøkkel'],
+      ['set', 'felles-nøkkel', { verdi: 43 }, 1234]
+    ]);
+  });
+
+  it('logger og returnerer null når cache-lesing feiler', async () => {
+    const feil = new Error('lesefeil');
+    const advarsler = [];
+    app.SourceRegistry.ssb.instance.cache.get = async () => { throw feil; };
+    app.logger.warn = (...args) => advarsler.push(args);
+
+    assert.equal(await SourceCommon.cacheGet('ustabil-lesing'), null);
+    assert.equal(advarsler.length, 1);
+    assert.match(advarsler[0][0], /cache/i);
+    assert.equal(advarsler[0][1], 'ustabil-lesing');
+    assert.equal(advarsler[0][2], feil);
+  });
+
+  it('logger og blir en no-op når cache-skriving feiler', async () => {
+    const feil = new Error('skrivefeil');
+    const advarsler = [];
+    app.SourceRegistry.ssb.instance.cache.set = async () => { throw feil; };
+    app.logger.warn = (...args) => advarsler.push(args);
+
+    await assert.doesNotReject(() => SourceCommon.cacheSet('ustabil-skriving', { verdi: 1 }, 5678));
+    assert.equal(advarsler.length, 1);
+    assert.match(advarsler[0][0], /cache/i);
+    assert.equal(advarsler[0][1], 'ustabil-skriving');
+    assert.equal(advarsler[0][2], feil);
+  });
+});
+
 describe('SourceCommon.fetchWithTimeout', () => {
   it('returns the fetch Response on success', async () => {
     const fakeResponse = { ok: true, status: 200 };

@@ -53,6 +53,16 @@ function statusFor(sourceId) {
   return app.api.getSourceStatus().find(s => s.sourceId === sourceId);
 }
 
+function deferred() {
+  let resolve;
+  let reject;
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+}
+
 describe('SourceRegistry — per-kilde status', () => {
   it('SSB nede: getAllTables resolver med NB/FHI-tabeller, status viser feilen', async () => {
     const events = [];
@@ -121,6 +131,51 @@ describe('SourceRegistry — per-kilde status', () => {
 
   it('reloadSource på ukjent kilde kaster', async () => {
     await assert.rejects(() => app.api.reloadSource('finnes-ikke'));
+  });
+
+  it('eldre aggregering overskriver ikke status fra en nyere reload', async () => {
+    const ssb = app.SourceRegistry.adapters.find(a => a.sourceId === 'ssb');
+    const originalGetAllTables = ssb.getAllTables;
+    const aggregation = deferred();
+    const reload = deferred();
+    let calls = 0;
+
+    ssb.getAllTables = () => {
+      calls += 1;
+      return calls === 1 ? aggregation.promise : reload.promise;
+    };
+
+    try {
+      const aggregatePromise = app.api.getAllTables({
+        lang: 'no',
+        includeDiscontinued: true
+      });
+      const reloadPromise = app.api.reloadSource('ssb', { force: true });
+
+      reload.resolve({
+        tables: [{ id: 'ny', label: 'Ny reload-tabell', paths: [] }],
+        sourceMeta: { fromCache: false, stale: false, fetchedAt: 200 }
+      });
+      await reloadPromise;
+
+      aggregation.resolve({
+        tables: [
+          { id: 'gammel-1', label: 'Gammel tabell 1', paths: [] },
+          { id: 'gammel-2', label: 'Gammel tabell 2', paths: [] }
+        ],
+        sourceMeta: { fromCache: true, stale: true, fetchedAt: 100 }
+      });
+      await aggregatePromise;
+
+      const status = statusFor('ssb');
+      assert.equal(status.status, 'ok');
+      assert.equal(status.tableCount, 1);
+      assert.equal(status.fromCache, false);
+      assert.equal(status.stale, false);
+      assert.equal(status.fetchedAt, 200);
+    } finally {
+      ssb.getAllTables = originalGetAllTables;
+    }
   });
 });
 

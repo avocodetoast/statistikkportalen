@@ -115,13 +115,6 @@
     REGNET: 'Regionalt nettverk: indikatorer fra Norges Banks kvartalsvise bedriftsundersøkelse.'
   };
 
-  // Emnesubjektenes sortCode (samsvarer med SSBs egne subjektnoder; kosmetisk
-  // siden SSB-tabeller oppretter subjektnodene først). NB-tabellene plasseres nå
-  // under flere subjekter (bf/nk/os/ei/ut). '9xx'-nodene sist blant undertemaene.
-  const SUBJECT_SORTCODE = {
-    bf: '0000006', nk: '0000066', os: '0000076', ei: '0000030', ut: '0000115'
-  };
-
   // ---- Språk-/cache-hjelpere ----
 
   function apiLang(lang) {
@@ -131,25 +124,8 @@
   // Delt med fhi-adapter.js — se js/sources/source-common.js.
   const pickLabel = window.SourceCommon.pickLabel;
 
-  let _cache = null;
-  function cache() {
-    if (_cache) return _cache;
-    // Gjenbruk SSBs delte CacheManager om mulig (samme localStorage/IndexedDB).
-    const ssbCache = window.SourceRegistry && window.SourceRegistry.ssb &&
-      window.SourceRegistry.ssb.instance && window.SourceRegistry.ssb.instance.cache;
-    _cache = ssbCache || (typeof window.CacheManager === 'function' ? new window.CacheManager() : null);
-    return _cache;
-  }
-  async function cacheGet(key) {
-    const c = cache();
-    if (!c) return null;
-    try { return await c.get(key); } catch (e) { return null; }
-  }
-  async function cacheSet(key, value) {
-    const c = cache();
-    if (!c) return;
-    try { await c.set(key, value, TTL); } catch (e) { /* ignorer cache-feil */ }
-  }
+  const cacheGet = window.SourceCommon.cacheGet;
+  const cacheSet = (key, value) => window.SourceCommon.cacheSet(key, value, TTL);
 
   // ---- Fetch-hjelpere ----
 
@@ -189,63 +165,13 @@
 
   /** Bygg alle katalog-oppføringer fra config (nettverksfritt). */
   function buildCatalogue(lang) {
-    const dataflows = cfg.dataflows || [];
-    const nodes = (window.AppConfig && window.AppConfig.sourceNodes) || {};
-    const subjectNames = (window.SubjectConfig && window.SubjectConfig.subjectNames) || {};
-
-    const makeSubjectSeg = (subjectId) => ({
-      id: subjectId,
-      label: pickLabel(subjectNames[subjectId], lang) || subjectId,
-      sortCode: SUBJECT_SORTCODE[subjectId] || '0009999'
-    });
-    const makeNodeSeg = (nodeId) => {
-      const node = nodes[nodeId] || {};
-      return {
-        id: nodeId,
-        label: pickLabel(node.label, lang) || nodeId,
-        sortCode: node.sortCode || '999'
-      };
-    };
-
-    return dataflows.map((flow, i) => {
-      // En flow kan plasseres flere steder i emnetreet via `paths` (array av
-      // plasseringer). Hver plassering er [subjektkode, ...node-id-er] med
-      // vilkårlig dybde: subjektet + én eller flere noder (SSB-passthrough-id-er
-      // som f.eks. 'bf03'/'renter' + en NB-leaf-node). Legacy-formen `path` gir
-      // én plassering. Subjektkoden må finnes i subjects.js og hver node-id i
-      // AppConfig.sourceNodes.
-      const placements = (Array.isArray(flow.paths) && flow.paths.length)
-        ? flow.paths
-        : [flow.path];
-      const subjectId = placements[0][0];
-
-      return {
-        id: flow.tableId,
-        label: pickLabel(flow.label, lang) || flow.tableId,
-        // Rekkefølge blant tabeller i noden (menu-hierarchy sorterer på table.sortCode).
-        sortCode: String(900 + i),
-        // NB: 'updated' MÅ være en streng (aldri null) — menu-hierarchy.js
-        // _collectAllTables() sorterer via table.updated.localeCompare(...)
-        // uten null-guard (samme landmine unngås defensivt i fhi-adapter.js).
-        updated: '',
-        firstPeriod: '',
-        lastPeriod: '',
-        // FREQ=B for kjerneutvalget → daglige/virkedagsserier. 'Business' faller i
-        // «Andre tabeller»/«Other»-bøtta i frekvensfilteret (ikke Monthly/Quarterly/Annual),
-        // som degraderer pent (se browser-state.filterTables/calcFrequencyCounts).
-        // Flows med én kjent, grovere frekvens (REGNET: kvartal) kan overstyre
-        // via `timeUnit` på config-raden og havner da i riktig frekvensbøtte.
-        timeUnit: flow.timeUnit || 'Business',
-        // Avsluttede serier (GOVT_IRS) merkes i config-raden og filtreres/
-        // merkes i UI-en som SSBs egne avsluttede tabeller.
-        discontinued: flow.discontinued === true,
-        // Søkeord: per-tabell `keywords` når flere rader deler samme flow
-        // (Regionalt nettverk → én rad per tema), ellers flow-ordlista.
-        variableNames: (flow.keywords || VARIABLE_NAMES[flow.flow] || []).slice(),
-        subjectCode: subjectId,
-        paths: placements.map(p => [makeSubjectSeg(p[0]), ...p.slice(1).map(makeNodeSeg)]),
-        source: 'Norges Bank'
-      };
+    return window.CatalogShared.buildNbRows({
+      dataflows: cfg.dataflows || [],
+      variableNames: VARIABLE_NAMES,
+      subjectNames: (window.SubjectConfig && window.SubjectConfig.subjectNames) || {},
+      sourceNodes: (window.AppConfig && window.AppConfig.sourceNodes) || {},
+      lang: lang,
+      pickLabel: pickLabel
     });
   }
 

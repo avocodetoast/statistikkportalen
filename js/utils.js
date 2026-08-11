@@ -332,16 +332,19 @@ function extractTableTitle(label) {
 }
 
 /**
- * Kildenøkkel ('ssb' | 'nb' | 'fhi') for en tabell-id — samme prefiksregel
- * som kildefasaden (js/sources/source-registry.js) og sourceKeyForId i
- * scripts/lib/seo-sources.mjs: nb-* → Norges Bank, fhi-* → FHI, ellers SSB.
+ * Kildenøkkel for en tabell-id, avledet fra AppConfig.sources[*].idPrefix.
+ * Tabell-id-er uten et konfigurert prefiks tilhører standardkilden SSB.
  * @param {string} tableId
  * @returns {string}
  */
 function sourceKeyForTableId(tableId) {
   const s = String(tableId || '');
-  if (s.indexOf('nb-') === 0) return 'nb';
-  if (s.indexOf('fhi-') === 0) return 'fhi';
+  const sources = AppConfig.sources || {};
+  for (const [key, source] of Object.entries(sources)) {
+    if (source && typeof source === 'object' && source.idPrefix && s.indexOf(source.idPrefix) === 0) {
+      return key;
+    }
+  }
   return 'ssb';
 }
 
@@ -359,8 +362,8 @@ function sourceBrandingForTable(tableId) {
 }
 
 /**
- * Tabell-id slik den VISES i tabellistenes id-kolonne: kildeprefikset
- * ('nb-'/'fhi-') strippes, siden kilden nå fremgår av badgen bak tittelen —
+ * Tabell-id slik den VISES i tabellistenes id-kolonne: det konfigurerte
+ * kildeprefikset strippes, siden kilden nå fremgår av badgen bak tittelen —
  * å gjenta den i id-en er støy og presser lange id-er ut i ellipse.
  * Den fulle id-en beholdes i rad-datasettet og som hover-tittel, så den
  * fortsatt kan leses av og kopieres.
@@ -370,7 +373,9 @@ function sourceBrandingForTable(tableId) {
 function displayTableId(tableId) {
   const s = String(tableId || '');
   const key = sourceKeyForTableId(s);
-  return key === 'ssb' ? s : s.slice(key.length + 1);
+  const source = AppConfig.sources && AppConfig.sources[key];
+  const prefix = source && source.idPrefix;
+  return prefix ? s.slice(prefix.length) : s;
 }
 
 /**

@@ -101,10 +101,17 @@ export function loadSubjectConfig(appConfig) {
   return { ...cfg, subjectGroups, subjectNames };
 }
 
+/** Én registrering per adapter, brukt av både validering og radbygging. */
+const ADAPTER_PROVIDERS = {
+  ssb: buildSsbRows,
+  'norges-bank': buildNorgesBankRows,
+  fhi: buildFhiRows,
+};
+
 /** Adaptere det finnes en provider for her. En kilde i AppConfig.sources med
  *  et ukjent adapter-navn skal hoppes over med en tydelig advarsel, ikke
  *  behandles som en feilende kilde. */
-const KNOWN_ADAPTERS = new Set(['ssb', 'norges-bank', 'fhi']);
+const KNOWN_ADAPTERS = new Set(Object.keys(ADAPTER_PROVIDERS));
 
 export function isKnownAdapter(adapter) {
   return KNOWN_ADAPTERS.has(adapter);
@@ -216,8 +223,8 @@ export function readFhiCatalog() {
 
 /**
  * Alle katalograder for ÉN kilde, dispatchet på AppConfig.sources[key].adapter.
- * Dette er utvidelsespunktet for nye kilder: legg til en gren her og en
- * provider i scripts/lib/seo-sources.mjs.
+ * Dette er utvidelsespunktet for nye kilder: registrer en provider i
+ * ADAPTER_PROVIDERS og legg til katalogbyggingen i scripts/lib/seo-sources.mjs.
  *
  * @param {string} sourceKey - Nøkkel i AppConfig.sources ('ssb' | 'nb' | 'fhi').
  * @param {object} opts
@@ -229,20 +236,28 @@ export function readFhiCatalog() {
  * @param {string} [opts.prefix] - Loggprefiks.
  * @returns {Promise<object[]>} katalograder
  */
-export async function buildSourceRows(sourceKey, opts = {}) {
-  const { appConfig, subjectConfig, lang, minTables = 0 } = opts;
-  const adapter = appConfig?.sources?.[sourceKey]?.adapter;
+async function buildSsbRows(opts) {
+  const { appConfig, minTables = 0 } = opts;
+  return fetchAllTables(appConfig, minTables, opts);
+}
 
-  if (adapter === 'ssb') {
-    return fetchAllTables(appConfig, minTables, opts);
+async function buildNorgesBankRows(opts) {
+  const { appConfig, subjectConfig, lang } = opts;
+  const rows = buildNbCatalogue(appConfig, subjectConfig.subjectNames, lang);
+  applyNbPeriods(rows, opts);
+  return rows;
+}
+
+async function buildFhiRows(opts) {
+  const { appConfig, subjectConfig, lang } = opts;
+  return buildFhiCatalogue(readFhiCatalog(), appConfig, subjectConfig.subjectNames, lang);
+}
+
+export async function buildSourceRows(sourceKey, opts = {}) {
+  const adapter = opts.appConfig?.sources?.[sourceKey]?.adapter;
+  const provider = ADAPTER_PROVIDERS[adapter];
+  if (!provider) {
+    throw new Error(`Kilden «${sourceKey}» har ukjent adapter «${adapter}» — legg til en gren i scripts/lib/catalog-sources.mjs.`);
   }
-  if (adapter === 'norges-bank') {
-    const rows = buildNbCatalogue(appConfig, subjectConfig.subjectNames, lang);
-    applyNbPeriods(rows, opts);
-    return rows;
-  }
-  if (adapter === 'fhi') {
-    return buildFhiCatalogue(readFhiCatalog(), appConfig, subjectConfig.subjectNames, lang);
-  }
-  throw new Error(`Kilden «${sourceKey}» har ukjent adapter «${adapter}» — legg til en gren i scripts/lib/catalog-sources.mjs.`);
+  return provider(opts);
 }

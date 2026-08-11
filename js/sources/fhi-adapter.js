@@ -158,15 +158,6 @@
   const DATA_FETCH_TIMEOUT_MS =
     (window.AppConfig.sources && window.AppConfig.sources.dataFetchTimeoutMs) || 90000;
 
-  // Emnesubjektets sortCode — kun kosmetisk (SSB-tabeller under 'he' oppretter
-  // subjektnoden i emnetreet først; jf. tilsvarende resonnement i
-  // norges-bank-adapter.js). Satt likevel defensivt for å unngå
-  // undefined.localeCompare() dersom FHI mot formodning skulle bli
-  // registrert/aggregert før noen SSB-tabell under 'he'.
-  // Samsvarer med SSBs egne subjektnoder (verifisert mot data.ssb.no). FHI-
-  // tabeller kryssplasseres nå også under be/in (Befolkning/Innvandring).
-  const SUBJECT_SORTCODE = { he: '0000034', be: '0000016', in: '0000042' };
-
   const EN_LANGUAGE_NOTE =
     'FHI data is only available in Norwegian. Dimension and category names ' +
     'below are shown in Norwegian even though the interface language is English.';
@@ -245,24 +236,8 @@
     return src.tables.find(t => String(t.tableId) === String(rawId)) || null;
   }
 
-  let _cache = null;
-  function cache() {
-    if (_cache) return _cache;
-    const ssbCache = window.SourceRegistry && window.SourceRegistry.ssb &&
-      window.SourceRegistry.ssb.instance && window.SourceRegistry.ssb.instance.cache;
-    _cache = ssbCache || (typeof window.CacheManager === 'function' ? new window.CacheManager() : null);
-    return _cache;
-  }
-  async function cacheGet(key) {
-    const c = cache();
-    if (!c) return null;
-    try { return await c.get(key); } catch (e) { return null; }
-  }
-  async function cacheSet(key, value) {
-    const c = cache();
-    if (!c) return;
-    try { await c.set(key, value, TTL); } catch (e) { /* ignorer cache-feil */ }
-  }
+  const cacheGet = window.SourceCommon.cacheGet;
+  const cacheSet = (key, value) => window.SourceCommon.cacheSet(key, value, TTL);
 
   const currentLang = () =>
     (typeof window.getCurrentApiLang === 'function' ? window.getCurrentApiLang() : 'no');
@@ -445,7 +420,7 @@
    */
   async function fetchSourceTableList(source, force) {
     const key = 'tables_fhi_' + source;
-    const c = cache();
+    const c = window.SourceCommon.sharedCache();
     let entry = null;
     if (c && typeof c.getEntry === 'function') {
       try { entry = await c.getEntry(key); } catch (e) { entry = null; }
@@ -476,7 +451,6 @@
     const catalog = await getCatalog(); // null hvis fila mangler/feiler — se getCatalog
     const catSource = (catalog && catalog.sources && catalog.sources[source]) || null;
     const catRows = (catSource && catSource.tables) || [];
-    const catById = new Map(catRows.map(t => [String(t.tableId), t]));
 
     // Radlista: den innsjekkede katalogfila er standardkilden. Den inneholder
     // ALT en katalogoppføring trenger (id, tittel, perioder, timeUnit,
@@ -501,16 +475,6 @@
     const rows = useBaked
       ? catRows.map(t => ({ tableId: t.tableId, title: t.title, modifiedAt: t.updated || '' }))
       : fetched.list;
-    // Kuraterte kategorier (register → kategori, se data/sources/fhi-curation.json
-    // og scripts/lib/fhi-curation.mjs): {katId: {label, sortCode}}. Tabeller med
-    // `category` i katalogen får et TREDJE path-segment under registernoden;
-    // tabeller uten (og hele kilden når katalogfila mangler) beholder dagens
-    // 2-segments plassering rett under registernoden.
-    const catCategories = (catSource && catSource.categories) || null;
-
-    const nodes = (window.AppConfig && window.AppConfig.sourceNodes) || {};
-    const subjectNames = (window.SubjectConfig && window.SubjectConfig.subjectNames) || {};
-
     // En delkilde kan plasseres flere steder i emnetreet via
     // AppConfig.sources.fhi.paths[source] = [[subjektkode, node-id], …];
     // default er én plassering under 'he' med den kildespesifikke noden.
@@ -519,96 +483,18 @@
     const placements = (cfg.paths && Array.isArray(cfg.paths[source]) && cfg.paths[source].length)
       ? cfg.paths[source]
       : [[SUBJECT_ID, 'fhi-' + source]];
-    const subjectCode = placements[0][0];
-
-    // En plassering er [subjektkode, ...node-id-er] med vilkårlig dybde: subjekt
-    // + én eller flere noder (SSB-passthrough-id-er som f.eks. 'he03'/'be06' +
-    // en FHI-leaf-node). Node-id-ene må finnes i AppConfig.sourceNodes.
-    const basePaths = placements.map(p => {
-      const [subjId, ...nodeIds] = p;
-      return [
-        {
-          id: subjId,
-          label: pickLabel(subjectNames[subjId], lang) || subjId,
-          sortCode: SUBJECT_SORTCODE[subjId] || '0009999'
-        },
-        ...nodeIds.map(nodeId => {
-          const node = nodes[nodeId] || {};
-          return {
-            id: nodeId,
-            label: pickLabel(node.label, lang) || nodeId,
-            sortCode: node.sortCode || '999'
-          };
-        })
-      ];
-    });
-    /** Paths for én tabell: basePaths + ev. kategorisegment (nb-only labels). */
-    function pathsForCategory(catId) {
-      if (!catId || !catCategories || !catCategories[catId]) return basePaths;
-      const def = catCategories[catId];
-      const seg = {
-        id: 'fhi-' + source + '-' + catId,
-        label: def.label || catId,
-        sortCode: def.sortCode || '999'
-      };
-      return basePaths.map(p => p.concat([seg]));
-    }
-    const sourceTitle = sourceTitleOf(infoMap, source);
-
-    const tables = (rows || []).map(row => {
-      // Katalogoppføringen (data/sources/fhi-catalog.json) gir en tittel
-      // utledet fra tabellens metadata-sammendrag der API-tittelen bare er et
-      // internt kodenavn (f.eks. «D10b_selvmord» → «Dødsfall med
-      // underliggende dødsårsak selvmord»), pluss first/lastPeriod og
-      // timeUnit fra en /dimension-analyse gjort ved byggetid — se
-      // scripts/update-fhi-catalog.mjs. Uten katalogen (fila mangler/feiler
-      // å laste) faller alt dette tilbake til den rå API-tittelen og tomme
-      // periodefelt, akkurat som før katalogen fantes.
-      const cat = catById.get(String(row.tableId));
-      // Rå API-titler ryddes for periode-/oppdateringshale (lmr legger begge
-      // deler i selve tittelen, og begge har egne kolonner i tabellistene).
-      // Kuraterte katalogtitler er allerede rene og røres ikke.
-      const title = (cat && cat.title) ||
-        stripTitleMetadataTail(row.title) || String(row.tableId);
-
-      return {
-        id: 'fhi-' + source + '-' + row.tableId,
-        // Ren tittel uten kildesuffiks — kilden vises som en badge bak
-        // tittelen i tabellistene (sourceBadgeHTML i js/utils.js).
-        label: title,
-        // NB: 'updated' MÅ være en streng (aldri null) — menu-hierarchy.js
-        // _collectAllTables() sorterer via table.updated.localeCompare(...)
-        // uten null-guard.
-        updated: row.modifiedAt || row.publishedAt || (cat && cat.updated) || '',
-        firstPeriod: (cat && cat.firstPeriod) || '',
-        lastPeriod: (cat && cat.lastPeriod) || '',
-        discontinued: false,
-        // sortCode brukes av menu-hierarchy.groupTables()/search-view.js for å
-        // sortere tabeller innad i en gruppe (samme udokumenterte-men-påkrevde
-        // felt som norges-bank-adapter.js setter defensivt). Zero-padded FHI
-        // tableId gir stabil, leksikografisk korrekt rekkefølge.
-        sortCode: String(row.tableId).padStart(6, '0'),
-        // 'Annual' når katalogen har fastslått at samtlige perioder i
-        // tidsdimensjonen er enkeltår (se deriveTimeInfo i byggescriptet);
-        // ellers null (5-årige glidende snitt, skoleår, fødselskohorter …) —
-        // browser-state.calcFrequencyCounts/filterTables degraderer null
-        // pent til «Andre tabeller» i stedet for å gjette feil.
-        timeUnit: (cat && cat.timeUnit) || null,
-        variableNames: (cat && cat.variableNames) || [],
-        // Brukes av browser-state.renderTableListHTML som hover-tooltip på
-        // tabellenken (rendrer kun når feltet er satt) — utledet fra samme
-        // metadata-sammendrag som tittelen, se byggescriptet.
-        description: (cat && cat.description) || '',
-        // Kreves av browser-state.js (_filterNonQuery/calcSubjectCounts) og
-        // search-view.js (_searchGroupBySubject) for emnefilter/-gruppering —
-        // udokumentert i source-registry.js sin katalog-kontrakt, men satt av
-        // norges-bank-adapter.js (jf. subjectCode der) og av SSBs eget API.
-        // Uten dette havner FHI-tabeller i «other»-bøtta og filtrerte søk på
-        // emnet «Helse og samfunn» ekskluderer dem feilaktig.
-        subjectCode: subjectCode,
-        paths: pathsForCategory(cat && cat.category),
-        source: 'FHI/' + sourceTitle
-      };
+    const tables = window.CatalogShared.buildFhiRows({
+      source: source,
+      rows: rows,
+      catalogRows: catRows,
+      categories: (catSource && catSource.categories) || null,
+      placements: placements,
+      subjectNames: (window.SubjectConfig && window.SubjectConfig.subjectNames) || {},
+      sourceNodes: (window.AppConfig && window.AppConfig.sourceNodes) || {},
+      lang: lang,
+      pickLabel: pickLabel,
+      stripTitleMetadataTail: stripTitleMetadataTail,
+      sourceTitle: sourceTitleOf(infoMap, source)
     });
 
     return {

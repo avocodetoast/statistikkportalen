@@ -22,6 +22,47 @@
     return labelObj[l] || labelObj.nb || labelObj.en || '';
   }
 
+  // ---- Delt cache ----
+
+  let sharedCacheInstance = null;
+
+  /** Finn SSBs CacheManager-instans, eller opprett den delte reserveinstansen. */
+  function sharedCache() {
+    if (sharedCacheInstance) return sharedCacheInstance;
+    const ssbCache = window.SourceRegistry && window.SourceRegistry.ssb &&
+      window.SourceRegistry.ssb.instance && window.SourceRegistry.ssb.instance.cache;
+    sharedCacheInstance = ssbCache ||
+      (typeof window.CacheManager === 'function' ? new window.CacheManager() : null);
+    return sharedCacheInstance;
+  }
+
+  /** Les fra cache uten at lagringsfeil får stoppe kildeadaptrene. */
+  async function cacheGet(key) {
+    const cache = sharedCache();
+    if (!cache) return null;
+    try {
+      return await cache.get(key);
+    } catch (error) {
+      if (window.logger && typeof window.logger.warn === 'function') {
+        window.logger.warn('[SourceCommon] Kunne ikke lese fra cache:', key, error);
+      }
+      return null;
+    }
+  }
+
+  /** Skriv til cache uten at lagringsfeil får stoppe kildeadaptrene. */
+  async function cacheSet(key, value, ttlMs) {
+    const cache = sharedCache();
+    if (!cache) return;
+    try {
+      await cache.set(key, value, ttlMs);
+    } catch (error) {
+      if (window.logger && typeof window.logger.warn === 'function') {
+        window.logger.warn('[SourceCommon] Kunne ikke skrive til cache:', key, error);
+      }
+    }
+  }
+
   // ---- Forespørselskø ----
 
   // NB- og FHI-adapterne går utenom SSBs egen throttle. Uten køen her fyres
@@ -258,6 +299,7 @@
   }
 
   window.SourceCommon = {
-    pickLabel, uiLabelLang, fetchWithTimeout, htmlToPlainLines, stripTitleMetadataTail
+    pickLabel, uiLabelLang, sharedCache, cacheGet, cacheSet,
+    fetchWithTimeout, htmlToPlainLines, stripTitleMetadataTail
   };
 })();

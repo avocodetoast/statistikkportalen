@@ -339,6 +339,7 @@ const AppConfig = {
    * og at kildens tabeller ikke rutes — resten av portalen påvirkes ikke.
    */
   sources: {
+    // DEN ENE kilden til id→kilde-regelen er `idPrefix` på fremmedkildene.
     // Timeout (ms) for KATALOG- OG METADATAKALL mot fremmedkilder (NB/FHI) —
     // en hengende kilde skal feile innen dette og ikke blokkere app-
     // initialiseringen (BrowserState venter på hele katalogaggregeringen).
@@ -380,6 +381,7 @@ const AppConfig = {
     nb: {
       adapter: 'norges-bank',
       enabled: true,
+      idPrefix: 'nb-',
       baseUrl: 'https://data.norges-bank.no/api',
       displayName: { nb: 'Norges Bank', en: 'Norges Bank' },
       // SEO-/attribusjonsinfo (samme form som det globale `source`-objektet
@@ -414,6 +416,7 @@ const AppConfig = {
     fhi: {
       adapter: 'fhi',
       enabled: true,
+      idPrefix: 'fhi-',
       baseUrl: 'https://statistikk-data.fhi.no/api/open/v1',
       displayName: { nb: 'Folkehelseinstituttet (FHI)', en: 'Norwegian Institute of Public Health (FHI)' },
       // SEO-/attribusjonsinfo for fhi-*-tabeller (jf. nb.branding over).

@@ -101,7 +101,9 @@
  * ------
  *  • Id-baserte metoder (getTableMetadata, getTableData, getCodeList,
  *    downloadTableData, getDefaultSelection) → adapteren der ownsTableId(id) er
- *    true (fremmede kilder sjekkes først, SSB er fallback).
+ *    true (fremmede kilder sjekkes først, SSB er fallback bare når ingen
+ *    fremmed adapter eier id-en). Eier en deaktivert fremmed kilde id-en,
+ *    avvises rutingen i stedet for å falle gjennom til SSB.
  *  • getConfig + savedquery-metodene (saveSavedQuery, getSavedQuery,
  *    getSavedQueryData) → KUN SSB-adapteren.
  *  • getTables/getAllTables → aggregerer alle *enabled* kilder med
@@ -222,13 +224,13 @@
     adapterForTableId(tableId) {
       // Ikke-SSB-adaptere prøves først slik at mest spesifikke eier vinner.
       const foreign = this.adapters.find(
-        a => a.sourceId !== 'ssb' && this.isEnabled(a) && a.ownsTableId(tableId)
+        a => a.sourceId !== 'ssb' && a.ownsTableId(tableId)
       );
-      if (foreign) return foreign;
+      if (foreign) return this.isEnabled(foreign) ? foreign : null;
       const ssb = this.ssb;
       if (ssb) return ssb;
-      // Siste utvei: hvilken som helst adapter som påstår eierskap.
-      return this.adapters.find(a => a.ownsTableId(tableId)) || null;
+      // Siste utvei: en aktivert adapter som påstår eierskap.
+      return this.adapters.find(a => this.isEnabled(a) && a.ownsTableId(tableId)) || null;
     },
 
     // ---- Katalogstatus per kilde (grunnlag for API-statusbadgen) ----
@@ -236,6 +238,7 @@
     //              tableCount, fromCache, stale, fetchedAt, lastAttemptAt,
     //              partial (feilede FHI-delkilder), error }
     catalogueStatus: {},
+    _statusAttempts: {},
     _statusListeners: [],
 
     /** Abonner på statusendringer; cb får hele snapshot-arrayen. */
@@ -324,6 +327,7 @@
     // Katalogstatus spores KUN for fulle getAllTables-aggregeringer — søk
     // (query) og nylig-oppdaterte (pastDays) skal ikke flippe statusbadgen.
     const track = method === 'getAllTables' && !foreignSkip;
+    const statusAttemptTokens = {};
 
     let enabled = registry.adapters.filter(a => registry.isEnabled(a));
 
@@ -335,10 +339,16 @@
     }
 
     if (track) {
-      enabled.forEach(a => registry._setStatus(a.sourceId, {
-        status: 'loading',
-        lastAttemptAt: Date.now()
-      }));
+      enabled.forEach(a => {
+        const sourceId = a.sourceId;
+        const token = (registry._statusAttempts[sourceId] || 0) + 1;
+        registry._statusAttempts[sourceId] = token;
+        statusAttemptTokens[sourceId] = token;
+        registry._setStatus(sourceId, {
+          status: 'loading',
+          lastAttemptAt: Date.now()
+        });
+      });
     }
 
     const settled = await Promise.allSettled(enabled.map(a => {
@@ -362,18 +372,22 @@
       if (s.status === 'fulfilled') {
         tables.push(...s.value.tables);
         if (track) {
-          registry._setStatus(s.value.sourceId, statusPatchFromResult(s.value));
+          if (statusAttemptTokens[s.value.sourceId] === registry._statusAttempts[s.value.sourceId]) {
+            registry._setStatus(s.value.sourceId, statusPatchFromResult(s.value));
+          }
         }
       } else {
         const info = s.reason || {};
         logger.warn('[SourceRegistry] Kilde «' + (info.sourceId || '?') + '» feilet under ' +
                     method + ' (hoppes over):', info.error || s.reason);
         if (track && info.sourceId) {
-          registry._setStatus(info.sourceId, {
-            status: 'error',
-            tableCount: 0,
-            error: (info.error && info.error.message) || String(info.error || s.reason)
-          });
+          if (statusAttemptTokens[info.sourceId] === registry._statusAttempts[info.sourceId]) {
+            registry._setStatus(info.sourceId, {
+              status: 'error',
+              tableCount: 0,
+              error: (info.error && info.error.message) || String(info.error || s.reason)
+            });
+          }
         }
       }
     }
@@ -489,6 +503,8 @@
       if (!adapter || !registry.isEnabled(adapter)) {
         throw new Error('[SourceRegistry] Ukjent eller deaktivert kilde: ' + sourceId);
       }
+      const token = (registry._statusAttempts[sourceId] || 0) + 1;
+      registry._statusAttempts[sourceId] = token;
       registry._setStatus(sourceId, { status: 'loading', lastAttemptAt: Date.now() });
       try {
         // Samme options som BrowserState._doInit bruker for aggregeringen.
@@ -497,14 +513,18 @@
           includeDiscontinued: true,
           useCache: !force
         });
-        registry._setStatus(sourceId, statusPatchFromResult(result));
+        if (token === registry._statusAttempts[sourceId]) {
+          registry._setStatus(sourceId, statusPatchFromResult(result));
+        }
         return { tables: (result && Array.isArray(result.tables)) ? result.tables : [] };
       } catch (e) {
-        registry._setStatus(sourceId, {
-          status: 'error',
-          tableCount: 0,
-          error: (e && e.message) || String(e)
-        });
+        if (token === registry._statusAttempts[sourceId]) {
+          registry._setStatus(sourceId, {
+            status: 'error',
+            tableCount: 0,
+            error: (e && e.message) || String(e)
+          });
+        }
         throw e;
       }
     },

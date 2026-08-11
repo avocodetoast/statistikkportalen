@@ -10,16 +10,14 @@
  * AppConfig.sources.<kilde> og en provider her (+ dispatch i generatorens
  * enumerateAllTables).
  *
- * Katalogbyggingen er en bevisst nettverksfri reimplementering av adapternes
- * config-/katalogfil-deriverte logikk (js/sources/norges-bank-adapter.js
- * buildCatalogue, js/sources/fhi-adapter.js buildSourceCatalogue) — samme
- * «config.js er én kilde til sannhet»-konvensjon som generatorens
- * buildHierarchy-duplikat av MenuHierarchy. Endres katalogformen i en
- * adapter, må provideren her oppdateres tilsvarende.
+ * Katalogradene bygges av samme avhengighetsfrie browserfil som adapterne,
+ * lastet via node:vm, slik at nettleser og katalog aldri kan drive fra hverandre.
  *
  * Ren ESM uten browser-globals — importeres direkte av
  * tests/unit/seo-sources.test.js.
  */
+
+import { buildNbRows, buildFhiRows } from './catalog-shared.mjs';
 
 /** SSB-/FHI-periode → ISO 8601 for temporalCoverage: "2006" → "2006",
  *  "2006M01" → "2006-01", kvartal/uke/halvår ("2006K1" osv.) → året.
@@ -41,12 +39,14 @@ export function pickLabel(value, lang) {
   return value || '';
 }
 
-/** Kildennøkkel i AppConfig.sources for en tabell-id — samme prefiksregel som
- *  fasaden i js/sources/source-registry.js (nb-* / fhi-* / ellers SSB). */
-export function sourceKeyForId(id) {
+/** Kildenøkkel i AppConfig.sources for en tabell-id, avledet fra idPrefix. */
+export function sourceKeyForId(id, appConfig) {
   const s = String(id || '');
-  if (s.startsWith('nb-')) return 'nb';
-  if (s.startsWith('fhi-')) return 'fhi';
+  for (const [key, source] of Object.entries(appConfig?.sources || {})) {
+    if (source && typeof source === 'object' && source.idPrefix && s.startsWith(source.idPrefix)) {
+      return key;
+    }
+  }
   return 'ssb';
 }
 
@@ -58,7 +58,7 @@ export function sourceKeyForId(id) {
  * gjør at generatoren utelater lisensfeltet/-lenken.
  */
 export function sourceBrandingFor(id, appConfig) {
-  const key = sourceKeyForId(id);
+  const key = sourceKeyForId(id, appConfig);
   const branding = appConfig?.sources?.[key]?.branding;
   return branding || appConfig.source;
 }
@@ -81,7 +81,7 @@ function escapeHtml(str) {
  * @returns {string} HTML, eller '' når tabellen ikke skal merkes
  */
 export function sourceBadgeHtml(id, appConfig) {
-  const key = sourceKeyForId(id);
+  const key = sourceKeyForId(id, appConfig);
   if (key === 'ssb') return '';
   const branding = appConfig?.sources?.[key]?.branding;
   if (!branding) return '';
@@ -89,36 +89,6 @@ export function sourceBadgeHtml(id, appConfig) {
   if (!text) return '';
   const title = branding.nameFull || branding.name || text;
   return `<span class="source-badge source-badge--${escapeHtml(key)}" data-tooltip="${escapeHtml(title)}" aria-label="${escapeHtml(title)}">${escapeHtml(text)}</span>`;
-}
-
-// Emnesubjektenes sortCode (kosmetisk — SSB-tabellene oppretter subjektnodene
-// først i praksis). Union av adapternes SUBJECT_SORTCODE-konstanter.
-const SUBJECT_SORTCODE = {
-  bf: '0000006', nk: '0000066', os: '0000076', ei: '0000030', ut: '0000115',
-  he: '0000034', be: '0000016', in: '0000042',
-};
-
-/** Path-segmenter [{id,label,sortCode}, …] for en plassering
- *  [subjektkode, ...node-id-er] med vilkårlig dybde (subjekt + én eller flere
- *  noder), med labels fra subjects.js og AppConfig.sourceNodes. Speiler
- *  buildCatalogue i norges-bank-adapter.js. */
-function buildPathSegments(placement, subjectNames, sourceNodes, lang) {
-  const [subjectId, ...nodeIds] = placement;
-  return [
-    {
-      id: subjectId,
-      label: pickLabel(subjectNames[subjectId], lang) || subjectId,
-      sortCode: SUBJECT_SORTCODE[subjectId] || '0009999',
-    },
-    ...nodeIds.map((nodeId) => {
-      const node = sourceNodes[nodeId] || {};
-      return {
-        id: nodeId,
-        label: pickLabel(node.label, lang) || nodeId,
-        sortCode: node.sortCode || '999',
-      };
-    }),
-  ];
 }
 
 /**
@@ -130,32 +100,13 @@ function buildPathSegments(placement, subjectNames, sourceNodes, lang) {
  */
 export function buildNbCatalogue(appConfig, subjectNames, lang) {
   const cfg = appConfig?.sources?.nb || {};
-  const nodes = appConfig?.sourceNodes || {};
-  // Statiske søkeord per flow: samme kilde som adapteren
-  // (js/sources/nb-catalog.js → AppConfig.sources.nb.variableNames).
-  const variableNames = cfg.variableNames || {};
-  return (cfg.dataflows || []).map((flow, i) => {
-    // `paths` = flere emnetre-plasseringer; legacy `path` = én.
-    const placements = (Array.isArray(flow.paths) && flow.paths.length)
-      ? flow.paths
-      : [flow.path];
-    return {
-      id: flow.tableId,
-      label: pickLabel(flow.label, lang) || flow.tableId,
-      sortCode: String(900 + i),
-      updated: '',
-      firstPeriod: '',
-      lastPeriod: '',
-      discontinued: flow.discontinued === true,
-      // Speiler buildCatalogue i js/sources/norges-bank-adapter.js: flere rader
-      // kan dele samme flow (REGNET-snittene), og overstyrer da frekvensbøtte
-      // og søkeord per tabell.
-      timeUnit: flow.timeUnit || 'Business',
-      variableNames: (flow.keywords || variableNames[flow.flow] || []).slice(),
-      subjectCode: placements[0][0],
-      paths: placements.map(p => buildPathSegments(p, subjectNames, nodes, lang)),
-      source: 'Norges Bank',
-    };
+  return buildNbRows({
+    dataflows: cfg.dataflows || [],
+    variableNames: cfg.variableNames || {},
+    subjectNames,
+    sourceNodes: appConfig?.sourceNodes || {},
+    lang,
+    pickLabel,
   });
 }
 
@@ -169,7 +120,6 @@ export function buildNbCatalogue(appConfig, subjectNames, lang) {
  */
 export function buildFhiCatalogue(catalog, appConfig, subjectNames, lang) {
   const cfg = appConfig?.sources?.fhi || {};
-  const nodes = appConfig?.sourceNodes || {};
   const tables = [];
   for (const source of cfg.sourceIds || []) {
     const catSource = catalog?.sources?.[source];
@@ -178,44 +128,18 @@ export function buildFhiCatalogue(catalog, appConfig, subjectNames, lang) {
     const placements = (cfg.paths && Array.isArray(cfg.paths[source]) && cfg.paths[source].length)
       ? cfg.paths[source]
       : [['he', 'fhi-' + source]];
-    const basePaths = placements.map(p => buildPathSegments(p, subjectNames, nodes, lang));
-    const subjectCode = placements[0][0];
-    const sourceTitle = catSource.title || source;
-
-    // Kuraterte kategorier (register → kategori) fra katalogfila — speiler
-    // pathsForCategory i fhi-adapter.js buildSourceCatalogue: tabeller med
-    // `category` får et tredje path-segment under registernoden.
-    const categories = catSource.categories || null;
-    const pathsForCategory = (catId) => {
-      if (!catId || !categories || !categories[catId]) return basePaths;
-      const def = categories[catId];
-      const seg = {
-        id: 'fhi-' + source + '-' + catId,
-        label: def.label || catId,
-        sortCode: def.sortCode || '999',
-      };
-      return basePaths.map(p => p.concat([seg]));
-    };
-
-    for (const row of catSource.tables) {
-      tables.push({
-        id: 'fhi-' + source + '-' + row.tableId,
-        // Uten kildesuffiks — kilden rendres som badge i tabellistene
-        // (sourceBadgeHtml under), likt appen (js/sources/fhi-adapter.js).
-        label: row.title || String(row.tableId),
-        updated: row.updated || '',
-        firstPeriod: row.firstPeriod || '',
-        lastPeriod: row.lastPeriod || '',
-        discontinued: false,
-        sortCode: String(row.tableId).padStart(6, '0'),
-        timeUnit: row.timeUnit || null,
-        variableNames: row.variableNames || [],
-        description: row.description || '',
-        subjectCode,
-        paths: pathsForCategory(row.category),
-        source: 'FHI/' + sourceTitle,
-      });
-    }
+    tables.push(...buildFhiRows({
+      source,
+      rows: catSource.tables,
+      catalogRows: catSource.tables,
+      categories: catSource.categories || null,
+      placements,
+      subjectNames,
+      sourceNodes: appConfig?.sourceNodes || {},
+      lang,
+      pickLabel,
+      sourceTitle: catSource.title || source,
+    }));
   }
   return tables;
 }
