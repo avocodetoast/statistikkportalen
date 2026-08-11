@@ -55,7 +55,11 @@
       "WebFetch(domain:query.norges-bank.no)",
       "WebFetch(domain:statistikk-data.fhi.no)",
       "WebFetch(domain:www.fhi.no)",
-      "WebFetch(domain:www.pxtools.net)"
+      "WebFetch(domain:www.pxtools.net)",
+      "Edit(/.claude/skills/new-source/**)",
+      "Edit(/.claude/skills/repo-map/**)",
+      "Skill(codex:rescue)",
+      "Skill(codex:rescue:*)"
     ]
   },
   "hooks": {

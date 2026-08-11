@@ -9,6 +9,7 @@ runtime-avhengigheter. Bla i og eksporter statistikk fra PxWebApi v2 (SSB), Norg
 | Trenger du å vite… | Les |
 |---|---|
 | hvilken fil eier hva, hvilke filer en endring treffer, re-skinning | `repo-map`-skillen |
+| hvordan implementere en helt ny API-kilde (adapter) | `new-source`-skillen |
 | hvordan kjøre og verifisere appen, E2E, fixtures, skjermbilder, feilsøking | `verify`-skillen |
 | tilstandsflyt, kildefasaden, caching, URL-koding, SEO-pipelinen | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | testharnessen, dekningsporten, hva som testes hvor | [tests/README.md](tests/README.md) |
